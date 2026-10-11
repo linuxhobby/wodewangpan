@@ -849,7 +849,7 @@ ${newest
   </ul>
 
   <p class="muted">${esc(site.title)} · <a href="${esc(baseUrl)}/">${esc(baseUrl)}</a></p>
-  ${maintainer ? `<p class="muted">维护：${esc(maintainer)}</p>` : ''}
+  ${maintainer ? `<p class="muted">${esc(maintainer)}</p>` : ''}
 </div>`;
 
   return layout({
