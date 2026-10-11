@@ -14,24 +14,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadResources } from '../scripts/lib/data.js';
+import { loadResources, bodyLength, MIN_DESC } from '../scripts/lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const apply = process.argv.includes('--apply');
 const strict = process.argv.includes('--strict');
-/** 正文下限，默认 300 字；改这个值要和 skill 里 scripts/check-desc.mjs 的 MIN 保持一致 */
-const MIN = Number((process.argv.find((a) => a.startsWith('--min=')) || '').split('=')[1]) || 300;
-const draftPath = path.join(root, '.tmp/desc-draft.json');
-
 /**
- * 正文字数：先剥掉开头的「【第 N 季 · 共 M 集】」标签与结尾的「｜TMDB 7.5」这类署名，
- * 与 skill 的 check-desc.mjs 用的是同一套口径，两边数字才能直接对比。
+ * 正文下限，默认取 data.js 的 MIN_DESC——标准只在那儿定义一处。
+ * 字数也直接用 data.js 的 bodyLength，不再本地另写一份：
+ * 以前这里只剥开头的【…】且限 30 字，构建那边是全剥，同一个简介在两边字数
+ * 会差出几个字，结果就是脚本说「够了」、构建还在告警。
  */
-const bodyLen = (s) =>
-  [...String(s || '')
-    .replace(/^【[^】]{1,30}】/, '')
-    .replace(/｜[^｜]{1,40}$/, '')
-    .trim()].length;
+const MIN = Number((process.argv.find((a) => a.startsWith('--min=')) || '').split('=')[1]) || MIN_DESC;
+const draftPath = path.join(root, '.tmp/desc-draft.json');
 
 if (!fs.existsSync(draftPath)) {
   console.error('找不到 .tmp/desc-draft.json');
@@ -96,7 +91,7 @@ for (const [id, body] of Object.entries(draft)) {
       break;
     }
 
-    const shortfall = bodyLen(next) < MIN;
+    const shortfall = bodyLength(next) < MIN;
     if (shortfall) tooShort.push(id);
     // --strict：不足下限的直接跳过，不碰 YAML、不计入改动数
     if (strict && shortfall) {
@@ -119,7 +114,7 @@ for (const [file, list] of touched) {
   for (const { id, before, after } of list) {
     console.log(`\n  ${id}`);
     console.log(`  - ${before.slice(0, 60)}`);
-    console.log(`  + ${after.slice(0, 60)}…（正文 ${bodyLen(after)} 字）`);
+    console.log(`  + ${after.slice(0, 60)}…（正文 ${bodyLength(after)} 字）`);
   }
 }
 
@@ -135,7 +130,7 @@ if (apply) {
   // 回读一遍：YAML 一旦被写坏，这里会直接抛出来
   try {
     const list = loadResources(path.join(root, 'data'));
-    const still = list.filter((it) => bodyLen(it.description) < MIN);
+    const still = list.filter((it) => bodyLength(it.description) < MIN);
     console.log(`回读校验：YAML 正常，载入 ${list.length} 条，其中正文仍不足 ${MIN} 字的有 ${still.length} 条`);
   } catch (e) {
     console.log(`! 回读失败，请检查 data/*.yaml：${e.message}`);

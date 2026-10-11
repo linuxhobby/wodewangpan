@@ -20,7 +20,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadResources, normalizeResources } from '../scripts/lib/data.js';
+import { loadResources, normalizeResources, bodyLength, MIN_DESC } from '../scripts/lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const argv = process.argv.slice(2);
@@ -30,21 +30,15 @@ const arg = (key, fallback) => {
   return hit ? hit.slice(key.length + 3) : fallback;
 };
 
-const max = Number(arg('max', 300));
+const max = Number(arg('max', MIN_DESC));
 const limit = Number(arg('limit', 0)) || Infinity;
 const cat = arg('cat', '');
 
 const { items } = normalizeResources(loadResources(path.join(root, 'data')));
-/** 正文字数：剥掉【…】标签与结尾 ｜… 署名后缀，与 fill-desc.mjs 的 bodyLen 同一口径 */
-const bodyLen = (s) =>
-  [...String(s || '')
-    .replace(/【[^】]*】/g, '')
-    .replace(/｜[^｜]{1,40}\s*$/, '')
-    .trim()].length;
 
 const short = items
-  .filter((it) => (!cat || it.category === cat) && bodyLen(it.description) < max)
-  .sort((a, b) => bodyLen(a.description) - bodyLen(b.description))
+  .filter((it) => (!cat || it.category === cat) && bodyLength(it.description) < max)
+  .sort((a, b) => bodyLength(a.description) - bodyLength(b.description))
   .slice(0, limit);
 
 if (!short.length) {
@@ -54,7 +48,7 @@ if (!short.length) {
 
 const lines = short.map(
   (it) =>
-    `| ${bodyLen(it.description)} | ${it.id} | ${it.category} | ${it.title} | ${String(it.description || '')
+    `| ${bodyLength(it.description)} | ${it.id} | ${it.category} | ${it.title} | ${String(it.description || '')
       .replace(/\s+/g, ' ')
       .slice(0, 40)}… |`
 );
