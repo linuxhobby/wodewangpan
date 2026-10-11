@@ -27,6 +27,7 @@ Thumbs.db
 .cache/
 # npm run serve 的临时输出
 .tmp-serve.err
+.tmp-serve.out
 
 # 本地 skill 与凭据（含 cookie / token，严禁入库；实际放在 ~/.workbuddy/skills/ 下使用）
 skills/
