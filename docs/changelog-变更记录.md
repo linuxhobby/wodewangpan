@@ -7,7 +7,7 @@
 
 ## 2026-10-11 · `docs/` 文档体系重组，统一命名与索引
 
-13 篇经验文档重组成 11 篇 + 1 篇归档，文件名统一 `英文-中文.md`，索引与规范写进 `docs/readme.md`：
+13 篇经验文档重组成 11 篇 + 1 篇归档，文件名统一 `英文-中文.md`，索引与规范写进 `docs/README.md`：
 
 | 改动 | 说明 |
 |---|---|
@@ -15,7 +15,7 @@
 | 合并重复 | `dev-notes.md` + `pitfalls.md` → `dev-开发注意事项.md`；`seo.md` + `seo-notes.md` → [seo-收录与优化.md](seo-收录与优化.md) |
 | 拆分 | `content-rules.md` 的配图节 → [images-配图规范.md](images-配图规范.md)（补齐 README 里挂了两天的「配图经验待补」）；`experience.md` 的 skill 维护章 → [skills-skill用法与维护.md](skills-skill用法与维护.md)，待办章 → [todo-待办清单.md](todo-待办清单.md) |
 | 归档 | 已完成的 [archive/thin-content-薄内容补写归档.md](archive/thin-content-薄内容补写归档.md) 移入 `docs/archive/`，正文精简为可复用口径与工具链 |
-| 新增索引 | `docs/readme.md`：分类索引 + 命名规范 + 写什么 / 不写什么 + 维护约定 |
+| 新增索引 | `docs/README.md`：分类索引 + 命名规范 + 写什么 / 不写什么 + 维护约定 |
 | 交叉引用 | docs 内部与根 README 的链接全部同步更新 |
 
 

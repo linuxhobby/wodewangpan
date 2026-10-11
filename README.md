@@ -236,14 +236,14 @@ tools/
   book-cover-douban.mjs  # 从豆瓣图书抓书籍封面（电子书 bk- 优先用它，配图经验待补，见 docs/）
   book-poster.mjs        # 豆瓣查无此书时，生成书封海报兜底
   set-poster.mjs         # 套装 / 合辑专用深色封面（豆瓣没有对应单册封面时用；配图经验待补，见 docs/）
-docs/                # 经验 / 注意事项 / 待办 / 总结（开发、入库、配图、skill、SEO…）都写在这里，见 docs/readme.md
+docs/                # 经验 / 注意事项 / 待办 / 总结（开发、入库、配图、skill、SEO…）都写在这里，见 docs/README.md
 deploy/              # 部署用：Nginx 配置示例、自动更新脚本、统计日志格式、搜索引擎提交脚本
 public/              # 构建产物，部署这个目录（586 条时约 17MB，不入库）
 ```
 
 ## 文档
 
-经验 / 注意事项 / 待办 / 总结都在 [`docs/`](docs/readme.md)，根 README 只留「怎么把站点跑起来」。
+经验 / 注意事项 / 待办 / 总结都在 [`docs/`](docs/README.md)，根 README 只留「怎么把站点跑起来」。
 
 | 文档 | 内容 |
 |---|---|
@@ -254,7 +254,7 @@ public/              # 构建产物，部署这个目录（586 条时约 17MB，
 | [`docs/todo-待办清单.md`](docs/todo-待办清单.md) | 已知欠账与下一步 |
 | [`docs/changelog-变更记录.md`](docs/changelog-变更记录.md) | 变更记录（最新修改） |
 
-完整索引与文档规范见 [`docs/readme.md`](docs/readme.md)。
+完整索引与文档规范见 [`docs/README.md`](docs/README.md)。
 
 开发注意事项四条要点（全文见 [`docs/dev-开发注意事项.md`](docs/dev-开发注意事项.md)）：
 
