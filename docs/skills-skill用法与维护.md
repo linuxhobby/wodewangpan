@@ -1,15 +1,18 @@
-# skill 用法与维护
+# skill · 用法与维护
 
-三个夸克相关 skill 的日常用法、升级合并流程、双机同步约定。
-环境路径见 [environment.md](environment.md)，入库操作见 [ingestion-workflow.md](ingestion-workflow.md)。
+三个夸克相关 skill 的日常用法、安装位置、升级合并流程、双机同步约定、灾后重建。
+
+环境路径见 [environment-环境与命令速查.md](environment-环境与命令速查.md)，入库操作见 [workflow-入库流程.md](workflow-入库流程.md)。
+最近更新：2026-10-11（并入原 `experience.md` 的 skill 维护章节）。
 
 ---
 
 ## 一、结论先写
 
 1. **真身只有一份**，在 `~/.workbuddy/skills/`。`~/.codebuddy/skills/` 下的同名目录是**符号链接**，不要在两处各维护一份。
-2. 两台机器之间经 `~/Documents/SynologyDrive/sync-skill/` 中转，`config.env` 含凭据，**不同步**。
-3. 每次从上游拉完新版，跑一次 `.quark-macos-localize.py` 把 macOS 专属章节装回去。
+2. **不要把自维护 skill 放在客户端的 `builtin/` 目录下**——客户端更新会清空它。稳定位置是 `~/.workbuddy/skills/`、TRAE 侧是 `~/.trae-cn/skills/`。
+3. 两台机器之间经 `~/Documents/SynologyDrive/sync-skill/` 中转，`config.env` 含凭据，**不同步**。
+4. 每次从上游拉完新版，跑一次 `.quark-macos-localize.py` 把 macOS 专属章节装回去。
 
 ---
 
@@ -17,11 +20,11 @@
 
 | skill | 版本 | 职责 |
 |---|---|---|
-| `quark-resource-sync` | v1.10（+ macOS 章节） | 网盘 → 站点的同步编排：扫描、编号、出链、抓 TMDB、写 YAML、热门反向同步 |
+| `quark-resource-sync` | v1.11 | 网盘 → 站点的同步编排：扫描、编号、出链、抓 TMDB、写 YAML、热门反向同步、**合集拆分** |
 | `quarkclouddrive` | 1.0.24（官方，会自动更新） | 夸克网盘 CLI 本体：`browse` / `rename` / `share` / `search` / `upload` 等 |
 | `quark-upload-share` | — | 上传本地文件到夸克并生成公开分享链接 |
 
-`quarkclouddrive` 是官方 skill，会自行更新（本机 2026-10-11 从 1.0.22 自动升到 1.0.24）。升级它必须用 `bash scripts/install.sh`，**不要用 `quark-drive.cjs update`**（后者只更新 CLI 本体，不动 SKILL.md 与 references）。
+`quarkclouddrive` 是官方 skill，会自行更新。升级它必须用 `bash scripts/install.sh`，**不要用 `quark-drive.cjs update`**（后者只更新 CLI 本体，不动 SKILL.md 与 references）。
 
 ---
 
@@ -43,9 +46,17 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/lib/config.mjs
 
 ---
 
-## 四、从上游升级的合并流程
+## 四、安装位置的教训（2026-10-11 事故）
 
-上游 = Windows 兄机经 `~/Documents/SynologyDrive/sync-skill/` 推过来的版本。固定三步：
+- **不要把自维护 skill 放在 `~/.trae-cn/builtin/` 下**。TRAE 客户端更新会清空 `builtin/` 目录（实测：skill + quarkclouddrive CLI 整个消失，仅 `~/.trae-cn/quark-sync-cache/` 幸存）。
+- 稳定位置：**`~/.trae-cn/skills/`**（客户端更新不碰这里）。WorkBuddy 侧同理：`~/.workbuddy/skills/`。
+- 母本永远在 SynologyDrive，本地实例丢了随时可重建（见第六节）。
+
+---
+
+## 五、从上游升级的合并流程
+
+上游 = 兄机经 `~/Documents/SynologyDrive/sync-skill/` 推过来的版本。固定三步：
 
 ```bash
 S=~/Documents/SynologyDrive/sync-skill/quark-resource-sync
@@ -77,21 +88,54 @@ done
 
 合并结束后把本机结果回写中转目录。**该目录 rsync 改名会被 Synology Drive 拦（`Operation not permitted`），一律用 `cp` 覆盖**，并排除 `config.env`、`.quarkclouddrive`、`workbuddy/`（search 缓存）。
 
+若源结构大改（如脚本统一改用 `lib/config.mjs`），全量覆盖后重跑第七节的适配清单。
+
+验证三件套：`node --check` 全部脚本 → `node scripts/lib/config.mjs` 诊断配置 → `scan-new.mjs` 实测连通。
+
 ---
 
-## 五、两端谁更新（反向同步）
+## 六、灾后重建流程（本地实例丢失时，约 10 分钟）
+
+```bash
+# 1. 复制母本
+cp -R ~/Documents/SynologyDrive/sync-skill/quark-resource-sync ~/.trae-cn/skills/
+# 2. 复制 CLI（从 WorkBuddy，登录态在客户端不受影响）
+cp -R ~/.workbuddy/skills/quarkclouddrive ~/.trae-cn/skills/
+# 3. 路径适配（见第七节清单，前缀统一改 ~/.trae-cn/skills/）
+# 4. config.env 从 WorkBuddy 继承凭据（TMDB_TOKEN/PROXY/REPO/SHARE_FID 原样，QUARK_CLI 指向新位置），chmod 600
+# 5. 验证三件套（同第五节）
+```
+
+---
+
+## 七、路径适配清单（合并 / 重建时必查）
+
+| 文件 | 要改的点 |
+|---|---|
+| `scripts/lib/config.mjs` | `CACHE` 常量 → `~/.trae-cn/quark-sync-cache`；`detectCli` 的 roots 首选 `'.trae-cn'` |
+| `SKILL.md` | 全部 `~/.workbuddy/skills/` → `~/.trae-cn/skills/`（含 Windows 示例路径）；「macOS 实测」表更新为本机实况 |
+| `references/troubleshooting.md` | CLI 路径 2 处 |
+| `scripts/install.mjs` | 默认 target、Windows 示例、config.env 继承候选路径 |
+| 脚本注释里的 CACHE 路径 | `app-batch.mjs` / `process-batch.mjs` / `trending-sync.mjs` |
+| `config.env`（自持，不从母本覆盖） | `QUARK_CLI` 指向 `~/.trae-cn/skills/quarkclouddrive/scripts/quark-drive.cjs` |
+
+替换完用 `grep -rn '\.workbuddy' <skill目录>` 终检，允许残留的只有 detectCli 回退候选与示例。
+
+---
+
+## 八、两端谁更新（反向同步）
 
 三方版本号要放在一起看：中转目录可能是**落后**的一方。
 
 | 情形 | 处理 |
 |---|---|
-| 上游 SKILL.md 版本号更高 | 按第四节合并进来 |
+| 上游 SKILL.md 版本号更高 | 按第五节合并进来 |
 | 本机更高（如 skill 官方自动升级） | 反向 `cp` 回中转目录，让另一台机拉到最新版 |
 | 版本号相同但内容不同 | 多半是多机各自改过，`diff` 后人工合并 |
 
 ---
 
-## 六、WorkBuddy 与 CodeBuddy 联建
+## 九、WorkBuddy 与 CodeBuddy 联建
 
 约定：`~/.workbuddy/skills` = 唯一真身，`~/.codebuddy/skills` = 只放符号链接。
 
@@ -106,7 +150,7 @@ done
 
 ---
 
-## 七、脚本清单（`quark-resource-sync/scripts/`）
+## 十、脚本清单（`quark-resource-sync/scripts/`）
 
 | 脚本 | 作用 |
 |---|---|
@@ -123,8 +167,8 @@ done
 
 ---
 
-## 八、相关
+## 十一、相关
 
-- 入库流程：[ingestion-workflow.md](ingestion-workflow.md)
-- 环境与路径：[environment.md](environment.md)
+- 入库流程：[workflow-入库流程.md](workflow-入库流程.md)
+- 环境与路径：[environment-环境与命令速查.md](environment-环境与命令速查.md)
 - 完整 skill 文档：`~/.workbuddy/skills/quark-resource-sync/SKILL.md`

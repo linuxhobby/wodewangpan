@@ -1,7 +1,7 @@
-# 内容硬规范
+# 内容 · 文案与素材硬规范
 
 > 写任何一条资源之前先看这篇。多数要求来自踩过的坑，而不是审美偏好。
-> 构建与 URL 相关的禁忌（改 id、改 slug、忘了构建）见 [pitfalls.md](pitfalls.md)，本篇只讲**文案与素材**。
+> 构建与 URL 相关的禁忌（改 id、改 slug、忘了构建）见 [dev-开发注意事项.md](dev-开发注意事项.md)，本篇只讲**文案**；配图单独见 [images-配图规范.md](images-配图规范.md)。
 
 ---
 
@@ -40,9 +40,11 @@ export const MIN_DESC = 300;   // 正文下限，低于会被判薄内容
 | 开头的 `【第 N 季 · 共 M 集】` | 电视剧必须有，草稿里不用写，`fill-desc.mjs` 从原文接回 |
 | 结尾的 `｜TMDB 8.5`、`｜作者：[美] xxx` | 数据署名，不能删，工具自动接回 |
 
+评分要 `toFixed(1)`：整数评分会写成 `｜TMDB 7` 而不是 `7.0`。
+
 ### 经验值
 
-一次写到「感觉够了」通常只有 **240–260 字**，离 300 还差一截。写完先算字数，不足的再补 1–2 句（约 80–110 字），比整段重写省事得多。
+一次写到「感觉够了」通常只有 **255–290 字**，离 320 还差 30–65 字——批次里往往只有极少数能一次写够。写完先本地算字数，不足的再补 1–2 句（每句 30–50 字），**补句分散在正文中间或结尾，别全堆在末尾**，比整段重写省事得多。
 
 ---
 
@@ -60,34 +62,16 @@ export const MIN_DESC = 300;   // 正文下限，低于会被判薄内容
 
 ## 三、id、编号与命名
 
-- `id` 就是 URL（`/resource/mv-046/`），**绝不能改**。编号规则见 [ingestion-workflow.md](ingestion-workflow.md)。
+- `id` 就是 URL（`/resource/mv-046/`），**绝不能改**。编号规则见 [workflow-入库流程.md](workflow-入库流程.md)。
 - 数据文件全部**英文命名**：`movie.yaml` / `tv.yaml` / `documentary.yaml` / `anime.yaml` / `game.yaml` / `software.yaml` / `ebook.yaml` / `misc.yaml` / `os.yaml`。
 - 页面标题**不带编号**，编号只用于网盘排序与资源 id。
 - 新增分类涉及站点 5 处 + skill 2 处，漏项是静默的：构建不报错，但分类页 URL 变中文、缺图海报塌成文件夹样式。清单见 skill 的「新增分类：两边都要改」。
+- `added` 带时刻（`"2026-10-11 16:30"`，要加引号），首页排序更准。
 
 ---
 
-## 四、配图
+## 四、相关
 
-- 站点卡片尺寸 **240×360**，`fit: cover` 裁切，所以**源图宽 ≥240 即达标**，不必死磕高清。
-- **真实素材优先**，自绘是最后手段（返工率极高）。图源实测结论：
-
-| 图源 | 结论 |
-|---|---|
-| `upload.wikimedia.org`（官方盒绘 / Commons 矢量 logo） | ✅ 首选，**必须带浏览器 UA**，否则 403 |
-| iTunes `artworkUrl512` | ✅ |
-| TMDB 节目海报 | ✅ |
-| simple-icons | ✅ 适合取 OS / 软件标志 |
-| Fandom | ❌ 全站超时 |
-| MobyGames | ❌ 403 |
-| 官网猜路径 | ❌ 试过了，通 |
-
-- 取英文维基官方图的标准三步：`prop=images` → `imageinfo` 取直链 → 带 UA 下载。盒绘直接 `cp`，矢量 logo 交给 `tools/icon-poster.mjs` 配品牌色。
-
----
-
-## 五、相关
-
-- 判定口径与补写工具链：[thin-content-rewrite.md](thin-content-rewrite.md)
-- 本次正在进行的进度：同上「二·补、进度记录」
-- 待办清单：[experience.md](experience.md)「四、待完成工作」
+- 判定口径与补写工具链：[archive/thin-content-薄内容补写归档.md](archive/thin-content-薄内容补写归档.md)
+- 入库完整流程：[workflow-入库流程.md](workflow-入库流程.md)
+- 待办清单：[todo-待办清单.md](todo-待办清单.md)

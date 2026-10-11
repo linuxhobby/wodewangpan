@@ -169,4 +169,7 @@ limit_req_zone $crawler_limit_key zone=crawler_limit:10m rate=6r/m;   # ≈8,600
 
 唯一遗留：`/etc/nginx/conf.d/00-crawler-limit.conf` 已改名停用，但**没有对应的仓库镜像**（因为它是空转配置，见第六节）。若日后按第六节的 per-UA 方案重建限速，记得同时放进 `deploy/` 并在 `deploy/nginx-site.conf.example` 里补上 `limit_req` 那行。
 
-另见 `README.md` 的「SEO 建议优化」小节（收录复查与优化清单）。
+## 九、相关
+
+- 收录现状与优化清单：[seo-收录与优化.md](seo-收录与优化.md)
+- 待办与优先级：[todo-待办清单.md](todo-待办清单.md)

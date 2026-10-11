@@ -1,7 +1,8 @@
-# 本机环境与命令速查
+# 环境 · 本机路径与命令速查
 
 > 换机器、重装、或者隔了几周回来忘了东西放哪儿，看这一篇。
 > **凭据的真实值一律不写进文档**，这里只记「在哪、叫什么」。
+> 最近更新：2026-10-11。
 
 ---
 
@@ -12,7 +13,7 @@
 | 站点仓库 | `/Users/marco.chan/Documents/GitHub/wodewangpan` |
 | 远端 | `git@github.com:linuxhobby/wodewangpan.git`（本机 git 身份 `linuxhobby`） |
 | 线上站点 | https://www.wodewangpan.top |
-| 资源同步 skill | `~/.workbuddy/skills/quark-resource-sync/`（v1.10 + macOS 章节） |
+| 资源同步 skill | `~/.workbuddy/skills/quark-resource-sync/`（v1.11） |
 | 夸克网盘 CLI skill | `~/.workbuddy/skills/quarkclouddrive/`（CLI 本体 `scripts/quark-drive.cjs`） |
 | 上传出链 skill | `~/.workbuddy/skills/quark-upload-share/` |
 | skill 配置（**含凭据**） | `~/.workbuddy/skills/quark-resource-sync/config.env` |
@@ -20,6 +21,8 @@
 | 双机中转目录 | `~/Documents/SynologyDrive/sync-skill/`（不含 `config.env`） |
 | CodeBuddy skill 联建脚本 | `~/.workbuddy/skills/.link-codebuddy-skills.sh` |
 | skill macOS 本地化脚本 | `~/.workbuddy/skills/.quark-macos-localize.py` |
+
+Windows 兄机对应路径：`C:\Users\marco\Github\wodewangpan`、`C:\Users\marco\.workbuddy\skills\`、`C:\Users\marco\Documents\SynologyDrive\sync-skill\`。
 
 ---
 
@@ -64,7 +67,17 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/lib/config.mjs
 # 改写好的正文放进 .tmp/desc-draft.json  →  { "id": "新正文" }
 node tools/fill-desc.mjs            # 空跑
 node tools/fill-desc.mjs --apply    # 落盘
+node tools/fill-desc.mjs --draft=.tmp/desc-draft-tv.json   # 多批并行各用各的草稿
 npm run build                       # 验收
+```
+
+### 配图
+
+```bash
+node tools/book-cover-douban.mjs --title "书名" --out static/images/bk-001.jpg
+node tools/icon-poster.mjs --icon <图标> --out static/images/app-001.png
+node tools/set-poster.mjs --title "套装名" --out static/images/bk-006.jpg
+node tools/share-poster.mjs         # 改完站点配置后重跑，刷新 static/share.jpg
 ```
 
 ### 资源同步 skill
@@ -86,13 +99,15 @@ node $S/trending-sync.mjs --dry-run --no-build --no-push
 |---|---|
 | Node（管理版） | v22.22.2，`~/.workbuddy/binaries/node/versions/22.22.2-6/bin/node` |
 | 系统 | macOS（zsh），另一台是 Windows |
-| 依赖 | `js-yaml`、`sharp`、`pinyin-pro`（**必须在 `dependencies`**，理由见 pitfalls） |
+| 依赖 | `js-yaml`、`sharp`、`pinyin-pro`（**必须在 `dependencies`**，理由见 [dev-开发注意事项.md](dev-开发注意事项.md) 第一节） |
 
 写脚本时注意：**Node 只用内置模块**，不要引入需要 npm install 的库；临时文件一律走 `os.tmpdir()`，别写死 `/tmp/`（Windows 无效）。
+
+两个 Windows 专属坑：`data/*.yaml` 是 CRLF 换行（正则匹配整块会失效，改用位置切片）；沙箱里 `spawnSync` 调 CLI 会 EBUSY（改走 bash 脚本直接调）。
 
 ---
 
 ## 五、相关
 
-- 哪些改动会翻车：[pitfalls.md](pitfalls.md)
-- 入库与 skill 用法：[ingestion-workflow.md](ingestion-workflow.md) / [skill-usage.md](skill-usage.md)
+- 哪些改动会翻车：[dev-开发注意事项.md](dev-开发注意事项.md)
+- 入库与 skill 用法：[workflow-入库流程.md](workflow-入库流程.md) / [skills-skill用法与维护.md](skills-skill用法与维护.md)

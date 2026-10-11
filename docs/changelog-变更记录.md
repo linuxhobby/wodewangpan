@@ -1,9 +1,23 @@
-# 变更记录
+# 变更 · 记录
 
-网站代码的最新修改都记在这里（原在根 README「最新修改」，2026-10-11 迁入）。
+网站代码与文档的最新修改都记在这里（原在根 README「最新修改」，2026-10-11 迁入）。
 按时间倒序，最新在最上面。
 
 ---
+
+## 2026-10-11 · `docs/` 文档体系重组，统一命名与索引
+
+13 篇经验文档重组成 11 篇 + 1 篇归档，文件名统一 `英文-中文.md`，索引与规范写进 `docs/readme.md`：
+
+| 改动 | 说明 |
+|---|---|
+| 重命名 | 全部改为 `英文-中文.md`（如 `pitfalls.md` → [dev-开发注意事项.md](dev-开发注意事项.md) 合并并入） |
+| 合并重复 | `dev-notes.md` + `pitfalls.md` → `dev-开发注意事项.md`；`seo.md` + `seo-notes.md` → [seo-收录与优化.md](seo-收录与优化.md) |
+| 拆分 | `content-rules.md` 的配图节 → [images-配图规范.md](images-配图规范.md)（补齐 README 里挂了两天的「配图经验待补」）；`experience.md` 的 skill 维护章 → [skills-skill用法与维护.md](skills-skill用法与维护.md)，待办章 → [todo-待办清单.md](todo-待办清单.md) |
+| 归档 | 已完成的 [archive/thin-content-薄内容补写归档.md](archive/thin-content-薄内容补写归档.md) 移入 `docs/archive/`，正文精简为可复用口径与工具链 |
+| 新增索引 | `docs/readme.md`：分类索引 + 命名规范 + 写什么 / 不写什么 + 维护约定 |
+| 交叉引用 | docs 内部与根 README 的链接全部同步更新 |
+
 
 ## 2026-10-11 · `docs/` 成为经验文档目录，根 README 精简
 
@@ -25,7 +39,7 @@
 | 重复样式合并 | `theme/assets/style.css` | 海报（`.tile__poster` + `.poster`）、按钮（`.btn` + `.qrbtn`）、长文本正文、四处计数后缀各自并成一条；两个 `max-width: 560px` 断点合一 |
 | 去掉 3 处 `!important` | `theme/assets/style.css` | `.foot__icp` / `.foot__stat` / `.foot__contact` 补标签名提特异性；`.foot__nav` 本是 `<nav>`，不受 `.foot p` 影响，直接去掉 |
 
-验证：`npm run build` 通过（706 个资源 · 33 个标签页）；`npm run audit:css` 三项全绿；首页 / 分类页 / 详情页 / 标签页 / 内容页 / 404 的 `<body class="page--wide">` 一致。经验已写进 [dev-notes.md](dev-notes.md)。
+验证：`npm run build` 通过（706 个资源 · 33 个标签页）；`npm run audit:css` 三项全绿；首页 / 分类页 / 详情页 / 标签页 / 内容页 / 404 的 `<body class="page--wide">` 一致。经验已写进 [dev-开发注意事项.md](dev-开发注意事项.md)。
 
 ## 2026-10-10 · 构建改为「内容未变不覆盖」，让蜘蛛能命中 304
 

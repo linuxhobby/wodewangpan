@@ -224,7 +224,7 @@ config/              # 站点配置，与资源数据分开存放
 static/
   favicon.svg        # 站点图标唯一源文件（换 logo 就改它）；构建时拷到根目录并生成 favicon.ico / apple-touch-icon.png
   share.jpg          # 首页品牌分享卡（1200×630），构建时拷到站点根目录供 og:image 用
-  images/            # 配图，文件名与资源 id 对应：<id>.jpg / .png / .webp / .svg；全部平铺在一个目录，不按分类分桶（配图经验待补，见 docs/）
+  images/            # 配图，文件名与资源 id 对应：<id>.jpg / .png / .webp / .svg；全部平铺在一个目录，不按分类分桶（图源与出图规范见 docs/images-配图规范.md）
 theme/assets/        # 前端样式与脚本，构建时拷到 public/assets/
 scripts/             # 构建 / 预览脚本（lib/ 是构建核心：读数据、出图片、渲染页面）
 tools/
@@ -236,23 +236,27 @@ tools/
   book-cover-douban.mjs  # 从豆瓣图书抓书籍封面（电子书 bk- 优先用它，配图经验待补，见 docs/）
   book-poster.mjs        # 豆瓣查无此书时，生成书封海报兜底
   set-poster.mjs         # 套装 / 合辑专用深色封面（豆瓣没有对应单册封面时用；配图经验待补，见 docs/）
-docs/                # 经验 / 注意事项 / 待办 / 总结（开发、入库、配图、skill、SEO…）都写在这里，见 docs/README.md
+docs/                # 经验 / 注意事项 / 待办 / 总结（开发、入库、配图、skill、SEO…）都写在这里，见 docs/readme.md
 deploy/              # 部署用：Nginx 配置示例、自动更新脚本、统计日志格式、搜索引擎提交脚本
 public/              # 构建产物，部署这个目录（586 条时约 17MB，不入库）
 ```
 
 ## 文档
 
-经验 / 注意事项 / 待办 / 总结都在 [`docs/`](docs/README.md)，根 README 只留「怎么把站点跑起来」。
+经验 / 注意事项 / 待办 / 总结都在 [`docs/`](docs/readme.md)，根 README 只留「怎么把站点跑起来」。
 
 | 文档 | 内容 |
 |---|---|
-| [`docs/dev-notes.md`](docs/dev-notes.md) | 开发注意事项：改代码前必读 |
-| [`docs/seo.md`](docs/seo.md) | SEO 收录现状、优化建议与待办 |
-| [`docs/changelog.md`](docs/changelog.md) | 变更记录（最新修改） |
-| [`docs/thin-content-rewrite.md`](docs/thin-content-rewrite.md) | 薄内容简介补写：流程、要求、验收 |
+| [`docs/dev-开发注意事项.md`](docs/dev-开发注意事项.md) | 开发注意事项：改代码前必读 |
+| [`docs/workflow-入库流程.md`](docs/workflow-入库流程.md) | 入库 SOP：八步流程、编号与 id 对照、合集拆分 |
+| [`docs/content-内容规范.md`](docs/content-内容规范.md) / [`images-配图规范.md`](docs/images-配图规范.md) | 简介写法红线 / 配图图源与出图 |
+| [`docs/seo-收录与优化.md`](docs/seo-收录与优化.md) | SEO 收录现状、优化建议与待办 |
+| [`docs/todo-待办清单.md`](docs/todo-待办清单.md) | 已知欠账与下一步 |
+| [`docs/changelog-变更记录.md`](docs/changelog-变更记录.md) | 变更记录（最新修改） |
 
-开发注意事项四条要点（全文见 [`docs/dev-notes.md`](docs/dev-notes.md)）：
+完整索引与文档规范见 [`docs/readme.md`](docs/readme.md)。
+
+开发注意事项四条要点（全文见 [`docs/dev-开发注意事项.md`](docs/dev-开发注意事项.md)）：
 
 1. **页面宽度只有一个开关**：`layout()` 的 `wide` 默认 `true`，档位由 `<body class="page--wide">` + `--page-max` 一处决定；新区块用现成的 `.wrap`，别再造 `.xxx--wide` 变体
 2. **样式只有一份来源**：只写 `theme/assets/style.css`，数值一律走 `:root` 令牌，同一视觉只定义一次，少用 `!important`

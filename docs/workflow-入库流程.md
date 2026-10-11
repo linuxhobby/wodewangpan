@@ -1,8 +1,8 @@
-# 入库标准流程
+# 入库 · 标准流程
 
 从「网盘里多了东西」到「站点上线」的完整链路。本文是**给执行者看的 SOP**，详细配额表与分类清单以 skill 自身文档为准。
 
-> 前置：`~/.workbuddy/skills/quark-resource-sync/`（v1.10）。环境见 [environment.md](environment.md)，内容规范见 [content-rules.md](content-rules.md)。
+> 前置：`~/.workbuddy/skills/quark-resource-sync/`（v1.11）。环境见 [environment-环境与命令速查.md](environment-环境与命令速查.md)，内容规范见 [content-内容规范.md](content-内容规范.md)，配图见 [images-配图规范.md](images-配图规范.md)。
 
 ---
 
@@ -62,7 +62,7 @@ node ~/.workbuddy/skills/quarkclouddrive/scripts/quark-drive.cjs share "<新 FID
 node ~/.workbuddy/skills/quark-resource-sync/scripts/tmdb.mjs search --type movie --query "片名"
 ```
 
-TMDB 走 `api.tmdb.org`（`api.themoviedb.org` 本机可能被劫持），代理优先、失败自动直连。海报 CDN 连不上时改用豆瓣图源。
+TMDB 走 `api.tmdb.org`（`api.themoviedb.org` 本机可能被劫持），代理优先、失败自动直连。海报 CDN 连不上时改用豆瓣图源（见 [images-配图规范.md](images-配图规范.md)）。
 
 ### 6. 写入数据
 
@@ -70,7 +70,7 @@ TMDB 走 `api.tmdb.org`（`api.themoviedb.org` 本机可能被劫持），代理
 node ~/.workbuddy/skills/quark-resource-sync/scripts/make-entry.mjs --data '{...}'
 ```
 
-简介按 [content-rules.md](content-rules.md) 写，不要照抄 TMDB 原文。
+简介按 [content-内容规范.md](content-内容规范.md) 写，不要照抄 TMDB 原文。
 
 ### 7. 构建 + 冒烟
 
@@ -82,6 +82,8 @@ npm run serve        # 抽查详情页
 ### 8. 提交并推送
 
 推 `main` 后 VPS 每 2 小时自动拉取重建，急发用 `FORCE=1 site-autoupdate`。
+
+推送前先 `git status` 查有没有其他会话的未提交改动，**只 `git add` 自己那几个文件**，别 `git add -A`。
 
 ---
 
@@ -104,7 +106,24 @@ npm run serve        # 抽查详情页
 
 ---
 
-## 四、反向流程：TMDB 热门自动入库
+## 四、合集拆分（一个目录拆成多条）
+
+网盘里一个「XX 合集」目录装着整系列时，拆成独立条目再入库。规则：
+
+1. **原目录留第一部**并改名（`025-速度与激情合集` → `025-速度与激情1`）。
+2. 其余各集在**该分类目录下新建编号目录**，编号从当前最大值 +1 往后排。
+3. 字幕等附属文件随正片一起移。
+4. 外传 / 特别篇单独一个目录，不并入正传编号序列。
+5. 顺序严格走 **rename → create-folder → move → share**：改名会让旧链接作废，出链必须放最后。
+6. 站点侧：原 id 就地改写成第一部，其余按新编号新增。
+
+详细命令与验收清单见 skill 的「合集拆分」章节（`~/.workbuddy/skills/quark-resource-sync/SKILL.md`）。
+
+> 实操案例（2026-10-11）：`025-速度与激情合集` 拆成 11 个目录（mv-025 改第一部 + mv-337~346），见 [changelog-变更记录.md](changelog-变更记录.md)。
+
+---
+
+## 五、反向流程：TMDB 热门自动入库
 
 `trending-sync.mjs` 从 TMDB 今日热门取电影 / 电视剧各 1 部，在网盘对应分类建编号目录 → 出链 → 入库 → 推送。
 
@@ -116,8 +135,9 @@ node scripts/trending-sync.mjs --dry-run --no-build --no-push   # 先看会做�
 
 ---
 
-## 五、相关
+## 六、相关
 
 - skill 本身的完整文档：`~/.workbuddy/skills/quark-resource-sync/SKILL.md`
-- skill 的维护与升级：[skill-usage.md](skill-usage.md)
-- 改动禁忌：[pitfalls.md](pitfalls.md)
+- skill 的维护与升级：[skills-skill用法与维护.md](skills-skill用法与维护.md)
+- 改动禁忌：[dev-开发注意事项.md](dev-开发注意事项.md)
+- 待办与优先级：[todo-待办清单.md](todo-待办清单.md)
