@@ -11,8 +11,6 @@ import {
   categorySlug,
   syncHeaderCounts,
   clipDesc,
-  bodyLength,
-  MIN_DESC,
   collectTags,
   tagSlug,
   setSlugFallback,
@@ -505,14 +503,10 @@ if (fs.existsSync(qqGroupSrc)) {
  */
 {
   const warns = [];
-  // 正文过短：与 tools/list-short-desc.mjs 同一口径同一阈值，两个数字能直接对上
-  const thin = items.filter((it) => bodyLength(it.description) < MIN_DESC).length;
-  if (thin) {
-    warns.push(
-      `${thin}/${total} 条资源正文不足 ${MIN_DESC} 字，详情页易被判薄内容（npm run list:short 看明细）`
-    );
-  }
-  if (!site.icp) warns.push('config/site.yaml 未填 icp：大陆访问的站点没有备案号会影响信任度与百度收录');
+  // 这里原本还检查两项，都是「有专门命令管、却每次构建都跟着报」的重复提醒，2026-10-11 去掉：
+  //   · 正文过短 → 专项检查是 npm run list:short（同一口径同一阈值，还能 --cat 细分）
+  //   · 未填备案号 icp → 站点在境外节点、不打算备案，这条永远不会被处理
+  // 构建只保留「肉眼完全看不见、又没有别的命令管」的问题。
   if (missing) warns.push(`${missing} 条资源缺配图，详情页结构化数据与图片 sitemap 里都没有图`);
   // 拼音兜底没生效时（没装 pinyin-pro），新增标签的 URL 会退化成
   // /tag/%E5%89%A7%E6%83%85/ 这种编码形式。页面照常能打开，肉眼发现不了
