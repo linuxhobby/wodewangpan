@@ -149,6 +149,8 @@ a:hover { text-decoration: underline; }
 /* ── 列表页 ──────────────────────────── */
 .page__title { font-size: var(--fs-xl); margin: 16px 0 12px; display: flex; align-items: baseline; gap: 8px; }
 .page__n { font-size: var(--fs-sm); font-weight: 400; color: var(--muted); }
+/* 首页 H1 比分类页高半档：下面还有一排分类区块标题，同级会分不清主次 */
+.page__title--home { font-size: var(--fs-h2); }
 
 /* 海报宫格：等宽自适应列，列宽由 --tile-w 决定（详情页海报复用同一个值） */
 .grid {
@@ -160,6 +162,21 @@ a:hover { text-decoration: underline; }
   padding: 0;
 }
 .tile-item { display: block; }
+
+/* ── 首页分类区块 ───────────────────────
+   首页按分类分区，每类一行海报 + 一个通往分类页的入口。
+   每类固定输出 PC 一行（5 张），窄屏由下面的断点按当前列数藏掉多出来的几张，
+   这样任何屏宽下每个区块都是整行整行地出现，不留半行零头。 */
+.home-cat { margin-top: 26px; }
+.home-cat:first-child { margin-top: 6px; }
+.home-cat__head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+.home-cat__title { font-size: var(--fs-xl); margin: 0; }
+.home-cat__title a { color: var(--text); }
+.home-cat__title a:hover { color: var(--brand); text-decoration: none; }
+.home-cat__n { font-size: var(--fs-sm); color: var(--muted); }
+.home-cat__more { margin-left: auto; font-size: var(--fs-base); white-space: nowrap; }
+/* 兜底入口：首页只剩每类几条，想翻全站的人从这里去 /all/ */
+.home-all { margin: 26px 0 4px; }
 
 /* ── 末行零头 ──────────────────────────
    列表页/首页可以接受末行不满（本来就可能有几十条），但详情页「相关推荐」只有
@@ -230,9 +247,27 @@ mark {
 }
 .tag--cat { color: var(--brand); background: var(--brand-soft); font-weight: 600; flex: 0 0 auto; }
 .tag--plain { background: transparent; color: var(--muted); }
+a.tag { color: var(--brand); text-decoration: none; }
+a.tag:hover { background: var(--brand-soft); }
+
+/* 热门标签云：标签页之间互链用，也是 /all/ 页进入标签体系的入口 */
+.tagcloud { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.tag__n { margin-left: 5px; font-size: var(--fs-sm); color: var(--muted); }
 
 .empty { padding: 40px 0; text-align: center; color: var(--muted); }
 .muted { color: var(--muted); }
+
+/* ── 无 JS 时的全量索引（<noscript>） ──────
+   列表页首屏之外靠「加载更多」补齐，禁用 JS 时只剩这份纯链接清单。
+   它同时是不执行 JS 的爬虫走完全部详情页的通道，所以不能只是「能看」，
+   得排得整齐：两列栅格，链接本身带整行点击区。 */
+.ns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 18px; margin: 0; padding: 0; list-style: none; }
+.ns__h { font-size: var(--fs-h2); margin: 26px 0 12px; }
+/* 首页那份清单按分类分组，分类小标题比总标题矮一档 */
+.ns__cat { font-size: var(--fs-lg); margin: 18px 0 8px; }
+.ns a { display: block; padding: 5px 0; color: var(--brand); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ns a:hover { text-decoration: underline; }
+@media (max-width: 560px) { .ns { grid-template-columns: 1fr; } }
 
 /* ── 内容页（关于本站 / RSS 订阅） ────── */
 .card-page {
@@ -442,16 +477,22 @@ mark {
    宫格卡片与详情页海报宽度会自动跟着变 */
 @media (max-width: 1000px) {
   :root { --cols: 4; }
+  /* 首页每类只留一行：4 列屏藏掉第 5 张及以后 */
+  .home-cat__grid > .tile-item:nth-child(n+5) { display: none; }
   .grid--fit > .tile-item:nth-child(4n+1):nth-last-child(-n+3),
   .grid--fit > .tile-item:nth-child(4n+1):nth-last-child(-n+3) ~ .tile-item { display: none; }
 }
 @media (max-width: 820px) {
   :root { --cols: 3; --gap-x: 10px; --gap-y: 14px; }
+  /* 3 列屏留 3 张（后面两条断点同样向下覆盖，越窄藏得越多） */
+  .home-cat__grid > .tile-item:nth-child(n+4) { display: none; }
   .grid--fit > .tile-item:nth-child(3n+1):nth-last-child(-n+2),
   .grid--fit > .tile-item:nth-child(3n+1):nth-last-child(-n+2) ~ .tile-item { display: none; }
 }
 @media (max-width: 480px) {
   :root { --cols: 2; }
+  /* 2 列屏留 2 张 */
+  .home-cat__grid > .tile-item:nth-child(n+3) { display: none; }
   .grid--fit > .tile-item:nth-child(2n+1):nth-last-child(-n+1),
   .grid--fit > .tile-item:nth-child(2n+1):nth-last-child(-n+1) ~ .tile-item { display: none; }
 }
@@ -460,7 +501,9 @@ mark {
    不需要再写一堆逐个元素的覆盖，避免漏改 */
 @media (max-width: 640px) {
   :root {
-    --fs-brand: 16px;
+    /* 站名不再跟着缩到 16px（和正文同档，太小、撑不起品牌）：
+       降到 20px 与移动端主标题同档，腾空间的活交给下面的 logo 与搜索框 */
+    --fs-brand: 20px;
     --fs-h1: 20px;
     --fs-h2: 18px;
     --fs-lg: 15px;
@@ -471,5 +514,9 @@ mark {
   .poster { width: 150px; }
   .qrbox { flex: 1; width: auto; }
   .linkrow__url { flex-basis: 100%; }
-  .top__search { max-width: 180px; }
+  /* 顶栏横着挤三样东西（logo + 站名 + 搜索框），390px 屏只有 358px 可用。
+     站名放大到 20px 后，靠这两处把空间还回来：logo 34→28，搜索框 180→150。
+     算下来站名还有约 150px，6～7 个汉字放得下，不必给品牌名加省略号 */
+  .top__logo { width: 28px; height: 28px; margin-right: 8px; vertical-align: -5px; }
+  .top__search { max-width: 150px; }
 }

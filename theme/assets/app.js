@@ -11,11 +11,11 @@ import { esc, tileHtml } from './card.js';
   var TOTAL = parseInt(dataEl && dataEl.getAttribute('data-total'), 10) || items.length;
   var CAT = (dataEl && dataEl.getAttribute('data-category')) || '';
   var listEl = document.getElementById('list');
+  // 首页按分类分区，整块容器是 #home（里面没有 #list，也没有「加载更多」）
+  var homeEl = document.getElementById('home');
   var moreEl = document.getElementById('more');
   var input = document.getElementById('q');
   var resultsEl = document.getElementById('results');
-  // 「最新」角标条数由构建端注入（list-data 的 data-newest），避免两边各写一个数字
-  var NEWEST = parseInt(dataEl && dataEl.getAttribute('data-newest'), 10) || 0;
   var PAGE = parseInt(moreEl && moreEl.getAttribute('data-page-size'), 10) || 36;
   var MAX_HITS = 120;
   var shown = PAGE;
@@ -59,8 +59,17 @@ import { esc, tileHtml } from './card.js';
     items = CAT ? globalIndex.filter(function (it) { return it.category === CAT; }) : globalIndex;
   }
 
+  /** 搜索时把「可浏览的列表」整块藏起来：分类页是 #list，分组首页是 #home */
+  function setBrowseHidden(hidden) {
+    if (homeEl) homeEl.hidden = hidden;
+    if (listEl) listEl.hidden = hidden;
+  }
+
   function paint() {
-    listEl.innerHTML = items.slice(0, shown).map(function (it, i) { return tileOf(it, '', i < NEWEST); }).join('');
+    // 分组首页没有 #list（也没有「加载更多」），只有搜索功能用得上
+    if (!listEl) return;
+    // isNew 由构建端按「当天入库」算好写进索引，浏览器算不出来（索引里没有 added 字段）
+    listEl.innerHTML = items.slice(0, shown).map(function (it) { return tileOf(it, '', it.isNew); }).join('');
     if (moreEl) {
       moreEl.hidden = shown >= TOTAL;
       moreEl.textContent = '加载更多（剩余 ' + (TOTAL - shown) + '）';
@@ -126,17 +135,17 @@ import { esc, tileHtml } from './card.js';
     if (!hits) {
       resultsEl.hidden = true;
       resultsEl.innerHTML = '';
-      listEl.hidden = false;
+      setBrowseHidden(false);
       if (moreEl) moreEl.hidden = shown >= TOTAL;
       return;
     }
-    listEl.hidden = true;
+    setBrowseHidden(true);
     if (moreEl) moreEl.hidden = true;
     resultsEl.hidden = false;
     var tokens = q.toLowerCase().split(/\s+/);
     resultsEl.innerHTML = hits.length
       ? '<div class="results__hint">找到 ' + hits.length + ' 个资源（按相关度排序）</div>' +
-        '<ul class="grid">' + hits.map(function (it) { return tileOf(it, highlight(it.title, tokens)); }).join('') + '</ul>'
+        '<ul class="grid">' + hits.map(function (it) { return tileOf(it, highlight(it.title, tokens), it.isNew); }).join('') + '</ul>'
       : '<p class="empty">没有匹配「' + esc(q) + '」的资源，试试更短的关键词或拼音首字母</p>';
   }
 

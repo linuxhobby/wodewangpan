@@ -6,8 +6,24 @@ description: 夸克 / 百度网盘资源索引，打开即用，扫码即存
 # 首页 SEO 文案（可选，不填则回退用站名与站描述）；{total} = 资源总数，{categories} = 分类列表
 homeTitle: 我的网盘资源站 - 夸克/百度网盘资源索引        # 首页 title，构建时自动追加「（396 项）」
 homeDesc: 夸克 / 百度网盘资源索引，收录 {total} 个{categories}资源，打开即用，扫码即存
-homeH1: 网盘资源索引 · 全部资源                        # 首页 H1（分类页仍用分类名）
+homeH1: 网盘资源索引 · 分类浏览                        # 首页 H1（分类页仍用分类名）
+# 首页按分类分区展示。homePerCategory = 每个分类给几条（PC 端宫格 5 列，5 条正好一行；
+#   窄屏由 CSS 按当前列数自动减到 4/3/2 条，不必为移动端再配一个数）。
+# homeCatOrder = 分类区块的排列顺序：
+#   fixed  —— 按下面 categories 的顺序，回访用户每次进来位置一致（默认）；
+#   recent —— 按各分类最新一条的入库时间倒序，进了新货的分类自动上浮，但位置会天天变。
+homePerCategory: 5
+homeCatOrder: fixed
 disclaimer: 本站仅提供网盘资源索引，所有文件均存放于第三方网盘，版权归原作者所有，如有侵权请联系删除
+# 站长平台验证（可选）：填了就在每个页面的 <head> 输出对应的验证 meta。
+# 不填则不输出任何标签；某一家还没验证就删掉那行，别留空值。
+# 用法：在对应站长平台添加站点 → 选「HTML 标签」验证方式 → 把 content 里的那串码粘到下面。
+verification:
+#  google: 粘贴 google-site-verification 的 content        # Google Search Console
+#  bing: 粘贴 msvalidate.01 的 content                     # Bing Webmaster（配合 IndexNow 用）
+#  baidu: 粘贴 baidu-site-verification 的 content          # 百度站长平台
+#  360: 粘贴 360-site-verification 的 content              # 360 搜索站长
+#  sogou: 粘贴 sogou_site_verification 的 content          # 搜狗站长
 # 分类标签栏顺序（未在此列出的分类会追加在后面）
 categories:
   - 电影
@@ -31,6 +47,7 @@ slugs:
   操作系统: os
   电子书: ebook
   其他: misc
+# 标签聚合页配置（tagMin / tagExclude / tagOverlap* / tagSlugs）在同目录的 tags.yaml
 # 页脚访问统计：local = 本地统计（VPS 解析 nginx 日志生成 /stats.json，不依赖第三方）；
 #              留空则不显示
 stats: local

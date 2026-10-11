@@ -1,9 +1,12 @@
-import { categorySlug } from './data.js';
+import { categorySlug, tagSlug, tagKey } from './data.js';
 // 卡片模板与浏览器端（theme/assets/app.js）共用同一份：改结构两边同步生效
 import { esc, tileHtml } from '../../theme/assets/card.js';
 
-/** 列表最前面多少条打「最新」角标 */
-const NEWEST_BADGE = 6;
+/**
+ * 「最新」角标的判定不在渲染层做：build.js 用 newestIdsOf() 按构建当天（北京时间）
+ * 算出一批 id，通过 ctx.newestIds 传进来。首页、分类页、搜索索引共用同一份，
+ * 不会出现两个页面各判一套、标得不一样的情况。
+ */
 
 /** 页脚访问统计（site.yaml 里 stats: local 时启用）：读取 VPS 上由 nginx 日志生成的 /stats.json，不依赖任何第三方。
  *  同时种一年期 vid cookie 供服务端区分访客；接口不可用时数字保持占位符，不影响页面 */
@@ -149,6 +152,10 @@ export function catHref(category) {
 export function catFeedHref(category) {
   return `${catHref(category)}feed.xml`;
 }
+/** 标签聚合页链接：slug 由 tagSlug() 决定，与生成页面时用的是同一个函数 */
+export function tagHref(tag) {
+  return `/tag/${encodeURIComponent(tagSlug(tag))}/`;
+}
 
 function catNav(categories, counts, activeCat, total, wide) {
   const items = [
@@ -161,8 +168,34 @@ function catNav(categories, counts, activeCat, total, wide) {
   return `<nav class="cats${wide ? ' cats--wide' : ''}" aria-label="分类">${items.join('')}</nav>`;
 }
 
-/** 分类 → schema.org 类型，帮助搜索引擎理解资源类型 */
-const SCHEMA_TYPE = { 电影: 'Movie', 电视剧: 'TVSeries', 纪录片: 'TVSeries' };
+/**
+ * 分类 → schema.org 类型，帮助搜索引擎理解资源类型。
+ * 没列出的分类落到 CreativeWork——猜错类型比不标更糟（比如把软件标成 Movie）。
+ */
+const SCHEMA_TYPE = {
+  电影: 'Movie',
+  电视剧: 'TVSeries',
+  纪录片: 'TVSeries',
+  动漫: 'Animation',
+  游戏: 'VideoGame',
+  软件: 'SoftwareApplication',
+  电子书: 'Book',
+};
+
+/**
+ * 详情页 title 后缀：按分类带一个需求词。
+ * 只写资源名的话，只有已经知道这部片的人会点；加上「网盘资源」才能接到
+ * 「片名 + 网盘 / 下载」这类长尾搜索——这类词才是本站真正的流量来源。
+ */
+const TITLE_SUFFIX = {
+  电影: '电影网盘资源',
+  电视剧: '电视剧网盘资源',
+  纪录片: '纪录片网盘资源',
+  动漫: '动漫网盘资源',
+  游戏: '游戏网盘下载',
+  软件: '软件网盘下载',
+  电子书: '电子书网盘下载',
+};
 
 /** 结构化数据里最多列多少条：全量链接由正文的 <a> 给蜘蛛，这里只给个概览 */
 const JSONLD_ITEMS = 30;
@@ -204,6 +237,41 @@ function collectionPageJsonLd({ baseUrl, path, name, items }) {
 
 function jsonLdBlock(data) {
   return `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
+}
+
+/**
+ * 站长平台验证 meta 的 name 由各家自己定，Bing 甚至不叫 bing-site-verification，
+ * 手拼极易写错（写错等于没验证，页面照常打开，看不出问题），所以按引擎名固定映射。
+ * 表里没有的引擎退化为 <引擎名>-site-verification，方便以后直接加新平台。
+ */
+const VERIFICATION_META = {
+  google: 'google-site-verification',
+  bing: 'msvalidate.01',
+  baidu: 'baidu-site-verification',
+  '360': '360-site-verification',
+  sogou: 'sogou_site_verification',
+  shenma: 'shenma-site-verification',
+  bytedance: 'bytedance-verification-code',
+  yandex: 'yandex-verification',
+};
+
+/**
+ * site.verification: { google: 'xxx', baidu: 'yyy' } → 对应的 <meta> 串。
+ * 未配置或值为空时返回空串，不往页面里塞空标签。
+ */
+function verificationMeta(site) {
+  const conf = site.verification;
+  if (!conf || typeof conf !== 'object') return '';
+  const tags = Object.entries(conf)
+    .map(([engine, token]) => {
+      const content = String(token ?? '').trim();
+      if (!content) return '';
+      const key = String(engine).trim().toLowerCase();
+      const name = VERIFICATION_META[key] || `${key}-site-verification`;
+      return `<meta name="${esc(name)}" content="${esc(content)}">`;
+    })
+    .filter(Boolean);
+  return tags.length ? `${tags.join('\n')}\n` : '';
 }
 
 function layout({
@@ -255,7 +323,7 @@ ${
 }<title>${esc(fullTitle)}</title>
 <meta name="description" content="${esc(description || site.description)}">
 ${keywords ? `<meta name="keywords" content="${esc(keywords)}">\n` : ''}<meta name="robots" content="${noindex ? 'noindex,follow' : 'index,follow'}">
-<link rel="canonical" href="${esc(canonical)}">
+${verificationMeta(site)}<link rel="canonical" href="${esc(canonical)}">
 <meta name="theme-color" content="#4B3FE3">
 <meta property="og:type" content="${esc(ogType)}">
 <meta property="og:site_name" content="${esc(site.title)}">
@@ -312,75 +380,192 @@ function cardHtml(item, images, isNew = false, eager = false) {
   });
 }
 
-export function listPage(ctx) {
-  const { site, items, categories, activeCat, total, pageSize, images, baseUrl, indexAll, shareImage } = ctx;
-  const first = items.slice(0, pageSize);
+/** 首页每个分类展示的条数：PC 端宫格 5 列，取 5 正好排满一行 */
+const HOME_PER_CAT = 5;
+
+/**
+ * 首页分类区块：按分类切组，每组只留最新的 perCat 条。
+ *
+ * 顺序两种：
+ *   fixed  —— 用 site.yaml 的 categories 顺序，回访的用户每次进来位置一致；
+ *   recent —— 按各分类最新一条的入库时间倒序，进了新货的分类自动上浮，代价是位置会变。
+ */
+function homeGroups(items, categories, byCat, perCat, order) {
+  const pool = byCat || new Map();
+  const groups = (categories || [])
+    .map((cat) => {
+      // byCat 由 build.js 传入；万一没传，就地按 items 分组，不至于渲染出一个空白首页
+      const list = pool.get(cat) || (items || []).filter((it) => it.category === cat);
+      return { cat, list, shown: list.slice(0, perCat) };
+    })
+    .filter((g) => g.shown.length);
+  if (order !== 'recent') return groups;
+  // items 已按入库时刻降序，每组的第 0 条就是该分类最新的一条
+  const key = (g) => (g.list[0] && g.list[0].sortKey) || '';
+  return groups.sort((a, b) => (key(a) < key(b) ? 1 : key(a) > key(b) ? -1 : 0));
+}
+
+/**
+ * 首页无 JS 时的纯链接清单：把卡片之外剩下的资源按分类列全。
+ *
+ * 抓取盲区补偿：首页卡片现在只有「分类数 × 每类几条」这么多，不执行 JS 的爬虫
+ * （百度、各种社交 / AI 抓取器）走到首页就只能看见这几个入口。这份清单让它们照旧
+ * 能从首页走完全部详情页——不能只靠 /all/：首页权重最高，首页到详情页不该依赖 JS。
+ */
+function noscriptHome(groups) {
+  const rest = groups
+    .map((g) => ({ cat: g.cat, list: g.list.slice(g.shown.length) }))
+    .filter((g) => g.list.length);
+  if (!rest.length) return '';
+  const n = rest.reduce((sum, g) => sum + g.list.length, 0);
+  return `<noscript>
+<h2 class="ns__h">更多资源索引（${n} 个）</h2>
+${rest
+  .map(
+    (g) => `<h3 class="ns__cat">${esc(g.cat)}<span class="muted"> · ${g.list.length} 个</span></h3>
+<ul class="ns">${g.list.map((it) => `<li><a href="${itemHref(it.id)}">${esc(it.title)}</a></li>`).join('')}</ul>`
+  )
+  .join('\n')}
+</noscript>`;
+}
+
+/**
+ * 列表页内联索引：搜索的兜底数据（断网或还没预取到 search-index.json 时也能搜）。
+ * 只内联前两屏，剩余按需异步补齐，避免 HTML 过大导致抓取超时。
+ * 每条上的 isNew 由构建端按「当天入库」算好，前端直接读，不必再传一个「前几条算新」的数字。
+ */
+function listDataScript({ indexAll, activeCat, pageSize }) {
+  const indexData = (indexAll || []).filter((it) => !activeCat || it.category === activeCat);
+  return `<script type="application/json" id="list-data" data-total="${indexData.length}" data-category="${esc(activeCat)}">${JSON.stringify(indexData.slice(0, pageSize * 2)).replace(/</g, '\\u003c')}</script>`;
+}
+
+/**
+ * 首页：按分类分区，每个分类给出最新几条 + 一个通往分类页的「查看全部」。
+ *
+ * 为什么不再是一条按入库时间排下来的大列表：电影这类大分类（几百条）几乎占满首屏，
+ * 动漫 / 操作系统这些小分类永远沉在下面露不出来。分区之后每个分类在首页都有固定席位，
+ * 任何一类进了新货，当天就能在首页看到——顺带也给了每个分类页一条首页内链。
+ */
+function homePage(ctx) {
+  const { site, items, categories, total, pageSize, images, baseUrl, indexAll, shareImage, byCat } = ctx;
   // 首页 SEO 文案取自 site.yaml 的 homeTitle / homeDesc / homeH1，占位符 {total}、{categories}
-  const catList = (categories || []).join('、');
   const homeTitle = site.homeTitle || site.title;
   const homeDesc = String(site.homeDesc || site.description)
     .replace(/\{total\}/g, total)
-    .replace(/\{categories\}/g, catList);
+    .replace(/\{categories\}/g, (categories || []).join('、'));
   const homeH1 = site.homeH1 || '全部资源';
-  const newestCount = Math.min(NEWEST_BADGE, items.length);
-  const indexData = (indexAll || [])
-    .filter((it) => !activeCat || it.category === activeCat)
-    .map((it, i) => ({ ...it, isNew: i < newestCount }));
 
-  const heading = activeCat
-    ? `<h1 class="page__title">${esc(activeCat)}<span class="page__n">${items.length} 个资源</span></h1>`
-    : `<h1 class="page__title">${esc(homeH1)}<span class="page__n">${total} 个资源</span></h1>`;
+  const perCat =
+    Number(site.homePerCategory) > 0 ? Math.floor(Number(site.homePerCategory)) : HOME_PER_CAT;
+  const groups = homeGroups(items, categories, byCat, perCat, site.homeCatOrder);
+  // 「最新」角标用构建端算好的那一批：今天入库的落在哪个分类就标在哪张卡上
+  const newestIds = ctx.newestIds || new Set();
+  const shown = groups.flatMap((g) => g.shown);
+  const firstImg = (images.get(shown[0] && shown[0].id) || {}).card || '';
 
-  const canonicalPath = activeCat ? catHref(activeCat) : '/';
-  const firstImg = (images.get(items[0]?.id) || {}).card || '';
+  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span></h1>
+<div id="results" class="results" hidden></div>
+<div id="home">
+${groups
+    .map(
+      (g, gi) => `<section class="home-cat">
+  <div class="home-cat__head">
+    <h2 class="home-cat__title"><a href="${catHref(g.cat)}">${esc(g.cat)}</a></h2>
+    <span class="home-cat__n">${g.list.length} 个</span>
+    <a class="home-cat__more" href="${catHref(g.cat)}">查看全部 →</a>
+  </div>
+  <ul class="grid home-cat__grid">
+${g.shown.map((it, i) => cardHtml(it, images, newestIds.has(it.id), gi === 0 && i < 5)).join('\n')}
+  </ul>
+</section>`
+    )
+    .join('\n')}
+  <p class="home-all"><a class="btn btn--more" href="/all/">查看全部 ${total} 个资源 →</a></p>
+</div>
+${noscriptHome(groups)}
+${listDataScript({ indexAll, activeCat: '', pageSize })}`;
 
-  // 结构化数据：站点 + 当前列表
-  // 注意：不要再加 SearchAction（站点链接搜索框）——Google 已于 2024-11-21 下线该富媒体结果，
-  // 而且它的 urlTemplate `/?q=` 已被 robots.txt 屏蔽，留着是互相矛盾的死标记。
-  // WebSite 本身要保留：Google 的「网站名称」功能仍读它（要求 name + url）。
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      websiteJsonLd(baseUrl, site),
-      collectionPageJsonLd({
-        baseUrl,
-        path: canonicalPath,
-        name: activeCat ? `${activeCat} - ${site.title}` : homeTitle,
-        items,
-      }),
-    ],
+  return {
+    title: `${homeTitle}（${total} 项）`,
+    description: homeDesc,
+    body,
+    wide: true,
+    canonicalPath: '/',
+    ogImage: shareImage || firstImg,
+    ogImageSize: shareImage ? { w: 1200, h: 630 } : null,
+    // 结构化数据只列首页真渲染出来的卡片：分组后首页展示的就是这几十条，
+    // 标成全量条数反而与页面上看到的内容不符
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        websiteJsonLd(baseUrl, site),
+        collectionPageJsonLd({ baseUrl, path: '/', name: homeTitle, items: shown }),
+      ],
+    },
+    keywords: (categories || []).join(','),
+    rssHref: '/feed.xml',
   };
+}
 
-  // 列表数据：只内联前两屏（够首屏 + 一次「加载更多」），剩余按需异步补齐，避免 HTML 过大导致抓取超时
-  const body = `${heading}
+/** 分类页：单条按入库时间排下来的列表 + 「加载更多」（首页分区后不再走这里） */
+function catPage(ctx) {
+  const { site, items, activeCat, pageSize, images, baseUrl, indexAll } = ctx;
+  const newestIds = ctx.newestIds || new Set();
+  const firstImg = (images.get(items[0] && items[0].id) || {}).card || '';
+
+  const restLinks = items.slice(pageSize);
+  const noscriptIndex = restLinks.length
+    ? `<noscript>
+<h2 class="ns__h">${esc(activeCat)}资源索引（共 ${items.length} 个）</h2>
+<ul class="ns">${restLinks
+      .map((it) => `<li><a href="${itemHref(it.id)}">${esc(it.title)}</a></li>`)
+      .join('')}</ul>
+</noscript>`
+    : '';
+  const body = `<h1 class="page__title">${esc(activeCat)}<span class="page__n">${items.length} 个资源</span></h1>
 <div id="results" class="results" hidden></div>
 <ul id="list" class="grid">
-${first.map((it, i) => cardHtml(it, images, i < newestCount, i < 5)).join('\n')}
+${items.slice(0, pageSize).map((it, i) => cardHtml(it, images, newestIds.has(it.id), i < 5)).join('\n')}
 </ul>
 ${
   items.length > pageSize
     ? `<button id="more" class="btn btn--more" type="button" data-page-size="${pageSize}">加载更多（剩余 ${items.length - pageSize}）</button>`
     : ''
 }
+${noscriptIndex}
 ${items.length === 0 ? '<p class="empty">该分类下暂无资源</p>' : ''}
-<!-- data-newest：「最新」角标条数，由构建端注入，app.js 不再自己写死这个数 -->
-<script type="application/json" id="list-data" data-total="${indexData.length}" data-category="${esc(activeCat)}" data-newest="${newestCount}">${JSON.stringify(indexData.slice(0, pageSize * 2)).replace(/</g, '\\u003c')}</script>`;
+${listDataScript({ indexAll, activeCat, pageSize })}`;
 
-  return layout({
-    ...ctx,
-    title: activeCat || `${homeTitle}（${total} 项）`,
-    description: activeCat
-      ? `${activeCat}资源合集，共 ${items.length} 个，夸克网盘链接，扫码即存`
-      : homeDesc,
+  return {
+    title: activeCat,
+    description: `${activeCat}资源合集，共 ${items.length} 个，夸克网盘链接，扫码即存`,
     body,
     wide: true,
-    canonicalPath,
-    ogImage: activeCat ? firstImg : shareImage || firstImg,
-    ogImageSize: activeCat || !shareImage ? null : { w: 1200, h: 630 },
-    jsonLd,
-    keywords: activeCat ? `${activeCat},${activeCat}资源` : categories.join(','),
-    rssHref: activeCat ? catFeedHref(activeCat) : '/feed.xml',
-  });
+    canonicalPath: catHref(activeCat),
+    ogImage: firstImg,
+    ogImageSize: null,
+    // 注意：不要再加 SearchAction（站点链接搜索框）——Google 已于 2024-11-21 下线该富媒体结果，
+    // 而且它的 urlTemplate `/?q=` 已被 robots.txt 屏蔽，留着是互相矛盾的死标记。
+    // WebSite 本身要保留：Google 的「网站名称」功能仍读它（要求 name + url）。
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        websiteJsonLd(baseUrl, site),
+        collectionPageJsonLd({
+          baseUrl,
+          path: catHref(activeCat),
+          name: `${activeCat} - ${site.title}`,
+          items,
+        }),
+      ],
+    },
+    keywords: `${activeCat},${activeCat}资源`,
+    rssHref: catFeedHref(activeCat),
+  };
+}
+
+export function listPage(ctx) {
+  return layout({ ...ctx, ...(ctx.activeCat ? catPage(ctx) : homePage(ctx)) });
 }
 
 function linkRow(link) {
@@ -434,7 +619,7 @@ function relatedBlock(related, images) {
 }
 
 export function detailPage(ctx) {
-  const { site, item, images, qrLinks, baseUrl, items } = ctx;
+  const { site, item, images, qrLinks, baseUrl, items, tagIndex } = ctx;
   const img = images.get(item.id) || {};
   const primary = qrLinks[0];
 
@@ -488,7 +673,19 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     <h1 class="detail__title">${esc(item.title)}</h1>
     <div class="tags">
       <a class="tag tag--cat" href="${catHref(item.category)}">${esc(item.category)}</a>
-      ${item.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}
+      ${item.tags
+        // 与分类同名的标签不重复展示：左边已经有分类胶囊了，再跟一个同名的就是纯重复
+        // （/all/ 页的 row() 也是同样的过滤口径）
+        .filter((t) => t && tagKey(t) !== tagKey(item.category))
+        .map((t) => {
+          // 只有建了聚合页的标签才给链接：链到一个只有 1 条资源的标签页
+          // 既没内容，又把蜘蛛往垃圾页引
+          const entry = tagIndex && tagIndex.get(tagKey(t));
+          return entry
+            ? `<a class="tag" href="${tagHref(entry.label)}">${esc(t)}</a>`
+            : `<span class="tag">${esc(t)}</span>`;
+        })
+        .join('')}
       ${item.date ? `<span class="tag tag--plain">${esc(item.date)}</span>` : ''}
     </div>
     ${factsHtml}
@@ -503,6 +700,8 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   const schemaType = SCHEMA_TYPE[item.category] || 'CreativeWork';
   // 简介截取一次：meta 用前 160 字，结构化数据用前 200 字
   const descLong = item.description.slice(0, 200) || item.title;
+  // year 在上面资源信息块里已算好（没有 date 就是空串，不硬凑年份）
+  const titleSuffix = TITLE_SUFFIX[item.category] || `${item.category}网盘资源`;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -513,6 +712,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
         url: `${baseUrl}${canonicalPath}`,
         description: descLong,
         genre: item.tags.filter((t) => t !== item.category),
+        keywords: (item.tags || []).join(' '),
         ...(img.detail ? { image: `${baseUrl}${img.detail}` } : {}),
         ...(item.date ? { datePublished: item.date } : {}),
         inLanguage: 'zh-CN',
@@ -535,15 +735,16 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
 
   return layout({
     ...ctx,
-    title: item.title,
-    description: `${item.category} · ${descLong.slice(0, 160)}`,
+    // 资源名 + 年份 + 需求词：既区别于同名作品，也接住「片名 网盘」的长尾搜索
+    title: `${item.title}${year ? `（${year}）` : ''}${titleSuffix}`,
+    description: `${item.title}${year ? `（${year}）` : ''} · ${titleSuffix} · ${descLong.slice(0, 110)}`,
     activeCat: item.category,
     body,
     canonicalPath,
     ogType: 'article',
     ogImage: img.detail,
     jsonLd,
-    keywords: [item.title, item.category, ...item.tags].slice(0, 8).join(','),
+    keywords: [item.title, titleSuffix, item.category, ...item.tags].slice(0, 10).join(','),
     rssHref: catFeedHref(item.category),
     // 详情页与首页/分类页同宽容器，海报卡片左右边线才能严格对齐
     wide: true,
@@ -573,7 +774,7 @@ export function notFoundPage(ctx) {
   const picks = (indexAll || []).slice(0, 5);
   const grid = picks.length
     ? `<h2>最新入库</h2>
-<ul class="grid">${picks.map((it) => cardHtml(it, images, false, true)).join('')}</ul>`
+<ul class="grid">${picks.map((it) => cardHtml(it, images, !!it.isNew, true)).join('')}</ul>`
     : '';
 
   // 全站出现频次最高的标签作为快捷搜索入口；同一分类最多占 2 个位置，
@@ -637,7 +838,7 @@ export function notFoundPage(ctx) {
  * 这一页给蜘蛛一条「一次抓取即可走完全站」的通道，也不需要任何 JS。
  */
 export function allPage(ctx) {
-  const { site, items, categories, total, baseUrl } = ctx;
+  const { site, items, categories, total, baseUrl, tags } = ctx;
 
   // 分类顺序沿用导航栏；site.yaml 里没列出的分类排在后面，保证这一页真的是「全量」
   const order = [...(categories || [])];
@@ -670,6 +871,7 @@ ${g.list.map(row).join('\n')}
 </ul>`
   )
   .join('\n')}
+${tagCloudHtml(tags)}
 </div>`;
 
   return layout({
@@ -691,6 +893,87 @@ ${g.list.map(row).join('\n')}
         name: `全部资源索引 - ${site.title}`,
         items,
       }),
+    },
+  });
+}
+
+/* ── 标签聚合页 /tag/xxx/ ─────── */
+
+/** 「热门标签」区块里最多列多少个 */
+const TAG_CLOUD_MAX = 20;
+
+/**
+ * 热门标签区块：标签页之间互链用的。
+ * 没有它的话标签页只能靠 sitemap 被发现——站内任何导航都到不了，
+ * 蜘蛛抓到一张孤零零的页面，权重也传不出去。
+ */
+function tagCloudHtml(tags, currentKey = '') {
+  const others = (tags || []).filter((t) => t.key !== currentKey).slice(0, TAG_CLOUD_MAX);
+  if (!others.length) return '';
+  return `<h2>热门标签</h2>
+<ul class="tagcloud">${others
+    .map(
+      (t) =>
+        `<li><a class="tag" href="${tagHref(t.label)}">${esc(t.label)}<span class="tag__n">${t.count}</span></a></li>`
+    )
+    .join('')}</ul>`;
+}
+
+/**
+ * 标签聚合页：把带同一个标签的资源聚成一页。
+ *
+ * 存在的理由（SEO）：详情页只有「片名 + 分类」两条路可走，而用户实际搜的是
+ * 「悬疑 网盘」「macOS 软件」这类「题材/属性 + 网盘」的组合词——
+ * 分类页粒度太粗（电影 335 条），标签页才是接得住这层长尾的那一档。
+ *
+ * 只给资源数达标的标签建页：724 个标签里 662 个只出现 1 次，照单全收等于
+ * 批量造垃圾页（清洗逻辑见 data.js 的 collectTags）。
+ */
+export function tagPage(ctx) {
+  const { site, tag, images, baseUrl, tags } = ctx;
+  const { key, label, count, items } = tag;
+  const canonicalPath = tagHref(label);
+  // 该标签下的分类分布：写进 description，让搜索结果里的摘要有实际信息
+  const catCount = new Map();
+  for (const it of items) catCount.set(it.category, (catCount.get(it.category) || 0) + 1);
+  const topCats = [...catCount].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([c]) => c);
+
+  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="/all/">全部资源</a><span>/</span><span>${esc(label)}</span></nav>
+<h1 class="page__title">${esc(label)}<span class="page__n">${count} 个资源</span></h1>
+<ul class="grid">
+${items.map((it, i) => cardHtml(it, images, false, i < 5)).join('\n')}
+</ul>
+${tagCloudHtml(tags, key)}`;
+
+  return layout({
+    ...ctx,
+    title: `${label}相关资源`,
+    description: `带「${label}」标签的网盘资源共 ${count} 个${topCats.length ? `，以${topCats.join('、')}为主` : ''}，打开即用，扫码即存`,
+    activeCat: '',
+    body,
+    canonicalPath,
+    ogType: 'website',
+    ogImage: (images.get(items[0]?.id) || {}).card || '',
+    keywords: [label, `${label}资源`, ...topCats].join(','),
+    // 卡片是全量渲染的，不依赖 JS，不需要 noscript 兜底
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        collectionPageJsonLd({
+          baseUrl,
+          path: canonicalPath,
+          name: `${label}相关资源 - ${site.title}`,
+          items,
+        }),
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: site.title, item: `${baseUrl}/` },
+            { '@type': 'ListItem', position: 2, name: '全部资源', item: `${baseUrl}/all/` },
+            { '@type': 'ListItem', position: 3, name: label },
+          ],
+        },
+      ],
     },
   });
 }
@@ -933,10 +1216,21 @@ export function lastmodOfList(list) {
   return list.map(lastmodOf).filter(Boolean).sort().pop() || '';
 }
 
-export function sitemapXml(baseUrl, resources, categories, extras = []) {
+export function sitemapXml(baseUrl, resources, categories, extras = [], images = null) {
   // 首页 / 关于本站 / RSS 订阅 / 各分类页
-  const line = (loc, lastmod, priority) =>
-    `  <url><loc>${esc(loc)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}<priority>${priority}</priority></url>`;
+  const line = (loc, lastmod, priority, extra = '') =>
+    `  <url><loc>${esc(loc)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}<priority>${priority}</priority>${extra}</url>`;
+  /**
+   * 图片扩展：详情页海报是本站唯一的大批量原创图片资源，走图片搜索是除了网页搜索之外
+   * 第二个真实入口。Google 只认 image:loc，百度图片也读同一份扩展。
+   * 缺图资源用的是「分类 + 暂无配图」占位海报，同一张图会被几十个 URL 重复引用，
+   * 写进图片索引只会稀释真正有价值的海报，所以按文件名里的 placeholder 排除掉。
+   */
+  const imageExtra = (r) => {
+    const detail = images ? (images.get(r.id) || {}).detail : '';
+    if (!detail || detail.includes('placeholder')) return '';
+    return `<image:image><image:loc>${esc(`${baseUrl}${detail}`)}</image:loc><image:title>${esc(r.title)}</image:title></image:image>`;
+  };
   // lastmod 必须是页面真实变化日期：每次构建把全站刷成同一天，搜索引擎会判定为不可信并降低抓取频率
   const siteLastmod = lastmodOfList(resources);
   const urls = [
@@ -949,10 +1243,10 @@ export function sitemapXml(baseUrl, resources, categories, extras = []) {
         '0.8'
       )
     ),
-    ...resources.map((r) => line(`${baseUrl}${itemHref(r.id)}`, lastmodOf(r), '0.6')),
+    ...resources.map((r) => line(`${baseUrl}${itemHref(r.id)}`, lastmodOf(r), '0.6', imageExtra(r))),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"${images ? ' xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"' : ''}>
 ${urls.join('\n')}
 </urlset>
 `;

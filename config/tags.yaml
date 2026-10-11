@@ -1,0 +1,85 @@
+# 标签聚合页配置（/tag/xxx/）
+#
+# 为什么单独一个文件：站点设置（同目录的 site.yaml）建站时定一次，一年动不了几回；
+# 标签配置跟着内容长——每多一个达标标签就要动一次。两者维护节奏不同，分开各管各的。
+#
+# ── 关于 tagSlugs ──
+# 它是「可选的美化表」，不是必填项：
+#   配了别名 → 用别名（下面这批）
+#   没配     → 自动用拼音兜底（「科幻」→ kehuan），URL 不再是 %E7%A7%91%E5%B9%BB 这种
+# 所以新增标签不用再手工补表，构建也不会再为漏配告警。
+#
+# 但它是「只增不改」的表：改别名等于换 URL，已收录的页面会丢排名。
+# 已经落到拼音 URL 的标签，事后再补别名同样等于换 URL——别这么干。
+# 键必须与 collectTags() 选出的显示名完全一致（区分大小写，含空格）。
+
+# tagMin：一个标签至少挂多少个资源才给它建页。默认 3。
+#   本站 724 个去重标签里 662 个只出现 1 次，阈值调低会批量造出单条垃圾页。
+tagMin: 3
+
+# tagExclude：点名不建聚合页的标签。自动规则已经能挡住「与分类完全同名」的
+#   ——本站「纪录片」标签就走这条路：写成和分类一样，它自动不再出页，不用点名。
+#   这里留给「名字不撞、内容撞」的情况。
+#   注意只是不建页：标签照常显示在详情页，只是不再可点（免得链到 404），
+#   站内搜索照样能搜到它。
+# macOS：「软件」分类 126 条里 119 条是 Mac 软件，两页 Jaccard 93%。数据本身
+#   偏科，在这个前提下两页没法不重合。软件分类页已经有 119 个 Mac 软件（只混着
+#   7 个 Windows/跨平台的），够用，所以砍标签页。可逆：等 Windows 软件多起来、
+#   Jaccard 掉到阈值以下，把这项删掉即可恢复。
+tagExclude:
+  - macOS
+
+# tagOverlapMax：标签页与分类页的近重复阈值（0~1），两页资源集合的 Jaccard
+#   相似度（重合数 / 两页并集）超过它就在构建时告警点名。配 1 等于关掉。
+#   注意判据不能用「标签里有几成属于某分类」——那样会误报一片：冒险、科幻、
+#   恐怖本来就 100% 属于电影，可它们只占电影分类的一两成，两页内容差得远，
+#   不是重复。Jaccard 量的是两页整体有多像。实测本站 macOS 93%、纪录 87%，
+#   其余都在 67% 以下，所以 0.8 能干净地把这两个挑出来。
+tagOverlapMax: 0.8
+
+# tagOverlapMinSize：近重复检测的最小条数门槛。标签页不足这个条数就不参与比对
+#   ——小集合的 Jaccard 极不稳定（Linux 4 条 vs 操作系统 6 条是 67%，再多 1 条
+#   就越过 0.7 线），而只有几条内容的页面重不重复危害都有限，为它告警不值当。
+#   配 0 = 不设门槛，全部参与比对。
+tagOverlapMinSize: 10
+
+# 下面这批是建站时为 34 个标签定下的英文别名，已收录，不要动。
+# 之后的新标签交给拼音兜底，不必再往这里加。
+tagSlugs:
+  # ── 题材 ──
+  剧情: drama
+  动作: action
+  犯罪: crime
+  惊悚: thriller
+  喜剧: comedy
+  悬疑: mystery
+  冒险: adventure
+  科幻: sci-fi
+  动作冒险: action-adventure
+  奇幻: fantasy
+  历史: history
+  恐怖: horror
+  战争: war
+  家庭: family
+  爱情: romance
+  动画: animation
+  音乐: music
+  西部: western
+  真人秀: reality-show
+  文学: literature
+  外国文学: foreign-literature
+  # ── 软件 / 工具属性 ──
+  实用工具: utility
+  效率: productivity
+  效率工具: productivity-tools
+  开发工具: devtools
+  启动器: launcher
+  摄影与视频: photo-video
+  # ── 平台 / 版本（原本就是 ASCII，统一成小写连字符）──
+  macOS: macos
+  Windows: windows
+  Linux: linux
+  Switch: switch
+  x86_64: x86-64
+  "Sci-Fi & Fantasy": sci-fi-fantasy
+  "War & Politics": war-politics

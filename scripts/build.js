@@ -4,12 +4,21 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import {
   loadSite,
+  loadTagConfig,
   loadResources,
   normalizeResources,
   orderCategories,
   categorySlug,
   syncHeaderCounts,
   clipDesc,
+  bodyLength,
+  MIN_DESC,
+  collectTags,
+  tagSlug,
+  setSlugFallback,
+  slugify,
+  todayShanghai,
+  newestIdsOf,
 } from './lib/data.js';
 import {
   prepareImages,
@@ -29,10 +38,15 @@ import {
   sitemapXml,
   lastmodOfList,
   catFeedHref,
+  tagPage,
+  tagHref,
 } from './lib/render.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+/** 资源数据：一个分类一个 YAML */
 const dataDir = path.join(root, 'data');
+/** 配置：site.yaml / tags.yaml，与资源数据分开存放 */
+const configDir = path.join(root, 'config');
 const staticDir = path.join(root, 'static');
 const themeDir = path.join(root, 'theme');
 /**
@@ -132,16 +146,26 @@ function iconVersionOf(file) {
 
 const t0 = Date.now();
 console.log('读取数据源…');
-const site = loadSite(dataDir);
+const site = loadSite(configDir);
+/**
+ * 标签配置单独一份 config/tags.yaml。必须在第一次调用 tagSlug() 之前读取：
+ * 它负责装标签别名表，晚一步别名就不生效，tagSlug() 会退回拼音兜底，
+ * 已收录的那批 URL 会集体变掉。
+ */
+const tagCfg = loadTagConfig(configDir);
 /**
  * 站点域名：环境变量 BASE_URL 优先（服务器由 /etc/site-autoupdate.conf 注入），
- * 其次取 data/site.yaml 的 baseUrl，两者都没配则回退到站点默认域名。
+ * 其次取 config/site.yaml 的 baseUrl，两者都没配则回退到站点默认域名。
  */
 const DEFAULT_BASE_URL = 'https://www.wodewangpan.top';
 const baseUrl = (process.env.BASE_URL || site.baseUrl || DEFAULT_BASE_URL).replace(/\/+$/, '');
 if (baseUrl.includes('example.com')) {
   console.log('  ! 站点域名是占位值 example.com，canonical / OG / sitemap 会指错');
-  console.log('    请用 BASE_URL=... npm run build，或在 data/site.yaml 写 baseUrl: https://你的域名');
+  console.log('    请用 BASE_URL=... npm run build，或在 config/site.yaml 写 baseUrl: https://你的域名');
+}
+// 验证 meta 不输出时页面照常能打开，看不出缺了什么，只能在构建时提醒一次
+if (!site.verification || !Object.values(site.verification).filter((v) => String(v ?? '').trim()).length) {
+  console.log('  ! 未配置站长验证：config/site.yaml 的 verification 为空，搜索引擎后台无法验证站点归属');
 }
 const raw = loadResources(dataDir);
 const synced = syncHeaderCounts(dataDir);
@@ -149,6 +173,65 @@ if (synced.length) console.log(`  · 条数注释已刷新：${synced.join('、'
 const { items, counts } = normalizeResources(raw);
 const categories = orderCategories(site, counts);
 const total = items.length;
+/**
+ * 「最新」角标：只认构建当天（北京时间）入库的资源，全站口径、不设上限。
+ * 在这儿算一次，首页、分类页、搜索索引共用同一份，不会出现各判一套标得不一样。
+ */
+const today = todayShanghai();
+const newestIds = newestIdsOf(items, today);
+if (newestIds.size) {
+  console.log(`  · 「最新」角标：${today}（北京时间）入库 ${newestIds.size} 条`);
+} else {
+  console.log(`  · ${today}（北京时间）没有新入库，本次构建的「最新」角标不会出现`);
+}
+
+/**
+ * 拼音：构建期生成，两处用到——
+ *   1. 站内搜索的「全拼 / 首字母」输入（产物里只存字符串，不带词典）
+ *   2. 标签 slug 的兜底：tagSlugs 没配别名的标签自动转成拼音 URL，
+ *      不用再手工补表，也不会出现 %E7%A7%91%E5%B9%BB 这种编码路径
+ * 必须在 collectTags() 之前装好：标签 slug 一旦算出来就定了，晚一步就走不到兜底。
+ * pinyin-pro 是可选依赖，装不上只是退回「中文原样」，与拆表之前的行为一致。
+ */
+let toPinyin = null;
+try {
+  const { pinyin } = await import('pinyin-pro');
+  const toPyArray = (text) => pinyin(text, { toneType: 'none', type: 'array' });
+  toPinyin = (text) => ({
+    py: toPyArray(text).join(''),
+    py1: pinyin(text, { pattern: 'first', toneType: 'none', type: 'array' }).join(''),
+  });
+  // 标签 slug 兜底：配了别名的照旧走别名，只有没配的才落到这里
+  setSlugFallback((tag) => slugify(toPyArray(tag).join('')));
+} catch {
+  console.log(
+    '  ! 未安装 pinyin-pro：站内搜索不支持拼音，新增标签的 URL 也会是编码的中文（npm i -D pinyin-pro 可开启）'
+  );
+}
+
+// 标签聚合页：清洗后只保留资源数达标的标签（阈值 config/tags.yaml 的 tagMin，默认 3）
+// tagExclude 里点名的不建页——内容与某个分类页重合时用它，避免近重复页面
+const tags = collectTags(items, { categories, min: tagCfg.min, exclude: tagCfg.exclude });
+/** 标签 key → 聚合信息：详情页靠它判断某个标签有没有落地页，没有就不给链接 */
+const tagIndex = new Map(tags.map((t) => [t.key, t]));
+
+// 两个标签算出同一个 slug 会写进同一个 /tag/xxx/ 目录，后写的覆盖先写的——
+// 先写那个页面等于凭空消失，构建不报错、产物目录看着也齐全，只能在这儿点名。
+// 拼音兜底之后概率变大了（不同汉字可能同音），所以每次构建都查一遍
+{
+  const seen = new Map();
+  const clash = [];
+  for (const t of tags) {
+    const s = tagSlug(t.label);
+    if (seen.has(s)) clash.push(`「${seen.get(s)}」与「${t.label}」→ /tag/${s}/`);
+    else seen.set(s, t.label);
+  }
+  if (clash.length) {
+    console.log(`  ! ${clash.length} 组标签 slug 撞车，页面会互相覆盖：`);
+    for (const c of clash) console.log(`      ${c}`);
+    console.log('      在 config/tags.yaml 的 tagSlugs 里给其中一个配个别名');
+  }
+}
 
 if (!total) {
   console.error('! data/ 目录下没有解析到任何资源，请检查 YAML');
@@ -160,24 +243,19 @@ fs.mkdirSync(outDir, { recursive: true });
 // 只清理已删除资源 / 分类的旧目录，其余文件直接覆盖；清理失败不影响构建
 const keepIds = new Set(items.map((i) => i.id));
 const keepCats = new Set(categories.map(categorySlug));
+// 目录名用未编码的真实字符串：URL 里的 %E5%89%A7%E6%83%85 会被 nginx / serve.js
+// 解码回「剧情」再去匹配文件系统，写成编码形式反而找不到（resource/ 与 category/ 同理）
+const keepTags = new Set(tags.map((t) => tagSlug(t.label)));
 let staleFailed = 0;
-for (const [sub, keep] of [['resource', keepIds], ['category', keepCats]]) {
+for (const [sub, keep] of [
+  ['resource', keepIds],
+  ['category', keepCats],
+  ['tag', keepTags],
+]) {
   staleFailed += prune(path.join(outDir, sub), (name) => keep.has(name)).failed;
 }
 if (staleFailed) {
   console.log(`  ! ${staleFailed} 个旧目录未能清理（不影响访问）；可手动执行 rm -rf ${outDirName} 后重新构建`);
-}
-
-// 拼音索引：构建期生成，供站内搜索支持「全拼 / 首字母」输入（产物里只存字符串，不带词典）
-let toPinyin = null;
-try {
-  const { pinyin } = await import('pinyin-pro');
-  toPinyin = (text) => ({
-    py: pinyin(text, { toneType: 'none', type: 'array' }).join(''),
-    py1: pinyin(text, { pattern: 'first', toneType: 'none', type: 'array' }).join(''),
-  });
-} catch {
-  console.log('  ! 未安装 pinyin-pro，站内搜索将不支持拼音（npm i -D pinyin-pro 可开启）');
 }
 
 console.log(`处理配图（${total} 条）…`);
@@ -227,6 +305,9 @@ const indexAll = items.map((it) => {
     date: it.date,
     thumb: img.thumb || '/img/placeholder.svg',
     card: img.card || '/img/placeholder.svg',
+    // 「最新」角标：构建期就定好，前端（加载更多 / 搜索结果）直接读这个字段。
+    // 索引里没有 added（入库日），浏览器自己算不出来，只能由这里给结果
+    isNew: newestIds.has(it.id),
     ...(py || {}),
   };
 });
@@ -271,6 +352,9 @@ const ctxBase = {
   assetVersion,
   iconVersion,
   shareImage,
+  tags,
+  tagIndex,
+  newestIds,
 };
 
 // 列表页与分类 RSS 各自都要按分类取子集，分组一次省掉两遍 filter
@@ -281,7 +365,11 @@ for (const it of items) {
 }
 
 console.log('生成列表页…');
-write(path.join(outDir, 'index.html'), listPage({ ...ctxBase, activeCat: '', pageSize: site.pageSize }));
+// 首页按分类分区输出（每类最新的几条），byCat 供它取各分类的子集
+write(
+  path.join(outDir, 'index.html'),
+  listPage({ ...ctxBase, activeCat: '', pageSize: site.pageSize, byCat })
+);
 for (const cat of categories) {
   const file = path.join(outDir, 'category', categorySlug(cat), 'index.html');
   write(file, listPage({ ...ctxBase, items: byCat.get(cat), activeCat: cat, pageSize: site.pageSize }));
@@ -293,6 +381,11 @@ for (const item of items) {
     path.join(outDir, 'resource', item.id, 'index.html'),
     detailPage({ ...ctxBase, item, qrLinks: qrMap.get(item.id) || [] })
   );
+}
+
+console.log(`生成标签聚合页（${tags.length} 个）…`);
+for (const t of tags) {
+  write(path.join(outDir, 'tag', tagSlug(t.label), 'index.html'), tagPage({ ...ctxBase, tag: t }));
 }
 
 console.log('生成关于本站 / RSS 页面…');
@@ -349,7 +442,19 @@ write(
   // 蜘蛛仍按记忆反复重试这些残留 URL。这里挡掉子路径促其衰减，
   // 根目录的 /search-index.json 仍是 Googlebot 渲染「加载更多」的通道，不能一起废掉
   // （配合 deploy/nginx-site.conf.example 里对该模式的 410，不依赖引擎是否支持通配）。
-  `User-agent: *\nAllow: /\nDisallow: /*?q=\nDisallow: /stats.json\nDisallow: /hit\nDisallow: /*/search-index.json\nSitemap: ${baseUrl}/sitemap.xml\n`
+  //
+  // 三家「只抓不回流」的 AI 索引爬虫单独全站 Disallow：
+  // ShapBot(Parallel.ai) / KeenableBot / SkytabBot 九天合计 5800+ 次请求，
+  // 日志里 referer 回流 **0 次**（同期 Google 281、百度 37、Yandex 5），
+  // 且 ShapBot 只读 2 次 robots、SkytabBot 完全不读并反复抓同一页（单页 15 次）。
+  // 主流能带回引荐流量的 Perplexity / OpenAI / Google-Extended 不在屏蔽之列，照旧放行。
+  // 礼貌层靠这里，硬拦由 nginx 的 403 兜底（见 deploy/00-block-ai.conf）。
+  // SemrushBot 同批挡掉：SEO 数据采集爬虫（变体 SemrushBot-BA/-SA/-WA/-XRL/-xy…），
+  // 九天 630 次请求、referer 回流 0 次；robots 里写 SemrushBot 一个名字即覆盖全部变体。
+  // AhrefsBot / MJ12bot / SerpstatBot 同理（532 / 446 / 308 次，同样零回流）——
+  // 这一组全是「抓了只充实对方数据库、不给任何流量」的工具型爬虫。
+  // 真正会带引荐的 PerplexityBot / OAI-SearchBot / Claude-SearchBot / Google-Extended 不在此列。
+  `User-agent: *\nAllow: /\nDisallow: /*?q=\nDisallow: /stats.json\nDisallow: /hit\nDisallow: /*/search-index.json\n\nUser-agent: ShapBot\nUser-agent: KeenableBot\nUser-agent: SkytabBot\nUser-agent: SemrushBot\nUser-agent: AhrefsBot\nUser-agent: MJ12bot\nUser-agent: SerpstatBot\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml\n`
 );
 write(
   path.join(outDir, 'sitemap.xml'),
@@ -358,7 +463,15 @@ write(
     { path: '/rss/', priority: '0.4' },
     // 全量索引页：给蜘蛛一条不依赖 JS 就能走完全部详情页的通道
     { path: '/all/', priority: '0.4', lastmod: lastmodOfList(items) },
-  ])
+    // 标签聚合页：接「属性 + 网盘」这类长尾词。优先级压在分类页（0.8）之下，
+    // 因为它与分类页内容有重叠，不该抢分类页的抓取预算
+    ...tags.map((t) => ({
+      path: tagHref(t.label),
+      priority: '0.5',
+      lastmod: lastmodOfList(t.items),
+    })),
+    // 第 5 个参数传 images：有它才输出 image: 扩展，海报才能进图片搜索
+  ], images)
 );
 copyThemeAssets(themeDir, outDir);
 
@@ -379,6 +492,81 @@ if (fs.existsSync(qqGroupSrc)) {
   fs.copyFileSync(qqGroupSrc, qqGroupDest);
 } else {
   console.log('  ! 未找到 static/qq-group.png，关于本站页将不显示 QQ 群二维码');
+}
+
+/**
+ * SEO 自检：这些都是「页面照常能打开、肉眼永远看不出问题」的隐患，
+ * 只能靠构建时算一遍提醒。不影响构建结果，只是打几行字。
+ */
+{
+  const warns = [];
+  // 正文过短：与 tools/list-short-desc.mjs 同一口径同一阈值，两个数字能直接对上
+  const thin = items.filter((it) => bodyLength(it.description) < MIN_DESC).length;
+  if (thin) {
+    warns.push(
+      `${thin}/${total} 条资源正文不足 ${MIN_DESC} 字，详情页易被判薄内容（npm run list:short 看明细）`
+    );
+  }
+  if (!site.icp) warns.push('config/site.yaml 未填 icp：大陆访问的站点没有备案号会影响信任度与百度收录');
+  if (missing) warns.push(`${missing} 条资源缺配图，详情页结构化数据与图片 sitemap 里都没有图`);
+  // 拼音兜底没生效时（没装 pinyin-pro），新增标签的 URL 会退化成
+  // /tag/%E5%89%A7%E6%83%85/ 这种编码形式。页面照常能打开，肉眼发现不了
+  if (!toPinyin) {
+    const coded = tags.filter((t) => /[^\x00-\x7F]/.test(tagSlug(t.label)));
+    if (coded.length) {
+      warns.push(
+        `${coded.length} 个标签的 URL 是编码的中文：${coded
+          .map((t) => t.label)
+          .join('、')}（npm i -D pinyin-pro 即可自动转成拼音）`
+      );
+    }
+  }
+  // 标签页 vs 分类页 近重复：两页内容几乎一样时搜索引擎只会留一个，另一个白占
+  // 抓取预算。这类问题以前只能靠肉眼发现（「纪录」对「纪录片」就是这么找出来的）。
+  //
+  // 判据是 Jaccard = 重合数 / 两页并集大小，而不是「标签里有多少属于该分类」：
+  // 后者会误报一大片——冒险、科幻、恐怖本来就 100% 属于电影，可它们只占电影
+  // 分类的一两成，两页内容差得远。Jaccard 量的是两页整体有多像。
+  {
+    const idsByCat = new Map();
+    for (const it of items) {
+      let set = idsByCat.get(it.category);
+      if (!set) idsByCat.set(it.category, (set = new Set()));
+      set.add(it.id);
+    }
+    const nearDup = [];
+    for (const t of tags) {
+      const ids = new Set(t.items.map((x) => x.id));
+      // 小样本跳过：几条内容的页面 Jaccard 极不稳定，重不重复的危害也都有限
+      if (ids.size < tagCfg.overlapMinSize) continue;
+      let worst = null;
+      for (const [cat, set] of idsByCat) {
+        let shared = 0;
+        for (const id of ids) if (set.has(id)) shared += 1;
+        const jac = shared / (ids.size + set.size - shared);
+        if (!worst || jac > worst.jac) worst = { cat, jac, shared, catSize: set.size };
+      }
+      if (worst && worst.jac >= tagCfg.overlapMax) {
+        nearDup.push({ label: t.label, size: ids.size, ...worst });
+      }
+    }
+    if (nearDup.length) {
+      warns.push(
+        `${nearDup.length} 个标签页与分类页内容高度重合（Jaccard ≥ ${tagCfg.overlapMax}），会被判近重复：`
+      );
+      for (const d of nearDup.sort((a, b) => b.jac - a.jac)) {
+        warns.push(
+          `「${d.label}」${d.size} 条 vs 「${d.cat}」${d.catSize} 条，重合 ${d.shared} 条（${(
+            d.jac * 100
+          ).toFixed(0)}%）→ 确认没保留价值就加进 config/tags.yaml 的 tagExclude`
+        );
+      }
+    }
+  }
+  if (warns.length) {
+    console.log('\n  SEO 提醒：');
+    for (const w of warns) console.log(`    ! ${w}`);
+  }
 }
 
 const reusedTotal = reused.kept + reused.copied;

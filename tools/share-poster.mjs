@@ -19,10 +19,10 @@ const arg = (k, d) => {
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-// 默认站名 / 定位语 / 分类都从 data/site.yaml 取，改完站点配置重跑一次即可
+// 默认站名 / 定位语 / 分类都从 config/site.yaml 取，改完站点配置重跑一次即可
 let cfg = {};
 try {
-  cfg = yaml.load(fs.readFileSync('data/site.yaml', 'utf8')) || {};
+  cfg = yaml.load(fs.readFileSync('config/site.yaml', 'utf8')) || {};
 } catch {
   /* 无配置文件时用下面的兜底文案 */
 }
