@@ -2,8 +2,9 @@
  * 把草稿里的简介写回 YAML（第三项 SEO 待办：补厚过短简介）。
  *
  * 用法：
- *   node tools/fill-desc.mjs            # 空跑，只打印将要改成什么
- *   node tools/fill-desc.mjs --apply    # 真正写入 data/*.yaml
+ *   node tools/fill-desc.mjs                                  # 空跑，只打印将要改成什么
+ *   node tools/fill-desc.mjs --apply                          # 真正写入 data/*.yaml
+ *   node tools/fill-desc.mjs --draft=.tmp/desc-draft-tv.json  # 指定别的草稿文件
  *
  * 输入：.tmp/desc-draft.json，形如 { "mv-212": "新简介正文", ... }
  * 行为：
@@ -26,7 +27,9 @@ const strict = process.argv.includes('--strict');
  * 会差出几个字，结果就是脚本说「够了」、构建还在告警。
  */
 const MIN = Number((process.argv.find((a) => a.startsWith('--min=')) || '').split('=')[1]) || MIN_DESC;
-const draftPath = path.join(root, '.tmp/desc-draft.json');
+/** 草稿路径默认 .tmp/desc-draft.json；加 --draft=xxx 可换，便于多批并行互不覆盖 */
+const draftArg = (process.argv.find((a) => a.startsWith('--draft=')) || '').split('=')[1];
+const draftPath = path.join(root, draftArg || '.tmp/desc-draft.json');
 
 if (!fs.existsSync(draftPath)) {
   console.error('找不到 .tmp/desc-draft.json');
