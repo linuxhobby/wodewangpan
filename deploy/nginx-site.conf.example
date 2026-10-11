@@ -1,8 +1,9 @@
 # 站点 Nginx 配置 —— 放到 /etc/nginx/conf.d/wodewangpan.conf
 # 改 2 处即可：server_name（下面每段里的都要换）、ssl_certificate / ssl_certificate_key（certbot 会自动改）
 # 没有启用访问统计的话，把 access_log 那行改回默认、并删掉 location = /stats.json 与 /hit 两段
-# deploy/ 里还有两个 http 级文件要一并放进 /etc/nginx/conf.d/：00-sitestats.conf（日志格式）、
-# 00-block-probes.conf（扫描器屏蔽规则）。缺后者的话下面第一行的 $probe_block 无定义，nginx -t 会直接报错。
+# deploy/ 里还有三个 http 级文件要一并放进 /etc/nginx/conf.d/：00-sitestats.conf（日志格式）、
+# 00-block-probes.conf（扫描器屏蔽规则）、00-block-ai.conf（零回流 AI 爬虫名单）。
+# 缺后两个的话下面开头的 $probe_block / $ai_block 无定义，nginx -t 会直接报错。
 #
 # 规范化目标（SEO）：全站只有 https://www.<域名>/ 返回 200，
 # http 与裸域一律「单跳」301 过去——跳一次是标准做法，蜘蛛不会被劝退；
@@ -14,6 +15,10 @@ server {
     # 必须放本块第一行——早于裸域与 http→https 的跳转，探测请求连 301 都拿不到。
     # certbot 生成 443 段后，这一行也要复制进每个 server 块（含下面注释掉的裸域段）。
     if ($probe_block) { return 444; }
+
+    # 只抓不回流的 AI 索引爬虫（ShapBot / KeenableBot / SkytabBot）→ 403，
+    # 名单见 00-block-ai.conf；Googlebot / Yandex / Perplexity / Claude / GPT 均不在名单内。
+    if ($ai_block) { return 403; }
 
     listen 80;
     server_name your-domain.com www.your-domain.com;          # ← 换成你的域名（裸域与 www 都写）
