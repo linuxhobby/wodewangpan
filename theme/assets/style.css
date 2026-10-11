@@ -253,6 +253,31 @@ a.tag:hover { background: var(--brand-soft); }
 /* 热门标签云：标签页之间互链用，也是 /all/ 页进入标签体系的入口 */
 .tagcloud { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .tag__n { margin-left: 5px; font-size: var(--fs-sm); color: var(--muted); }
+/* 标签总览页 /tags/：卡片比标签云多带一行分类分布，纯链接墙容易被判薄内容 */
+.taglist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tagcard {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 11px 13px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-box);
+}
+.tagcard:hover { border-color: var(--brand); text-decoration: none; }
+.tagcard__name { font-size: var(--fs-lg); font-weight: 600; color: var(--text); }
+.tagcard:hover .tagcard__name { color: var(--brand); }
+.tagcard__n { font-size: var(--fs-sm); color: var(--brand); }
+.tagcard__cats { font-size: var(--fs-sm); color: var(--muted); }
+.tagcloud__more { margin: 12px 0 0; font-size: var(--fs-base); }
+@media (max-width: 560px) { .taglist { grid-template-columns: repeat(2, 1fr); } }
 
 .empty { padding: 40px 0; text-align: center; color: var(--muted); }
 .muted { color: var(--muted); }

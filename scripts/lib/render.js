@@ -65,6 +65,8 @@ const FOOT_NAV = [
   { href: '/about/', label: '关于本站' },
   // 全量索引页：每页底部都有一条入口，蜘蛛从任何一页都能走到全部详情页
   { href: '/all/', label: '全部资源' },
+  // 标签总览页：单标签页之间的互链只取前 20 个，排在后面的标签需要一个集中入口
+  { href: '/tags/', label: '标签索引' },
   { href: '/sitemap.xml', label: '网站地图', abs: true },
   { href: '/rss/', label: 'RSS订阅' },
 ];
@@ -908,15 +910,22 @@ const TAG_CLOUD_MAX = 20;
  * 蜘蛛抓到一张孤零零的页面，权重也传不出去。
  */
 function tagCloudHtml(tags, currentKey = '') {
-  const others = (tags || []).filter((t) => t.key !== currentKey).slice(0, TAG_CLOUD_MAX);
+  const all = tags || [];
+  const others = all.filter((t) => t.key !== currentKey).slice(0, TAG_CLOUD_MAX);
   if (!others.length) return '';
+  // 云里只放前 20 个，剩下的标签站内就断了路，补一条去总览页的出口
+  const more =
+    all.length > TAG_CLOUD_MAX
+      ? `<p class="tagcloud__more"><a href="/tags/">查看全部 ${all.length} 个标签 →</a></p>`
+      : '';
   return `<h2>热门标签</h2>
 <ul class="tagcloud">${others
     .map(
       (t) =>
         `<li><a class="tag" href="${tagHref(t.label)}">${esc(t.label)}<span class="tag__n">${t.count}</span></a></li>`
     )
-    .join('')}</ul>`;
+    .join('')}</ul>
+${more}`;
 }
 
 /**
@@ -1052,6 +1061,93 @@ function feedRow(baseUrl, href, label, note = '') {
   <a class="btn" href="${esc(href)}" target="_blank" rel="noopener noreferrer">打开</a>
   <button class="btn btn--primary" type="button" data-copy="${esc(url)}">复制地址</button>
 </div>`;
+}
+
+/**
+ * 标签总览页 /tags/：把建了页的标签集中列到一页。
+ *
+ * 单标签页之间靠 tagCloudHtml 互链，但它只取前 20 个——排在后面的标签站内
+ * 任何导航都到不了，只能等蜘蛛从 sitemap 挖。这一页给全部标签一个集中入口，
+ * 同时挂进页脚，用户也终于能直接按标签浏览。
+ *
+ * 每个标签带资源数和分类分布：纯链接墙容易被判薄内容，有这两项页面才有实质信息。
+ */
+export function tagsPage(ctx) {
+  const { site, tags = [], baseUrl, total } = ctx;
+  /** 标签下的分类分布（取前 3）：让「剧情」「Linux」这类标签一眼看出涵盖什么 */
+  const catsOf = (t) => {
+    const m = new Map();
+    for (const it of t.items) m.set(it.category, (m.get(it.category) || 0) + 1);
+    return [...m].sort((a, b) => b[1] - a[1]).slice(0, 3);
+  };
+
+  const cards = tags
+    .map((t) => {
+      const cats = catsOf(t)
+        .map(([c, n]) => `${esc(c)} ${n}`)
+        .join(' · ');
+      return `<li><a class="tagcard" href="${tagHref(t.label)}">
+    <span class="tagcard__name">${esc(t.label)}</span>
+    <span class="tagcard__n">${t.count} 个资源</span>
+${cats ? `    <span class="tagcard__cats">${cats}</span>\n` : ''}  </a></li>`;
+    })
+    .join('\n');
+
+  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="/all/">全部资源</a><span>/</span><span>标签索引</span></nav>
+<h1 class="page__title page__title--doc">标签索引<span class="page__n">${tags.length} 个标签</span></h1>
+<div class="card-page">
+  <p>本站按题材、平台、工具类型给资源打标签，共 <strong>${tags.length}</strong> 个标签，覆盖 ${total} 个资源。
+  标签比分类更细：想找「科幻」电影或者「Mac」软件，直接点下面的标签，比在分类里翻快得多。</p>
+  <ul class="taglist">
+${cards}
+  </ul>
+</div>`;
+
+  return layout({
+    ...ctx,
+    title: '标签索引',
+    description: `${site.title}标签索引：${tags.length} 个标签（${tags
+      .slice(0, 6)
+      .map((t) => t.label)
+      .join('、')}等），按题材与平台浏览 ${total} 个网盘资源`,
+    activeCat: '',
+    body,
+    canonicalPath: '/tags/',
+    footNavCurrent: '/tags/',
+    wide: true,
+    keywords: `标签索引,${tags.map((t) => t.label).join(',')}`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'CollectionPage',
+          '@id': `${baseUrl}/tags/#page`,
+          url: `${baseUrl}/tags/`,
+          name: `标签索引 - ${site.title}`,
+          isPartOf: { '@id': `${baseUrl}/#website` },
+          // 这一页的主体是标签的集合，不是资源列表，所以 ItemList 里列的是标签本身
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: tags.length,
+            itemListElement: tags.map((t, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              name: t.label,
+              url: `${baseUrl}${tagHref(t.label)}`,
+            })),
+          },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: site.title, item: `${baseUrl}/` },
+            { '@type': 'ListItem', position: 2, name: '全部资源', item: `${baseUrl}/all/` },
+            { '@type': 'ListItem', position: 3, name: '标签索引' },
+          ],
+        },
+      ],
+    },
+  });
 }
 
 export function aboutPage(ctx) {

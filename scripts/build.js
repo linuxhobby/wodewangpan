@@ -39,6 +39,7 @@ import {
   lastmodOfList,
   catFeedHref,
   tagPage,
+  tagsPage,
   tagHref,
 } from './lib/render.js';
 
@@ -392,6 +393,8 @@ console.log('生成关于本站 / RSS 页面…');
 // 全量索引页：蜘蛛不用执行 JS 就能走完全部详情页的通道（列表页首屏之外的内容靠 JS 补齐）
 write(path.join(outDir, 'all', 'index.html'), allPage(ctxBase));
 write(path.join(outDir, 'about', 'index.html'), aboutPage(ctxBase));
+// 标签总览页：热门标签云只互链前 20 个，这一页给全部标签一个站内入口
+write(path.join(outDir, 'tags', 'index.html'), tagsPage(ctxBase));
 write(path.join(outDir, 'rss', 'index.html'), rssPage(ctxBase));
 
 // RSS 源：全站一份 + 每个分类一份，条目里带上配图与转存链接
@@ -463,6 +466,8 @@ write(
     { path: '/rss/', priority: '0.4' },
     // 全量索引页：给蜘蛛一条不依赖 JS 就能走完全部详情页的通道
     { path: '/all/', priority: '0.4', lastmod: lastmodOfList(items) },
+    // 标签总览页：单标签页的入口集中地，蜘蛛从这一页能走到全部标签页
+    { path: '/tags/', priority: '0.5', lastmod: lastmodOfList(items) },
     // 标签聚合页：接「属性 + 网盘」这类长尾词。优先级压在分类页（0.8）之下，
     // 因为它与分类页内容有重叠，不该抢分类页的抓取预算
     ...tags.map((t) => ({
