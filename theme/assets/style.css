@@ -59,10 +59,14 @@
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* ── 页面宽度：普通页与列表页两档，顶栏 / 分类栏 / 正文 / 页脚共用 ──
-     保证 logo、分类条、内容区块左右严格对齐 */
+  /* ── 页面宽度：窄 / 宽两档，最终落在 --page-max 上 ──
+     档位只在 <body class="page--wide"> 一处切换（见下方 body 规则），
+     顶栏 / 分类栏 / 正文 / 页脚一律读 --page-max，不再各自写一份 max-width、
+     也不再各配一个 --wide 变体：那种写法每加一个区块就要多传一次开关，
+     漏一处就会比全站窄一圈（标签页就是这么踩的）。 */
   --page-w: 760px;
   --page-wide: 1180px;
+  --page-max: var(--page-w);
   --gutter: 16px;
 
   /* ── 宫格：详情页海报宽度 = 宫格卡片宽度，两页海报尺寸与左右边线完全一致 ── */
@@ -91,9 +95,12 @@ body {
 a { color: var(--brand); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-.wrap { max-width: var(--page-w); margin: 0 auto; padding: 0 var(--gutter); }
-/* 列表页（海报宫格）与详情页、内容页统一用宽容器 */
-.wrap--wide { max-width: var(--page-wide); }
+/* 页面宽度档位的唯一开关：挂在 <body> 上，页内所有容器一起生效 */
+body.page--wide { --page-max: var(--page-wide); }
+/* 页宽容器：顶栏 / 分类栏 / 正文 / 页脚共用同一组「页宽 + 居中」，
+   logo、分类条、内容区块的左右边线才严格对齐 */
+.wrap, .cats { max-width: var(--page-max); margin: 0 auto; }
+.wrap { padding: 0 var(--gutter); }
 
 /* ── 顶栏 ────────────────────────────── */
 .top {
@@ -121,10 +128,8 @@ a:hover { text-decoration: underline; }
 .top__search input:focus { border-color: var(--brand); background: var(--surface); }
 
 /* ── 分类标签栏 ───────────────────────── */
-/* 分类栏与正文同宽同内边距，左右边线才能和 logo、正文对齐 */
+/* 页宽与居中已在上面的 .wrap, .cats 里统一，这里只管自身布局与上下留白 */
 .cats {
-  max-width: var(--page-w);
-  margin: 0 auto;
   padding: 12px var(--gutter) 4px;
   display: flex;
   gap: 8px;
@@ -143,12 +148,9 @@ a:hover { text-decoration: underline; }
 }
 .cat:hover { text-decoration: none; color: var(--brand); }
 .cat.is-on { background: var(--brand); border-color: var(--brand); color: var(--surface); font-weight: 600; }
-.cats--wide { max-width: var(--page-wide); }
-.cat__n { margin-left: 5px; font-size: var(--fs-sm); opacity: .65; }
 
 /* ── 列表页 ──────────────────────────── */
 .page__title { font-size: var(--fs-xl); margin: 16px 0 12px; display: flex; align-items: baseline; gap: 8px; }
-.page__n { font-size: var(--fs-sm); font-weight: 400; color: var(--muted); }
 /* 首页 H1 比分类页高半档：下面还有一排分类区块标题，同级会分不清主次 */
 .page__title--home { font-size: var(--fs-h2); }
 
@@ -173,7 +175,6 @@ a:hover { text-decoration: underline; }
 .home-cat__title { font-size: var(--fs-xl); margin: 0; }
 .home-cat__title a { color: var(--text); }
 .home-cat__title a:hover { color: var(--brand); text-decoration: none; }
-.home-cat__n { font-size: var(--fs-sm); color: var(--muted); }
 .home-cat__more { margin-left: auto; font-size: var(--fs-base); white-space: nowrap; }
 /* 兜底入口：首页只剩每类几条，想翻全站的人从这里去 /all/ */
 .home-all { margin: 26px 0 4px; }
@@ -191,16 +192,19 @@ a:hover { text-decoration: underline; }
 }
 .tile { display: block; color: var(--text); }
 .tile:hover { text-decoration: none; }
-.tile__poster {
-  position: relative;
+/* 竖版海报：宫格卡片与详情页共用同一套 2:3 版式（圆角 / 描边 / 占位底色），
+   改这里两边同步生效，不会出现「卡片海报与详情页海报差一像素」 */
+.tile__poster, .poster {
   display: block;
+  width: 100%;
+  height: auto;
   aspect-ratio: 2 / 3;
-  overflow: hidden;
   border-radius: var(--r-poster);
   background: var(--fill-placeholder);
   border: 1px solid var(--border);
-  transition: border-color .15s, transform .15s;
 }
+/* 卡片海报多两件事：给「最新」角标当定位基准、把图片裁进圆角里 */
+.tile__poster { position: relative; overflow: hidden; transition: border-color .15s, transform .15s; }
 .tile__img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .tile:hover .tile__poster { border-color: var(--brand); transform: translateY(-2px); }
 .tile__new {
@@ -246,13 +250,12 @@ mark {
   border-radius: var(--r-tag);
 }
 .tag--cat { color: var(--brand); background: var(--brand-soft); font-weight: 600; flex: 0 0 auto; }
-.tag--plain { background: transparent; color: var(--muted); }
+.tag--plain { background: transparent; }
 a.tag { color: var(--brand); text-decoration: none; }
 a.tag:hover { background: var(--brand-soft); }
 
 /* 热门标签云：标签页之间互链用，也是 /all/ 页进入标签体系的入口 */
 .tagcloud { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.tag__n { margin-left: 5px; font-size: var(--fs-sm); color: var(--muted); }
 /* 标签总览页 /tags/：卡片比标签云多带一行分类分布，纯链接墙容易被判薄内容 */
 .taglist {
   display: grid;
@@ -277,10 +280,18 @@ a.tag:hover { background: var(--brand-soft); }
 .tagcard__n { font-size: var(--fs-sm); color: var(--brand); }
 .tagcard__cats { font-size: var(--fs-sm); color: var(--muted); }
 .tagcloud__more { margin: 12px 0 0; font-size: var(--fs-base); }
-@media (max-width: 560px) { .taglist { grid-template-columns: repeat(2, 1fr); } }
 
-.empty { padding: 40px 0; text-align: center; color: var(--muted); }
+/* ── 通用小件 ────────────────────────── */
 .muted { color: var(--muted); }
+.empty { padding: 40px 0; text-align: center; color: var(--muted); }
+/* 计数后缀：分类条 / 标签条 / 页面标题 / 首页分类区块，四处同一规格，
+   下面只留各自的差异（缩进、字重、透明度） */
+.cat__n, .tag__n, .page__n, .home-cat__n { font-size: var(--fs-sm); color: var(--muted); }
+/* 胶囊内跟在文字后面的计数要一点缩进 */
+.cat__n, .tag__n { margin-left: 5px; }
+/* 页面标题是 h1（粗体计数看着像标题的一部分），这里退回常规字重 */
+.page__n { font-weight: 400; }
+.cat__n { opacity: .65; }
 
 /* ── 无 JS 时的全量索引（<noscript>） ──────
    列表页首屏之外靠「加载更多」补齐，禁用 JS 时只剩这份纯链接清单。
@@ -292,7 +303,6 @@ a.tag:hover { background: var(--brand-soft); }
 .ns__cat { font-size: var(--fs-lg); margin: 18px 0 8px; }
 .ns a { display: block; padding: 5px 0; color: var(--brand); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ns a:hover { text-decoration: underline; }
-@media (max-width: 560px) { .ns { grid-template-columns: 1fr; } }
 
 /* ── 内容页（关于本站 / RSS 订阅） ────── */
 .card-page {
@@ -303,8 +313,10 @@ a.tag:hover { background: var(--brand-soft); }
 }
 .card-page > :first-child { margin-top: 0; }
 .card-page h2 { font-size: var(--fs-h2); margin: 26px 0 12px; }
-/* 长文本统一走「正文档」：字号 + 行高只在这里定义一次 */
-.card-page p, .card-page li, .card-page td, .card-page th {
+/* 长文本统一走「正文档」：内容页正文 / 详情页简介 / 404 说明共用同一档，
+   字号 + 行高只在这里定义一次，各自的 margin 与特殊属性自己管 */
+.card-page p, .card-page li, .card-page td, .card-page th,
+.detail__desc, .nf__desc {
   font-size: var(--fs-lg);
   line-height: var(--lh-body);
   color: var(--muted);
@@ -375,17 +387,8 @@ a.tag:hover { background: var(--brand-soft); }
 }
 /* 宽度取宫格卡片的计算宽度，海报与首页卡片完全同尺寸 */
 .detail__media { flex: 0 0 var(--tile-w); display: flex; flex-direction: column; gap: 12px; }
-/* 详情页海报与列表卡片同一套视觉：同为 2:3 竖版、相同圆角与描边 */
-.poster {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
-  border-radius: var(--r-poster);
-  border: 1px solid var(--border);
-  background: var(--fill-placeholder);
-  display: block;
-}
+/* 详情页海报：版式已在上面 .tile__poster, .poster 里与卡片海报统一 */
+.poster { object-fit: cover; }
 /* 二维码框与海报左右边线对齐 */
 .qrbox { width: 100%; border: 1px solid var(--border); border-radius: var(--r-box); padding: 8px; text-align: center; }
 .qrbox__img { width: 100%; max-width: 150px; height: auto; aspect-ratio: 1 / 1; display: block; margin: 0 auto; }
@@ -395,13 +398,7 @@ a.tag:hover { background: var(--brand-soft); }
 .detail__main { flex: 1; min-width: 0; }
 .detail__title { font-size: var(--fs-h1); line-height: var(--lh-tight); margin: 0 0 10px; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.detail__desc {
-  margin: 0 0 16px;
-  color: var(--muted);
-  font-size: var(--fs-lg);
-  line-height: var(--lh-body);
-  white-space: pre-wrap;
-}
+.detail__desc { margin: 0 0 16px; white-space: pre-wrap; }
 /* 资源信息表：分类 / 年份 / 入库 / 标签 / 转存来源，一行一项，扫一眼就够 */
 .facts { width: 100%; margin: 0 0 16px; border-collapse: collapse; font-size: var(--fs-base); }
 .facts th, .facts td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
@@ -434,8 +431,8 @@ a.tag:hover { background: var(--brand-soft); }
 .linkrow__url, .feed-url__code { font-family: var(--font-mono); font-size: var(--fs-sm); }
 
 /* ── 按钮 ────────────────────────────── */
-.btn {
-  flex: 0 0 auto;
+/* 普通按钮与二维码切换按钮同规格，只在下面各留一点差异 */
+.btn, .qrbtn {
   padding: 5px 12px;
   font-size: var(--fs-sm);
   color: var(--text);
@@ -445,22 +442,14 @@ a.tag:hover { background: var(--brand-soft); }
   cursor: pointer;
   line-height: var(--lh-ctl);
 }
+.btn { flex: 0 0 auto; }
 .btn:hover { text-decoration: none; border-color: var(--brand); color: var(--brand); }
 .btn--primary { background: var(--brand); border-color: var(--brand); color: var(--surface); }
 .btn--primary:hover { color: var(--surface); opacity: .9; }
 .btn--mini { padding: 1px 6px; font-size: var(--fs-xs); line-height: var(--lh-chip); }
 .btn--more { display: block; width: 100%; margin: 14px 0 4px; padding: 10px; color: var(--brand); }
-/* 二维码切换按钮：与 .btn 同规格，只是撑满半栏 */
-.qrbtn {
-  flex: 1;
-  padding: 5px 0;
-  font-size: var(--fs-sm);
-  color: var(--muted);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-ctl);
-  cursor: pointer;
-}
+/* 二维码切换按钮：撑满半栏，未选中的一组比 .btn 更弱一点 */
+.qrbtn { flex: 1; padding: 5px 0; color: var(--muted); }
 .qrbtn.is-on { color: var(--brand); border-color: var(--brand); font-weight: 600; }
 
 /* 搜索结果容器：显隐由 hidden 控制，空内容时不占位 */
@@ -472,7 +461,7 @@ a.tag:hover { background: var(--brand-soft); }
 .nf__art { width: 240px; max-width: 100%; height: auto; }
 .nf__code { margin: 0; font-size: clamp(var(--fs-brand), 14vw, var(--fs-display)); line-height: var(--lh-flat); font-weight: 700; color: var(--brand); letter-spacing: 2px; }
 .nf__title { margin: 0; font-size: var(--fs-xl); font-weight: 600; color: var(--text); }
-.nf__desc { margin: 0; max-width: 520px; font-size: var(--fs-lg); line-height: var(--lh-body); color: var(--muted); }
+.nf__desc { margin: 0; max-width: 520px; }
 .nf__acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0 0; }
 .nf__acts .btn { padding: 7px 16px; font-size: var(--fs-md); }
 /* 「大家在找」标签行：胶囊直接复用分类栏的 .cat，形状与其它页面一致 */
@@ -483,19 +472,22 @@ a.tag:hover { background: var(--brand-soft); }
 /* 页脚本身也带 .wrap，横向间距由 .wrap 提供，这里不再重复加 padding，否则会比其他区块窄一圈 */
 .foot { padding: 28px 0 40px; text-align: center; }
 .foot p { margin: 0; font-size: var(--fs-base); color: var(--muted); line-height: var(--lh-body); }
-.foot__icp, .foot__stat { margin-top: 4px !important; }
-.foot__contact { margin-top: 8px !important; display: flex; justify-content: center; align-items: center; gap: 14px; }
+/* 上面 .foot p 把 margin 归零了，下面这几个要补回间距：
+   给选择器补上标签名（p.foot__icp）把特异性提到与 .foot p 持平、靠后来者取胜，
+   不用 !important 硬压 */
+p.foot__icp, p.foot__stat { margin-top: 4px; }
+p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align-items: center; gap: 14px; }
 .foot__contact a, .foot__contact span { display: inline-flex; align-items: center; padding: 3px; border-radius: var(--r-tag); color: var(--contact-icon); text-decoration: none; }
 .foot__contact a:hover { color: var(--contact-icon-hover); background: var(--fill-hover); }
 /* 页脚导航：网站首页 | 关于本站 | 网站地图 | RSS订阅 */
-.foot__nav { margin: 0 0 10px !important; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: var(--fs-base); }
+.foot__nav { margin: 0 0 10px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: var(--fs-base); }
 .foot__nav a { color: var(--muted); text-decoration: none; }
 .foot__nav a:hover { color: var(--brand); text-decoration: underline; }
 .foot__nav a[aria-current="page"] { color: var(--brand); font-weight: 600; }
 .foot__sep { color: var(--border); font-size: var(--fs-xs); user-select: none; }
 .foot__icon { display: block; width: 17px; height: 17px; transition: transform .15s ease; }
 .foot__contact a:hover .foot__icon { transform: translateY(-1px); }
-.foot__stat span { color: var(--text, inherit); font-variant-numeric: tabular-nums; }
+.foot__stat span { color: var(--text); font-variant-numeric: tabular-nums; }
 
 /* ── 移动端 ──────────────────────────── */
 /* 窄屏逐级减列：5 → 4 → 3 → 2；断点只调 --cols / --gap-x，
@@ -520,6 +512,12 @@ a.tag:hover { background: var(--brand-soft); }
   .home-cat__grid > .tile-item:nth-child(n+3) { display: none; }
   .grid--fit > .tile-item:nth-child(2n+1):nth-last-child(-n+1),
   .grid--fit > .tile-item:nth-child(2n+1):nth-last-child(-n+1) ~ .tile-item { display: none; }
+}
+
+/* 窄屏两个两列栅格收成一列：标签卡片墙与 noscript 索引清单 */
+@media (max-width: 560px) {
+  .taglist { grid-template-columns: repeat(2, 1fr); }
+  .ns { grid-template-columns: 1fr; }
 }
 
 /* 窄屏整体降一档：只在这里重设字号 / 行高令牌，

@@ -159,7 +159,7 @@ export function tagHref(tag) {
   return `/tag/${encodeURIComponent(tagSlug(tag))}/`;
 }
 
-function catNav(categories, counts, activeCat, total, wide) {
+function catNav(categories, counts, activeCat, total) {
   const items = [
     `<a class="cat${activeCat ? '' : ' is-on'}" href="/">全部<span class="cat__n">${total}</span></a>`,
     ...categories.map(
@@ -167,7 +167,7 @@ function catNav(categories, counts, activeCat, total, wide) {
         `<a class="cat${c === activeCat ? ' is-on' : ''}" href="${catHref(c)}">${esc(c)}<span class="cat__n">${counts.get(c) || 0}</span></a>`
     ),
   ];
-  return `<nav class="cats${wide ? ' cats--wide' : ''}" aria-label="分类">${items.join('')}</nav>`;
+  return `<nav class="cats" aria-label="分类">${items.join('')}</nav>`;
 }
 
 /**
@@ -286,7 +286,12 @@ function layout({
   total,
   body,
   head = '',
-  wide = false,
+  /**
+   * 页面宽度档位：默认宽容器（全站统一档位，顶栏 / 分类栏 / 正文 / 页脚一起切）。
+   * 默认值必须是 true —— 曾经的教训是 `wide` 默认 false，新增的标签页忘了传，
+   * 整页就比全站窄一圈。窄容器成了例外，要窄的页面才显式传 wide: false。
+   */
+  wide = true,
   baseUrl = '',
   canonicalPath = '/',
   ogImage = '',
@@ -340,20 +345,20 @@ ${ogImg ? `<meta name="twitter:image" content="${esc(ogImg)}">\n` : ''}<link rel
 ${head}
 ${jsonLd ? jsonLdBlock(jsonLd) : ''}
 </head>
-<body>
+<body${wide ? ' class="page--wide"' : ''}>
 <header class="top">
-  <div class="wrap${wide ? ' wrap--wide' : ''} top__inner">
+  <div class="wrap top__inner">
     <a class="top__brand" href="/"><img class="top__logo" src="/favicon.svg${iv}" width="24" height="24" alt="">${esc(site.title)}</a>
     <form class="top__search" role="search" onsubmit="return false">
       <input id="q" type="search" placeholder="搜索资源…" autocomplete="off" aria-label="搜索资源">
     </form>
   </div>
 </header>
-${catNav(categories, counts, activeCat, total, wide)}
-<main class="wrap${wide ? ' wrap--wide' : ''}">
+${catNav(categories, counts, activeCat, total)}
+<main class="wrap">
 ${body}
 </main>
-<footer class="foot wrap${wide ? ' wrap--wide' : ''}">
+<footer class="foot wrap">
   ${footNav(footNavCurrent, baseUrl)}
   ${localStats ? STATS_HTML : ''}
   <p>共 ${total} 个资源 · ${esc(site.disclaimer)}</p>
@@ -491,7 +496,6 @@ ${listDataScript({ indexAll, activeCat: '', pageSize })}`;
     title: `${homeTitle}（${total} 项）`,
     description: homeDesc,
     body,
-    wide: true,
     canonicalPath: '/',
     ogImage: shareImage || firstImg,
     ogImageSize: shareImage ? { w: 1200, h: 630 } : null,
@@ -542,7 +546,6 @@ ${listDataScript({ indexAll, activeCat, pageSize })}`;
     title: activeCat,
     description: `${activeCat}资源合集，共 ${items.length} 个，夸克网盘链接，扫码即存`,
     body,
-    wide: true,
     canonicalPath: catHref(activeCat),
     ogImage: firstImg,
     ogImageSize: null,
@@ -748,8 +751,6 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     jsonLd,
     keywords: [item.title, titleSuffix, item.category, ...item.tags].slice(0, 10).join(','),
     rssHref: catFeedHref(item.category),
-    // 详情页与首页/分类页同宽容器，海报卡片左右边线才能严格对齐
-    wide: true,
     footNavCurrent: canonicalPath,
   });
 }
@@ -808,8 +809,6 @@ export function notFoundPage(ctx) {
     title: '页面不存在',
     activeCat: '',
     canonicalPath: '/404.html',
-    // 与首页 / 分类页 / 内容页同宽容器，顶栏到页脚的左右边线一致
-    wide: true,
     body: `<nav class="crumb"><a href="/">首页</a><span>/</span><span>页面不存在</span></nav>
 <div class="card-page">
   <div class="nf">
@@ -884,7 +883,6 @@ ${tagCloudHtml(tags)}
     body,
     canonicalPath: '/all/',
     footNavCurrent: '/all/',
-    wide: true,
     keywords: `全部资源,资源索引,${(categories || []).join(',')},网盘资源`,
     // 与列表页共用 CollectionPage：结构化数据里只列前 30 条，全量链接靠正文的 <a> 给蜘蛛
     jsonLd: {
@@ -964,8 +962,6 @@ ${tagCloudHtml(tags, key)}`;
     ogType: 'website',
     ogImage: (images.get(items[0]?.id) || {}).card || '',
     keywords: [label, `${label}资源`, ...topCats].join(','),
-    // 与首页 / 分类页 / 资源页同宽容器，海报卡片左右边线严格对齐
-    wide: true,
     // 卡片是全量渲染的，不依赖 JS，不需要 noscript 兜底
     jsonLd: {
       '@context': 'https://schema.org',
@@ -1116,7 +1112,6 @@ ${cards}
     body,
     canonicalPath: '/tags/',
     footNavCurrent: '/tags/',
-    wide: true,
     keywords: `标签索引,${tags.map((t) => t.label).join(',')}`,
     jsonLd: {
       '@context': 'https://schema.org',
@@ -1241,8 +1236,6 @@ ${newest
     body,
     canonicalPath: '/about/',
     footNavCurrent: '/about/',
-    // 与首页 / 分类页 / 资源页同宽容器，卡片左右边线严格对齐
-    wide: true,
     keywords: `关于${site.title},${site.title},网盘资源索引`,
   });
 }
@@ -1294,8 +1287,6 @@ ${catFeeds}
     body,
     canonicalPath: '/rss/',
     footNavCurrent: '/rss/',
-    // 与首页 / 分类页 / 资源页同宽容器，卡片左右边线严格对齐
-    wide: true,
     keywords: `${site.title},RSS订阅,RSS feed,网盘资源`,
   });
 }

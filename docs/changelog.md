@@ -1,0 +1,61 @@
+# 变更记录
+
+网站代码的最新修改都记在这里（原在根 README「最新修改」，2026-10-11 迁入）。
+按时间倒序，最新在最上面。
+
+---
+
+## 2026-10-11 · `docs/` 成为经验文档目录，根 README 精简
+
+| 改动 | 文件 | 说明 |
+|---|---|---|
+| 建 `docs/` 索引与约定 | `docs/README.md` | 经验 / 注意事项 / 待办 / 总结统一放 `docs/`；写什么与不写什么、文件命名、新增必须登记索引 |
+| 开发注意事项迁入 | `docs/dev-notes.md` | 从根 README 整段迁入，根 README 只留 4 条要点 |
+| SEO 结论与待办迁入 | `docs/seo.md` | 收录现状、优化建议、下一步，从根 README 迁入 |
+| 变更记录迁入 | `docs/changelog.md` | 本文件；根 README 只留链接 |
+| 根 README 精简 | `README.md` | 删掉迁走的两大节与空的「配图规范 / SKILL 变更」标题；新增「文档」索引表 |
+
+## 2026-10-11 · 标签页宽度归位 + 样式收拢
+
+新增的标签聚合页 `/tag/<slug>/` 没走宽容器，整页比全站窄一圈。修的时候顺手把宽度开关与重复样式收了一遍：
+
+| 改动 | 文件 | 说明 |
+|---|---|---|
+| 页面宽度改成一处开关 | `scripts/lib/render.js`、`theme/assets/style.css` | `<body class="page--wide">` + `--page-max` 取代原先分四处传的 `wide`；删掉 `.wrap--wide` / `.cats--wide`，`layout()` 的 `wide` 默认改 `true`，各页面里 9 处 `wide: true` 全部删除 |
+| 重复样式合并 | `theme/assets/style.css` | 海报（`.tile__poster` + `.poster`）、按钮（`.btn` + `.qrbtn`）、长文本正文、四处计数后缀各自并成一条；两个 `max-width: 560px` 断点合一 |
+| 去掉 3 处 `!important` | `theme/assets/style.css` | `.foot__icp` / `.foot__stat` / `.foot__contact` 补标签名提特异性；`.foot__nav` 本是 `<nav>`，不受 `.foot p` 影响，直接去掉 |
+
+验证：`npm run build` 通过（706 个资源 · 33 个标签页）；`npm run audit:css` 三项全绿；首页 / 分类页 / 详情页 / 标签页 / 内容页 / 404 的 `<body class="page--wide">` 一致。经验已写进 [dev-notes.md](dev-notes.md)。
+
+## 2026-10-10 · 构建改为「内容未变不覆盖」，让蜘蛛能命中 304
+
+每小时全量重建会把 700 多个详情页的 mtime / ETag 一起刷新，蜘蛛带 `If-Modified-Since` 来也永远不命中，每次都是完整 200——抓取预算大半耗在重复下载上（Google 日志 200×810、几乎没有 304）。现在内容没变就沿用旧文件并保留原 mtime：
+
+| 改动 | 文件 | 说明 |
+|---|---|---|
+| `write()` 先比对再写盘 | `scripts/build.js` | 依次比对 outDir 同路径与上一版产物（`BUILD_DIR=public.new` 时对照 `public/`，可用 `PREV_DIR` 改）；相同则跳过，或 `copyFile + utimes` 沿用原 mtime。只处理文本产物，图片仍每次生成（走 30 天缓存，不占抓取预算） |
+| 静态资源版本号改内容哈希 | `scripts/build.js` | 原先 `?v=<commit>`：每个 commit 都改一遍所有页面的 CSS/JS 链接 → 700 多页内容全变 → mtime 全量刷新，304 照样落空。改成 theme/assets 下 css/js 的内容哈希，纯数据提交不再动任何页面 |
+| 构建汇总加一行 | `scripts/build.js` | 输出「未变化文件沿用 N 个（从 public/ 沿用 M 个）；重新生成 K 个」 |
+| 重建频率定为 2h | `README.md`、`deploy/site-autoupdate.sh` | 脚本无新提交时直接跳过，频率只决定上线延迟（≤2h）；急发走 `FORCE=1 site-autoupdate` |
+
+验证：连续两次构建，722 个文件全部沿用、0 个重写（58.7s → 34.9s）；`public.new/resource/mv-010/index.html` 的 mtime 与 `public/` 中的完全一致。
+
+## 2026-10-10 · 只清理 search-index.json 的子路径残留（不挡根路径）
+
+蜘蛛日志里对该文件的 54 次请求全是 404，原建议是整条路径屏蔽。线上实测后修正：根路径是 200，404 全在带目录前缀的子路径上（`app.js` 早期相对路径的历史残留，10-09 已改根绝对路径，但蜘蛛仍按记忆重试）。根路径是 Googlebot 渲染「加载更多」的通道，挡掉等于自断发现路径，所以只清子路径：
+
+| 改动 | 文件 | 说明 |
+|---|---|---|
+| `Disallow: /*/search-index.json` | `scripts/build.js` | 只匹配带目录前缀的索引文件，根目录那份照常允许 |
+| 410 规则 | `deploy/nginx-site.conf.example` | `location ~ ^/.+/search-index\.json$ { return 410; }`，410 比 404 衰退快，且不依赖引擎是否支持通配；必须排在静态资源 location 之前（nginx 正则 location 取第一个命中） |
+
+## 2026-10-09 · 相关推荐排版对齐（每行必须排满）
+
+详情页「相关推荐」原来固定取 6 条，而宫格桌面端一行 5 列，第 6 张必然单独掉到第二行。现在统一按整行出牌：
+
+| 改动 | 文件 | 说明 |
+|---|---|---|
+| 推荐数 6 → 10 | `scripts/lib/render.js` | `relatedOf()` 默认取 10 条（同分类优先、标签重合多的靠前，不够时跨分类同标签补齐），桌面端 5 列 × 2 行正好排满 |
+| 末行零头自动裁掉 | `theme/assets/style.css` | 新增 `.grid--fit`：`nth-child(cols·n+1):nth-last-child(-n+cols-1)` 定位残缺末行的第一张卡，连同后面的兄弟一起 `display:none`。四个断点（5/4/3/2 列）各一组互斥规则，窄屏减列后同样是整行；卡片不足一行时不加这个类，避免藏过头把区块藏没 |
+
+产物验证：668 个资源重新构建通过，660 个详情页恰好输出 10 条；`npm run audit:css` 三项全绿。
