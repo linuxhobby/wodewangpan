@@ -8,6 +8,8 @@
 | 仓库 | `git@github.com:linuxhobby/wodewangpan.git` |
 | 更新方式 | 推到 `main`，VPS 每 2 小时自动拉取并重建（急发用 `FORCE=1 site-autoupdate`） |
 
+> 踩坑经验、注意事项、待办清单一律放 [`docs/`](docs/README.md)，README 只管「怎么搭、怎么部署」。
+
 ## 网站特性
 
 - **数据即内容**：一个分类一个 YAML，改完构建就出整站
@@ -208,6 +210,7 @@ curl -s $S/ | grep canonical       # 应是你的真实域名
 ## 目录结构
 
 ```
+docs/                # 本站经验与备忘：注意事项、SEO 结论、待办清单（索引见 docs/README.md）
 data/                # 一个分类一个 YAML（英文文件名），构建时自动合并
   movie.yaml         # 电影
   tv.yaml            # 电视剧
