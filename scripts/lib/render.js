@@ -964,6 +964,8 @@ ${tagCloudHtml(tags, key)}`;
     ogType: 'website',
     ogImage: (images.get(items[0]?.id) || {}).card || '',
     keywords: [label, `${label}资源`, ...topCats].join(','),
+    // 与首页 / 分类页 / 资源页同宽容器，海报卡片左右边线严格对齐
+    wide: true,
     // 卡片是全量渲染的，不依赖 JS，不需要 noscript 兜底
     jsonLd: {
       '@context': 'https://schema.org',
