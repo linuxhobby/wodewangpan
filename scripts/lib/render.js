@@ -781,6 +781,8 @@ export function aboutPage(ctx) {
   const qqLink = qqLinkOf(site.contact);
   /** 备用邮箱（site.yaml 的 contact.邮箱），加不了群时的兜底通道 */
   const contactEmail = emailOf(site.contact);
+  /** 维护者署名（site.yaml 的 maintainer），留空则不输出这一行 */
+  const maintainer = String(site.maintainer || '').trim();
   const catRows = (categories || [])
     .map(
       (c) =>
@@ -847,6 +849,7 @@ ${newest
   </ul>
 
   <p class="muted">${esc(site.title)} · <a href="${esc(baseUrl)}/">${esc(baseUrl)}</a></p>
+  ${maintainer ? `<p class="muted">维护：${esc(maintainer)}</p>` : ''}
 </div>`;
 
   return layout({

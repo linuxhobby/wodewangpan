@@ -164,6 +164,7 @@ export function loadSite(dataDir) {
     icp: cfg.icp || '',
     contact: cfg.contact && typeof cfg.contact === 'object' ? cfg.contact : null,
     qqGroup: cfg.qqGroup || '',
+    maintainer: cfg.maintainer || '',
     stats: cfg.stats || '',
     homeTitle: cfg.homeTitle || '',
     homeDesc: cfg.homeDesc || '',
