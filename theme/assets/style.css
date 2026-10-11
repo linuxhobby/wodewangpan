@@ -148,6 +148,9 @@ body.page--wide { --page-max: var(--page-wide); }
 }
 .cat:hover { text-decoration: none; color: var(--brand); }
 .cat.is-on { background: var(--brand); border-color: var(--brand); color: var(--surface); font-weight: 600; }
+/* 选中的分类胶囊是品牌色实底：计数若沿用通用次要色会糊在紫底上看不清，
+   这里让它跟着标题一起反白，并抬高透明度补足小字号的对比度 */
+.cat.is-on .cat__n { color: var(--surface); opacity: .8; }
 
 /* ── 列表页 ──────────────────────────── */
 .page__title { font-size: var(--fs-xl); margin: 16px 0 12px; display: flex; align-items: baseline; gap: 8px; }
