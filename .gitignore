@@ -29,6 +29,10 @@ Thumbs.db
 .tmp-serve.err
 .tmp-serve.out
 
+# 夸克 CLI 的落盘产物：browse 任务 JSONL 与写权限探针，会落在执行时的 cwd 下
+browse/
+.quarkclouddrive/
+
 # 本地 skill 与凭据（含 cookie / token，严禁入库；实际放在 ~/.workbuddy/skills/ 下使用）
 skills/
 # skill 安装锁文件，只反映本机的安装状态
