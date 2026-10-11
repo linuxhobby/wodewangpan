@@ -256,11 +256,5 @@ public/              # 构建产物，部署这个目录（586 条时约 17MB，
 
 完整索引与文档规范见 [`docs/README.md`](docs/README.md)。
 
-开发注意事项四条要点（全文见 [`docs/dev-开发注意事项.md`](docs/dev-开发注意事项.md)）：
-
-1. **页面宽度只有一个开关**：`layout()` 的 `wide` 默认 `true`，档位由 `<body class="page--wide">` + `--page-max` 一处决定；新区块用现成的 `.wrap`，别再造 `.xxx--wide` 变体
-2. **样式只有一份来源**：只写 `theme/assets/style.css`，数值一律走 `:root` 令牌，同一视觉只定义一次，少用 `!important`
-3. **卡片结构只改一处**：`theme/assets/card.js` 被构建期与浏览器端共用，两边各抄一份必然长得不一样
-4. **改完自检**：`npm run build && npm run audit:css`
 
 
