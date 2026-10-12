@@ -97,8 +97,8 @@ npm run serve        # 抽查详情页
 | `05动漫` | 动漫 | `an-` | `anime.yaml` |
 | `01游戏` | 游戏 | `game-` | `game.yaml` |
 | `02应用` | 软件 | `app-` | `software.yaml` |
-| `008电子书` | 电子书 | `bk-` | `ebook.yaml` |
-| `007其他` | 其他 | `ot-` | `misc.yaml` |
+| `08电子书` | 电子书 | `bk-` | `ebook.yaml` |
+| `010其他` | 其他 | `ot-` | `misc.yaml` |
 | `09操作系统` | 操作系统 | `os-` | `os.yaml` |
 
 - **按扫描返回顺序编号**，不要自作主张按年份 / 系列重排：站点排序是「`added` 倒序 → `id` 倒序 → 上映日期倒序」，重排会让系列作品在页面上倒过来。
@@ -123,7 +123,44 @@ npm run serve        # 抽查详情页
 
 ---
 
-## 五、反向流程：TMDB 热门自动入库
+## 五、网盘改名 / 分享失效后的修复（2026-10-12 实操）
+
+用户在网盘里改目录名、改编号、或手动取消分享之后，站点数据与网盘会脱节。修复走三步，**顺序不能颠倒**：
+
+```bash
+# ① 目录名核对：按编号把网盘目录与 data/*.yaml 配对
+node ~/.workbuddy/skills/quark-resource-sync/scripts/check-drive-sync.mjs
+
+# ② 链接核对：逐条 share-detail
+node ~/.workbuddy/skills/quark-resource-sync/scripts/check-share-links.mjs
+
+# ③ 重出链并把新链接写回 YAML
+node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-check --apply
+```
+
+### 三类问题，处理方式不同
+
+| 现象 | 含义 | 处理 |
+|---|---|---|
+| 目录名与站点标题对不上（`name_diff`） | 出链之后目录被改名 | 重新出链 + 改写 `quark_url` |
+| `41004 分享的文件不存在` | 文件被挪走 / 删除 / 改名后旧链接指向丢失 | 目录还在，重出链即可恢复 |
+| `41012 该链接已被用户取消分享` | 用户在网盘端主动取消 | **重建不了**，见下 |
+
+`check-drive-sync.mjs` **只比对目录名、不验链接**，改名修复必须再跑第 ② 步；反过来链接失效也不一定能在目录名上看出问题，两个脚本缺一不可。
+
+### 取消分享的边界（本轮实测结论）
+
+- 重新 `share` 会拿 `41026 没有可分享的文件`，连目录内单个文件也出不了链 —— **取消 = 不可恢复**。
+- 这类目录通常只有占位 md 或干脆是空的（典型：`trending-sync` 建好目录后资源还没转存进去）。先 `browse` 看内容：空目录标「待补资源」，等资源到位再出链，**不要写 YAML**。
+- 本轮 6 条属此列：`tv-077 / tv-080 / tv-085 / tv-088 / tv-092 / tv-144`，其中 4 条有百度兜底，`tv-077`、`tv-144` 无任何可用链接。修不了的在收尾报告里逐条列出并问用户下架还是等补资源，不要反复重试。
+
+### 分类目录改名也要同步
+
+用户会改**分类目录**名（`008电子书`→`08电子书`、`007其他`→`010其他`、`99-待删除`→`99-需要删除的移动到这里`）。改完必须同步 skill 里 `scan-new.mjs` / `check-drive-sync.mjs` / `reshare-batch.mjs` 的 `dir` 常量，否则该分类直接扫不到（静默漏掉，不报错）。
+
+---
+
+## 六、反向流程：TMDB 热门自动入库
 
 `trending-sync.mjs` 从 TMDB 今日热门取电影 / 电视剧各 1 部，在网盘对应分类建编号目录 → 出链 → 入库 → 推送。
 
@@ -135,7 +172,7 @@ node scripts/trending-sync.mjs --dry-run --no-build --no-push   # 先看会做�
 
 ---
 
-## 六、相关
+## 七、相关
 
 - skill 本身的完整文档：`~/.workbuddy/skills/quark-resource-sync/SKILL.md`
 - skill 的维护与升级：[skills-skill用法与维护.md](skills-skill用法与维护.md)

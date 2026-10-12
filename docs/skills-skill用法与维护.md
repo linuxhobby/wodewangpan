@@ -3,7 +3,7 @@
 三个夸克相关 skill 的日常用法、安装位置、升级合并流程、双机同步约定、灾后重建。
 
 环境路径见 [environment-环境与命令速查.md](environment-环境与命令速查.md)，入库操作见 [workflow-入库流程.md](workflow-入库流程.md)。
-最近更新：2026-10-11（并入原 `experience.md` 的 skill 维护章节）。
+最近更新：2026-10-12（脚本清单补三个核对 / 重出链脚本；改名与失效修复流程见 [workflow-入库流程.md](workflow-入库流程.md) §五）。
 
 ---
 
@@ -159,6 +159,9 @@ cp -R ~/.workbuddy/skills/quarkclouddrive ~/.trae-cn/skills/
 | `make-entry.mjs` | 生成单条 YAML 条目 |
 | `process-batch.mjs` / `app-batch.mjs` | 批量处理（内建 rename 后刷新 fid 再 share） |
 | `check-desc.mjs` | 检查某分类简介字数达标情况 |
+| `check-drive-sync.mjs` | 核对网盘目录名 vs 站点标题（**只比对名字，不验链接**） |
+| `check-share-links.mjs` | 逐条 `share-detail` 验链接是否还有效、是否被改名 |
+| `reshare-batch.mjs` | 对失效 / 改名条目重新出链，`--apply` 回写 `data/*.yaml` |
 | `backfill-desc.mjs` / `backfill-icons.mjs` / `backfill-tv-spec.mjs` | 存量补齐（简介 / 图标 / 剧集季数） |
 | `placeholder-fill.mjs` | 缺资源目录补占位说明文件 |
 | `trending-sync.mjs` | TMDB 热门反向入库（**会真建目录并 push**） |
