@@ -1,4 +1,4 @@
-# 纪录片资源（88 条）
+# 纪录片资源（86 条）
 # 来源：夸克网盘 SHARE/06纪录片
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -719,18 +719,6 @@
   added: 2026-05-02
   image: dc-018.jpg
 
-- id: dc-017
-  title: "喜马拉雅壮丽之旅"
-  category: 纪录片
-  tags: ["纪录片", "喜马拉雅之旅"]
-  quark_url: "https://pan.quark.cn/s/88bccdb03b80"
-  baidu_url: "https://pan.baidu.com/s/1P_6er2gveQyXA0sXBTOBAQ"
-  baidu_code: "lkr5"
-  description: "继撒哈拉之后，迈克尔·佩林又上路了，这次是喜马拉雅。他从印度出发，穿过尼泊尔、巴基斯坦，一直走到中国境内，全程约两千英里，路上换过火车、吉普和徒步：繁忙喧闹的城市、安静的村庄、雪峰、冰川与低地的孟加拉湾都在路上。佩林的风格一如既往——不赶路、不猎奇，见到什么聊什么，跟赶集的商人、朝圣者、登山者和当地学生都能搭上话，幽默里带着真正的尊重。于是这片地区被呈现出的不是风光明信片，而是人和地形互相塑造的日常。沿途的宗教与族群差异摊得很开，不同信仰的场所交替出现，冲突与共处并存，他也赶上了几场当地节庆。整体更接近一本人文游记，想看纯粹登山与极限风光的会失望。佩林的运气也不错，赶上了几场当地节庆。它记录的年代距今已有二十多年，沿途的变化本身也成了一份对照材料。｜TMDB 8.2"
-  date: 2004-10-03
-  added: 2026-05-02
-  image: dc-017.jpg
-
 - id: dc-016
   title: "南美遗失的帝国"
   category: 纪录片
@@ -936,18 +924,6 @@
   date: 2025-04-22
   added: 2026-09-30
   image: mv-046.jpg
-
-- id: mv-212
-  title: "Making All Quiet on the Western Front"
-  category: 纪录片
-  tags: ["纪录片", "Making All Quiet on the Western Front Making All Quiet on the Western Front"]
-  quark_url: "https://pan.quark.cn/s/43c0eea32bb8"
-  baidu_url: "https://pan.baidu.com/s/1QDxlQgEyF4YxcKcfCfNFcg"
-  baidu_code: "41g0"
-  description: "Netflix 为 2022 年那部德语反战电影配了这支幕后特辑，导演 Ingo Becker。爱德华·贝尔格、主演丹尼尔·布吕尔与作曲者等人陆续出镜，讲他们怎么在泥地里搭起一战战壕、怎么用实拍与灯光把战场的压迫感做出来，以及配乐与音效如何把士兵的恐惧推到观众面前。片子里能看到不少具体决策：为什么坚持长镜头跟拍，为什么把泥和血的处理做到那种程度，为什么选择用极简的电子配乐去压画面。它也不回避困难：天气、工期与安全限制，都要在现场逐一落实。片中对原著小说与这次改编的差异还有简短说明，能看出主创为什么做了这些取舍。时长只有半小时左右，建议先看正片再补这支特辑，会很清楚地看到一个镜头背后有多少工种在协同。喜欢反战题材的，看完多半会想把原著找来读一遍。｜TMDB 6.1"
-  date: 2022-11-16
-  added: 2026-09-30
-  image: mv-212.jpg
 
 - id: dc-078
   title: "一级方程式：疾速争胜 第七季"

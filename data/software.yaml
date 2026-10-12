@@ -383,19 +383,6 @@
   image: app-030.jpg
 
 
-- id: app-031
-  title: "VoiceOver Designer"
-  category: 软件
-  tags: ["软件", "开发工具", "macOS", "VoiceOver Designer"]
-  quark_url: "https://pan.quark.cn/s/3719d3a0081b"
-  baidu_url: "https://pan.baidu.com/s/1zmDAJxukjYbrLfGdk96Ukw"
-  baidu_code: "lo5e"
-  description: "做无障碍适配最容易被忽略的一步，是做完之后没人真的去听一遍。界面元素的朗读顺序排好了，可视障用户实际听到的顺序是否如你所想，不看不听是不知道的。VoiceOver Preview 就是为这一步准备的配套应用：它专门打开 .vodesign 后缀的文件，也就是在 VoiceOver Designer 里排好的无障碍布局方案。流程很直接——先在 Designer 里把界面元素的朗读顺序与内容编排妥当，导出之后用这个 Preview 打开试听，确认顺序是否符合预期，不对再回去改。它不负责排布本身，只负责验证，两者是分开的两个应用。要真的听到效果，得先在系统里启用 VoiceOver，也可以让 Siri 帮你打开。适合正在做无障碍适配、需要验证改造成果的开发者与设计师。配套工具支持 macOS。｜Mikhail Rubanov"
-  date: 2023-02-26
-  added: 2026-10-04
-  image: app-031.jpg
-
-
 - id: app-032
   title: "UnnaturalScrollWheels"
   category: 软件
@@ -420,19 +407,6 @@
   date: 2026-08-12
   added: 2026-10-04
   image: app-033.jpg
-
-
-- id: app-034
-  title: "Tuneful for Spotify & Music"
-  category: 软件
-  tags: ["软件", "音乐", "macOS", "Tuneful for Spotify & Music"]
-  quark_url: "https://pan.quark.cn/s/6eab5b0d8e26"
-  baidu_url: "https://pan.baidu.com/s/1v06wfZ21KQ8OqQHmY7pGpA"
-  baidu_code: "w6v6"
-  description: "Tuneful 为 Spotify 和 Apple Music 带来精美的原生音乐控制，可从刘海、菜单栏或可自定义的迷你播放器操控音乐，完全融入 macOS。刘海集成：悬停即唤出播放器，带触感反馈，外观与行为可自定义；菜单栏播放器：菜单栏直接显示正在播放的内容，点击展开精致的控制浮层，多种样式可选；迷你播放器：多款精美样式让控制始终顺手；无需打开 Spotify 或 Apple Music，即可从刘海、菜单栏或迷你播放器把当前歌曲加入收藏；用 Swift 与 SwiftUI 打造，快速流畅、资源占用低；可接入 Spotify 与 Last.fm，支持曲目记录（scrobble）、更新正在播放状态与收藏曲目。每个界面都是可选的，只开启你需要的部分。｜Martin Fekete"
-  date: 2025-01-06
-  added: 2026-10-04
-  image: app-034.jpg
 
 
 - id: app-035
@@ -669,19 +643,6 @@
   image: app-052.jpg
 
 
-- id: app-053
-  title: "Omnivore"
-  category: 软件
-  tags: ["软件", "macOS", "Omnivore"]
-  quark_url: "https://pan.quark.cn/s/84e3d6f066c3"
-  baidu_url: "https://pan.baidu.com/s/1lRJ0PR3w9S0Hv868T5iX9Q"
-  baidu_code: "mwqd"
-  description: "网页上的长文，八成的阅读障碍来自版式：两侧的广告、飘浮的导航栏、塞在段落中间的关注引导。Omnivore 是给重度阅读者做的开源稍后读方案——看到长文来不及读，先丢进来，它会把正文抓取下来重新排版，去掉广告、导航栏和花哨样式，改成适合长时间盯着读的版式，图片和代码块都保留。读的时候可以划重点、写批注，这些内容同步回个人 Library，也能导出到 Obsidian、Notion、Readwise 这类工具里接着加工，不会读完就散掉。文章都能离线归档，配上高亮和自由标签，攒起来就是自己的资料库。它解决的不是「没时间读」，而是「读的时候总被打扰」这一层。适合每天要消化大量文章的人。开源免费，主页 https://github.com/omnivore-app/omnivore。"
-  date: 2026-10-04
-  added: 2026-10-04
-  image: app-053.jpg
-
-
 - id: app-054
   title: "MarkEdit"
   category: 软件
@@ -719,19 +680,6 @@
   date: 2019-02-06
   added: 2026-10-04
   image: app-056.jpg
-
-
-- id: app-057
-  title: "Mackup"
-  category: 软件
-  tags: ["软件", "macOS", "Mackup"]
-  quark_url: "https://pan.quark.cn/s/6f54ddc00090"
-  baidu_url: "https://pan.baidu.com/s/1jZrgFc4L4qZbjpacCMzhgg"
-  baidu_code: "4u1h"
-  description: "换台新 Mac 最耗时的不是装软件，而是把那些年攒下的配置一点一点调回来：ssh 的 config、vim 的 vimrc、zsh 的别名、编辑器的键位。它们全都散落在主目录的各个角落，光记住位置本身就是负担。Mackup 是个命令行工具，内置一份常见软件的支持列表，知道这些配置各自放在哪里，跑一遍就把文件归到一个统一目录（通常是 Dropbox 或 iCloud），再用符号链接替回去，原来的位置照样能读到。换机器时只要恢复目录、执行 mackup restore，所有软件的习惯设置一次性就位。对常重装系统、或者在多台机器之间来回切换的人，这一步能省下几个小时的手工配置。开源免费，代码在 https://github.com/lra/mackup。"
-  date: 2026-10-04
-  added: 2026-10-04
-  image: app-057.jpg
 
 
 - id: app-058
@@ -940,19 +888,6 @@
   date: 2018-12-21
   added: 2026-10-04
   image: app-073.jpg
-
-
-- id: app-074
-  title: "Ice Cubes for Mastodon"
-  category: 软件
-  tags: ["软件", "社交", "macOS", "Ice Cubes for Mastodon"]
-  quark_url: "https://pan.quark.cn/s/d5f4b4139e38"
-  baidu_url: "https://pan.baidu.com/s/1W3jFK_WvrzpwAHcxZqV5EQ"
-  baidu_code: "3pzh"
-  description: "Ice Cubes 是一款快速、可靠且美观的 Mastodon 客户端，可连接任意 Mastodon 实例并使用其丰富功能。浏览主页、跨站（联邦）与本地时间线；推送通知；时间线同步；对任意嘟文收藏、加书签、转发、分享乃至引用，引用功能还会把其他嘟文链接嵌入内容中，方便直接阅读。出色的 iPad 支持，含专门的通知栏；可用列表整理时间线，随时增删成员、新建列表，并按列表、关注的话题标签等筛选。接入 Mastodon 强大的流式 API，时间线实时刷新不错过任何内容；还能置顶其他实例的本地时间线，用一个账号跟进多个社区。支持标签分组（用多个标签拼出专属时间线）、探索与搜索、私信专属标签页、在应用内直接编辑个人资料、多账号快速切换，以及大量个性化选项。内置 AI 工具：撰写嘟文时可帮你纠错甚至缩短文字，还能自动生成图片描述。全部开源，源码见 github.com/Dimillian/IceCubesApp，Mac 上同样可用。｜Thomas Ricouard"
-  date: 2023-01-19
-  added: 2026-10-04
-  image: app-074.jpg
 
 
 - id: app-075
@@ -1280,19 +1215,6 @@
   image: app-099.jpg
 
 
-- id: app-100
-  title: "Gifski"
-  category: 软件
-  tags: ["软件", "摄影与视频", "macOS", "Gifski"]
-  quark_url: "https://pan.quark.cn/s/5ea39d83b886"
-  baidu_url: "https://pan.baidu.com/s/1gneebwXoIlapVjWb58PRrg"
-  baidu_code: "upkd"
-  description: "把视频转换成高品质 GIF。Gifski 可将视频转成每帧数千色的动画 GIF，这得益于高效的跨帧调色板与时间抖动等精妙技术。请注意：Gifski 是转换器而非 GIF 创作工具，不会支持往 GIF 里添加文字或元素，这类需求更适合用剪辑软件完成。功能：视频裁剪与裁切；精确控制尺寸；控制循环与「溜溜球」往返播放；调节速度与循环延迟；转换前预览 GIF；复制、分享或直接拖出 GIF；提供分享扩展与系统服务；可选生成体积更小的低画质版本；自动保存到「下载」文件夹；最高生成 50fps 的 GIF；也可导出修改后的视频而不转成 GIF；支持「快捷指令」。转换方式：把视频拖到窗口或 Dock 图标；点击「打开」按钮选择视频；或在 Finder 中右键视频，用「打开方式」选择本应用。支持 macOS 支持的所有视频格式（H.264、HEVC、ProRes 等 .mp4/.mov），不支持 QuickTime Animation，建议改用 ProRes 4444 XQ。｜Sindre Sorhus"
-  date: 2018-02-23
-  added: 2026-10-04
-  image: app-100.jpg
-
-
 - id: app-101
   title: "Calendr"
   category: 软件
@@ -1345,32 +1267,6 @@
   image: app-104.jpg
 
 
-- id: app-105
-  title: "Cronica"
-  category: 软件
-  tags: ["软件", "娱乐", "macOS", "Cronica"]
-  quark_url: "https://pan.quark.cn/s/64d66e849dcb"
-  baidu_url: "https://pan.baidu.com/s/1jsTqfprg9ubPm8wY-oyXhA"
-  baidu_code: "py4k"
-  description: "Cronica 是一款精致的极简影视观剧清单应用，覆盖 iPhone、iPad、Mac、Apple Watch、Apple TV 与 Apple Vision Pro：记录看过的片、不丢进度、随时准备下一部，无论你是刷剧狂魔还是休闲观众，都能把片库打理得井井有条。功能：看下一集，首页直达待看剧集，不必翻找上次看到哪；随手把电影与剧集标记为已看，进度与清单同步；当清单中的影片上映或有新剧集上线时收到提醒；片单、评分、笔记与偏好在设备间通过 iCloud 私密同步；支持 Siri 与「快捷指令」（最多 10 个 App 快捷指令），可语音添加片目、标记已看、查看待看、打开搜索；提供主屏幕小组件与控制中心组件；可从 IMDb、Letterboxd、TMDb、JustWatch 等通过分享表单或快捷指令添加片目，并分享能在应用或网页中打开的 cronica.watch 链接；可看预告片，浏览演员、季集与详情；基于 TMDb 的 JustWatch 数据查看各平台上线情况并按常用服务筛选；支持自定义列表、筛选排序、主题配色与首页定制；还可选择连接 SIMKL 或 TMDb 账号同步片库。｜Egger & Co"
-  date: 2022-05-05
-  added: 2026-10-04
-  image: app-105.jpg
-
-
-- id: app-106
-  title: "Control Room Clock"
-  category: 软件
-  tags: ["软件", "摄影与视频", "macOS", "Control Room Clock"]
-  quark_url: "https://pan.quark.cn/s/3469f157756e"
-  baidu_url: "https://pan.baidu.com/s/1tFffGv-yVyZde3vlIVHZuQ"
-  baidu_code: "3fbs"
-  description: "演播室里的时间不能差半秒：串联单上写着几点几分起播，导播、音频、字幕各盯各的设备，大家对表靠的是同一个时钟。Control Room Clock 是给广播工程师、制作人员和媒体专业人士做的精密计时工具，思路是让时间始终在你眼前——它可以常亮显示，悬浮在所有应用与空间之上，也可以开点击穿透，把位置锁住之后照常在它下面工作，不会被挡住操作。设备之间有时差或者对不上标准时间时，可以用时间偏移加减秒数来对齐演播室设备或不同时区。显示部分能自己定：尺寸、颜色、透明度与字体都按控制室的布置来调，12 与 24 小时制可切换，也能显示秒，数字用的是七段数码字体，远距离读数清楚。适用于广播控制室、电台与电视台演播室、直播现场、流媒体与录音棚，以及任何需要精确时间同步的工作环境。支持 macOS。｜Andrew Logan"
-  date: 2025-11-26
-  added: 2026-10-04
-  image: app-106.jpg
-
-
 - id: app-107
   title: "CalendarX"
   category: 软件
@@ -1384,32 +1280,6 @@
   image: app-107.jpg
 
 
-- id: app-108
-  title: "BrightIntosh"
-  category: 软件
-  tags: ["软件", "macOS", "BrightIntosh"]
-  quark_url: "https://pan.quark.cn/s/325df8c97bb9"
-  baidu_url: "https://pan.baidu.com/s/1YovqnNa7zJc3Nfb3_zEYFg"
-  baidu_code: "hgug"
-  description: "MacBook Pro 的 XDR 屏能跑到很高的亮度，但系统只在播放 HDR 内容时才放开这个上限，日常使用时屏幕其实一直被按着。BrightIntosh 专门解决这一件事：把上限去掉，让整块屏幕在看普通内容时也能跑到 XDR 的高亮度，不需要外接显示器，也不用先播一段 HDR 视频。它常驻菜单栏，点一下开启，随时切回系统默认，来回切换没有成本。实际用处很直接——在窗边、户外或者光线很强的房间里工作时，屏幕不再暗到看不清，这一点在咖啡馆靠窗的位置感受最明显。要注意长期高亮度会更耗电、机器也可能更烫，建议按需开启而不是一直挂着。只有带 XDR 屏的机型才有这个效果，别的 Mac 上装了也调不出额外亮度。开源免费，主页 https://brightintosh.de。macOS 原生包。"
-  date: 2026-10-04
-  added: 2026-10-04
-  image: app-108.jpg
-
-
-- id: app-109
-  title: "Blurred"
-  category: 软件
-  tags: ["软件", "实用工具", "macOS", "Blurred"]
-  quark_url: "https://pan.quark.cn/s/436c6cdbebc5"
-  baidu_url: "https://pan.baidu.com/s/1BdoRHWT8rGcAOR05oMdfTw"
-  baidu_code: "4bz9"
-  description: "注意力被抢走，往往不是因为有人打扰，而是余光里还有别的东西在动。Blurred 的做法很物理：把当前没在用的窗口压暗，让眼睛自然落回到正在工作的那一个上面，其余一切退到背景里。它提供两种聚焦范围——单屏模式只照顾主屏幕上最前面的窗口，并行模式则让每台显示器各自聚焦自己最前面的窗口，接了外接屏之后哪种更合适，试一次就知道了。压暗的程度是可调的，从轻微降低存在感到几乎看不清，按自己的忍受程度定。模糊程度可以直接在菜单栏图标上滚动调整，也可以设一个全局快捷键随时开关，嫌每次手动麻烦还能让它随登录自动启动。新版本补上了中文界面，配置没有语言门槛。它不是要你关掉别的窗口，只是让它们暂时不那么显眼，屏幕越大、窗口越多，这种视觉收束的效果越明显。｜Dwarves Foundation"
-  date: 2020-02-20
-  added: 2026-10-04
-  image: app-109.jpg
-
-
 - id: app-110
   title: "BatteryBoi"
   category: 软件
@@ -1421,19 +1291,6 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-110.jpg
-
-
-- id: app-111
-  title: "Auto Mute :Screen Lock & Sleep"
-  category: 软件
-  tags: ["软件", "实用工具", "macOS", "Auto Mute :Screen Lock & Sleep"]
-  quark_url: "https://pan.quark.cn/s/541c25b43c64"
-  baidu_url: "https://pan.baidu.com/s/1Pm3c9Gg2VQCnOoe0B5i5WQ"
-  baidu_code: "pcn2"
-  description: "开放工位上的尴尬时刻：你去接了杯水，同事路过你的 Mac 顺手点开什么，声音外放，全办公室都知道你刚才在看什么。Auto Mute 就是为这个瞬间做的——锁屏或者机器进入休眠的一刹那，音频立刻静音；等你回来解锁，音量自动恢复到离开前的数值，不用手动调回去，也不用提醒别人别乱碰。它后来加的那个功能其实更常用：任何耳机、耳塞、蓝牙或外接音频设备一断开，内置扬声器马上静音，避免你拔掉耳机的瞬间声音突然公放，这一条在会议室和图书馆尤其救命。恢复音量这一步也是自动的，回来解锁后不用再手动调到原来的大小。软件常驻后台，几乎感觉不到它的存在，也不需要额外配置。如果你经常带着 Mac 在外面用，或者座位就在人来人往的地方，这类保险装上比事后尴尬划算得多。这类工具装好就该忘掉，它唯一该出现的时刻是意外发生时。｜khalid altariqi"
-  date: 2026-08-19
-  added: 2026-10-04
-  image: app-111.jpg
 
 
 - id: app-112
@@ -1462,19 +1319,6 @@
   image: app-113.jpg
 
 
-- id: app-114
-  title: "ArMed eHealth"
-  category: 软件
-  tags: ["软件", "医疗", "macOS", "ArMed eHealth"]
-  quark_url: "https://pan.quark.cn/s/a610f3c3f8c3"
-  baidu_url: "https://pan.baidu.com/s/14Lpd69u_1YlLvUoPJXSN2A"
-  baidu_code: "ovus"
-  description: "这是亚美尼亚国家集中电子健康系统的患者端入口，目标是让居民少跑几趟窗口。当前版本能办的事包括：查看自己签约的家庭医生、一键为这位医生预约门诊、接收系统通知，身份认证之后还能查看自己的就诊记录，查询付费就诊、卡片绑定与支付情况，管理哪些人可以访问自己的医疗数据，以及查看关联家人和个人资料。官方表示后续会陆续开放护理计划、医疗文档、化验与影像结果，以及电子处方续药，换句话说，现在能办的主要是预约和查询这一层，更完整的病历查阅还在路上。它的适用范围很明确——只有使用该国公立医疗系统的居民才用得上，不在该国就医的话装上也调不出任何数据。这类应用的价值不在界面好看，而在于把原本必须本人到场的流程搬到了手机上。另有 macOS 版本可在 Mac 上使用。｜SYLEX SA"
-  date: 2020-05-11
-  added: 2026-10-04
-  image: app-114.jpg
-
-
 - id: app-115
   title: "AnyBar"
   category: 软件
@@ -1486,19 +1330,6 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-115.jpg
-
-
-- id: app-116
-  title: "Actions"
-  category: 软件
-  tags: ["软件", "实用工具", "macOS", "Actions"]
-  quark_url: "https://pan.quark.cn/s/2fbbc35f13a6"
-  baidu_url: "https://pan.baidu.com/s/1U9wRmVKZW9T9ChoIXJC1pQ"
-  baidu_code: "0ozm"
-  description: "系统自带的「快捷指令」能做的事不少，但一碰到稍微具体的活就接不上了——把一张图转成另一种格式、临时调某个 API、在文件系统层面搬个东西。Actions 就是补这一层的：它自己不做任何事，装好之后会在快捷指令的动作清单里多出一大批现成操作，你在流程里拖进去就能用，不必为每个需求单独找工具或者写脚本。作者 Sindre Sorhus 做这类小而实的 Mac 与 iOS 工具多年，风格延续了他一贯的取向：功能不花哨，但刚好卡在原生能力的缺口上。要注意这版上架时间较早，系统大版本更新之后部分动作有可能失效，遇到不灵的时候先别急着怀疑自己写的流程。原简介还提到过一个 iOS 上的小毛病：动作没出现时，需要先启动本应用再重启设备。支持 macOS。｜Sindre Sorhus"
-  date: 2021-10-28
-  added: 2026-10-04
-  image: app-116.jpg
 
 
 - id: app-117
@@ -1577,19 +1408,6 @@
   date: 2026-10-07
   added: 2026-10-07
   image: app-122.jpg
-
-
-- id: app-123
-  title: "HEU KMS Activator"
-  category: 软件
-  tags: ["软件", "激活工具", "系统工具", "Windows", "Office", "HEU KMS Activator"]
-  quark_url: "https://pan.quark.cn/s/ab40ebc8557c"
-  baidu_url: "https://pan.baidu.com/s/1i6j4Gl69mNXRrNuZeGuBTQ"
-  baidu_code: "q37d"
-  description: "轻量的 Windows 与 Office 激活工具，免安装、解压即用，本次收录 v61.1.0。智能激活会按数字许可证、KMS38、OEM、KMS 的优先级自动挑选最合适的方式，并跳过已经永久激活的系统；支持本地搭建 KMS 服务器、安装与卸载自动续期（含任务计划模式）、清除 KMS 客户端信息，做数字许可证与 KMS38（有效期至 2038 年）激活，OEM 激活与 $OEM$ 文件夹生成，密钥安装、卸载、查看与 Office 许可证清理，激活信息备份还原，Windows 10 版本切换，Office 零售版转批量授权版，并提供静默参数方便批量部署。覆盖 Windows XP 到 11 及全系 Server、Office 2010 到 2021 与 365，完全离线也能完成激活。请仅在测试与学习环境中使用，商业场景请购买正版授权。（开源免费，主页 https://github.com/zbezj/HEU_KMS_Activator）｜知彼而知己"
-  date: 2026-10-07
-  added: 2026-10-07
-  image: app-123.jpg
 
 
 - id: app-124

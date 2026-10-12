@@ -159,6 +159,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 网盘目录删掉之后，站点侧必须同步清除，**构建不会回收已删条目的旧产物**：
 
 1. `data/*.yaml` 删条目（顺手改文件头部的条数注释）；
+   ⚠️ **别用「按 `- id:` 切块再 join 重写」的脚本删**——它只保留条目块，会把文件开头的 `# XX资源（N 条）` 注释整段吃掉（2026-10-12 踩了，movie/tv/documentary 三个文件的头部一度全丢，只能从 `.bak` / git 历史捞回来）。删完务必校验：`js-yaml` 解析条数对得上、首行仍是 `#`。
 2. `static/images/<id>.jpg` 删海报；
 3. `public/` 里删 `resource/<id>/`、`img/<id>-*.webp`、`qr/<id>-*.svg`；
 4. 重新构建 + 冒烟（首页 200、已下架详情页 404）→ 提交推送。
