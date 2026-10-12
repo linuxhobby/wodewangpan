@@ -1570,7 +1570,7 @@
   title: "COMFAST CF-WP1200 驱动"
   category: 软件
   tags: ["软件", "驱动", "无线网卡", "蓝牙", "Windows", "CF-WP1200"]
-  quark_url: "https://pan.quark.cn/s/4038296175ce"
+  quark_url: "https://pan.quark.cn/s/64a7085e01f2"
   baidu_url: "https://pan.baidu.com/s/1-8VciWml4F-PigZMWzG8jw"
   baidu_code: "24cu"
   description: "COMFAST CF-WP1200 系列 PCIe 无线网卡的 Windows 驱动合集，含 WiFi 与蓝牙两部分。该系列采用 Intel 8265AC 芯片方案，PCIe-X1 接口，双频 1200Mbps（2.4GHz 300Mbps 加 5GHz 867Mbps），支持 802.11ac / a / b / g / n 与 MU-MIMO，蓝牙 4.2，配外置 2×6dBi 高增益天线，兼容各品牌主板的 PCIe 插槽。本驱动适用于 CF-WP1200、CF-WP1200 V2、CF-WP1200 PRO、CF-WP1200-M 四个型号，覆盖 Windows 7 / 8 / 8.1 / 10，装好后无线网络与蓝牙即可正常工作。（官方网站 http://www.comfast.cn）｜COMFAST 深圳市四海众联"
@@ -1583,7 +1583,7 @@
   title: "HEU KMS Activator"
   category: 软件
   tags: ["软件", "激活工具", "系统工具", "Windows", "Office", "HEU KMS Activator"]
-  quark_url: "https://pan.quark.cn/s/c96ea2fef94b"
+  quark_url: "https://pan.quark.cn/s/ab40ebc8557c"
   baidu_url: "https://pan.baidu.com/s/1i6j4Gl69mNXRrNuZeGuBTQ"
   baidu_code: "q37d"
   description: "轻量的 Windows 与 Office 激活工具，免安装、解压即用，本次收录 v61.1.0。智能激活会按数字许可证、KMS38、OEM、KMS 的优先级自动挑选最合适的方式，并跳过已经永久激活的系统；支持本地搭建 KMS 服务器、安装与卸载自动续期（含任务计划模式）、清除 KMS 客户端信息，做数字许可证与 KMS38（有效期至 2038 年）激活，OEM 激活与 $OEM$ 文件夹生成，密钥安装、卸载、查看与 Office 许可证清理，激活信息备份还原，Windows 10 版本切换，Office 零售版转批量授权版，并提供静默参数方便批量部署。覆盖 Windows XP 到 11 及全系 Server、Office 2010 到 2021 与 365，完全离线也能完成激活。请仅在测试与学习环境中使用，商业场景请购买正版授权。（开源免费，主页 https://github.com/zbezj/HEU_KMS_Activator）｜知彼而知己"
