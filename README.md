@@ -235,26 +235,29 @@ tools/
   fill-desc.mjs          # 把 .tmp/desc-draft.json 里的简介写回 YAML（自动接回【季/集】前缀与 ｜TMDB 后缀，--strict 拦不合格稿）
   list-short-desc.mjs    # 列出正文不足指定字数的条目（npm run list:short）
   icon-poster.mjs        # 把应用图标合成 2:3 竖版海报（软件 / 音频等非影视资源）
-  book-cover-douban.mjs  # 从豆瓣图书抓书籍封面（电子书 bk- 优先用它，配图经验待补，见 docs/）
+  book-cover-douban.mjs  # 从豆瓣图书抓书籍封面（电子书 bk- 优先用它，见 docs/content-内容生产.md）
   book-poster.mjs        # 豆瓣查无此书时，生成书封海报兜底
-  set-poster.mjs         # 套装 / 合辑专用深色封面（豆瓣没有对应单册封面时用；配图经验待补，见 docs/）
-docs/                # 经验 / 注意事项 / 待办 / 总结（开发、入库、配图、skill、SEO…）都写在这里，见 docs/README.md
+  set-poster.mjs         # 套装 / 合辑专用深色封面（豆瓣没有对应单册封面时用，见 docs/content-内容生产.md）
+docs/                # 经验类文档（4 篇 + 索引），按干活的场景划分，见 docs/README.md
+  content-内容生产.md   # 入库八步、编号、失效修复、简介文案、配图、skill
+  site-建站与开发.md     # URL 禁忌、样式约定、构建部署、环境速查
+  growth-收录与流量.md   # 收录现状、抓取预算、日志解析、nginx 爬虫治理
+  record-待办变更与规划.md  # 待办 / 规划 / 变更记录
+  README.md           # 索引与文档规范
 deploy/              # 部署用：Nginx 配置示例、自动更新脚本、统计日志格式、搜索引擎提交脚本
 public/              # 构建产物，部署这个目录（本目录不入库）
 ```
 
 ## 文档
 
-经验 / 注意事项 / 待办 / 总结都在 [`docs/`](docs/README.md)，根 README 只留「怎么把站点跑起来」。
+`docs/` 只有 4 篇 + 索引，按「干活时在干什么」划分。索引与命名规范见 [`docs/README.md`](docs/README.md)。
 
 | 文档 | 内容 |
 |---|---|
-| [`docs/dev-开发注意事项.md`](docs/dev-开发注意事项.md) | 开发注意事项：改代码前必读 |
-| [`docs/workflow-入库流程.md`](docs/workflow-入库流程.md) | 入库 SOP：八步流程、编号与 id 对照、合集拆分 |
-| [`docs/content-内容规范.md`](docs/content-内容规范.md) / [`images-配图规范.md`](docs/images-配图规范.md) | 简介写法红线 / 配图图源与出图 |
-| [`docs/seo-收录与优化.md`](docs/seo-收录与优化.md) | SEO 收录现状、优化建议与待办 |
-| [`docs/todo-待办清单.md`](docs/todo-待办清单.md) | 已知欠账与下一步 |
-| [`docs/changelog-变更记录.md`](docs/changelog-变更记录.md) | 变更记录（最新修改） |
+| [`docs/content-内容生产.md`](docs/content-内容生产.md) | 入库 SOP、编号与 id、失效修复与下架、简介文案红线、配图图源与兜底工具、skill 用法与维护 |
+| [`docs/site-建站与开发.md`](docs/site-建站与开发.md) | 改代码前必读：URL 与收录禁忌、样式与卡片约定、config / data、构建产物、部署与 Nginx、环境速查 |
+| [`docs/growth-收录与流量.md`](docs/growth-收录与流量.md) | 收录现状、抓取预算、日志解析方法、nginx 爬虫四层策略、优化项 |
+| [`docs/record-待办变更与规划.md`](docs/record-待办变更与规划.md) | 待办与已闭环、待评审的功能 / 内容规划、变更记录 |
 
 完整索引与文档规范见 [`docs/README.md`](docs/README.md)。
 

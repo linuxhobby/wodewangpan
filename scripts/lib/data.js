@@ -20,7 +20,7 @@ export const MIN_DESC = 300;
 
 /**
  * 正文字数：【…】标签与结尾 ｜… 署名不计入。全站只有这一个口径，改它会同时
- * 影响 list-short-desc / fill-desc / skill 的判定，详见 docs/dev-开发注意事项.md。
+ * 影响 list-short-desc / fill-desc / skill 的判定，详见 docs/site-建站与开发.md。
  */
 export function bodyLength(text) {
   return [
@@ -67,7 +67,7 @@ function setCategorySlugs(map) {
 /**
  * 标签 → URL 段，三级取值：手写别名 → 拼音兜底 → 原样（编码中文）。
  * 别名表「只增不改」：给已收录的标签事后补别名等于换 URL 丢排名。
- * 完整口径与反面案例见 docs/dev-开发注意事项.md 第一节。
+ * 完整口径与反面案例见 docs/site-建站与开发.md 第一节。
  */
 let TAG_SLUGS = new Map();
 function setTagSlugs(map) {

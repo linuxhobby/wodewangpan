@@ -1,5 +1,5 @@
 // 宫格卡片的唯一一份模板：构建期刷进首屏 HTML，浏览器端渲染「加载更多」和搜索结果。
-// 只做字符串拼接，不碰 DOM 与 Node API，两端才能共用（详见 docs/dev-开发注意事项.md）。
+// 只做字符串拼接，不碰 DOM 与 Node API，两端才能共用（详见 docs/site-建站与开发.md）。
 
 export function esc(value) {
   return String(value ?? '')

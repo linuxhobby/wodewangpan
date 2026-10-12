@@ -259,7 +259,7 @@ function layout({
   total,
   body,
   head = '',
-  // 默认宽容器，已经是全站唯一档位；要窄才显式传 false（见 docs/dev-开发注意事项.md）
+  // 默认宽容器，已经是全站唯一档位；要窄才显式传 false（见 docs/site-建站与开发.md）
   wide = true,
   baseUrl = '',
   canonicalPath = '/',
@@ -532,7 +532,7 @@ function linkRow(link) {
 </div>`;
 }
 
-// 详情页之间原本零互链，蜘蛛爬进来出不去；这段静态输出给它们一条向深处走的路（理由见 docs/seo-收录与优化.md）。
+// 详情页之间原本零互链，蜘蛛爬进来出不去；这段静态输出给它们一条向深处走的路（理由见 docs/growth-收录与流量.md）。
 // 取 10 条 = 宫格一行 5 列排满两行，窄屏由 .grid--fit 藏掉末行零头
 function relatedOf(item, all, n = 10) {
   const tags = new Set(item.tags || []);
@@ -760,7 +760,7 @@ export function notFoundPage(ctx) {
 
 /* ── 全量索引页 /all/ ─────────── */
 
-/** 存在理由：列表页卡片是 JS 补齐的，不执行 JS 的蜘蛛到列表页就没有下一条路（见 docs/seo-收录与优化.md） */
+/** 存在理由：列表页卡片是 JS 补齐的，不执行 JS 的蜘蛛到列表页就没有下一条路（见 docs/growth-收录与流量.md） */
 export function allPage(ctx) {
   const { site, items, categories, total, baseUrl, tags } = ctx;
 
@@ -825,7 +825,7 @@ ${tagCloudHtml(tags)}
 /** 「热门标签」区块里最多列多少个 */
 const TAG_CLOUD_MAX = 20;
 
-/** 只取前 20 个：没它标签页站内任何导航都到不了，只能等蜘蛛从 sitemap 挖（见 docs/seo-收录与优化.md） */
+/** 只取前 20 个：没它标签页站内任何导航都到不了，只能等蜘蛛从 sitemap 挖（见 docs/growth-收录与流量.md） */
 function tagCloudHtml(tags, currentKey = '') {
   const all = tags || [];
   const others = all.filter((t) => t.key !== currentKey).slice(0, TAG_CLOUD_MAX);
@@ -845,7 +845,7 @@ function tagCloudHtml(tags, currentKey = '') {
 ${more}`;
 }
 
-/** 详情页只有「片名 + 分类」两条路，而用户搜的是「题材/属性 + 网盘」的组合词（见 docs/seo-收录与优化.md） */
+/** 详情页只有「片名 + 分类」两条路，而用户搜的是「题材/属性 + 网盘」的组合词（见 docs/growth-收录与流量.md） */
 export function tagPage(ctx) {
   const { site, tag, images, baseUrl, tags } = ctx;
   const { key, label, count, items } = tag;
@@ -976,7 +976,7 @@ function feedRow(baseUrl, href, label, note = '') {
 </div>`;
 }
 
-/** 标签云只互链前 20 个，后排标签站内任何导航都到不了；这一页给全部标签一个入口（见 docs/seo-收录与优化.md） */
+/** 标签云只互链前 20 个，后排标签站内任何导航都到不了；这一页给全部标签一个入口（见 docs/growth-收录与流量.md） */
 export function tagsPage(ctx) {
   const { site, tags = [], baseUrl, total } = ctx;
   /** 标签下的分类分布（取前 3）：让「剧情」「Linux」这类标签一眼看出涵盖什么 */
@@ -1216,7 +1216,7 @@ export function sitemapXml(baseUrl, resources, categories, extras = [], images =
   // 首页 / 关于本站 / RSS 订阅 / 各分类页
   const line = (loc, lastmod, priority, extra = '') =>
     `  <url><loc>${esc(loc)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}<priority>${priority}</priority>${extra}</url>`;
-  /** 占位海报一张被几十个 URL 引用，写进图片索引只会稀释真海报，按文件名里的 placeholder 排除（见 docs/seo-收录与优化.md） */
+  /** 占位海报一张被几十个 URL 引用，写进图片索引只会稀释真海报，按文件名里的 placeholder 排除（见 docs/growth-收录与流量.md） */
   const imageExtra = (r) => {
     const detail = images ? (images.get(r.id) || {}).detail : '';
     if (!detail || detail.includes('placeholder')) return '';
