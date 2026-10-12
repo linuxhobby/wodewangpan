@@ -931,6 +931,8 @@ export function feedXml({ site, items, baseUrl, categories, feedPath = '/feed.xm
         poster ? `<p><img src="${esc(poster)}" width="240" alt="${esc(it.title)}"></p>` : '',
         it.description ? `<p>${esc(it.description)}</p>` : '',
         links,
+        // 不少阅读器只显示 description 正文、不显示 <link>，正文里没有入口就点不回站内
+        `<p><a href="${esc(url)}">阅读原文</a></p>`,
       ]
         .filter(Boolean)
         .join('');
