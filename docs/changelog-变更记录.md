@@ -7,6 +7,20 @@
 
 ## 2026-10-12
 
+### 文档：新增 Cloudflare Pages 迁移评估（未执行）
+
+评估把 `www.wodewangpan.top` 迁到 CF Pages 免费计划的可行性，结论与操作要点落进文档，代码一行没动。
+
+| 改动 | 文件 | 说明 |
+|---|---|---|
+| 评估结论 | [dev-开发注意事项.md](dev-开发注意事项.md) §六 | Pages 构建配置表（`npm ci && npm run build` / 输出 `public` / `NODE_VERSION=20`）、额度体积核对、两个上线即坏的阻塞、CF Free 无中国节点的速度上限 |
+| 待办登记 | [todo-待办清单.md](todo-待办清单.md) §三 | 新增「Cloudflare Pages 试用」，明确第一步是修验证文件、且不许先改 DNS |
+| 纠错 | [dev-开发注意事项.md](dev-开发注意事项.md) §六 | 划掉旧记录「`baidu_verify_*.html` 永久保留在 `public/` 防丢」：`public/` 不入库且每次构建覆盖，保不住。验证文件实为不入库，靠 VPS nginx 从 `/opt/seo/`、`/opt/indexnow/` 映射 |
+
+要点：`baidu_verify_*.html` 与 IndexNow `key.txt` 都不在仓库里，Pages 上没有 nginx 承接映射，直接部署会让百度验证和 IndexNow 当场 404；444 探针 + referer 零回流名单这套治理也无法平移到 CF WAF。因此定性为「省运维、多一层容灾」，不解决收录，真要做就 `xxx.pages.dev` 双跑对比再决定切不切。
+
+---
+
 ### 网盘改名后重出链 24 条 + 修复流程沉淀
 
 用户在夸克 SHARE 里改了一批子目录名（含分类目录 `008电子书`→`08电子书`、`007其他`→`010其他`），导致站点链接与网盘脱节。核对后重新出链 24 条（mv/tv/dc/an/app/ot），并顺带把 `mv-240` 的内容修正为《黑寡妇》（原条目内容与网盘目录不符，海报一并换掉）。

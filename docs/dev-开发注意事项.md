@@ -3,7 +3,7 @@
 改代码 / 改数据 / 动部署之前必读。按「踩了会怎样」分组，**改 URL 相关的排最前**——这类错了不会报错，只会悄悄丢收录。
 
 适用：本站（`www.wodewangpan.top`）前端、构建脚本、数据与部署的改动。
-最近更新：2026-10-11（原 `dev-notes.md` 与 `pitfalls.md` 合并）。
+最近更新：2026-10-12（第六节补「迁 Cloudflare Pages」可行性评估）。原 `dev-notes.md` 与 `pitfalls.md` 合并。
 
 ---
 
@@ -164,6 +164,30 @@ const NON_RESOURCE_FILES = new Set(['site.yaml', 'tags.yaml']);
 - Nginx 的 410 规则（`^/.+/search-index\.json$`）**必须排在静态资源 location 之前**——nginx 正则 location 取第一个命中。
 - 静态资源 location 带 `access_log off`，成功的 json 请求**不进日志**，只有 404 经 `error_page` 落到 `location /` 才被记录。日志里「全是 404」有一半是采样偏差，别拿它当抓取量。
 - 改 nginx 的三步走与「必须放行清单」回归，见 [bot-traffic-蜘蛛流量治理.md](bot-traffic-蜘蛛流量治理.md) 第七节。
+
+### 迁到 Cloudflare Pages：可行性与上线前必修（2026-10-12 评估，未执行）
+
+结论先说：**技术上可行、免费额度足够，但不适合直接切主站**——Pages 上没有 nginx，而本站的蜘蛛治理整套长在 nginx 上。真要试，顺序是先修验证文件、用 `xxx.pages.dev` 双跑对比，而不是先改 DNS。
+
+Pages 侧配置（对着仓库实测过，不是猜的）：
+
+| 项 | 值 | 依据 |
+|---|---|---|
+| Framework preset | `None` | 非框架项目 |
+| Build command | `npm ci && npm run build` | `package.json` 的 `build` = `node scripts/build.js` |
+| Output directory | `public` | `build.js` 里 `outDir` = 仓库根 `public`；`public/` 整目录不入库，由 CI 自建 |
+| Production branch | `main` | 与 VPS 拉取分支一致 |
+| 环境变量 | `NODE_VERSION=20` | `engines` 只写 `>=18`，不锁死会让构建 Node 版本随 CF 默认漂移 |
+
+额度与体积够用：`public/` 36MB、700 多页，上限是 2 万文件 / 单文件 25MB；带宽与请求数不限量，构建 500 次/月——入库一次推 `main` 消耗一次，正常节奏用不完。`sharp` 在 `optionalDependencies`，装不上也不会中断构建，只是配图处理降级，首次构建日志值得确认有没有 skip。切过去之后 `deploy/site-autoupdate.sh` 的 pull+build+reload 就退役了；IndexNow 每日 03:00 的推送只是往 `api.index-now.org` 发 POST，与站点托管在哪无关，cron 可以继续留在 VPS。
+
+**两个必修阻塞，不修就是上线即坏：**
+
+1. **站点验证文件会 404。** `baidu_verify_*.html` 和 IndexNow 的 `key.txt` 都被 `.gitignore` 排除，线上靠 nginx 从 `/opt/seo/`、`/opt/indexnow/` 映射（见根 README）。Pages 没有 nginx、构建产物里也不含这两个文件 → 百度站长平台验证当场失效、IndexNow 密钥不可访问。修法：仓库根建 `seo/` 放这两个文件，`.gitignore` 补 `!seo/` 例外（现有全局规则会把它们一并忽略），再在 `build.js` 末尾把 `seo/*` 拷进 `outDir`。
+   > 顺带纠正本文档一处旧记录：曾写「`baidu_verify_*.html` 永久保留在 `public/` 防丢」——`public/` 既不入库又每次被构建覆盖，那个位置保不住东西。
+2. **蜘蛛治理无法平移。** 444 探针、referer 零回流 403 名单都是 nginx 逻辑；CF 侧只有 WAF 自定义规则（Free 约 10 条，可挂在 Pages 域名上），能按 UA / IP / URI 拦，做不到「看 referer 判是不是真人回流」这种带状态的判定。抓取限速 zone 也不必重建（Pages 走 CF 缓存），但这等于第五节那套四层策略只剩一个粗筛。判据与教训见 [bot-traffic-蜘蛛流量治理.md](bot-traffic-蜘蛛流量治理.md) 第五、六节。
+
+真正的天花板还是原来那条，跟托管在哪无关：**CF Free 没有中国网络节点**，大陆访问速度与 Baiduspider 抓取稳定性预计都不如现在的香港 VPS；备案 + 大陆节点仍是百度系唯一破局手段（见 [seo-收录与优化.md](seo-收录与优化.md) 第四节）。所以 Pages 的价值主要是省运维和多一层容灾，不是解决收录。
 
 ---
 

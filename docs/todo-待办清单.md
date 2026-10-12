@@ -1,7 +1,7 @@
 # 待办 · 已知欠账与下一步
 
 还没做的优化、已知欠账、下一步。**做完的移到文末「已闭环」并从清单划掉。**
-最近更新：2026-10-12（6 条取消分享的电视剧已下架，移入「已闭环」）。
+最近更新：2026-10-12（6 条取消分享的电视剧已下架，移入「已闭环」；第三节新增 Cloudflare Pages 试用一条，评估完成、代码未动）。最初由原 `experience.md`、`seo.md`、`bot-traffic-governance.md` 汇总（2026-10-11）。
 
 ---
 
@@ -39,6 +39,7 @@
 
 ## 三、站点与运维
 
+- [ ] **Cloudflare Pages 试用（评估已做完，代码未动）**：配置与两个必修阻塞写在 [dev-开发注意事项.md](dev-开发注意事项.md) 第六节。真要动手，第一步是修验证文件——建仓库根 `seo/` 放 `baidu_verify_*.html` 与 IndexNow `key.txt`、`.gitignore` 补 `!seo/` 例外、`build.js` 拷进 `outDir`；否则 Pages 上百度验证和 IndexNow 直接 404。蜘蛛治理（444 探针 + referer 零回流名单）无法平移，且 CF Free 无中国节点，所以只双跑对比，别先改 DNS。
 - [ ] **重建爬虫限速（per-UA 方案）**：`00-crawler-limit.conf` 因单 IP 令牌桶无效已摘掉（见 [bot-traffic-蜘蛛流量治理.md](bot-traffic-蜘蛛流量治理.md) 第六节）。若日后按 UA 固定 token 重建，记得同时放进 `deploy/` 并在 `deploy/nginx-site.conf.example` 补上 `limit_req` 那行。
 - [ ] **首页品牌分享卡**：改完站点配置要重跑 `node tools/share-poster.mjs`。
 
