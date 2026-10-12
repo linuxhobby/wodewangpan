@@ -2,14 +2,10 @@ import { categorySlug, tagSlug, tagKey } from './data.js';
 // 卡片模板与浏览器端（theme/assets/app.js）共用同一份：改结构两边同步生效
 import { esc, tileHtml } from '../../theme/assets/card.js';
 
-/**
- * 「最新」角标的判定不在渲染层做：build.js 用 newestIdsOf() 按构建当天（北京时间）
- * 算出一批 id，通过 ctx.newestIds 传进来。首页、分类页、搜索索引共用同一份，
- * 不会出现两个页面各判一套、标得不一样的情况。
- */
+// 「最新」角标的判定不在渲染层：build.js 用 newestIdsOf() 算好后通过 ctx.newestIds 传进来，
+// 保证首页 / 分类页 / 搜索索引标的是同一批
 
-/** 页脚访问统计（site.yaml 里 stats: local 时启用）：读取 VPS 上由 nginx 日志生成的 /stats.json，不依赖任何第三方。
- *  同时种一年期 vid cookie 供服务端区分访客；接口不可用时数字保持占位符，不影响页面 */
+/** 页脚访问统计（stats: local 时启用）：读 VPS 上由 nginx 日志生成的 /stats.json，另种一年期 vid cookie 区分访客 */
 const STATS_HTML =
   '<p class="foot__stat">总访问量 <span id="stat-pv">–</span> · 访客数 <span id="stat-uv">–</span>' +
   ' · 今日 <span id="stat-tpv">–</span> · 访客 <span id="stat-tuv">–</span></p>';
@@ -55,17 +51,11 @@ const iconSvg = (key) =>
     ? `<svg class="foot__icon" viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">${ICONS[key]}</svg>`
     : '';
 
-/**
- * 页脚导航：全站每页底部的固定入口。
- * href 写站内路径（同时用于 aria-current 比对）；
- * abs: true 的条目输出时拼上站点域名，写成完整网址。
- */
+// 全站每页底部的固定入口。abs: true 的输出时拼上站点域名
 const FOOT_NAV = [
   { href: '/', label: '网站首页', abs: true },
   { href: '/about/', label: '关于本站' },
-  // 全量索引页：每页底部都有一条入口，蜘蛛从任何一页都能走到全部详情页
   { href: '/all/', label: '全部资源' },
-  // 标签总览页：单标签页之间的互链只取前 20 个，排在后面的标签需要一个集中入口
   { href: '/tags/', label: '标签索引' },
   { href: '/sitemap.xml', label: '网站地图', abs: true },
   { href: '/rss/', label: 'RSS订阅' },
@@ -98,9 +88,7 @@ const emailOf = (contact) => contactValue(contact, EMAIL_KEY);
 /** QQ 群加入链接（key 写 qq / qq群 / qq group，且必须是个网址），没有则返回空串 */
 const qqLinkOf = (contact) => contactValue(contact, QQ_KEY, (v) => HTTP_RE.test(v));
 
-/** 页脚联系方式：site.yaml 的 contact 写成 { 平台: 账号或链接 }，留空整段则不渲染。
- *  页面上只显示图标，账号名写进 aria-label / title，不直接露出。
- *  groupName = site.yaml 的 qqGroup（QQ 群名），有值时群名一并写进 title / aria-label。 */
+/** 页面上只出图标，账号名写进 aria-label / title；groupName 是 site.yaml 的 qqGroup */
 const contactItems = (contact, groupName = '') => {
   const group = String(groupName || '').trim();
   return contact && typeof contact === 'object'
@@ -146,7 +134,6 @@ const contactHtml = (contact, groupName = '') => {
 export function itemHref(id) {
   return `/resource/${encodeURIComponent(id)}/`;
 }
-/** 分类页链接 */
 export function catHref(category) {
   return `/category/${encodeURIComponent(categorySlug(category))}/`;
 }
@@ -170,10 +157,7 @@ function catNav(categories, counts, activeCat, total) {
   return `<nav class="cats" aria-label="分类">${items.join('')}</nav>`;
 }
 
-/**
- * 分类 → schema.org 类型，帮助搜索引擎理解资源类型。
- * 没列出的分类落到 CreativeWork——猜错类型比不标更糟（比如把软件标成 Movie）。
- */
+/** 分类 → schema.org 类型。没列出的落到 CreativeWork：猜错类型比不标更糟 */
 const SCHEMA_TYPE = {
   电影: 'Movie',
   电视剧: 'TVSeries',
@@ -184,11 +168,7 @@ const SCHEMA_TYPE = {
   电子书: 'Book',
 };
 
-/**
- * 详情页 title 后缀：按分类带一个需求词。
- * 只写资源名的话，只有已经知道这部片的人会点；加上「网盘资源」才能接到
- * 「片名 + 网盘 / 下载」这类长尾搜索——这类词才是本站真正的流量来源。
- */
+/** 详情页 title 后缀：只有资源名的话接不住「片名 + 网盘下载」这类长尾词 */
 const TITLE_SUFFIX = {
   电影: '电影网盘资源',
   电视剧: '电视剧网盘资源',
@@ -241,11 +221,7 @@ function jsonLdBlock(data) {
   return `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 }
 
-/**
- * 站长平台验证 meta 的 name 由各家自己定，Bing 甚至不叫 bing-site-verification，
- * 手拼极易写错（写错等于没验证，页面照常打开，看不出问题），所以按引擎名固定映射。
- * 表里没有的引擎退化为 <引擎名>-site-verification，方便以后直接加新平台。
- */
+/** 各家 meta name 不统一（Bing 叫 msvalidate.01），手拼写错等于没验证且看不出问题，所以固定映射 */
 const VERIFICATION_META = {
   google: 'google-site-verification',
   bing: 'msvalidate.01',
@@ -257,10 +233,7 @@ const VERIFICATION_META = {
   yandex: 'yandex-verification',
 };
 
-/**
- * site.verification: { google: 'xxx', baidu: 'yyy' } → 对应的 <meta> 串。
- * 未配置或值为空时返回空串，不往页面里塞空标签。
- */
+/** 未配置或值为空时返回空串，不往页面里塞空标签 */
 function verificationMeta(site) {
   const conf = site.verification;
   if (!conf || typeof conf !== 'object') return '';
@@ -286,11 +259,7 @@ function layout({
   total,
   body,
   head = '',
-  /**
-   * 页面宽度档位：默认宽容器（全站统一档位，顶栏 / 分类栏 / 正文 / 页脚一起切）。
-   * 默认值必须是 true —— 曾经的教训是 `wide` 默认 false，新增的标签页忘了传，
-   * 整页就比全站窄一圈。窄容器成了例外，要窄的页面才显式传 wide: false。
-   */
+  // 默认宽容器，已经是全站唯一档位；要窄才显式传 false（见 docs/dev-开发注意事项.md）
   wide = true,
   baseUrl = '',
   canonicalPath = '/',
@@ -372,7 +341,6 @@ ${localStats ? STATS_SCRIPT : ''}
 `;
 }
 
-/** 宫格卡片（海报墙）：最新资源排在最前，前 newest 条打「最新」角标 */
 /** 构建期渲染卡片：把资源条目与配图映射摊平成模板需要的字段 */
 function cardHtml(item, images, isNew = false, eager = false) {
   const img = images.get(item.id) || {};
@@ -390,13 +358,7 @@ function cardHtml(item, images, isNew = false, eager = false) {
 /** 首页每个分类展示的条数：PC 端宫格 5 列，取 5 正好排满一行 */
 const HOME_PER_CAT = 5;
 
-/**
- * 首页分类区块：按分类切组，每组只留最新的 perCat 条。
- *
- * 顺序两种：
- *   fixed  —— 用 site.yaml 的 categories 顺序，回访的用户每次进来位置一致；
- *   recent —— 按各分类最新一条的入库时间倒序，进了新货的分类自动上浮，代价是位置会变。
- */
+/** 顺序 fixed = site.yaml 的分类顺序（位置稳定）；recent = 按各分类最新入库倒序（新货自动上浮） */
 function homeGroups(items, categories, byCat, perCat, order) {
   const pool = byCat || new Map();
   const groups = (categories || [])
@@ -412,13 +374,7 @@ function homeGroups(items, categories, byCat, perCat, order) {
   return groups.sort((a, b) => (key(a) < key(b) ? 1 : key(a) > key(b) ? -1 : 0));
 }
 
-/**
- * 首页无 JS 时的纯链接清单：把卡片之外剩下的资源按分类列全。
- *
- * 抓取盲区补偿：首页卡片现在只有「分类数 × 每类几条」这么多，不执行 JS 的爬虫
- * （百度、各种社交 / AI 抓取器）走到首页就只能看见这几个入口。这份清单让它们照旧
- * 能从首页走完全部详情页——不能只靠 /all/：首页权重最高，首页到详情页不该依赖 JS。
- */
+/** 首页卡片只有「分类数 × 每类几条」，不执行 JS 的爬虫到首页就只剩几个入口；这份清单补上这条路 */
 function noscriptHome(groups) {
   const rest = groups
     .map((g) => ({ cat: g.cat, list: g.list.slice(g.shown.length) }))
@@ -436,23 +392,13 @@ ${rest
 </noscript>`;
 }
 
-/**
- * 列表页内联索引：搜索的兜底数据（断网或还没预取到 search-index.json 时也能搜）。
- * 只内联前两屏，剩余按需异步补齐，避免 HTML 过大导致抓取超时。
- * 每条上的 isNew 由构建端按「当天入库」算好，前端直接读，不必再传一个「前几条算新」的数字。
- */
+/** 搜索的兜底数据（断网或还没取到 search-index.json 时也能搜）；只内联前两屏，其余异步补齐 */
 function listDataScript({ indexAll, activeCat, pageSize }) {
   const indexData = (indexAll || []).filter((it) => !activeCat || it.category === activeCat);
   return `<script type="application/json" id="list-data" data-total="${indexData.length}" data-category="${esc(activeCat)}">${JSON.stringify(indexData.slice(0, pageSize * 2)).replace(/</g, '\\u003c')}</script>`;
 }
 
-/**
- * 首页：按分类分区，每个分类给出最新几条 + 一个通往分类页的「查看全部」。
- *
- * 为什么不再是一条按入库时间排下来的大列表：电影这类大分类（几百条）几乎占满首屏，
- * 动漫 / 操作系统这些小分类永远沉在下面露不出来。分区之后每个分类在首页都有固定席位，
- * 任何一类进了新货，当天就能在首页看到——顺带也给了每个分类页一条首页内链。
- */
+/** 分区而不排一条大列表：否则电影这类大分类占满首屏，小分类永远沉底看不见 */
 function homePage(ctx) {
   const { site, items, categories, total, pageSize, images, baseUrl, indexAll, shareImage, byCat } = ctx;
   // 首页 SEO 文案取自 site.yaml 的 homeTitle / homeDesc / homeH1，占位符 {total}、{categories}
@@ -586,15 +532,8 @@ function linkRow(link) {
 </div>`;
 }
 
-/**
- * 详情页「相关推荐」：同分类优先，标签重合多的排前面；同分类凑不够时用跨分类同标签的补齐。
- *
- * 存在理由（SEO）：详情页之间原本零互链，蜘蛛爬进来就出不去，593 个详情页各自是孤岛。
- * 这段是构建期静态输出的，不依赖 JS，蜘蛛能顺着它继续往深处走。
- *
- * 取 10 条是因为宫格桌面端一行 5 列：10 条正好排满两行。窄屏减列后由 CSS
- * （style.css 的 .grid--fit）自动藏掉末行零头，保证任何宽度下都是整行整行地出现。
- */
+// 详情页之间原本零互链，蜘蛛爬进来出不去；这段静态输出给它们一条向深处走的路（理由见 docs/seo-收录与优化.md）。
+// 取 10 条 = 宫格一行 5 列排满两行，窄屏由 .grid--fit 藏掉末行零头
 function relatedOf(item, all, n = 10) {
   const tags = new Set(item.tags || []);
   const score = (it) => (it.tags || []).filter((t) => tags.has(t)).length;
@@ -755,10 +694,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   });
 }
 
-/**
- * 404 插画：三张海报，中间那张「消失」（虚线框 + 禁用符号），
- * 与本站最常见的 404 原因——资源被取消分享——对应得上。
- */
+// 中间那张海报「消失」，对应本站最常见的 404 原因——资源被取消分享
 const NF_ART = `<svg class="nf__art" viewBox="0 0 240 116" role="presentation" aria-hidden="true">
   <rect x="18" y="24" width="54" height="76" rx="8" fill="var(--fill-placeholder)"/>
   <rect x="93" y="24" width="54" height="76" rx="8" fill="none" stroke="var(--brand)" stroke-width="2" stroke-dasharray="6 6"/>
@@ -767,11 +703,7 @@ const NF_ART = `<svg class="nf__art" viewBox="0 0 240 116" role="presentation" a
   <line x1="107" y1="49" x2="133" y2="75" stroke="var(--brand)" stroke-width="3" stroke-linecap="round"/>
 </svg>`;
 
-/**
- * 404 页面：沿用内容页骨架（面包屑 + 卡片）。
- * 除了大号 404 与操作按钮，再给出「大家在找」标签入口和一行最新资源，
- * 让人不必退回搜索引擎，从这一页就能继续走下去。
- */
+/** 404 页：除了 404 与操作按钮，再给「大家在找」标签入口和一行最新资源，让人不必退回搜索引擎 */
 export function notFoundPage(ctx) {
   const { images, indexAll } = ctx;
   const picks = (indexAll || []).slice(0, 5);
@@ -780,9 +712,7 @@ export function notFoundPage(ctx) {
 <ul class="grid">${picks.map((it) => cardHtml(it, images, !!it.isNew, true)).join('')}</ul>`
     : '';
 
-  // 全站出现频次最高的标签作为快捷搜索入口；同一分类最多占 2 个位置，
-  // 否则热词会清一色来自收录最多的那个分类（电影），覆盖不到软件 / 电子书等
-  // 跨分类的标签按首次出现的分类归属，限流粒度因此是「主要分类」而非严格去重
+  // 同一分类最多占 2 个位，否则热词清一色来自收录最多的那个分类（电影），覆盖不到小分类
   const tagStat = new Map();
   for (const it of indexAll || []) {
     for (const t of it.tags || []) {
@@ -830,14 +760,7 @@ export function notFoundPage(ctx) {
 
 /* ── 全量索引页 /all/ ─────────── */
 
-/**
- * 全量索引页：把所有详情页的链接平铺成纯 HTML，按分类分组。
- *
- * 存在的理由（SEO）：列表页 HTML 里只渲染前 pageSize 张卡片，其余靠 JS 拉
- * search-index.json 补齐——不执行 JS 的蜘蛛走到列表页就没有下一条路了
- * （实测 Googlebot 只覆盖了 122 个资源页，而 Yandex 靠 sitemap 走了 514 个）。
- * 这一页给蜘蛛一条「一次抓取即可走完全站」的通道，也不需要任何 JS。
- */
+/** 存在理由：列表页卡片是 JS 补齐的，不执行 JS 的蜘蛛到列表页就没有下一条路（见 docs/seo-收录与优化.md） */
 export function allPage(ctx) {
   const { site, items, categories, total, baseUrl, tags } = ctx;
 
@@ -902,11 +825,7 @@ ${tagCloudHtml(tags)}
 /** 「热门标签」区块里最多列多少个 */
 const TAG_CLOUD_MAX = 20;
 
-/**
- * 热门标签区块：标签页之间互链用的。
- * 没有它的话标签页只能靠 sitemap 被发现——站内任何导航都到不了，
- * 蜘蛛抓到一张孤零零的页面，权重也传不出去。
- */
+/** 只取前 20 个：没它标签页站内任何导航都到不了，只能等蜘蛛从 sitemap 挖（见 docs/seo-收录与优化.md） */
 function tagCloudHtml(tags, currentKey = '') {
   const all = tags || [];
   const others = all.filter((t) => t.key !== currentKey).slice(0, TAG_CLOUD_MAX);
@@ -926,16 +845,7 @@ function tagCloudHtml(tags, currentKey = '') {
 ${more}`;
 }
 
-/**
- * 标签聚合页：把带同一个标签的资源聚成一页。
- *
- * 存在的理由（SEO）：详情页只有「片名 + 分类」两条路可走，而用户实际搜的是
- * 「悬疑 网盘」「macOS 软件」这类「题材/属性 + 网盘」的组合词——
- * 分类页粒度太粗（电影 335 条），标签页才是接得住这层长尾的那一档。
- *
- * 只给资源数达标的标签建页：724 个标签里 662 个只出现 1 次，照单全收等于
- * 批量造垃圾页（清洗逻辑见 data.js 的 collectTags）。
- */
+/** 详情页只有「片名 + 分类」两条路，而用户搜的是「题材/属性 + 网盘」的组合词（见 docs/seo-收录与优化.md） */
 export function tagPage(ctx) {
   const { site, tag, images, baseUrl, tags } = ctx;
   const { key, label, count, items } = tag;
@@ -944,9 +854,13 @@ export function tagPage(ctx) {
   const catCount = new Map();
   for (const it of items) catCount.set(it.category, (catCount.get(it.category) || 0) + 1);
   const topCats = [...catCount].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([c]) => c);
+  // 定制文案（config/tags.yaml 的 tagMeta）：给与分类页重合的标签换一个视角
+  const meta = (ctx.tagMeta || new Map()).get(label);
+  const fill = (s) => String(s || '').replace(/\{count\}/g, count);
+  const pageName = fill(meta?.title) || `${label}相关资源`;
 
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="/all/">全部资源</a><span>/</span><span>${esc(label)}</span></nav>
-<h1 class="page__title">${esc(label)}<span class="page__n">${count} 个资源</span></h1>
+<h1 class="page__title">${esc(fill(meta?.h1) || label)}<span class="page__n">${count} 个资源</span></h1>
 <ul class="grid">
 ${items.map((it, i) => cardHtml(it, images, false, i < 5)).join('\n')}
 </ul>
@@ -954,8 +868,10 @@ ${tagCloudHtml(tags, key)}`;
 
   return layout({
     ...ctx,
-    title: `${label}相关资源`,
-    description: `带「${label}」标签的网盘资源共 ${count} 个${topCats.length ? `，以${topCats.join('、')}为主` : ''}，打开即用，扫码即存`,
+    title: pageName,
+    description:
+      fill(meta?.desc) ||
+      `带「${label}」标签的网盘资源共 ${count} 个${topCats.length ? `，以${topCats.join('、')}为主` : ''}，打开即用，扫码即存`,
     activeCat: '',
     body,
     canonicalPath,
@@ -969,7 +885,7 @@ ${tagCloudHtml(tags, key)}`;
         collectionPageJsonLd({
           baseUrl,
           path: canonicalPath,
-          name: `${label}相关资源 - ${site.title}`,
+          name: `${pageName} - ${site.title}`,
           items,
         }),
         {
@@ -996,10 +912,7 @@ function rfc822(value) {
 /** RSS 里最多放多少条（够订阅器拉取，也不至于让文件过大） */
 const RSS_MAX = 50;
 
-/**
- * RSS 2.0 源：全站或单个分类的最新资源。
- * description 里放海报 + 简介 + 网盘链接，订阅器里直接能看到转存入口。
- */
+/** description 里放海报 + 简介 + 网盘链接，订阅器里直接能看到转存入口 */
 export function feedXml({ site, items, baseUrl, categories, feedPath = '/feed.xml', title, description }) {
   const self = `${baseUrl}${feedPath}`;
   const homeLink = `${baseUrl}/`;
@@ -1061,15 +974,7 @@ function feedRow(baseUrl, href, label, note = '') {
 </div>`;
 }
 
-/**
- * 标签总览页 /tags/：把建了页的标签集中列到一页。
- *
- * 单标签页之间靠 tagCloudHtml 互链，但它只取前 20 个——排在后面的标签站内
- * 任何导航都到不了，只能等蜘蛛从 sitemap 挖。这一页给全部标签一个集中入口，
- * 同时挂进页脚，用户也终于能直接按标签浏览。
- *
- * 每个标签带资源数和分类分布：纯链接墙容易被判薄内容，有这两项页面才有实质信息。
- */
+/** 标签云只互链前 20 个，后排标签站内任何导航都到不了；这一页给全部标签一个入口（见 docs/seo-收录与优化.md） */
 export function tagsPage(ctx) {
   const { site, tags = [], baseUrl, total } = ctx;
   /** 标签下的分类分布（取前 3）：让「剧情」「Linux」这类标签一眼看出涵盖什么 */
@@ -1309,12 +1214,7 @@ export function sitemapXml(baseUrl, resources, categories, extras = [], images =
   // 首页 / 关于本站 / RSS 订阅 / 各分类页
   const line = (loc, lastmod, priority, extra = '') =>
     `  <url><loc>${esc(loc)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}<priority>${priority}</priority>${extra}</url>`;
-  /**
-   * 图片扩展：详情页海报是本站唯一的大批量原创图片资源，走图片搜索是除了网页搜索之外
-   * 第二个真实入口。Google 只认 image:loc，百度图片也读同一份扩展。
-   * 缺图资源用的是「分类 + 暂无配图」占位海报，同一张图会被几十个 URL 重复引用，
-   * 写进图片索引只会稀释真正有价值的海报，所以按文件名里的 placeholder 排除掉。
-   */
+  /** 占位海报一张被几十个 URL 引用，写进图片索引只会稀释真海报，按文件名里的 placeholder 排除（见 docs/seo-收录与优化.md） */
   const imageExtra = (r) => {
     const detail = images ? (images.get(r.id) || {}).detail : '';
     if (!detail || detail.includes('placeholder')) return '';
