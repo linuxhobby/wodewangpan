@@ -224,21 +224,21 @@ config/              # 站点配置，与资源数据分开存放
 static/
   favicon.svg        # 站点图标唯一源文件（换 logo 就改它）；构建时拷到根目录并生成 favicon.ico / apple-touch-icon.png
   share.jpg          # 首页品牌分享卡（1200×630），构建时拷到站点根目录供 og:image 用
-  images/            # 配图，文件名与资源 id 对应：<id>.jpg / .png / .webp / .svg；全部平铺在一个目录，不按分类分桶（图源与出图规范见 docs/images-配图规范.md）
+  images/            # 配图，文件名与资源 id 对应：<id>.jpg / .png / .webp / .svg；全部平铺在一个目录，不按分类分桶）
 theme/assets/        # 前端样式与脚本，构建时拷到 public/assets/
 scripts/             # 构建 / 预览脚本（lib/ 是构建核心：读数据、出图片、渲染页面）
 tools/
   sitestats.py           # 访问统计脚本（VPS 方案用到）
   share-poster.mjs       # 生成首页品牌分享卡 static/share.jpg（改站点配置后重跑）
   fill-desc.mjs          # 把 .tmp/desc-draft.json 里的简介写回 YAML（自动接回【季/集】前缀与 ｜TMDB 后缀，--strict 拦不合格稿）
-  list-short-desc.mjs    # 列出正文不足指定字数的条目（npm run list:short，默认 120 字）
+  list-short-desc.mjs    # 列出正文不足指定字数的条目（npm run list:short）
   icon-poster.mjs        # 把应用图标合成 2:3 竖版海报（软件 / 音频等非影视资源）
   book-cover-douban.mjs  # 从豆瓣图书抓书籍封面（电子书 bk- 优先用它，配图经验待补，见 docs/）
   book-poster.mjs        # 豆瓣查无此书时，生成书封海报兜底
   set-poster.mjs         # 套装 / 合辑专用深色封面（豆瓣没有对应单册封面时用；配图经验待补，见 docs/）
 docs/                # 经验 / 注意事项 / 待办 / 总结（开发、入库、配图、skill、SEO…）都写在这里，见 docs/README.md
 deploy/              # 部署用：Nginx 配置示例、自动更新脚本、统计日志格式、搜索引擎提交脚本
-public/              # 构建产物，部署这个目录（586 条时约 17MB，不入库）
+public/              # 构建产物，部署这个目录（本目录不入库）
 ```
 
 ## 文档
