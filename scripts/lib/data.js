@@ -402,6 +402,12 @@ export function loadTagConfig(configDir) {
     exclude: Array.isArray(cfg.tagExclude)
       ? cfg.tagExclude.map((x) => String(x ?? '').trim()).filter(Boolean)
       : [],
+    // 已知且照样要保留页面的近重复标签：它们与某个分类页高度重合是数据现状决定的，
+    // 已经权衡过「要这个入口」优先于「去重」，构建时不再重复提醒。区别于 exclude——
+    // exclude 是不建页，这里是建页但不报警
+    overlapAllow: Array.isArray(cfg.tagOverlapAllow)
+      ? cfg.tagOverlapAllow.map((x) => String(x ?? '').trim()).filter(Boolean)
+      : [],
     // 标签页 vs 分类页的近重复阈值（Jaccard 相似度），超了构建时告警。配 1 等于关掉
     overlapMax: Number(cfg.tagOverlapMax) > 0 ? Number(cfg.tagOverlapMax) : DEFAULT_TAG_OVERLAP_MAX,
     // 近重复检测的最小条数门槛；显式配 0 = 不设门槛，所以要区分「没配」和「配了 0」

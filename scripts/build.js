@@ -535,6 +535,9 @@ if (fs.existsSync(qqGroupSrc)) {
     }
     const nearDup = [];
     for (const t of tags) {
+      // 已经权衡过要保留的近重复（config/tags.yaml 的 tagOverlapAllow）不再提醒——
+      // 它不是待办，是决定
+      if (tagCfg.overlapAllow.includes(t.label)) continue;
       const ids = new Set(t.items.map((x) => x.id));
       // 小样本跳过：几条内容的页面 Jaccard 极不稳定，重不重复的危害也都有限
       if (ids.size < tagCfg.overlapMinSize) continue;
