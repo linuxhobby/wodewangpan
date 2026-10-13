@@ -29,6 +29,7 @@ const DATA_FILE = {
   软件: 'software',
   操作系统: 'os',
   电子书: 'ebook',
+  课程: 'course',
   其他: 'misc',
 };
 

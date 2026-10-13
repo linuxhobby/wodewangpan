@@ -101,6 +101,7 @@ npm run serve        # 抽查详情页
 | `01游戏` | 游戏 | `game-` | `game.yaml` |
 | `02应用` | 软件 | `app-` | `software.yaml` |
 | `08电子书` | 电子书 | `bk-` | `ebook.yaml` |
+| `07课程` | 课程 | `cs-` | `course.yaml` |
 | `010其他` | 其他 | `ot-` | `misc.yaml` |
 | `09操作系统` | 操作系统 | `os-` | `os.yaml` |
 
@@ -222,6 +223,7 @@ export const MIN_DESC = 300;   // 正文下限，低于会被判薄内容
 | 操作系统 / 其他 | 写清版本；非影视资源的 `date` 填**版本发布日**并核实，查不到就留空 |
 | 纪录片 | 题材、视角、讲了什么、适合什么兴趣的观众 |
 | 电视剧 | 题材、主线、风格；季数集数标签由工具接回 |
+| 课程 | 讲什么内容、多少节 / 总时长、需要什么基础、学完能做什么。`date` 填发布 / 录制年份，查不到就留空 |
 
 套装 / 合辑的 `date` 填**套装自身出版时间**，不是里面某一本的首版年。
 
@@ -276,6 +278,8 @@ node scripts/trending-sync.mjs --dry-run --no-build --no-push   # 先看会做�
 | MobyGames | ❌ | 403 |
 | 官网猜路径（如 `assets.nintendo.com`） | ❌ | 试过，通不了 |
 | Google Books / Open Library | ❌ | 配额 429 / 连接超时，别耗时间 |
+
+**课程这类非影视资源 TMDB 抓不到海报**：图源优先顺序是官方封面 / 宣传图 → 维基官方图 → `tools/icon-poster.mjs` 合成竖版（配色与图标取 `scripts/lib/assets.js` 的 `CAT_STYLE`）。合成图务必打开看一眼再入库。
 
 **取维基官方图的标准三步**：① `prop=images` 找文件名 → ② `prop=imageinfo&iiprop=url|size|mime` 取直链 → ③ 带浏览器 UA 下载。盒绘直接 `cp`；矢量 logo 交给 `tools/icon-poster.mjs` 配品牌色合成竖版。
 
@@ -419,7 +423,7 @@ cp -R ~/.workbuddy/skills/quarkclouddrive ~/.trae-cn/skills/
 
 | 脚本 | 作用 |
 |---|---|
-| `scan-new.mjs` | 扫描 SHARE 下 9 个分类，输出待编号目录与下一可用编号 |
+| `scan-new.mjs` | 扫描 SHARE 下 10 个分类，输出待编号目录与下一可用编号 |
 | `tmdb.mjs` | TMDB 搜索 / 详情 / 海报 |
 | `make-entry.mjs` | 生成单条 YAML 条目 |
 | `process-batch.mjs` / `app-batch.mjs` | 批量处理（内建 rename 后刷新 fid 再 share） |

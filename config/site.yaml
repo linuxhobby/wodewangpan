@@ -34,6 +34,7 @@ categories:
   - 软件
   - 操作系统
   - 电子书
+  - 课程
   - 其他
 # 分类 → URL 别名（可选）：页面的分类路径用这里的英文名，没配的分类仍用分类名
 # 注意：改动已收录的路径要配 301 跳转，否则丢排名
@@ -46,6 +47,7 @@ slugs:
   软件: software
   操作系统: os
   电子书: ebook
+  课程: course
   其他: misc
 # 标签聚合页配置（tagMin / tagExclude / tagOverlap* / tagSlugs）在同目录的 tags.yaml
 # 页脚访问统计：local = 本地统计（VPS 解析 nginx 日志生成 /stats.json，不依赖第三方）；

@@ -219,6 +219,7 @@ data/                # 一个分类一个 YAML（英文文件名），构建时�
   software.yaml      # 软件
   os.yaml            # 操作系统
   ebook.yaml         # 电子书
+  course.yaml        # 课程
   misc.yaml          # 其他
 config/              # 站点配置，与资源数据分开存放
   site.yaml          # 站名、分类顺序、首页每类条数与排序方式、免责声明、页脚联系方式、分类页首屏条数

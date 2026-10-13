@@ -76,6 +76,7 @@ const CAT_STYLE = {
   软件: { c1: '#22344c', c2: '#5b7ba6', icon: 'window', en: 'SOFTWARE', tex: 'grid' },
   电子书: { c1: '#8a5a33', c2: '#e3b98f', icon: 'book', en: 'E-BOOK', tex: 'pages' },
   操作系统: { c1: '#123b5e', c2: '#57c7e8', icon: 'disc', en: 'OPERATING SYSTEM', tex: 'disc' },
+  课程: { c1: '#7d4b00', c2: '#ffc857', icon: 'cap', en: 'COURSE', tex: 'pages' },
   其他: { c1: '#6a5a4d', c2: '#b09881', icon: 'folder', en: 'MISC', tex: 'waves' },
 };
 
@@ -99,6 +100,9 @@ const ICONS = {
   // 操作系统：光盘（镜像文件），中心孔 + 一道高光弧
   disc:
     '<circle cx="48" cy="48" r="34"/><circle cx="48" cy="48" r="12" fill="#fff" stroke="none"/><path fill="none" d="M24 24A34 34 0 0 1 77 31" stroke-width="4"/>',
+  // 课程：学士帽（帽顶菱形 + 帽筒 + 右侧垂下的流苏）
+  cap:
+    '<path d="M48 12 88 34 48 56 8 34z"/><path d="M24 46v10c0 7 11 12 24 12s24-5 24-12V46z"/><path fill="none" d="M88 34v16" stroke-width="4"/><circle cx="88" cy="56" r="5" fill="#fff" stroke="none"/>',
 };
 
 /** 分类专属底纹（240×360 坐标系，画在渐变底之上） */
