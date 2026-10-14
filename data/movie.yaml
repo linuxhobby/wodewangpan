@@ -1,4 +1,4 @@
-# 电影资源（372 条）
+# 电影资源（373 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -4398,3 +4398,13 @@
   added: "2026-10-14 00:01"
   image: mv-383.jpg
 
+
+- id: mv-384
+  title: "魔法情缘"
+  category: 电影
+  tags: ["电影", "爱情", "奇幻", "喜剧", "魔法情缘 Practical Magic 2"]
+  quark_url: "https://pan.quark.cn/s/6c15e6a6becc"
+  description: "一个世代都是女巫的家族，被诅咒几个世纪都无法拥有爱情，他们试​​图通过直面黑暗的秘密和为彼此牺牲来打破诅咒。｜TMDB 6.3"
+  date: 2026-09-09
+  added: 2026-10-14
+  image: mv-384.jpg
