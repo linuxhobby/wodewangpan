@@ -38,6 +38,8 @@ SKIP_PATH_RE = re.compile(
     re.I,
 )
 VID_RE = re.compile(r'^[A-Za-z0-9_-]{8,64}$')
+# 资源详情页 /resource/<id>/：仅对这一类做按资源聚合（其余页面不进 page 表）
+RES_RE = re.compile(r'^/resource/([^/]+)/?$')
 
 
 def log(msg):
@@ -51,7 +53,9 @@ def connect():
         '''CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY, value TEXT);
            CREATE TABLE IF NOT EXISTS visitors(fp TEXT PRIMARY KEY, first_seen TEXT, last_seen TEXT);
            CREATE TABLE IF NOT EXISTS daily(d TEXT PRIMARY KEY, pv INTEGER DEFAULT 0);
-           CREATE TABLE IF NOT EXISTS daily_uv(d TEXT, fp TEXT, PRIMARY KEY(d, fp));'''
+           CREATE TABLE IF NOT EXISTS daily_uv(d TEXT, fp TEXT, PRIMARY KEY(d, fp));
+           CREATE TABLE IF NOT EXISTS page_pv(id TEXT, day TEXT, pv INTEGER DEFAULT 0, PRIMARY KEY(id, day));
+           CREATE TABLE IF NOT EXISTS page_uv(id TEXT, day TEXT, fp TEXT, PRIMARY KEY(id, day, fp));'''
     )
     return c
 
@@ -129,6 +133,19 @@ def ingest(c, lines):
         # UV 只认带 vid cookie 的请求：cookie 由页面 JS 种植，跑过 JS 才算真人访客
         mark_visitor(c, day, fp, ts)
         pv += 1
+
+        # 按资源聚合：仅资源详情页 /resource/<id>/ 入库，PV 全量（与 daily 口径一致），
+        # UV 同样只认 v: 前缀（与 daily_uv 一致）。其余页面（首页 / 分类 / 标签页）不做细分。
+        m = RES_RE.match(path)
+        if m:
+            rid = m.group(1)
+            c.execute(
+                'INSERT INTO page_pv(id,day,pv) VALUES(?,?,1) '
+                'ON CONFLICT(id,day) DO UPDATE SET pv=pv+1',
+                (rid, day),
+            )
+            if fp.startswith('v:'):
+                c.execute('INSERT OR IGNORE INTO page_uv(id,day,fp) VALUES(?,?,?)', (rid, day, fp))
     return pv
 
 
@@ -140,12 +157,27 @@ def write_stats(c):
     t_pv = row[0] if row else 0
     t_uv = c.execute('SELECT COUNT(*) FROM daily_uv WHERE d=?', (today,)).fetchone()[0]
     since = c.execute('SELECT MIN(d) FROM daily').fetchone()[0]
+
+    # 每资源 PV / UV：page_pv 含全量 PV，page_uv 仅去重真人，二者合并成 res 字典
+    res = {}
+    for rid, p in c.execute('SELECT id, COALESCE(SUM(pv),0) FROM page_pv GROUP BY id'):
+        res[rid] = {'pv': p, 'uv': 0}
+    for rid, u in c.execute('SELECT id, COUNT(*) FROM page_uv GROUP BY id'):
+        res.setdefault(rid, {'pv': 0, 'uv': 0})['uv'] = u
+    # 热门榜单：按 PV 降序取前 20，给人工巡检用（同时带 uv，更接近「真实人气」）
+    top = sorted(
+        ({'id': k, 'pv': v['pv'], 'uv': v['uv']} for k, v in res.items()),
+        key=lambda x: x['pv'], reverse=True,
+    )[:20]
+
     data = {
         'pv': pv,
         'uv': uv,
         'today_pv': t_pv,
         'today_uv': t_uv,
         'since': since or today,
+        'res': res,
+        'top': top,
         'updated': datetime.now(TZ).isoformat(timespec='seconds'),
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -182,7 +214,7 @@ def main():
 
     c = connect()
     if a.reset:
-        c.executescript('DELETE FROM meta; DELETE FROM visitors; DELETE FROM daily; DELETE FROM daily_uv;')
+        c.executescript('DELETE FROM meta; DELETE FROM visitors; DELETE FROM daily; DELETE FROM daily_uv; DELETE FROM page_pv; DELETE FROM page_uv;')
         log('已清空历史统计')
         # 重置后默认从「此刻」起算：游标直接跳到当前日志末尾，不回填已有日志
         if not a.backfill and os.path.exists(LOG):
