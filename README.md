@@ -8,7 +8,7 @@
 |---|---|
 | 网站 | https://www.wodewangpan.top |
 | 仓库 | `git@github.com:linuxhobby/wodewangpan.git` |
-| 更新方式 | 推到 `main`，VPS 每 2 小时自动拉取并重建（急发用 `FORCE=1 site-autoupdate`） |
+| 更新方式 | 推到 `main`，VPS 定时自动拉取并重建（急发用 `FORCE=1 site-autoupdate`） |
 
 ## 网站特性
 
