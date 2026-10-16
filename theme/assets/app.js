@@ -42,6 +42,7 @@ import { esc, tileHtml } from './card.js';
 
   /** 索引条目 → 卡片入参（索引里已带 href / card / thumb，不必再拼 URL） */
   function tileOf(it, titleHtml, isNew) {
+    var m = it.href && it.href.match(/resource\/([^/]+)/);
     return tileHtml({
       href: it.href,
       src: it.card || it.thumb,
@@ -50,7 +51,37 @@ import { esc, tileHtml } from './card.js';
       category: it.category,
       date: it.date,
       isNew: !!isNew,
+      resId: m ? m[1] : '',
     });
+  }
+
+  /**
+   * 浏览量回填：拉 /stats.json（站点自带埋点生成，不依赖第三方），按 data-res-id 把
+   * 对应资源的 pv/uv 填进占位元素。详情页（#stat-views）显示「次浏览 · 人」，
+   * 卡片（.tile__views）显示低调的「· N人看过」；拿不到数据时元素保持空/占位。
+   * statsRes 缓存一份，卡片后续由「加载更多 / 搜索」动态渲染后也能立即填充。
+   */
+  var statsRes = null;
+  function applyViews() {
+    if (!statsRes) return;
+    var nodes = document.querySelectorAll('[data-res-id]');
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var v = statsRes[el.getAttribute('data-res-id')];
+      if (!v) continue;
+      if (el.id === 'stat-views') {
+        el.textContent = (v.pv || 0) + ' 次浏览 · ' + (v.uv || 0) + ' 人';
+      } else {
+        el.textContent = ' · ' + (v.pv || 0) + ' 人看过';
+      }
+    }
+  }
+  function loadStats(cb) {
+    if (statsRes) { if (cb) cb(); return; }
+    fetch('/stats.json', { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (s) { statsRes = (s && s.res) || {}; applyViews(); if (cb) cb(); })
+      .catch(function () { if (cb) cb(); });
   }
 
   /** 把 items 补齐到全站/本分类全集（数据来自异步加载的 search-index.json） */
@@ -86,6 +117,7 @@ import { esc, tileHtml } from './card.js';
     }
     if (items.length < TOTAL) refill();
     paint();
+    applyViews();
   }
 
   /**
@@ -147,6 +179,7 @@ import { esc, tileHtml } from './card.js';
       ? '<div class="results__hint">找到 ' + hits.length + ' 个资源（按相关度排序）</div>' +
         '<ul class="grid">' + hits.map(function (it) { return tileOf(it, highlight(it.title, tokens), it.isNew); }).join('') + '</ul>'
       : '<p class="empty">没有匹配「' + esc(q) + '」的资源，试试更短的关键词或拼音首字母</p>';
+    applyViews();
   }
 
   // 输入防抖：避免每敲一个字就重排上百个卡片
@@ -174,6 +207,9 @@ import { esc, tileHtml } from './card.js';
   if (dataEl) {
     window.addEventListener('load', function () { setTimeout(loadGlobalIndex, 1000); });
   }
+
+  // 拉取浏览量（/stats.json），覆盖首屏静态卡片 + 详情页占位
+  loadStats();
 
   if (input) {
     input.addEventListener('input', function () {

@@ -354,6 +354,7 @@ function cardHtml(item, images, isNew = false, eager = false) {
     date: item.date,
     isNew,
     eager,
+    resId: encodeURIComponent(item.id),
   });
 }
 
@@ -600,6 +601,8 @@ export function detailPage(ctx) {
     ...(item.added ? [['入库日期', esc(item.added)]] : []),
     ['标签', item.tags.length ? item.tags.map((t) => esc(t)).join(' · ') : '—'],
     ['转存方式', esc(source)],
+    // 浏览量：构建期只放占位，前端拉 /stats.json 后填入（拿不到数据时留「–」）
+    ['浏览量', `<span id="stat-views" data-res-id="${esc(encodeURIComponent(item.id))}">–</span>`],
   ];
   const factsHtml = `<table class="facts">
   <tbody>
