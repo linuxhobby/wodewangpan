@@ -406,7 +406,9 @@ a.tag:hover { background: var(--brand-soft); }
 .share__panel { display: contents; }
 .share__panel[hidden] { display: none !important; }
 .share__row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.share__hint { margin: 0; font-size: var(--fs-sm); color: var(--muted); display: flex; align-items: center; gap: 10px; flex-basis: 100%; }
+/* 分享区内按钮字号放大（覆盖全局 chip 的 .btn--mini），更易读 */
+.detail__share .btn--mini { font-size: var(--fs-base); padding: 6px 12px; line-height: var(--lh-body); }
+.share__hint { margin: 0; font-size: var(--fs-base); color: var(--muted); display: flex; align-items: center; gap: 10px; flex-basis: 100%; }
 .share__qr { width: 96px; height: 96px; flex: none; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 4px; }
 .detail__title { font-size: var(--fs-h1); line-height: var(--lh-tight); margin: 0 0 10px; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
