@@ -21,6 +21,7 @@ import {
 import {
   prepareImages,
   writeQr,
+  writeShareQr,
   writeFavicon,
   copyThemeAssets,
   POSTER_WIDTHS,
@@ -242,6 +243,13 @@ for (const item of items) {
   qrMap.set(item.id, await writeQr(item, outDir));
 }
 
+// 本页分享二维码（微信扫一扫分享资源页，区别于扫码转存的深链二维码）
+const shareQrMap = new Map();
+for (const item of items) {
+  const pageUrl = `${baseUrl}/resource/${encodeURIComponent(item.id)}/`;
+  shareQrMap.set(item.id, await writeShareQr(pageUrl, item.id, outDir));
+}
+
 // 全站索引：列表页内联（首屏离线可用）+ search-index.json（搜索全站）
 const indexAll = items.map((it) => {
   const img = images.get(it.id) || {};
@@ -322,7 +330,7 @@ console.log('生成详情页…');
 for (const item of items) {
   write(
     path.join(outDir, 'resource', item.id, 'index.html'),
-    detailPage({ ...ctxBase, item, qrLinks: qrMap.get(item.id) || [] })
+    detailPage({ ...ctxBase, item, qrLinks: qrMap.get(item.id) || [], shareQr: shareQrMap.get(item.id) || '' })
   );
 }
 

@@ -363,6 +363,23 @@ export async function writeQr(item, outDir) {
   return results;
 }
 
+/** 本页分享二维码：内容为资源页 canonical URL（区别于 writeQr 的网盘转存深链），
+ *  供分享面板里的「微信扫一扫分享」使用，长按/扫码即把本页发给好友。 */
+export async function writeShareQr(pageUrl, id, outDir) {
+  const dir = path.join(outDir, 'qr');
+  ensureDir(dir);
+  const file = `share-${id}.svg`;
+  let svg = await QRCode.toString(pageUrl, {
+    type: 'svg',
+    margin: 1,
+    errorCorrectionLevel: 'M',
+    color: { dark: '#171717', light: '#FFFFFF' },
+  });
+  svg = svg.replace('<svg ', '<svg width="120" height="120" ');
+  fs.writeFileSync(path.join(dir, file), svg);
+  return `/qr/${encodeURIComponent(file)}`;
+}
+
 /** 拷贝主题静态资源（CSS / JS） */
 export function copyThemeAssets(themeDir, outDir) {
   const src = path.join(themeDir, 'assets');

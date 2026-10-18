@@ -566,7 +566,7 @@ function relatedBlock(related, images) {
 }
 
 export function detailPage(ctx) {
-  const { site, item, images, qrLinks, baseUrl, items, tagIndex } = ctx;
+  const { site, item, images, qrLinks, baseUrl, items, tagIndex, shareQr } = ctx;
   const img = images.get(item.id) || {};
   const primary = qrLinks[0];
 
@@ -653,19 +653,19 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
       ${item.links.length ? item.links.map(linkRow).join('\n') : '<p class="muted">暂无可用链接</p>'}
     </div>
     <div class="detail__share">
-      <button class="btn" type="button" data-share
+      <button class="btn btn--mini" type="button" data-share
         data-url="${esc(shareUrl)}"
         data-title="${esc(item.title)}"
         data-text="${esc(site.title)}">分享</button>
       <div class="share__panel" hidden>
         <div class="share__row">
-          <button class="btn btn--mini" type="button" data-copy="${esc(shareUrl)}">复制链接</button>
           <a class="btn btn--mini" href="${esc(qqHref)}" target="_blank" rel="noopener noreferrer">QQ</a>
           <a class="btn btn--mini" href="${esc(weiboHref)}" target="_blank" rel="noopener noreferrer">微博</a>
-          <a class="btn btn--mini" href="${esc(xHref)}" target="_blank" rel="noopener noreferrer">X</a>
+          <a class="btn btn--mini" href="${esc(xHref)}" target="_blank" rel="noopener noreferrer">𝕏</a>
           <a class="btn btn--mini" href="${esc(tgHref)}" target="_blank" rel="noopener noreferrer">Telegram</a>
+          <button class="btn btn--mini" type="button" data-copy="${esc(shareUrl)}">复制链接</button>
         </div>
-        <p class="share__hint">微信：请长按上方二维码分享给好友</p>
+        <p class="share__hint">${shareQr ? `<img class="share__qr" src="${esc(shareQr)}" width="96" height="96" alt="本页分享二维码">` : ''}微信：扫一扫，把本页分享给好友</p>
       </div>
     </div>
   </div>

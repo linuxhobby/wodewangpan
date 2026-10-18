@@ -401,13 +401,13 @@ a.tag:hover { background: var(--brand-soft); }
 .qrbox__switch { display: flex; gap: 6px; margin-top: 8px; }
 
 .detail__main { flex: 1; min-width: 0; }
-/* 分享按钮：与上方转存链接区隔开一行，复用 .btn 外观 */
-.detail__share { margin-top: 14px; }
-/* 分享面板：桌面端不支持 Web Share 时展开；两行结构——第一行动作按钮，第二行提示 */
-.share__panel { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+/* 分享按钮：与上方转存链接区隔开一行，展开后「分享」与社交按钮同在一行 */
+.detail__share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.share__panel { display: contents; }
+.share__panel[hidden] { display: none !important; }
 .share__row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.btn--mini { padding: 4px 10px; font-size: var(--fs-sm); line-height: 1.4; border-radius: 6px; }
-.share__hint { margin: 0; font-size: var(--fs-sm); color: var(--muted); }
+.share__hint { margin: 0; font-size: var(--fs-sm); color: var(--muted); display: flex; align-items: center; gap: 10px; flex-basis: 100%; }
+.share__qr { width: 96px; height: 96px; flex: none; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 4px; }
 .detail__title { font-size: var(--fs-h1); line-height: var(--lh-tight); margin: 0 0 10px; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 .detail__desc { margin: 0 0 16px; white-space: pre-wrap; }
