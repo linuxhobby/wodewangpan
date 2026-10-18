@@ -658,12 +658,14 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
         data-title="${esc(item.title)}"
         data-text="${esc(site.title)}">分享</button>
       <div class="share__panel" hidden>
-        <button class="btn btn--mini" type="button" data-copy="${esc(shareUrl)}">复制链接</button>
-        <span class="share__hint">微信：长按上方二维码分享给好友</span>
-        <a class="btn btn--mini" href="${esc(qqHref)}" target="_blank" rel="noopener noreferrer">QQ</a>
-        <a class="btn btn--mini" href="${esc(weiboHref)}" target="_blank" rel="noopener noreferrer">微博</a>
-        <a class="btn btn--mini" href="${esc(xHref)}" target="_blank" rel="noopener noreferrer">X</a>
-        <a class="btn btn--mini" href="${esc(tgHref)}" target="_blank" rel="noopener noreferrer">Telegram</a>
+        <div class="share__row">
+          <button class="btn btn--mini" type="button" data-copy="${esc(shareUrl)}">复制链接</button>
+          <a class="btn btn--mini" href="${esc(qqHref)}" target="_blank" rel="noopener noreferrer">QQ</a>
+          <a class="btn btn--mini" href="${esc(weiboHref)}" target="_blank" rel="noopener noreferrer">微博</a>
+          <a class="btn btn--mini" href="${esc(xHref)}" target="_blank" rel="noopener noreferrer">X</a>
+          <a class="btn btn--mini" href="${esc(tgHref)}" target="_blank" rel="noopener noreferrer">Telegram</a>
+        </div>
+        <p class="share__hint">微信：请长按上方二维码分享给好友</p>
       </div>
     </div>
   </div>
