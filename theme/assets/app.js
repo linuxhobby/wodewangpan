@@ -211,6 +211,12 @@ import { esc, tileHtml } from './card.js';
   // 拉取浏览量（/stats.json），覆盖首屏静态卡片 + 详情页占位
   loadStats();
 
+  // 不支持 Web Share API 的浏览器（多数桌面端）把「分享」改成「复制链接」，避免点了没反应
+  if (!navigator.share) {
+    var sb = document.querySelectorAll('[data-share]');
+    for (var i = 0; i < sb.length; i++) sb[i].textContent = '复制链接';
+  }
+
   if (input) {
     input.addEventListener('input', function () {
       var v = input.value;
@@ -293,7 +299,36 @@ import { esc, tileHtml } from './card.js';
       for (var i = 0; i < btns.length; i++) btns[i].classList.remove('is-on');
       qrBtn.classList.add('is-on');
     }
+
+    // 原生 Web Share API：移动端唤起系统分享面板（含微信/QQ/微博等）；
+    // 不支持的浏览器（多数桌面端）回退为「复制本页链接」。按钮文案也随之改为「复制链接」。
+    var shareBtn = e.target.closest('[data-share]');
+    if (shareBtn) {
+      var url = shareBtn.getAttribute('data-url') || location.href;
+      var payload = {
+        title: shareBtn.getAttribute('data-title') || document.title,
+        text: shareBtn.getAttribute('data-text') || '',
+        url: url,
+      };
+      if (navigator.share) {
+        navigator.share(payload).catch(function () {});  // 用户取消（AbortError）静默忽略
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(
+          function () { flash(shareBtn, '已复制链接'); },
+          function () { fallbackCopy(url, function () { flash(shareBtn, '已复制链接'); }); }
+        );
+      } else {
+        fallbackCopy(url, function () { flash(shareBtn, '已复制链接'); });
+      }
+    }
   });
+
+  /** 按钮临时反馈文字，1.5s 后复原 */
+  function flash(btn, msg) {
+    var old = btn.textContent;
+    btn.textContent = msg;
+    setTimeout(function () { btn.textContent = old; }, 1500);
+  }
 
   function fallbackCopy(text, done) {
     var ta = document.createElement('textarea');

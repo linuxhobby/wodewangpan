@@ -642,6 +642,12 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     <div class="links">
       ${item.links.length ? item.links.map(linkRow).join('\n') : '<p class="muted">暂无可用链接</p>'}
     </div>
+    <div class="detail__share">
+      <button class="btn" type="button" data-share
+        data-url="${esc(`${baseUrl}${itemHref(item.id)}`)}"
+        data-title="${esc(item.title)}"
+        data-text="${esc(site.title)}">分享</button>
+    </div>
   </div>
 </article>${related.length ? relatedBlock(related, images) : ''}`;
 
