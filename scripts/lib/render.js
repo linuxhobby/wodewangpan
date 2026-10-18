@@ -657,7 +657,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
         data-url="${esc(shareUrl)}"
         data-title="${esc(item.title)}"
         data-text="${esc(site.title)}">分享</button>
-      <div class="share__panel" hidden>
+      <div class="share__panel">
         <div class="share__row">
           <a class="btn btn--mini" href="${esc(qqHref)}" target="_blank" rel="noopener noreferrer">QQ</a>
           <a class="btn btn--mini" href="${esc(weiboHref)}" target="_blank" rel="noopener noreferrer">微博</a>

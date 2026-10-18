@@ -211,6 +211,13 @@ import { esc, tileHtml } from './card.js';
   // 拉取浏览量（/stats.json），覆盖首屏静态卡片 + 详情页占位
   loadStats();
 
+  // 触屏移动端（支持 Web Share）隐藏社交按钮组，只用系统分享面板；
+  // 桌面端（含支持 share 的 Chrome/Edge）始终展示按钮组，方便一键分享到各平台。
+  if (navigator.share && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var sps = document.querySelectorAll('.share__panel');
+    for (var i = 0; i < sps.length; i++) sps[i].setAttribute('hidden', '');
+  }
+
   if (input) {
     input.addEventListener('input', function () {
       var v = input.value;
@@ -295,7 +302,7 @@ import { esc, tileHtml } from './card.js';
     }
 
     // 原生 Web Share API：移动端直接唤起系统分享面板（含微信/QQ/微博等）；
-    // 桌面端不支持时，点「分享」展开面板（复制链接 + 微信扫码提示 + 四个社交直链）。
+    // 桌面端始终展示社交按钮组（见 init 的媒体查询判定），点「分享」即分享/复制本页链接。
     // 只有直接点到「分享」按钮才触发此逻辑；面板内的复制/社交链接各走各的分支或默认跳转。
     var shareBtn = e.target.closest('[data-share]');
     if (shareBtn && e.target === shareBtn) {
@@ -308,16 +315,7 @@ import { esc, tileHtml } from './card.js';
         }).catch(function () {});  // 用户取消（AbortError）静默忽略
         return;
       }
-      var panel = shareBtn.parentNode.querySelector('.share__panel');
-      if (panel) {
-        if (panel.hasAttribute('hidden')) {
-          panel.removeAttribute('hidden');
-          shareBtn.textContent = '收起';
-        } else {
-          panel.setAttribute('hidden', '');
-          shareBtn.textContent = '分享';
-        }
-      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(
           function () { flash(shareBtn, '已复制链接'); },
           function () { fallbackCopy(url, function () { flash(shareBtn, '已复制链接'); }); }
