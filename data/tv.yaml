@@ -1,4 +1,4 @@
-# 电视剧资源（110 条）
+# 电视剧资源（111 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -1276,3 +1276,13 @@
   date: 2026-10-16
   added: 2026-10-17
   image: tv-149.jpg
+
+- id: tv-150
+  title: "头号外交官"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "War & Politics", "头号外交官 The Diplomat"]
+  quark_url: "https://pan.quark.cn/s/8562f5fcf58b"
+  description: "【第 4 季 · 共 8 集 · 全剧 4 季】一名立场鲜明、行事果断的美国外交官出任驻英国大使，在应对国际危机的同时，还要处理与野心勃勃的政治战略家的婚姻关系。｜TMDB 7.6"
+  date: 2023-04-20
+  added: 2026-10-18
+  image: tv-150.jpg
