@@ -610,6 +610,16 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   </tbody>
 </table>`;
 
+  // 分享面板：四个社交平台直达链接在构建期拼好（canonical + 标题 URL 编码），无 JS 也能用
+  const shareUrl = `${baseUrl}${itemHref(item.id)}`;
+  const encUrl = encodeURIComponent(shareUrl);
+  const encTitle = encodeURIComponent(item.title);
+  const encText = encodeURIComponent(`${item.title} - ${site.title}`);
+  const qqHref = `https://connect.qq.com/widget/shareqq/index.html?url=${encUrl}&title=${encTitle}`;
+  const weiboHref = `https://service.weibo.com/share/share.php?url=${encUrl}&title=${encTitle}`;
+  const xHref = `https://twitter.com/intent/tweet?url=${encUrl}&text=${encText}`;
+  const tgHref = `https://t.me/share/url?url=${encUrl}&text=${encText}`;
+
   const related = relatedOf(item, items || []);
 
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="${catHref(item.category)}">${esc(item.category)}</a></nav>
@@ -644,9 +654,17 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     </div>
     <div class="detail__share">
       <button class="btn" type="button" data-share
-        data-url="${esc(`${baseUrl}${itemHref(item.id)}`)}"
+        data-url="${esc(shareUrl)}"
         data-title="${esc(item.title)}"
         data-text="${esc(site.title)}">分享</button>
+      <div class="share__panel" hidden>
+        <button class="btn btn--mini" type="button" data-copy="${esc(shareUrl)}">复制链接</button>
+        <span class="share__hint">微信：长按上方二维码分享给好友</span>
+        <a class="btn btn--mini" href="${esc(qqHref)}" target="_blank" rel="noopener noreferrer">QQ</a>
+        <a class="btn btn--mini" href="${esc(weiboHref)}" target="_blank" rel="noopener noreferrer">微博</a>
+        <a class="btn btn--mini" href="${esc(xHref)}" target="_blank" rel="noopener noreferrer">X</a>
+        <a class="btn btn--mini" href="${esc(tgHref)}" target="_blank" rel="noopener noreferrer">Telegram</a>
+      </div>
     </div>
   </div>
 </article>${related.length ? relatedBlock(related, images) : ''}`;

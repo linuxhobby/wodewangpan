@@ -403,6 +403,9 @@ a.tag:hover { background: var(--brand-soft); }
 .detail__main { flex: 1; min-width: 0; }
 /* 分享按钮：与上方转存链接区隔开一行，复用 .btn 外观 */
 .detail__share { margin-top: 14px; }
+/* 分享面板：桌面端不支持 Web Share 时展开；flex 换行，移动端走系统面板不会看到它 */
+.share__panel { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.share__hint { font-size: var(--fs-base); color: var(--muted); }
 .detail__title { font-size: var(--fs-h1); line-height: var(--lh-tight); margin: 0 0 10px; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 .detail__desc { margin: 0 0 16px; white-space: pre-wrap; }

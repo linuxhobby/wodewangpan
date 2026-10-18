@@ -211,12 +211,6 @@ import { esc, tileHtml } from './card.js';
   // 拉取浏览量（/stats.json），覆盖首屏静态卡片 + 详情页占位
   loadStats();
 
-  // 不支持 Web Share API 的浏览器（多数桌面端）把「分享」改成「复制链接」，避免点了没反应
-  if (!navigator.share) {
-    var sb = document.querySelectorAll('[data-share]');
-    for (var i = 0; i < sb.length; i++) sb[i].textContent = '复制链接';
-  }
-
   if (input) {
     input.addEventListener('input', function () {
       var v = input.value;
@@ -300,18 +294,29 @@ import { esc, tileHtml } from './card.js';
       qrBtn.classList.add('is-on');
     }
 
-    // 原生 Web Share API：移动端唤起系统分享面板（含微信/QQ/微博等）；
-    // 不支持的浏览器（多数桌面端）回退为「复制本页链接」。按钮文案也随之改为「复制链接」。
+    // 原生 Web Share API：移动端直接唤起系统分享面板（含微信/QQ/微博等）；
+    // 桌面端不支持时，点「分享」展开面板（复制链接 + 微信扫码提示 + 四个社交直链）。
+    // 只有直接点到「分享」按钮才触发此逻辑；面板内的复制/社交链接各走各的分支或默认跳转。
     var shareBtn = e.target.closest('[data-share]');
-    if (shareBtn) {
+    if (shareBtn && e.target === shareBtn) {
       var url = shareBtn.getAttribute('data-url') || location.href;
-      var payload = {
-        title: shareBtn.getAttribute('data-title') || document.title,
-        text: shareBtn.getAttribute('data-text') || '',
-        url: url,
-      };
       if (navigator.share) {
-        navigator.share(payload).catch(function () {});  // 用户取消（AbortError）静默忽略
+        navigator.share({
+          title: shareBtn.getAttribute('data-title') || document.title,
+          text: shareBtn.getAttribute('data-text') || '',
+          url: url,
+        }).catch(function () {});  // 用户取消（AbortError）静默忽略
+        return;
+      }
+      var panel = shareBtn.parentNode.querySelector('.share__panel');
+      if (panel) {
+        if (panel.hasAttribute('hidden')) {
+          panel.removeAttribute('hidden');
+          shareBtn.textContent = '收起';
+        } else {
+          panel.setAttribute('hidden', '');
+          shareBtn.textContent = '分享';
+        }
       } else if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(
           function () { flash(shareBtn, '已复制链接'); },
