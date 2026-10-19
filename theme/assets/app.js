@@ -362,6 +362,9 @@ import { esc, tileHtml } from './card.js';
         return;
       }
       var arr = Object.keys(statsRes)
+        // 只展示当前站内还存在的资源：stats.json 的 res 含历史上访问过但已删除的 id，
+        // 不过滤会出现「裸 id 标题 + 详情页 404」
+        .filter(function (id) { return !!index[id]; })
         .map(function (id) {
           var m = index[id] || { title: id, href: '/resource/' + encodeURIComponent(id) + '/', category: '' };
           return { id: id, pv: statsRes[id].pv || 0, uv: statsRes[id].uv || 0, title: m.title, href: m.href, category: m.category };
