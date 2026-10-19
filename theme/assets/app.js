@@ -354,7 +354,7 @@ import { esc, tileHtml } from './card.js';
     var btns = document.querySelectorAll('[data-hot-sort]');
     var mode = 'pv';
     var statsRes = null;
-    var HOT_N = 50;
+    var HOT_N = 30;
 
     function render() {
       if (!statsRes) {

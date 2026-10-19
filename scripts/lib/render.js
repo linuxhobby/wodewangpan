@@ -149,11 +149,11 @@ export function tagHref(tag) {
 function catNav(categories, counts, activeCat, total, hotOn = false) {
   const items = [
     `<a class="cat${activeCat ? '' : ' is-on'}" href="/">全部<span class="cat__n">${total}</span></a>`,
-    `<a class="cat${hotOn ? ' is-on' : ''}" href="/hot/">热门</a>`,
     ...categories.map(
       (c) =>
         `<a class="cat${c === activeCat ? ' is-on' : ''}" href="${catHref(c)}">${esc(c)}<span class="cat__n">${counts.get(c) || 0}</span></a>`
     ),
+    `<a class="cat${hotOn ? ' is-on' : ''}" href="/hot/">热榜</a>`,
   ];
   return `<nav class="cats" aria-label="分类">${items.join('')}</nav>`;
 }
