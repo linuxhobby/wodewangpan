@@ -1,10 +1,10 @@
 # 热门资源榜（/hot/）
 
-按真实访问统计对全站资源排序的独立页面，入口在导航栏「热门」。
+按真实访问统计对全站资源排序的独立页面，入口在首页与分类页的 H1 同一行（标题栏右侧）。
 
 ## 入口与位置
 - 页面路径：`/hot/`（构建产物 `public/hot/index.html`）。
-- 导航栏常驻「热门」链接，当前页高亮（`catNav` 的 `hotOn` 透传到 `layout`）。
+- 首页 H1（「网盘资源索引 · 分类浏览 N 个资源」）与各分类页 H1（如「动漫 N 个资源」）同一行右侧，各有一个「热榜 TOP 30 →」链接指向 `/hot/`（不在顶部导航栏）。
 - 已加入 `sitemap.xml`，供搜索引擎发现。
 
 ## 排序维度
@@ -23,7 +23,7 @@
 ## 实现位置
 | 文件 | 职责 |
 |---|---|
-| `scripts/lib/render.js` | `hotPage()` 模板：排序按钮 + `#hot-list` 容器 + 内联索引；`catNav`/`layout` 加「热门」入口 |
+| `scripts/lib/render.js` | `hotPage()` 模板：排序按钮 + `#hot-list` 容器 + 内联索引；首页/分类页 H1 后加「查看热门榜 TOP 30」入口（导航栏不再含热榜） |
 | `scripts/build.js` | 导入 `hotPage`，生成 `/hot/index.html`，sitemap 加入 `/hot/` |
 | `theme/assets/app.js` | `initHot()`：读取内联索引 + fetch `/stats.json`，按 pv/uv 排序渲染、切换、降级 |
 | `theme/assets/style.css` | `.hot` 相关样式（排名序号、列表、切换高亮） |

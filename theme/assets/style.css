@@ -153,7 +153,7 @@ body.page--wide { --page-max: var(--page-wide); }
 .cat.is-on .cat__n { color: var(--surface); opacity: .8; }
 
 /* ── 列表页 ──────────────────────────── */
-.page__title { font-size: var(--fs-xl); margin: 16px 0 12px; display: flex; align-items: baseline; gap: 8px; }
+.page__title { font-size: var(--fs-xl); margin: 16px 0 12px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 /* 首页 H1 比分类页高半档：下面还有一排分类区块标题，同级会分不清主次 */
 .page__title--home { font-size: var(--fs-h2); }
 
@@ -296,6 +296,9 @@ a.tag:hover { background: var(--brand-soft); }
 .cat__n, .tag__n { margin-left: 5px; }
 /* 页面标题是 h1（粗体计数看着像标题的一部分），这里退回常规字重 */
 .page__n { font-weight: 400; }
+/* 页面标题栏里的「热榜」入口：与标题、计数同一行，推到最右 */
+.page__hot { margin-left: auto; font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
+.page__hot:hover { text-decoration: underline; }
 .cat__n { opacity: .65; }
 
 /* ── 无 JS 时的全量索引（<noscript>） ──────

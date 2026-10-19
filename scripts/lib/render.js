@@ -153,7 +153,6 @@ function catNav(categories, counts, activeCat, total, hotOn = false) {
       (c) =>
         `<a class="cat${c === activeCat ? ' is-on' : ''}" href="${catHref(c)}">${esc(c)}<span class="cat__n">${counts.get(c) || 0}</span></a>`
     ),
-    `<a class="cat${hotOn ? ' is-on' : ''}" href="/hot/">热榜</a>`,
   ];
   return `<nav class="cats" aria-label="分类">${items.join('')}</nav>`;
 }
@@ -421,7 +420,7 @@ function homePage(ctx) {
   const shown = groups.flatMap((g) => g.shown);
   const firstImg = (images.get(shown[0] && shown[0].id) || {}).card || '';
 
-  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span></h1>
+  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span><a class="page__hot" href="/hot/">热榜 TOP 30 →</a></h1>
 <div id="results" class="results" hidden></div>
 <div id="home">
 ${groups
@@ -479,7 +478,7 @@ function catPage(ctx) {
       .join('')}</ul>
 </noscript>`
     : '';
-  const body = `<h1 class="page__title">${esc(activeCat)}<span class="page__n">${items.length} 个资源</span></h1>
+  const body = `<h1 class="page__title">${esc(activeCat)}<span class="page__n">${items.length} 个资源</span><a class="page__hot" href="/hot/">热榜 TOP 30 →</a></h1>
 <div id="results" class="results" hidden></div>
 <ul id="list" class="grid">
 ${items.slice(0, pageSize).map((it, i) => cardHtml(it, images, newestIds.has(it.id), i < 5)).join('\n')}
@@ -894,8 +893,7 @@ export function hotPage(ctx) {
   }
   // 把 < 转义为 \u003c，防止资源标题里出现 </script> 破坏内联 JSON
   const indexJson = JSON.stringify(hotIndex).replace(/</g, '\\u003c');
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>热门资源</span></nav>
-<h1 class="page__title page__title--doc">热门资源<span class="page__n">按真实访问统计排序</span></h1>
+  const body = `<h1 class="page__title page__title--doc">热门资源榜<span class="page__n">按真实访问统计排序</span></h1>
 <div class="hot">
   <div class="hot__bar">
     <span class="hot__label">排序：</span>
