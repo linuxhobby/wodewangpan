@@ -146,9 +146,10 @@ export function tagHref(tag) {
   return `/tag/${encodeURIComponent(tagSlug(tag))}/`;
 }
 
-function catNav(categories, counts, activeCat, total) {
+function catNav(categories, counts, activeCat, total, hotOn = false) {
   const items = [
     `<a class="cat${activeCat ? '' : ' is-on'}" href="/">全部<span class="cat__n">${total}</span></a>`,
+    `<a class="cat${hotOn ? ' is-on' : ''}" href="/hot/">热门</a>`,
     ...categories.map(
       (c) =>
         `<a class="cat${c === activeCat ? ' is-on' : ''}" href="${catHref(c)}">${esc(c)}<span class="cat__n">${counts.get(c) || 0}</span></a>`
@@ -256,6 +257,7 @@ function layout({
   title,
   description,
   activeCat,
+  hotOn = false,
   categories,
   counts,
   total,
@@ -325,7 +327,7 @@ ${jsonLd ? jsonLdBlock(jsonLd) : ''}
     </form>
   </div>
 </header>
-${catNav(categories, counts, activeCat, total)}
+${catNav(categories, counts, activeCat, total, hotOn)}
 <main class="wrap">
 ${body}
 </main>
@@ -877,6 +879,46 @@ ${more}`;
 }
 
 /** 详情页只有「片名 + 分类」两条路，而用户搜的是「题材/属性 + 网盘」的组合词（见 docs/growth-收录与流量.md） */
+/** 热门资源排行榜：构建期只出骨架（排序按钮 + 列表容器 + 内联精简索引），
+ *  实际数据由浏览器端 fetch /stats.json 后渲染（见 app.js 的 initHot）。
+ *  索引内联为 id -> {title, href, category}，避免再请求 search-index.json。 */
+export function hotPage(ctx) {
+  const { site, items } = ctx;
+  const hotIndex = {};
+  for (const it of items) {
+    hotIndex[it.id] = {
+      title: it.title,
+      href: `/resource/${encodeURIComponent(it.id)}/`,
+      category: it.category,
+    };
+  }
+  // 把 < 转义为 \u003c，防止资源标题里出现 </script> 破坏内联 JSON
+  const indexJson = JSON.stringify(hotIndex).replace(/</g, '\\u003c');
+  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>热门资源</span></nav>
+<h1 class="page__title page__title--doc">热门资源<span class="page__n">按真实访问统计排序</span></h1>
+<div class="hot">
+  <div class="hot__bar">
+    <span class="hot__label">排序：</span>
+    <button type="button" class="btn btn--mini is-on" data-hot-sort="pv">按浏览量</button>
+    <button type="button" class="btn btn--mini" data-hot-sort="uv">按人数</button>
+  </div>
+  <ul id="hot-list" class="hot__list"><li class="hot__empty">加载中…</li></ul>
+  <p class="hot__note">数据来自本站 nginx 访问日志的真实统计，每 10 分钟更新一次。浏览量 = 页面被打开次数；人数 = 去重后的独立访客数。</p>
+  <script type="application/json" id="hot-index">${indexJson}</script>
+</div>`;
+  return layout({
+    ...ctx,
+    title: '热门资源',
+    description: `${site.title}里被打开次数最多的网盘资源排行榜，可按浏览量或独立访客数排序。`,
+    activeCat: '',
+    body,
+    canonicalPath: '/hot/',
+    footNavCurrent: '/hot/',
+    keywords: '热门资源,排行榜,网盘资源',
+    wide: true,
+  });
+}
+
 export function tagPage(ctx) {
   const { site, tag, images, baseUrl, tags } = ctx;
   const { key, label, count, items } = tag;

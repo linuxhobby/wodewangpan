@@ -31,6 +31,7 @@ import {
   detailPage,
   aboutPage,
   allPage,
+  hotPage,
   rssPage,
   feedXml,
   notFoundPage,
@@ -341,6 +342,7 @@ for (const t of tags) {
 
 console.log('生成关于本站 / RSS 页面…');
 write(path.join(outDir, 'all', 'index.html'), allPage(ctxBase));
+write(path.join(outDir, 'hot', 'index.html'), hotPage(ctxBase));
 write(path.join(outDir, 'about', 'index.html'), aboutPage(ctxBase));
 write(path.join(outDir, 'tags', 'index.html'), tagsPage(ctxBase));
 write(path.join(outDir, 'rss', 'index.html'), rssPage(ctxBase));
@@ -392,6 +394,7 @@ write(
     { path: '/rss/', priority: '0.4' },
     // /all/ 与 /tags/ 是蜘蛛不执行 JS 也能走完全部详情页 / 标签页的通道
     { path: '/all/', priority: '0.4', lastmod: lastmodOfList(items) },
+    { path: '/hot/', priority: '0.5', lastmod: lastmodOfList(items) },
     { path: '/tags/', priority: '0.5', lastmod: lastmodOfList(items) },
     // 标签页接长尾词，但与分类页有重叠，优先级压在分类页（0.8）之下不抢预算
     ...tags.map((t) => ({

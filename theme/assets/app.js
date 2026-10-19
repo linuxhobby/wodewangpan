@@ -343,4 +343,67 @@ import { esc, tileHtml } from './card.js';
     try { document.execCommand('copy'); done(); } catch (e) { /* ignore */ }
     document.body.removeChild(ta);
   }
+
+  // 热门榜页面（/hot/）：读取内联索引 + fetch /stats.json，按当前维度排序渲染，可切换 pv/uv
+  function initHot() {
+    var listEl = document.getElementById('hot-list');
+    if (!listEl) return;
+    var indexEl = document.getElementById('hot-index');
+    var index = {};
+    try { index = indexEl ? JSON.parse(indexEl.textContent) : {}; } catch (e) { index = {}; }
+    var btns = document.querySelectorAll('[data-hot-sort]');
+    var mode = 'pv';
+    var statsRes = null;
+    var HOT_N = 50;
+
+    function render() {
+      if (!statsRes) {
+        listEl.innerHTML = '<li class="hot__empty">统计暂不可用，请稍后刷新。</li>';
+        return;
+      }
+      var arr = Object.keys(statsRes)
+        .map(function (id) {
+          var m = index[id] || { title: id, href: '/resource/' + encodeURIComponent(id) + '/', category: '' };
+          return { id: id, pv: statsRes[id].pv || 0, uv: statsRes[id].uv || 0, title: m.title, href: m.href, category: m.category };
+        })
+        .filter(function (x) { return x.pv > 0 || x.uv > 0; })
+        .sort(function (a, b) { return mode === 'uv' ? b.uv - a.uv : b.pv - a.pv; })
+        .slice(0, HOT_N);
+      if (!arr.length) {
+        listEl.innerHTML = '<li class="hot__empty">暂无足够统计数据。</li>';
+        return;
+      }
+      listEl.innerHTML = arr
+        .map(function (x, i) {
+          var rank = i + 1;
+          var rc = rank <= 3 ? ' hot__rank--top' + rank : '';
+          return (
+            '<li class="hot__item">' +
+            '<span class="hot__rank' + rc + '">' + rank + '</span>' +
+            '<span class="hot__main"><a class="hot__title" href="' + esc(x.href) + '">' + esc(x.title) + '</a>' +
+            (x.category ? '<span class="hot__cat">' + esc(x.category) + '</span>' : '') + '</span>' +
+            '<span class="hot__pv">' + x.pv + ' 次浏览</span>' +
+            '<span class="hot__uv">' + x.uv + ' 人</span>' +
+            '</li>'
+          );
+        })
+        .join('');
+    }
+
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener('click', function () {
+        mode = this.getAttribute('data-hot-sort') || 'pv';
+        for (var j = 0; j < btns.length; j++) btns[j].classList.remove('is-on');
+        this.classList.add('is-on');
+        render();
+      });
+    }
+
+    listEl.innerHTML = '<li class="hot__empty">加载中…</li>';
+    fetch('/stats.json', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(function (d) { statsRes = (d && d.res) || {}; render(); })
+      .catch(function () { render(); });
+  }
+  initHot();
 })();

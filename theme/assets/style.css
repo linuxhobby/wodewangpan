@@ -410,6 +410,27 @@ a.tag:hover { background: var(--brand-soft); }
 .detail__share .btn--mini { font-size: var(--fs-base); padding: 6px 12px; line-height: var(--lh-body); }
 .share__hint { margin: 0; font-size: var(--fs-base); color: var(--muted); display: flex; align-items: center; gap: 10px; flex-basis: 100%; }
 .share__qr { width: 96px; height: 96px; flex: none; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 4px; }
+
+/* 热门资源榜（/hot/） */
+.hot { margin-top: 8px; }
+.hot__bar { display: flex; align-items: center; gap: 8px; margin: 14px 0; }
+.hot__label { color: var(--muted); font-size: var(--fs-sm); }
+.hot__bar .btn.is-on { background: #4B3FE3; color: #fff; border-color: #4B3FE3; }
+.hot__list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.hot__item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.hot__item:last-child { border-bottom: none; }
+.hot__rank { flex: none; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 50%; background: var(--bg-soft, #f1f1f4); color: var(--muted); font-weight: 700; font-size: var(--fs-sm); }
+.hot__rank--top1 { background: #f5b301; color: #fff; }
+.hot__rank--top2 { background: #9aa7b5; color: #fff; }
+.hot__rank--top3 { background: #cd7f32; color: #fff; }
+.hot__main { flex: 1 1 auto; min-width: 0; display: flex; align-items: baseline; gap: 8px; }
+.hot__title { font-weight: 600; color: var(--text, #171717); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hot__title:hover { text-decoration: underline; }
+.hot__cat { flex: none; font-size: var(--fs-xs); color: var(--muted); background: var(--bg-soft, #f1f1f4); padding: 1px 7px; border-radius: 999px; }
+.hot__pv, .hot__uv { flex: none; font-size: var(--fs-sm); color: var(--muted); white-space: nowrap; }
+.hot__uv { width: 48px; text-align: right; }
+.hot__empty { padding: 18px 14px; color: var(--muted); font-size: var(--fs-sm); }
+.hot__note { margin-top: 12px; font-size: var(--fs-sm); color: var(--muted); line-height: 1.6; }
 .detail__title { font-size: var(--fs-h1); line-height: var(--lh-tight); margin: 0 0 10px; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 .detail__desc { margin: 0 0 16px; white-space: pre-wrap; }
