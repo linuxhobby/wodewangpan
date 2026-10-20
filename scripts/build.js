@@ -423,6 +423,14 @@ if (fs.existsSync(qqGroupSrc)) {
 } else {
   console.log('  ! 未找到 static/qq-group.png，关于本站页将不显示 QQ 群二维码');
 }
+// IndexNow 验证文件：static/indexnow-key.txt -> public/indexnow-key.txt（Bing/Yandex 等推送前需可访问）
+const inKey = path.join(staticDir, 'indexnow-key.txt');
+if (fs.existsSync(inKey)) {
+  fs.copyFileSync(inKey, path.join(outDir, 'indexnow-key.txt'));
+  console.log('  · 已复制 IndexNow key 文件');
+} else {
+  console.log('  ! 未找到 static/indexnow-key.txt，IndexNow 推送所需的验证文件缺失');
+}
 
 /**
  * SEO 自检：只提醒「页面照常能打开、肉眼永远看不出」的隐患，不影响构建结果。
