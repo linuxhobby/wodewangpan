@@ -21,7 +21,7 @@ disclaimer: 本站仅提供网盘资源索引，所有文件均存放于第三�
 verification:
 #  google: 粘贴 google-site-verification 的 content        # Google Search Console
 #  bing: 粘贴 msvalidate.01 的 content                     # Bing Webmaster（配合 IndexNow 用）
-#  baidu: 粘贴 baidu-site-verification 的 content          # 百度站长平台
+  baidu: codeva-6pyn8x0vyd          # 百度站长平台
 #  360: 粘贴 360-site-verification 的 content              # 360 搜索站长
 #  sogou: 粘贴 sogou_site_verification 的 content          # 搜狗站长
 # 分类标签栏顺序（未在此列出的分类会追加在后面）
