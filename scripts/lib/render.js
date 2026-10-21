@@ -46,9 +46,10 @@ const ICONS = {
   qq:
     '<path d="M21.395 15.035a40 40 0 0 0-.803-2.264l-1.079-2.695c.001-.032.014-.562.014-.836C19.526 4.632 17.351 0 12 0S4.474 4.632 4.474 9.241c0 .274.013.804.014.836l-1.08 2.695a39 39 0 0 0-.802 2.264c-1.021 3.283-.69 4.643-.438 4.673.54.065 2.103-2.472 2.103-2.472 0 1.469.756 3.387 2.394 4.771-.612.188-1.363.479-1.845.835-.434.32-.379.646-.301.778.343.578 5.883.369 7.482.189 1.6.18 7.14.389 7.483-.189.078-.132.132-.458-.301-.778-.483-.356-1.233-.646-1.846-.836 1.637-1.384 2.393-3.302 2.393-4.771 0 0 1.563 2.537 2.103 2.472.251-.03.581-1.39-.438-4.673"/>',
 };
-const iconSvg = (key) =>
+// cls 可换：图标不只页脚用（详情页反馈条也用），类名跟着所在区块走
+const iconSvg = (key, cls = 'foot__icon') =>
   ICONS[key]
-    ? `<svg class="foot__icon" viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">${ICONS[key]}</svg>`
+    ? `<svg class="${cls}" viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">${ICONS[key]}</svg>`
     : '';
 
 // 全站每页底部的固定入口。abs: true 的输出时拼上站点域名
@@ -536,6 +537,54 @@ function linkRow(link) {
 </div>`;
 }
 
+/**
+ * 详情页反馈条（A1「链接失效一键反馈」的落点）：紧跟在转存链接下面，
+ * 这是全页意图最强的时刻——用户刚发现链接打不开，此刻正需要一个出口。
+ *
+ * 三条刻意的设计取舍：
+ * 1. 不放二维码。海报旁那个 qrbox 是资源转存码，同屏再放一个群码会被扫错；
+ *    qm.qq.com 落地页自己解决两端（手机拉起 QQ、PC 自带二维码），这里给纯链接就够。
+ * 2. 不用 --brand 实底按钮。加群是兜底动作，不该抢「打开 / 复制链接」的视觉焦点。
+ * 3. 纯 <a>，零 JS，noscript 可用，构建期静态输出。
+ */
+function feedbackBar({ site, item, baseUrl }) {
+  if (site.detailFeedback === false) return '';
+  const qq = qqLinkOf(site.contact);
+  const email = emailOf(site.contact);
+  if (!qq && !email) return '';
+
+  const group = String(site.qqGroup || '').trim();
+  const pageUrl = `${baseUrl}${itemHref(item.id)}`;
+  // 邮件预填：带上 id 与页面地址，站长收到就能直接定位到是哪条资源
+  const body = [
+    `资源：${item.title}`,
+    `ID：${item.id}`,
+    `页面：${pageUrl}`,
+    `问题：（链接打不开 / 文件损坏 / 内容有误 / 其他，请描述）`,
+  ].join('\n');
+
+  const hint = item.links.length ? '链接打不开或资源有误？' : '暂无可用链接？';
+  const btns = [
+    qq
+      ? `<a class="btn" href="${esc(qq)}" target="_blank" rel="noopener noreferrer" aria-label="加入${
+          group ? `${esc(group)}QQ群` : 'QQ群'
+        }">${iconSvg('qq', 'feedback__icon')}加入QQ群</a>`
+      : '',
+    email
+      ? `<a class="btn" href="mailto:${email}?subject=${encodeURIComponent(
+          `[失效反馈] ${item.title}`
+        )}&amp;body=${encodeURIComponent(body)}">邮件反馈</a>`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('');
+
+  return `<aside class="feedback" aria-label="问题反馈">
+  <p class="feedback__hint">${hint}</p>
+  <div class="feedback__row">${btns}</div>
+</aside>`;
+}
+
 // 详情页之间原本零互链，蜘蛛爬进来出不去；这段静态输出给它们一条向深处走的路（理由见 docs/growth-收录与流量.md）。
 // 取 10 条 = 宫格一行 5 列排满两行，窄屏由 .grid--fit 藏掉末行零头
 function relatedOf(item, all, n = 10) {
@@ -653,6 +702,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     <div class="links">
       ${item.links.length ? item.links.map(linkRow).join('\n') : '<p class="muted">暂无可用链接</p>'}
     </div>
+    ${feedbackBar({ site, item, baseUrl })}
     <div class="detail__share">
       <button class="btn btn--mini" type="button" data-share
         data-url="${esc(shareUrl)}"

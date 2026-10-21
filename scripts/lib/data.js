@@ -297,6 +297,8 @@ export function loadSite(configDir) {
     qqGroup: cfg.qqGroup || '',
     maintainer: cfg.maintainer || '',
     stats: cfg.stats || '',
+    // 详情页反馈条开关：默认开，site.yaml 写 detailFeedback: false 则全站详情页不渲染
+    detailFeedback: cfg.detailFeedback !== false,
     homeTitle: cfg.homeTitle || '',
     homeDesc: cfg.homeDesc || '',
     homeH1: cfg.homeH1 || '',

@@ -468,6 +468,24 @@ a.tag:hover { background: var(--brand-soft); }
 /* 等宽文本（链接地址 / 订阅地址）统一字体与字号 */
 .linkrow__url, .feed-url__code { font-family: var(--font-mono); font-size: var(--fs-sm); }
 
+/* 详情页反馈条：链接失效 / 资源有误的出口，紧跟在转存链接下面。
+   用虚线框 + 中性底与上面的 .linkrow 拉开层次——它是兜底，不是主操作 */
+.feedback {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px dashed var(--border);
+  border-radius: var(--r-box);
+  background: var(--fill-soft);
+}
+.feedback__hint { margin: 0; font-size: var(--fs-sm); color: var(--muted); }
+.feedback__row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.feedback__row .btn { display: inline-flex; align-items: center; gap: 5px; }
+.feedback__icon { display: block; width: 15px; height: 15px; color: var(--contact-icon); }
+
 /* ── 按钮 ────────────────────────────── */
 /* 普通按钮与二维码切换按钮同规格，只在下面各留一点差异 */
 .btn, .qrbtn {
