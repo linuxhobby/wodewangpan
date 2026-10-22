@@ -85,7 +85,7 @@ npm run serve        # 抽查详情页
 
 ### 8. 提交并推送
 
-推 `main` 后 VPS 每 2 小时自动拉取重建，急发用 `FORCE=1 site-autoupdate`。
+推 `main` 后 VPS 每 6 小时自动拉取重建（`0 */6`，兜底用）；想立刻上线就在推送方执行 `ssh <host> 'flock -w 120 /tmp/site-autoupdate.lock site-autoupdate'`，约 30 秒。
 推送前先 `git status` 查有没有其他会话的未提交改动，**只 `git add` 自己那几个文件**，别 `git add -A`。
 
 ---

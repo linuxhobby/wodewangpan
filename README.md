@@ -116,10 +116,11 @@ BASE_URL=https://你的域名
 EOF
 
 sudo crontab -e
-# 加入一行（每 2 小时拉一次）
-# 频率可以放心调密：脚本先比对 HEAD，没有新提交就直接退出，空跑只有一次 git fetch；
+# 加入一行（每 6 小时拉一次）
+# 频率只决定「上线延迟」的上限：脚本先比对 HEAD，没有新提交就直接退出，空跑只有一次 git fetch；
 # 真有提交时才构建，而构建现在只重写字节变了的页面，未变的保留原 mtime，不会白费蜘蛛的抓取预算
-0 */2 * * * /usr/local/bin/site-autoupdate >> /var/log/site-autoupdate.log 2>&1
+# 急发不必等 cron：在推送方执行 ssh <host> 'flock -w 120 /tmp/site-autoupdate.lock site-autoupdate'
+0 */6 * * * /usr/local/bin/site-autoupdate >> /var/log/site-autoupdate.log 2>&1
 ```
 
 看运行结果：`tail -20 /var/log/site-autoupdate.log`。

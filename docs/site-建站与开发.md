@@ -139,7 +139,7 @@ const NON_RESOURCE_FILES = new Set(['site.yaml', 'tags.yaml']);
 
 ## 六、部署与 Nginx
 
-- 推到 `main`，VPS 每 2 小时自动拉取重建；急发走 `FORCE=1 site-autoupdate`。脚本先比对 HEAD，没新提交直接 `exit 0`，频率只决定上线延迟。
+- 推到 `main`，VPS 每 6 小时自动拉取重建（`0 */6`）；急发不必等 cron，在推送方执行 `ssh <host> 'flock -w 120 /tmp/site-autoupdate.lock site-autoupdate'`，约 30 秒上线。脚本先比对 HEAD，没新提交直接 `exit 0`，频率只决定上线延迟上限。
 - **`robots.txt` 只挡子路径** `Disallow: /*/search-index.json`。根路径 `/search-index.json` 是 Googlebot 渲染「加载更多」的通道，挡了自断一条发现路径。
 - Nginx 的 410 规则（`^/.+/search-index\.json$`）**必须排在静态资源 location 之前**——nginx 正则 location 取第一个命中。
 - 静态资源 location 带 `access_log off`，成功的 json 请求**不进日志**，只有 404 经 `error_page` 落到 `location /` 才被记录。日志里「全是 404」有一半是采样偏差，别拿它当抓取量。

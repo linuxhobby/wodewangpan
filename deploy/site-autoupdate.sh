@@ -4,8 +4,8 @@
 # 用法：
 #   1) install -m755 本文件到 /usr/local/bin/site-autoupdate
 #   2) 站点专属的两个值写进 /etc/site-autoupdate.conf（与脚本分离，升级脚本时不会被覆盖）
-#   3) 加进 root 的 crontab：0 */2 * * * /usr/local/bin/site-autoupdate >> /var/log/site-autoupdate.log 2>&1
-#      （频率可以调密：没有新提交时脚本在下面直接 exit 0，空跑只有一次 git fetch）
+#   3) 加进 root 的 crontab：0 */6 * * * /usr/local/bin/site-autoupdate >> /var/log/site-autoupdate.log 2>&1
+#      （频率只决定上线延迟上限：没有新提交时脚本在下面直接 exit 0，空跑只有一次 git fetch）
 #
 # 手动立即发布（不想等 cron）：FORCE=1 site-autoupdate
 set -euo pipefail
