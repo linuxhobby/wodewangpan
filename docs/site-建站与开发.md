@@ -145,7 +145,7 @@ const NON_RESOURCE_FILES = new Set(['site.yaml', 'tags.yaml']);
 - 静态资源 location 带 `access_log off`，成功的 json 请求**不进日志**，只有 404 经 `error_page` 落到 `location /` 才被记录。日志里「全是 404」有一半是采样偏差，别拿它当抓取量。
 - `gzip_types` 必须带 `text/xml`：nginx 的 `mime.types` 把 `.xml` 映射成 **text/xml** 而不是 `application/xml`，只写后者时 `sitemap.xml` / `feed.xml` 完全不压缩（2026-10-22 实测响应头只有 `content-length: 210066 / 78433`，无 `content-encoding`，而 `/` 正常）。一并写 `application/rss+xml` `application/atom+xml`，供自建 feed 端点显式声明 Content-Type 时命中。改完 `nginx -t && systemctl reload nginx`，再用 `curl -H 'Accept-Encoding: gzip'` 逐个端点看头，别只看首页。
 - 完整部署步骤（Nginx 配置、HTTPS、自动更新、访问统计）→ 根 `README.md`。
-- 改 nginx 的三步走与「必须放行清单」回归 → [growth-收录与流量.md](growth-收录与流量.md) 第七节。
+- 改 nginx 的三步走与「必须放行清单」回归 → [SEO-收录与流量.md](SEO-收录与流量.md) 第七节。
 
 ### 迁到 Cloudflare Pages：可行性与上线前必修（2026-10-12 评估，未执行）
 
@@ -167,7 +167,7 @@ const NON_RESOURCE_FILES = new Set(['site.yaml', 'tags.yaml']);
    > 顺带纠正一处旧记录：曾写「`baidu_verify_*.html` 永久保留在 `public/` 防丢」——`public/` 既不入库又每次被构建覆盖，那个位置保不住东西。
 2. **蜘蛛治理无法平移。** 444 探针、referer 零回流 403 名单都是 nginx 逻辑；CF 侧只有 WAF 自定义规则（Free 约 10 条），做不到「看 referer 判是不是真人回流」这种带状态的判定。等于那套四层策略只剩一个粗筛。
 
-真正的天花板还是原来那条，跟托管在哪无关：**CF Free 没有中国网络节点**，备案 + 大陆节点仍是百度系唯一破局手段（见 [growth-收录与流量.md](growth-收录与流量.md)）。所以 Pages 的价值主要是省运维和多一层容灾，不是解决收录。
+真正的天花板还是原来那条，跟托管在哪无关：**CF Free 没有中国网络节点**，备案 + 大陆节点仍是百度系唯一破局手段（见 [SEO-收录与流量.md](SEO-收录与流量.md)）。所以 Pages 的价值主要是省运维和多一层容灾，不是解决收录。
 
 ---
 
@@ -258,5 +258,5 @@ grep -o '<body[^>]*>\|class="wrap[^"]*"\|class="cats[^"]*"' public/index.html pu
 ## 九、相关
 
 - 入库、文案、配图、skill：[content-内容生产.md](content-内容生产.md)
-- 网络侧爬虫处置：[growth-收录与流量.md](growth-收录与流量.md)
+- 网络侧爬虫处置：[SEO-收录与流量.md](SEO-收录与流量.md)
 - 待办与变更：[record-待办变更与规划.md](record-待办变更与规划.md)

@@ -242,7 +242,7 @@ tools/
 docs/                # 经验类文档（4 篇 + 索引），按干活的场景划分，见 docs/README.md
   content-内容生产.md   # 入库八步、编号、失效修复、简介文案、配图、skill
   site-建站与开发.md     # URL 禁忌、样式约定、构建部署、环境速查
-  growth-收录与流量.md   # 收录现状、抓取预算、日志解析、nginx 爬虫治理
+  SEO-收录与流量.md   # 问题清单与本期变化、抓取预算、日志解析、nginx 爬虫治理
   record-待办变更与规划.md  # 待办 / 规划 / 变更记录
   README.md           # 索引与文档规范
 deploy/              # 部署用：Nginx 配置示例、自动更新脚本、统计日志格式、搜索引擎提交脚本
@@ -257,7 +257,7 @@ public/              # 构建产物，部署这个目录（本目录不入库）
 |---|---|
 | [`docs/content-内容生产.md`](docs/content-内容生产.md) | 入库 SOP、编号与 id、失效修复与下架、简介文案红线、配图图源与兜底工具、skill 用法与维护 |
 | [`docs/site-建站与开发.md`](docs/site-建站与开发.md) | 改代码前必读：URL 与收录禁忌、样式与卡片约定、config / data、构建产物、部署与 Nginx、环境速查 |
-| [`docs/growth-收录与流量.md`](docs/growth-收录与流量.md) | 收录现状、抓取预算、日志解析方法、nginx 爬虫四层策略、优化项 |
+| [`docs/SEO-收录与流量.md`](docs/SEO-收录与流量.md) | 未闭环问题清单（P1–P7）与本期变化、放行判断准则、抓取预算结论、日志解析三个坑、真人流量估算、nginx 四层策略与上线规范 |
 | [`docs/record-待办变更与规划.md`](docs/record-待办变更与规划.md) | 待办与已闭环、待评审的功能 / 内容规划、变更记录 |
 
 完整索引与文档规范见 [`docs/README.md`](docs/README.md)。

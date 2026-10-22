@@ -2,7 +2,7 @@
 
 一条资源怎么从夸克网盘变成页面上的一张卡：流程、编号、失效修复、简介写法、配图、以及干这些活用的 skill。
 
-> 适用：入库、改简介、换图、下架、skill 维护。构建与 URL 相关的禁忌见 [site-建站与开发.md](site-建站与开发.md)，上线之后的收录效果见 [growth-收录与流量.md](growth-收录与流量.md)。
+> 适用：入库、改简介、换图、下架、skill 维护。构建与 URL 相关的禁忌见 [site-建站与开发.md](site-建站与开发.md)，上线之后的收录效果见 [SEO-收录与流量.md](SEO-收录与流量.md)。
 > 最近更新：2026-10-13（由「入库流程 + 内容规范 + 配图规范 + skill 用法与维护」四篇合并）。
 
 ---
@@ -442,6 +442,6 @@ cp -R ~/.workbuddy/skills/quarkclouddrive ~/.trae-cn/skills/
 ## 十、相关
 
 - 本机路径与命令速查、构建与部署禁忌：[site-建站与开发.md](site-建站与开发.md)
-- 编号 / 条数变了之后的 SEO 影响：[growth-收录与流量.md](growth-收录与流量.md)
+- 编号 / 条数变了之后的 SEO 影响：[SEO-收录与流量.md](SEO-收录与流量.md)
 - 待办与变更：[record-待办变更与规划.md](record-待办变更与规划.md)
 - skill 完整文档（不在本仓库）：`~/.workbuddy/skills/quark-resource-sync/SKILL.md`
