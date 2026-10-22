@@ -143,6 +143,7 @@ const NON_RESOURCE_FILES = new Set(['site.yaml', 'tags.yaml']);
 - **`robots.txt` 只挡子路径** `Disallow: /*/search-index.json`。根路径 `/search-index.json` 是 Googlebot 渲染「加载更多」的通道，挡了自断一条发现路径。
 - Nginx 的 410 规则（`^/.+/search-index\.json$`）**必须排在静态资源 location 之前**——nginx 正则 location 取第一个命中。
 - 静态资源 location 带 `access_log off`，成功的 json 请求**不进日志**，只有 404 经 `error_page` 落到 `location /` 才被记录。日志里「全是 404」有一半是采样偏差，别拿它当抓取量。
+- `gzip_types` 必须带 `text/xml`：nginx 的 `mime.types` 把 `.xml` 映射成 **text/xml** 而不是 `application/xml`，只写后者时 `sitemap.xml` / `feed.xml` 完全不压缩（2026-10-22 实测响应头只有 `content-length: 210066 / 78433`，无 `content-encoding`，而 `/` 正常）。一并写 `application/rss+xml` `application/atom+xml`，供自建 feed 端点显式声明 Content-Type 时命中。改完 `nginx -t && systemctl reload nginx`，再用 `curl -H 'Accept-Encoding: gzip'` 逐个端点看头，别只看首页。
 - 完整部署步骤（Nginx 配置、HTTPS、自动更新、访问统计）→ 根 `README.md`。
 - 改 nginx 的三步走与「必须放行清单」回归 → [growth-收录与流量.md](growth-收录与流量.md) 第七节。
 

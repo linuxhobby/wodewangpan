@@ -35,7 +35,11 @@ server {
     gzip_vary on;
     gzip_comp_level 6;
     gzip_min_length 1024;
-    gzip_types text/plain text/css application/javascript application/json image/svg+xml application/xml;
+    # text/xml 必须写：nginx 的 mime.types 把 .xml 映射成 text/xml，不是 application/xml。
+    # 只写 application/xml 的话 sitemap.xml / feed.xml 完全不压缩（实测响应头只有 content-length
+    # 210066 / 78433，没有 content-encoding）。application/rss+xml、application/atom+xml 同理，
+    # 供自建 feed 端点显式声明 Content-Type 时使用。
+    gzip_types text/plain text/css application/javascript application/json text/xml application/xml application/rss+xml application/atom+xml image/svg+xml;
 
     # 蜘蛛记忆里的残留 URL：app.js 早期用相对路径取 search-index.json，
     # 在 /resource/<id>/、/category/<slug>/ 下解析成 /resource/<id>/search-index.json 这类不存在的路径。
