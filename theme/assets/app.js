@@ -211,8 +211,9 @@ import { esc, tileHtml } from './card.js';
   // 拉取浏览量（/stats.json），覆盖首屏静态卡片 + 详情页占位
   loadStats();
 
-  // 触屏移动端（支持 Web Share）隐藏社交按钮组，只用系统分享面板；
-  // 桌面端（含支持 share 的 Chrome/Edge）始终展示按钮组，方便一键分享到各平台。
+  // 触屏移动端（支持 Web Share）隐藏分享面板，只留「分享」走系统面板——
+  // 手机上系统面板里本来就有微信 / QQ，再给一个「复制资源信息」按钮是多余的。
+  // 桌面端始终展示面板，因为系统分享面板在桌面上远不如一键复制顺手。
   if (navigator.share && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     var sps = document.querySelectorAll('.share__panel');
     for (var i = 0; i < sps.length; i++) sps[i].setAttribute('hidden', '');
@@ -302,26 +303,28 @@ import { esc, tileHtml } from './card.js';
     }
 
     // 原生 Web Share API：移动端直接唤起系统分享面板（含微信/QQ/微博等）；
-    // 桌面端始终展示社交按钮组（见 init 的媒体查询判定），点「分享」即分享/复制本页链接。
-    // 只有直接点到「分享」按钮才触发此逻辑；面板内的复制/社交链接各走各的分支或默认跳转。
+    // 桌面端不支持 share 时（如 Firefox）退化为复制——复制的是资源包文本而不是裸 URL，
+    // 因为卡片长什么样由平台方决定，写进消息正文的信息才是我们自己能保住的。
+    // 只有直接点到「分享」按钮才触发此逻辑；面板内的复制按钮走上面的 [data-copy] 分支。
     var shareBtn = e.target.closest('[data-share]');
     if (shareBtn && e.target === shareBtn) {
       var url = shareBtn.getAttribute('data-url') || location.href;
+      var packet = shareBtn.getAttribute('data-text') || url;
       if (navigator.share) {
         navigator.share({
           title: shareBtn.getAttribute('data-title') || document.title,
-          text: shareBtn.getAttribute('data-text') || '',
+          text: packet,
           url: url,
         }).catch(function () {});  // 用户取消（AbortError）静默忽略
         return;
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(
-          function () { flash(shareBtn, '已复制链接'); },
-          function () { fallbackCopy(url, function () { flash(shareBtn, '已复制链接'); }); }
+        navigator.clipboard.writeText(packet).then(
+          function () { flash(shareBtn, '已复制'); },
+          function () { fallbackCopy(packet, function () { flash(shareBtn, '已复制'); }); }
         );
       } else {
-        fallbackCopy(url, function () { flash(shareBtn, '已复制链接'); });
+        fallbackCopy(packet, function () { flash(shareBtn, '已复制'); });
       }
     }
   });

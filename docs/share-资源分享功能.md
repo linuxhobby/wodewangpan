@@ -1,23 +1,59 @@
 # 资源分享功能说明
 
-详情页提供一个「分享本资源页」入口，把资源页本身的 URL（canonical）发出去，与已有的「复制转存链接 / 扫码转存」区分开。方案是**移动端用系统分享面板、桌面端常显社交按钮组**的渐进增强组合，纯前端、零后端依赖。
+详情页分享入口做的是**把资源本身发出去**，不是把站点页面发出去。分享 / 复制的 payload 是一段多行的「资源包」文本，顺序为**网盘在前、页面在后**。方案是「移动端系统分享面板 + 桌面端一键复制」的渐进增强组合，纯前端、零后端依赖。
+
+## 为什么不分享一个 URL
+
+早期版本分享 / 复制的都是资源页 canonical，有三个问题：
+
+1. **卡片长什么样由平台方决定**。腾讯抓不抓、跟不跟随 301、抓成什么样都不归我们管（2026-10-22 实测：QQ 群卡片降级成「站点名 + 裸 URL」，而页面 OG 标签本身是完整正确的）。把展示效果外包给第三方抓取器，等于把最在意的东西交给不可控因素。
+2. **群里的人要多走一步**。拿到页面链接还得点进去、再点转存。
+3. **分享者的目的不是请人来看站**，是让人拿到资源。把页面链接顶在最前面等于给朋友卡一道。
+
+改成资源包文本后，信息写进**消息正文**——这是唯一 100% 可控的部分。卡片渲染得好是加分，渲染得烂也不丢信息。
+
+## 分享内容格式
+
+```
+{标题}（{年份}） · {分类}
+{一句话概要}
+{网盘名}：{链接}
+{网盘名}：{链接} 提取码 {code}
+更多同类 → {资源页 canonical}
+```
+
+- 有 `date` 才带年份；多条网盘链接时每个一行；带提取码的追加在行尾。
+- 无可用链接时，链接行写成「（暂无可用链接，页面会更新补源）」，页面链接照常给。
+
+**一句话概要**取简介的第一句（`summaryOf()`，上限 60 字）。简介已补到 300 字，整段放进去会淹没链接，所以只取首句；两处脏数据必须处理：
+
+1. 简介尾部常带「｜TMDB 7.1」这类标注，先按全角 `｜` 切掉，否则可能截出「…｜TMDB」。
+2. 硬截会切出半截词（实测 「…全球月活」），所以优先退到上限内最后一个句读处再断，退得太狠（不足 6 成）才硬切——宁可长一点，也别砍成半句。
+- **页面链接放在最后一行**，它的真实价值是兜底：网盘链接会失效，页面不会（失效了会标记 / 换源），所以它同时是长期入口和「更多同类」的引流位。
 
 ## 行为
 
-### 桌面端（含 Chrome / Edge）
-社交按钮组**默认就显示**，无需点击展开，排列顺序为：
+### 桌面端
 
 ```
-分享 · QQ · 微博 · 𝕏 · Telegram · 复制链接
+分享 · 复制资源信息
 ```
 
-- 「分享」主按钮：点击调用 `navigator.share` 唤起系统分享面板（桌面 Chrome/Edge 支持时）；不支持的浏览器（如 Firefox 桌面）则回退为复制本页链接。
-- `QQ / 微博 / 𝕏 / Telegram`：各一个外链，打开对应平台的发布框，链接与标题在**构建期**已拼好（见下文）。
-- 「复制链接」：复制本资源页 canonical 地址（区别于详情页已有的「复制转存链接」）。
-- 微信二维码：单独一行（见下）。
+- 「分享」：`navigator.share`；不支持的浏览器（如 Firefox 桌面）退化为复制——**复制的是资源包文本，不是 URL**。
+- 「复制资源信息」：复制资源包文本。
+- 微信二维码单独一行（见下）。
 
 ### 触屏移动端
-支持 Web Share 时隐藏社交按钮组，只留「分享」按钮，点击直接唤起系统分享面板（已含微信 / QQ / 微博等）。判定用媒体查询 `(hover: hover) and (pointer: fine)`：命中即视为桌面，否则视为触屏移动端。
+
+支持 Web Share 时隐藏分享面板，只留「分享」按钮走系统面板（里面本来就有微信 / QQ）。判定用媒体查询 `(hover: hover) and (pointer: fine)`。
+
+### 已删除的平台按钮
+
+原来的 `QQ / 微博 / 𝕏 / Telegram` 四个外链于 2026-10-22 删除，原因：
+
+- `connect.qq.com/widget/shareqq` 是腾讯 2010 年代的组件，**已经失效**（死链）。
+- 微博 / X / Telegram 对国内网盘资源站使用率近零，却占了详情页显眼位置，还稀释了真正高频的复制按钮。
+- 它们分享出去的都只是页面链接，同样逃不掉卡片降级的问题。
 
 ## 微信分享的两种路径
 
@@ -26,28 +62,17 @@
 1. **扫码分享本页**：分享区放一张**本页 URL 的二维码**（`/qr/share-<id>.svg`），文案「微信：扫一扫，把本页分享给好友」。
 2. **系统面板**：移动端「分享」按钮调起系统面板，里面直接有微信。
 
-注意与「扫码转存」区分：详情页左侧的 `qrBlock` 二维码内容是**网盘转存深链**，而分享区的二维码内容是**资源页 canonical URL**，二者不同，不要混用。
+注意与「扫码转存」区分：详情页左侧 `qrBlock` 的二维码内容是**网盘转存深链**，分享区的二维码内容是**资源页 canonical URL**，二者不同，不要混用。
 
 ## 实现位置
 
 | 文件 | 职责 |
 |---|---|
-| `scripts/lib/render.js` | 详情页 `.detail__share` 模板：主「分享」按钮（`data-share` / `data-url` / `data-title` / `data-text`）+ `.share__panel`（社交直链按钮组 + 本页二维码提示）。`shareUrl`、四个社交分享 URL 在构建期用 `encodeURIComponent` 拼好。 |
-| `theme/assets/app.js` | 点击 `[data-share]`：支持 `navigator.share` 则调系统面板，否则复制链接；面板内 `[data-copy]` 走复制逻辑并给「已复制链接」反馈。init 里用媒体查询判定触屏移动端并隐藏面板。 |
+| `scripts/lib/render.js` | `shareTextOf(item, shareUrl)` 拼资源包文本（构建期）；详情页 `.detail__share` 模板：「分享」按钮（`data-share` / `data-url` / `data-title` / `data-text`）+ `.share__panel`（复制按钮 + 本页二维码提示）。 |
+| `theme/assets/app.js` | 点击 `[data-share]`：支持 `navigator.share` 则调系统面板（传 `title` + 资源包 `text` + `url`），否则复制资源包文本；面板内 `[data-copy]` 走复制逻辑并给「已复制」反馈。init 里用媒体查询判定触屏移动端并隐藏面板。 |
 | `theme/assets/style.css` | `.detail__share`（flex 同行）、`.share__panel`（`display: contents`，让内部子元素与「分享」按钮排同一行）、`.share__hint`（`flex-basis: 100%` 强制微信二维码换行）、`.share__qr` 样式。 |
 | `scripts/lib/assets.js` | `writeShareQr(pageUrl, id, outDir)`：为每个资源生成本页 URL 的二维码 SVG，写入 `public/qr/share-<id>.svg`（依赖 `qrcode` 包）。 |
 | `scripts/build.js` | 构建期调用 `writeShareQr` 生成 `shareQrMap`，把 `shareQr` 路径注入 `detailPage` 的 `ctx`。 |
-
-## 社交平台分享 URL 格式（构建期拼装）
-
-变量：`url` = 资源页 canonical，`title` = 资源标题，`text` = `${title} - ${站点名}`。
-
-- **QQ**：`https://connect.qq.com/widget/shareqq/index.html?url=<encUrl>&title=<encTitle>`
-- **微博**：`https://service.weibo.com/share/share.php?url=<encUrl>&title=<encTitle>`
-- **𝕏**：`https://twitter.com/intent/tweet?url=<encUrl>&text=<encText>`
-- **Telegram**：`https://t.me/share/url?url=<encUrl>&text=<encText>`
-
-所有外链均带 `target="_blank" rel="noopener noreferrer"`，避免 `window.opener` 隐患、对 SEO 干净。
 
 ## 隐私口径
 
@@ -59,6 +84,7 @@
 
 ## 已知限制
 
-- 桌面 Chrome / Edge 点「分享」主按钮也会调系统面板，与常显的社交按钮组并存，属预期（系统面板是额外便捷方式）。
-- 分享依赖资源页 canonical（`baseUrl + /resource/<id>/`），`baseUrl` 需在 `config/site.yaml` 或 `BASE_URL` 环境变量正确配置，否则生成的分享链接会指向错误域名。
+- 资源包文本里的网盘链接是构建期从 YAML 取值，**入库后如果网盘换链，要重新构建才会更新**；分享出去的旧文本不会变。
+- 分享依赖资源页 canonical（`baseUrl + /resource/<id>/`），`baseUrl` 需在 `config/site.yaml` 或 `BASE_URL` 环境变量正确配置，否则生成的链接会指向错误域名。
 - 微信真正「一键分享给好友」只能靠移动端系统面板或扫码，网页端无法做到免扫码直达。
+- QQ 群卡片是否显示完整标题 / 描述，取决于腾讯抓取器的行为（新链接异步抓取、是否跟随重定向、域名是否备案），**站点侧无法干预**。这也是本功能改为「信息写进正文」的直接原因——不把效果押在它身上。

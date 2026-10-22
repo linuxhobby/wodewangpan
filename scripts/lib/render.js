@@ -538,6 +538,49 @@ function linkRow(link) {
 }
 
 /**
+ * 分享 / 复制的内容：一段多行「资源包」文本，而不是一个裸 URL。
+ *
+ * 顺序是刻意的——**网盘在前、页面在后**：
+ * 1. 分享者的目的是让群里的人拿到资源，不是请人来看站；把页面链接顶在前面等于给朋友卡一道。
+ * 2. 页面链接的真实价值是兜底：网盘链接会失效，页面不会（失效了会标记 / 补源），
+ *    所以它放在最后一行当「更多同类」的长期入口，顺带承担引流。
+ * 3. 卡片渲染由平台方决定（腾讯抓不抓、抓成什么样都不归我们管），
+ *    把信息写进消息正文才是唯一 100% 可控的部分。
+ */
+/**
+ * 分享文案里的一句话概要。简介已补到 300 字，整段放进去会淹没链接，只取第一句。
+ * 两个必须处理的脏数据：
+ * 1. 简介尾部常带「｜TMDB 7.1」这类标注（见 content-内容生产.md 的简介规范），先切掉；
+ * 2. 硬截会切出半句话，所以按句读取第一句，只有第一句本身就超长才硬截加省略号。
+ */
+function summaryOf(item, max = 60) {
+  const raw = String(item.description || '').trim();
+  if (!raw) return '';
+  const body = raw.split('｜')[0].trim();
+  const first = body.match(/^[^。！？!?]+[。！？!?]?/);
+  let s = ((first ? first[0] : body) || '').trim();
+  if (s.length > max) {
+    const cut = s.slice(0, max);
+    // 硬切会切出半截词（「…全球月活」），优先退到 max 内最后一个句读处再断；
+    // 退得太狠（不足 6 成）就宁可硬切，否则一句话会被砍成半句。
+    const last = Math.max(cut.lastIndexOf('，'), cut.lastIndexOf('、'), cut.lastIndexOf('；'));
+    s = last > max * 0.6 ? cut.slice(0, last) : cut.replace(/[，,、；;：:]$/, '');
+    s += '…';
+  }
+  return s;
+}
+
+function shareTextOf(item, shareUrl) {
+  const year = item.date ? String(item.date).slice(0, 4) : '';
+  const head = `${item.title}${year ? `（${year}）` : ''} · ${item.category}`;
+  const summary = summaryOf(item);
+  const links = item.links.length
+    ? item.links.map((l) => (l.code ? `${l.name}：${l.url} 提取码 ${l.code}` : `${l.name}：${l.url}`))
+    : ['（暂无可用链接，页面会更新补源）'];
+  return [head, summary, ...links, `更多同类 → ${shareUrl}`].filter(Boolean).join('\n');
+}
+
+/**
  * 详情页反馈条（A1「链接失效一键反馈」的落点）：紧跟在转存链接下面，
  * 这是全页意图最强的时刻——用户刚发现链接打不开，此刻正需要一个出口。
  *
@@ -660,15 +703,11 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   </tbody>
 </table>`;
 
-  // 分享面板：四个社交平台直达链接在构建期拼好（canonical + 标题 URL 编码），无 JS 也能用
+  // 分享面板：只留「分享（系统面板）+ 复制资源信息」两个动作。
+  // 原来那四个平台外链已删除——connect.qq.com 的 shareqq 组件早已失效（死链），
+  // 微博 / X / Telegram 对国内网盘站使用率近零，却占了详情页的显眼位置。
   const shareUrl = `${baseUrl}${itemHref(item.id)}`;
-  const encUrl = encodeURIComponent(shareUrl);
-  const encTitle = encodeURIComponent(item.title);
-  const encText = encodeURIComponent(`${item.title} - ${site.title}`);
-  const qqHref = `https://connect.qq.com/widget/shareqq/index.html?url=${encUrl}&title=${encTitle}`;
-  const weiboHref = `https://service.weibo.com/share/share.php?url=${encUrl}&title=${encTitle}`;
-  const xHref = `https://twitter.com/intent/tweet?url=${encUrl}&text=${encText}`;
-  const tgHref = `https://t.me/share/url?url=${encUrl}&text=${encText}`;
+  const shareText = shareTextOf(item, shareUrl);
 
   const related = relatedOf(item, items || []);
 
@@ -707,15 +746,9 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
       <button class="btn btn--mini" type="button" data-share
         data-url="${esc(shareUrl)}"
         data-title="${esc(item.title)}"
-        data-text="${esc(site.title)}">分享</button>
+        data-text="${esc(shareText)}">分享</button>
       <div class="share__panel">
-        <div class="share__row">
-          <a class="btn btn--mini" href="${esc(qqHref)}" target="_blank" rel="noopener noreferrer">QQ</a>
-          <a class="btn btn--mini" href="${esc(weiboHref)}" target="_blank" rel="noopener noreferrer">微博</a>
-          <a class="btn btn--mini" href="${esc(xHref)}" target="_blank" rel="noopener noreferrer">𝕏</a>
-          <a class="btn btn--mini" href="${esc(tgHref)}" target="_blank" rel="noopener noreferrer">Telegram</a>
-          <button class="btn btn--mini" type="button" data-copy="${esc(shareUrl)}">复制链接</button>
-        </div>
+        <button class="btn btn--mini" type="button" data-copy="${esc(shareText)}">复制资源信息</button>
         <p class="share__hint">${shareQr ? `<img class="share__qr" src="${esc(shareQr)}" width="96" height="96" alt="本页分享二维码">` : ''}微信：扫一扫，把本页分享给好友</p>
       </div>
     </div>

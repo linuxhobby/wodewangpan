@@ -408,7 +408,6 @@ a.tag:hover { background: var(--brand-soft); }
 .detail__share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
 .share__panel { display: contents; }
 .share__panel[hidden] { display: none !important; }
-.share__row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 /* 分享区内按钮字号放大（覆盖全局 chip 的 .btn--mini），更易读 */
 .detail__share .btn--mini { font-size: var(--fs-base); padding: 6px 12px; line-height: var(--lh-body); }
 .share__hint { margin: 0; font-size: var(--fs-base); color: var(--muted); display: flex; align-items: center; gap: 10px; flex-basis: 100%; }
