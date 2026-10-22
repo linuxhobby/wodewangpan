@@ -211,12 +211,13 @@ import { esc, tileHtml } from './card.js';
   // 拉取浏览量（/stats.json），覆盖首屏静态卡片 + 详情页占位
   loadStats();
 
-  // 触屏移动端（支持 Web Share）隐藏分享面板，只留「分享」走系统面板——
-  // 手机上系统面板里本来就有微信 / QQ，再给一个「复制资源信息」按钮是多余的。
-  // 桌面端始终展示面板，因为系统分享面板在桌面上远不如一键复制顺手。
+  // 触屏移动端（支持 Web Share）只隐藏微信二维码那一行：扫码分享得靠另一台设备，
+  // 在手机上没有意义。但「复制资源信息」必须留着——系统面板是「分享出去」，
+  // 复制是「放进剪贴板」，两个不同的动作；而资源包文本最可靠的落地方式恰恰是
+  // 复制粘贴（不经过任何平台的卡片渲染），藏掉它就等于砍掉了最稳的那条路。
   if (navigator.share && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    var sps = document.querySelectorAll('.share__panel');
-    for (var i = 0; i < sps.length; i++) sps[i].setAttribute('hidden', '');
+    var hints = document.querySelectorAll('.share__hint');
+    for (var i = 0; i < hints.length; i++) hints[i].setAttribute('hidden', '');
   }
 
   if (input) {

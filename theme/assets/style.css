@@ -407,10 +407,11 @@ a.tag:hover { background: var(--brand-soft); }
 /* 分享按钮：与上方转存链接区隔开一行，展开后「分享」与社交按钮同在一行 */
 .detail__share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
 .share__panel { display: contents; }
-.share__panel[hidden] { display: none !important; }
 /* 分享区内按钮字号放大（覆盖全局 chip 的 .btn--mini），更易读 */
 .detail__share .btn--mini { font-size: var(--fs-base); padding: 6px 12px; line-height: var(--lh-body); }
 .share__hint { margin: 0; font-size: var(--fs-base); color: var(--muted); display: flex; align-items: center; gap: 10px; flex-basis: 100%; }
+/* hidden 属性挡不住 display:flex，要显式压掉（移动端只藏二维码这行，复制按钮留着） */
+.share__hint[hidden] { display: none !important; }
 .share__qr { width: 96px; height: 96px; flex: none; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 4px; }
 
 /* 热门资源榜（/hot/） */
