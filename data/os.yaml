@@ -71,3 +71,25 @@
   added: "2026-10-09 19:41"
   image: os-006.jpg
 
+
+- id: os-007
+  title: "CMCC RAX-3000M OpenWrt 刷机套件"
+  category: 操作系统
+  tags: ["操作系统", "OpenWrt", "刷机", "CMCC", "RAX-3000M", "CMCC RAX-3000M OpenWrt 刷机套件 CMCC RAX-3000M OpenWrt"]
+  quark_url: "https://pan.quark.cn/s/6a6b5b50d3bb"
+  description: "这套目录面向中国移动 RAX-3000M 路由器的第三方固件刷机，核心内容是 bl-mt798x 引导程序的 2024 年 11 月 15 日发布版本，另附一个 etc 配置目录。RAX-3000M 搭载联发科 MT7981 方案，是刷机圈里性价比很突出的一台千兆路由，刷入 bl-mt798x 的 U-Boot 之后，可以在不开盖、不接 TTL 线的情况下从路由器管理界面直接刷入 OpenWrt 固件，就算刷坏了也能靠引导程序兜底救回，是公认的稳妥路线。刷成 OpenWrt 之后能解锁完整 SSH、自由安装软件包，旁路由、内网穿透、多拨、无线中继、广告过滤这些原厂固件阉割或缺失的玩法基本都能补回来，可玩性比原厂系统高出一个档次。目录里的 etc 部分是配套的配置文件，动手前建议先备份原厂固件，并确认自己手上的机器是免拆版本，全程照教程走基本不会有风险。适合想给家里路由升级 OpenWrt、折腾软路由玩法但又不想动烙铁的朋友。｜bl-mt798x 项目"
+  date: 2024-11-15
+  added: "2026-10-23 17:15"
+  image: os-007.jpg
+
+
+- id: os-008
+  title: "黑群晖 DS918 刷机套件"
+  category: 操作系统
+  tags: ["操作系统", "群晖", "DSM", "黑群晖", "DS918", "黑群晖 DS918 刷机套件 Synology DSM Loader"]
+  quark_url: "https://pan.quark.cn/s/e9ebba3f88fe"
+  description: "这套目录是给黑群晖玩家准备的 DS918 刷机全家桶：核心是 DS918-701-42962.img 引导镜像，对应群晖 DSM 7.1.1（构建号 42962），另附三款在 Windows 上制作刷机盘会用到的工具，分别是检测 U 盘主控的芯片无忧、把镜像写入 U 盘的 Win32DiskImager，以及用来修改镜像内容的 WinImage。黑群晖的思路是用一台普通 PC 或准系统，写入 DS918 的引导镜像伪装成群晖官方机型，再安装 DSM 系统，从而用便宜硬件获得快照、Drive、Photos 等官方套件的完整体验。42962 是 DSM 7.1 系列里维护时间很长的一个稳定构建，兼容性好、资料多，新手遇到问题也容易搜到答案。使用流程大致是：先用芯片无忧确认 U 盘主控，再用 Win32DiskImager 把引导镜像写入 U 盘，需要改 sn 与 mac 时用 WinImage 编辑镜像文件，最后插盘启动安装 DSM 即可。适合手头有闲置主机、想低成本体验群晖系统的用户。｜Synology 社区"
+  date: 2022-09-27
+  added: "2026-10-23 17:15"
+  image: os-008.jpg
+
