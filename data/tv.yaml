@@ -1,4 +1,4 @@
-# 电视剧资源（118 条）
+# 电视剧资源（119 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -1355,3 +1355,13 @@
   date: 2026-10-21
   added: 2026-10-21
   image: tv-163.jpg
+
+- id: tv-164
+  title: "天作不合的我们"
+  category: 电视剧
+  tags: ["电视剧", "喜剧", "剧情", "天作不合的我们 Nobody Wants This"]
+  quark_url: "https://pan.quark.cn/s/25a397304ad2"
+  description: "【第 3 季 · 共 10 集 · 全剧 3 季】一名不可知论者性爱播客主播与一名刚刚恢复单身的拉比坠入爱河。然而，面对迥然不同的生活方式和爱管闲事的家人，两人的恋情能否经受住考验？本剧类型：喜剧 / 剧情。2024 年首播，已获续订，仍在播出，全剧 3 季，累计 30 集。播出平台：Netflix。制片国家/地区：美国。主创：Erin Foster。主演：克里斯汀·贝尔、亚当·布罗迪、贾斯汀·卢佩、蒂莫西·西蒙斯。出品方：3 Arts Entertainment、Steven Levitan Prods、20th Television。｜TMDB 7.3"
+  date: 2024-09-26
+  added: 2026-10-23
+  image: tv-164.jpg
