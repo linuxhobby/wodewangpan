@@ -1,4 +1,4 @@
-# 动漫资源（37 条）
+# 动漫资源（38 条）
 # 来源：夸克网盘 SHARE/05动漫
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -353,3 +353,13 @@
   date: 2026-09-17
   added: "2026-10-24 03:41"
   image: an-040.jpg
+
+- id: an-041
+  title: "JOJO的奇妙冒险"
+  category: 动漫
+  tags: ["动漫", "动画", "动作冒险", "Sci-Fi & Fantasy", "JOJO的奇妙冒险 ジョジョの奇妙な冒険"]
+  quark_url: "https://pan.quark.cn/s/195a4107c08c"
+  description: "【第 6 季 · 共 12 集 · 全剧 6 季】乔斯达家族的数代人都有一个相同的绰号“JOJO”，他们在不同的时代与各种拥有超自然力量的反派战斗不休。本剧类型：动画 / 动作冒险 / Sci-Fi & Fantasy。2012 年首播，已获续订，仍在播出，全剧 6 季，累计 202 集，单集约 24 分钟。播出平台：Netflix、TOKYO MX、BS11。制片国家/地区：日本。主演：坂田将吾、阿座上洋平、石川界人、高桥李依、三宅健太。出品方：David Production、Shueisha、Warner Bros. Japan。｜TMDB 8.6"
+  date: 2012-10-06
+  added: "2026-10-25 03:41"
+  image: an-041.jpg
