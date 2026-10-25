@@ -389,8 +389,11 @@ a.tag:hover { background: var(--brand-soft); }
 /* 详情页把右侧邀请链接组也塞进这一行：gap 只管横向，换行后靠 row-gap 不挤在一起，
    align-items 居中避免胶囊被拉伸成整行高 */
 .crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; row-gap: 8px; font-size: var(--fs-md); color: var(--muted); margin: 16px 0 10px; }
-.crumb a { color: var(--muted); }
-.crumb a:hover { color: var(--brand); }
+/* 面包屑自身的链接是次要灰；右侧那组（邀请胶囊 + 热榜）是行动入口，
+   要用 :not() 排除掉——否则 .crumb a 的权重比 .page__invite / .page__hot 高，
+   同一组链接在详情页会褪成灰色、和首页不一致 */
+.crumb a:not(.page__invite):not(.page__hot) { color: var(--muted); }
+.crumb a:not(.page__invite):not(.page__hot):hover { color: var(--brand); }
 
 .detail {
   display: flex;
