@@ -56,12 +56,12 @@ const iconSvg = (key, cls = 'foot__icon') =>
 const PAGE_INVITES = [
   {
     href: 'https://www.workbuddy.cn/events/invite?inviteCode=4ktsif3n0ne',
-    label: '领 WorkBuddy 2000 积分',
+    label: '领取腾讯 WorkBuddy 2000 积分',
     title: '腾讯 WorkBuddy 邀请注册，领 2000 积分',
   },
   {
     href: 'https://www.trae.cn/events/code-fission/UU44ET25EK2C?utm_source=copy_link&utm_medium=code_fission',
-    label: '领 TRAE AI 5000 积分',
+    label: '领取抖音 TRAE AI 5000 积分',
     title: '字节跳动 TRAE AI 邀请注册，领 5000 积分',
   },
 ];
