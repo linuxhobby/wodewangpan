@@ -386,7 +386,9 @@ a.tag:hover { background: var(--brand-soft); }
 }
 
 /* ── 详情页 ──────────────────────────── */
-.crumb { display: flex; gap: 6px; font-size: var(--fs-md); color: var(--muted); margin: 16px 0 10px; }
+/* 详情页把右侧邀请链接组也塞进这一行：gap 只管横向，换行后靠 row-gap 不挤在一起，
+   align-items 居中避免胶囊被拉伸成整行高 */
+.crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; row-gap: 8px; font-size: var(--fs-md); color: var(--muted); margin: 16px 0 10px; }
 .crumb a { color: var(--muted); }
 .crumb a:hover { color: var(--brand); }
 
