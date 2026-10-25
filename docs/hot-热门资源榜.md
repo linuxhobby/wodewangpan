@@ -5,6 +5,7 @@
 ## 入口与位置
 - 页面路径：`/hot/`（构建产物 `public/hot/index.html`）。
 - 首页 H1（「网盘资源索引 · 分类浏览 N 个资源」）与各分类页 H1（如「动漫 N 个资源」）同一行右侧，各有一个「热榜 TOP 30 →」链接指向 `/hot/`（不在顶部导航栏）。
+- 同一行、热榜入口**之前**还有两个邀请链接（腾讯 WorkBuddy 2000 积分、字节 TRAE AI 5000 积分），与热榜一起构成「标题栏右侧链接组」，由 `render.js` 的 `PAGE_INVITES` + `titleAsideLinks()` 统一输出，两处 H1 不再各写一遍。新增/更换邀请链接只改 `PAGE_INVITES` 数组。
 - 已加入 `sitemap.xml`，供搜索引擎发现。
 
 ## 排序维度
@@ -23,7 +24,7 @@
 ## 实现位置
 | 文件 | 职责 |
 |---|---|
-| `scripts/lib/render.js` | `hotPage()` 模板：排序按钮 + `#hot-list` 容器 + 内联索引；首页/分类页 H1 后加「查看热门榜 TOP 30」入口（导航栏不再含热榜） |
+| `scripts/lib/render.js` | `hotPage()` 模板：排序按钮 + `#hot-list` 容器 + 内联索引；`titleAsideLinks()` 给首页/分类页 H1 拼「邀请链接 + 查看热门榜 TOP 30」右侧链接组（导航栏不再含热榜） |
 | `scripts/build.js` | 导入 `hotPage`，生成 `/hot/index.html`，sitemap 加入 `/hot/` |
 | `theme/assets/app.js` | `initHot()`：读取内联索引 + fetch `/stats.json`，按 pv/uv 排序渲染、切换、降级 |
 | `theme/assets/style.css` | `.hot` 相关样式（排名序号、列表、切换高亮） |

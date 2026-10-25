@@ -52,6 +52,28 @@ const iconSvg = (key, cls = 'foot__icon') =>
     ? `<svg class="${cls}" viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">${ICONS[key]}</svg>`
     : '';
 
+// 页面 H1 同一行右侧的邀请链接（首页与各分类页共用）。外部站，统一 nofollow + noopener
+const PAGE_INVITES = [
+  {
+    href: 'https://www.workbuddy.cn/events/invite?inviteCode=4ktsif3n0ne',
+    label: '领 WorkBuddy 2000 积分',
+    title: '腾讯 WorkBuddy 邀请注册，领 2000 积分',
+  },
+  {
+    href: 'https://www.trae.cn/events/code-fission/UU44ET25EK2C?utm_source=copy_link&utm_medium=code_fission',
+    label: '领 TRAE AI 5000 积分',
+    title: '字节跳动 TRAE AI 邀请注册，领 5000 积分',
+  },
+];
+/** 标题栏右侧整组链接：两个邀请在前，「热榜 TOP 30」在最后；首个链接吃掉左侧剩余空间，整组右对齐 */
+const titleAsideLinks = () =>
+  PAGE_INVITES.map(
+    (i, n) =>
+      `<a class="page__invite${n === 0 ? ' page__invite--lead' : ''}" href="${esc(
+        i.href
+      )}" title="${esc(i.title)}" target="_blank" rel="noopener noreferrer nofollow">${esc(i.label)}</a>`
+  ).join('') + '<a class="page__hot" href="/hot/">热榜 TOP 30 →</a>';
+
 // 全站每页底部的固定入口。abs: true 的输出时拼上站点域名
 const FOOT_NAV = [
   { href: '/', label: '网站首页', abs: true },
@@ -421,7 +443,7 @@ function homePage(ctx) {
   const shown = groups.flatMap((g) => g.shown);
   const firstImg = (images.get(shown[0] && shown[0].id) || {}).card || '';
 
-  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span><a class="page__hot" href="/hot/">热榜 TOP 30 →</a></h1>
+  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span>${titleAsideLinks()}</h1>
 <div id="results" class="results" hidden></div>
 <div id="home">
 ${groups
@@ -479,7 +501,7 @@ function catPage(ctx) {
       .join('')}</ul>
 </noscript>`
     : '';
-  const body = `<h1 class="page__title">${esc(activeCat)}<span class="page__n">${items.length} 个资源</span><a class="page__hot" href="/hot/">热榜 TOP 30 →</a></h1>
+  const body = `<h1 class="page__title">${esc(activeCat)}<span class="page__n">${items.length} 个资源</span>${titleAsideLinks()}</h1>
 <div id="results" class="results" hidden></div>
 <ul id="list" class="grid">
 ${items.slice(0, pageSize).map((it, i) => cardHtml(it, images, newestIds.has(it.id), i < 5)).join('\n')}

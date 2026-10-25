@@ -296,8 +296,13 @@ a.tag:hover { background: var(--brand-soft); }
 .cat__n, .tag__n { margin-left: 5px; }
 /* 页面标题是 h1（粗体计数看着像标题的一部分），这里退回常规字重 */
 .page__n { font-weight: 400; }
-/* 页面标题栏里的「热榜」入口：与标题、计数同一行，推到最右 */
-.page__hot { margin-left: auto; font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
+/* 页面标题栏右侧链接组：两个邀请胶囊在前，「热榜」在最后，整组靠右 */
+.page__invite { padding: 2px 9px; background: var(--brand-soft); border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
+.page__invite:hover { background: var(--brand-mark); text-decoration: none; }
+/* 组内第一个吃掉左侧剩余空间把整组推到行尾，其余靠父级 gap 隔开 */
+.page__invite--lead { margin-left: auto; }
+/* 页面标题栏里的「热榜」入口：与标题、计数同一行，跟在邀请链接之后 */
+.page__hot { font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
 .page__hot:hover { text-decoration: underline; }
 .cat__n { opacity: .65; }
 
