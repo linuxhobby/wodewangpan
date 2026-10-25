@@ -1,4 +1,4 @@
-# 电影资源（384 条）
+# 电影资源（385 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -4519,3 +4519,13 @@
   date: 2026-09-24
   added: "2026-10-25 03:40"
   image: mv-398.jpg
+
+- id: mv-399
+  title: "黑球"
+  category: 电影
+  tags: ["电影", "剧情", "战争", "黑球 La bola negra"]
+  quark_url: "https://pan.quark.cn/s/24c0dc26f96c"
+  description: "三个同性恋男子在西班牙历史上1932 年、1937 年和 2017 年三个不同时期的故事。本片类型：剧情 / 战争。2026 年上映，片长 159 分钟。制片国家/地区：西班牙、法国。导演：Javier Ambrossi、Javier Calvo。编剧：Javier Ambrossi、Javier Calvo、Federico García Lorca。主演：Guitarricadelafuente、米格尔·贝尔纳尔德阿尤、Carlos González、Milo Quifes、洛拉·杜埃尼亚斯、佩内洛普·克鲁兹。｜TMDB 8.1"
+  date: 2026-09-25
+  added: "2026-10-26 03:40"
+  image: mv-399.jpg
