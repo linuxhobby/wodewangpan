@@ -18,10 +18,7 @@ const MAX_DESC = 1200;
 /** 正文下限：低于它详情页易被判薄内容。改这里 = 改全站标准 */
 export const MIN_DESC = 300;
 
-/**
- * 正文字数：【…】标签与结尾 ｜… 署名不计入。全站只有这一个口径，改它会同时
- * 影响 list-short-desc / fill-desc / skill 的判定，详见 docs/site-建站与开发.md。
- */
+/** 正文字数：【…】标签与结尾 ｜… 署名不计入。全站只此一个口径，改它会影响 list-short-desc / fill-desc / skill */
 export function bodyLength(text) {
   return [
     ...String(text || '')
@@ -64,11 +61,7 @@ function setCategorySlugs(map) {
   );
 }
 
-/**
- * 标签 → URL 段，三级取值：手写别名 → 拼音兜底 → 原样（编码中文）。
- * 别名表「只增不改」：给已收录的标签事后补别名等于换 URL 丢排名。
- * 完整口径与反面案例见 docs/site-建站与开发.md 第一节。
- */
+/** 标签 → URL 段，三级取值：手写别名 → 拼音兜底 → 原样。别名表「只增不改」：事后补别名等于换 URL 丢排名 */
 let TAG_SLUGS = new Map();
 function setTagSlugs(map) {
   TAG_SLUGS = new Map(
@@ -92,10 +85,7 @@ export const MIN_TAG_ITEMS = 3;
 /** 标签页与分类页的近重复阈值（Jaccard），超过就认为两页对搜索引擎是同一份内容 */
 export const DEFAULT_TAG_OVERLAP_MAX = 0.8;
 
-/**
- * 近重复检测的最小条数门槛：小集合 Jaccard 极不稳定（Linux 4 条 vs 操作系统 6 条
- * 就有 67%），而只有几条内容的页面重不重复危害都有限。配 0 表示不设门槛。
- */
+/** 近重复检测的最小条数门槛：小集合 Jaccard 极不稳定（4 条 vs 6 条就有 67%），配 0 表示不设门槛 */
 export const DEFAULT_TAG_OVERLAP_MIN_SIZE = 10;
 
 /** 标签归一键：大小写与空格不影响同一性，"Sci-Fi & Fantasy" 与 "sci-fi&fantasy" 算同一个 */
@@ -109,10 +99,7 @@ export function tagKey(text) {
 const NON_CJK = /[^\u4e00-\u9fff\u3400-\u4dbf\u3040-\u30ff\uac00-\ud7af]/g;
 const cjkOf = (text) => String(text || '').replace(NON_CJK, '');
 
-/**
- * 数据里大量标签其实是作品原名（「权力的游戏 第二季 Game of Thrones S02」），
- * 只属于单个资源，给它建聚合页就是只有一个成员的空壳页。
- */
+/** 很多标签其实是作品原名（「权力的游戏 第二季 …」），只属于单个资源，建聚合页就是空壳页 */
 function isTitleNoise(tag, title) {
   const t = tagKey(tag);
   const ti = tagKey(title);
@@ -124,13 +111,9 @@ function isTitleNoise(tag, title) {
 }
 
 /**
- * 汇总「值得出聚合页」的标签。724 个去重标签里 662 个只出现 1 次，照单全收会生成
- * 600+ 个单条页面，所以做四道过滤：与分类同名 / 标题原式残留 / 资源数不足 min / exclude 名单。
- *
- * exclude 是人工兜底，留给「名字不像分类、内容却已被分类页覆盖」的近义标签
- * （如「纪录」对「纪录片」）。它只砍聚合页——标签照常显示，只是不再可点，搜索也搜得到。
- *
- * @returns {{key: string, label: string, count: number, items: object[]}[]} 按资源数倒序
+ * 汇总「值得出聚合页」的标签：724 个去重标签里 662 个只出现 1 次，照单全收会造出 600+ 个单条页面，
+ * 所以做四道过滤：与分类同名 / 标题原式残留 / 资源数不足 min / exclude 名单。
+ * exclude 专收「纪录」这类被分类页覆盖的近义标签，只砍聚合页，标签照常显示、搜索照常可搜。
  */
 export function collectTags(items, { categories = [], min = MIN_TAG_ITEMS, exclude = [] } = {}) {
   const catSet = new Set((categories || []).map((c) => tagKey(c)));

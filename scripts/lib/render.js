@@ -522,9 +522,8 @@ ${listDataScript({ indexAll, activeCat, pageSize })}`;
     canonicalPath: catHref(activeCat),
     ogImage: firstImg,
     ogImageSize: null,
-    // 注意：不要再加 SearchAction（站点链接搜索框）——Google 已于 2024-11-21 下线该富媒体结果，
-    // 而且它的 urlTemplate `/?q=` 已被 robots.txt 屏蔽，留着是互相矛盾的死标记。
-    // WebSite 本身要保留：Google 的「网站名称」功能仍读它（要求 name + url）。
+    // 不要再加 SearchAction：Google 2024-11-21 已下线该富媒体结果，其 urlTemplate `/?q=` 也被 robots 屏蔽。
+    // WebSite 本身要留：Google「网站名称」仍读它（要求 name + url）。
     jsonLd: {
       '@context': 'https://schema.org',
       '@graph': [
@@ -559,22 +558,7 @@ function linkRow(link) {
 </div>`;
 }
 
-/**
- * 分享 / 复制的内容：一段多行「资源包」文本，而不是一个裸 URL。
- *
- * 顺序是刻意的——**网盘在前、页面在后**：
- * 1. 分享者的目的是让群里的人拿到资源，不是请人来看站；把页面链接顶在前面等于给朋友卡一道。
- * 2. 页面链接的真实价值是兜底：网盘链接会失效，页面不会（失效了会标记 / 补源），
- *    所以它放在最后一行当「更多同类」的长期入口，顺带承担引流。
- * 3. 卡片渲染由平台方决定（腾讯抓不抓、抓成什么样都不归我们管），
- *    把信息写进消息正文才是唯一 100% 可控的部分。
- */
-/**
- * 分享文案里的一句话概要。简介已补到 300 字，整段放进去会淹没链接，只取第一句。
- * 两个必须处理的脏数据：
- * 1. 简介尾部常带「｜TMDB 7.1」这类标注（见 content-内容生产.md 的简介规范），先切掉；
- * 2. 硬截会切出半句话，所以按句读取第一句，只有第一句本身就超长才硬截加省略号。
- */
+/** 分享文案的一句话概要：简介已补到 300 字，整段塞进去会淹没链接，只取第一句 */
 function summaryOf(item, max = 60) {
   const raw = String(item.description || '').trim();
   if (!raw) return '';
@@ -592,6 +576,9 @@ function summaryOf(item, max = 60) {
   return s;
 }
 
+/** 分享 / 复制出去的是多行「资源包」而非裸 URL：网盘在前（让人拿到资源），
+    页面在后（网盘会失效、页面不会，是长期兜底入口）。卡片怎么渲染由平台决定，
+    写进消息正文才是 100% 可控的部分。 */
 function shareTextOf(item, shareUrl) {
   const year = item.date ? String(item.date).slice(0, 4) : '';
   const head = `${item.title}${year ? `（${year}）` : ''} · ${item.category}`;
@@ -602,16 +589,9 @@ function shareTextOf(item, shareUrl) {
   return [head, summary, ...links, `更多同类 → ${shareUrl}`].filter(Boolean).join('\n');
 }
 
-/**
- * 详情页反馈条（A1「链接失效一键反馈」的落点）：紧跟在转存链接下面，
- * 这是全页意图最强的时刻——用户刚发现链接打不开，此刻正需要一个出口。
- *
- * 三条刻意的设计取舍：
- * 1. 不放二维码。海报旁那个 qrbox 是资源转存码，同屏再放一个群码会被扫错；
- *    qm.qq.com 落地页自己解决两端（手机拉起 QQ、PC 自带二维码），这里给纯链接就够。
- * 2. 不用 --brand 实底按钮。加群是兜底动作，不该抢「打开 / 复制链接」的视觉焦点。
- * 3. 纯 <a>，零 JS，noscript 可用，构建期静态输出。
- */
+/** 详情页反馈条：紧跟转存链接下面——用户刚发现链接打不开，此刻正需要出口。
+    不放二维码（海报旁 qrbox 已是转存码，同屏再放会被扫错）、不用实底按钮（兜底动作不抢主操作），
+    纯 <a> 零 JS，noscript 可用 */
 function feedbackBar({ site, item, baseUrl }) {
   if (site.detailFeedback === false) return '';
   const qq = qqLinkOf(site.contact);
@@ -725,9 +705,8 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   </tbody>
 </table>`;
 
-  // 分享面板：只留「分享（系统面板）+ 复制资源信息」两个动作。
-  // 原来那四个平台外链已删除——connect.qq.com 的 shareqq 组件早已失效（死链），
-  // 微博 / X / Telegram 对国内网盘站使用率近零，却占了详情页的显眼位置。
+  // 分享面板只留「分享（系统面板）+ 复制资源信息」两个动作：
+  // 死链组件与国内零使用率的社交外链已删除，不再占详情页显眼位置。
   const shareUrl = `${baseUrl}${itemHref(item.id)}`;
   const shareText = shareTextOf(item, shareUrl);
 

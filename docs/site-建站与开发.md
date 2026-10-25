@@ -79,6 +79,8 @@ body.page--wide { --page-max: var(--page-wide); }   /* 唯一开关，在 layout
 - 同一视觉只定义一次，改一处两边同步：卡片海报与详情页海报共用 `.tile__poster, .poster`；按钮与二维码切换按钮共用 `.btn, .qrbtn`；内容页正文 / 详情页简介 / 404 说明共用同一条「字号 + 行高 + 色」；分类条 / 标签条 / 页面标题 / 首页区块的计数后缀共用同一条。
 - 少用 `!important`。要覆盖就补标签名提特异性或调整顺序（见 `.foot p` 与 `p.foot__icp` 那段注释）。
 - **合并规则的副作用（2026-10-11 踩过）**：把原本不设 `color`、靠继承父元素配色的元素，并进一条带 `color` 的公共规则，会把继承关系盖掉。`cat__n` 就是这样出的事——合并后它变成次要灰，而选中的分类胶囊是品牌紫实底，数字糊得看不见。合并前先查清楚目标元素的父元素**有没有实底 / 反白状态**。
+- **一个区块一个类族，别拆着放**（2026-10-25 清理）：`style.css` 按「令牌 → 基础 → 顶栏 → 分类栏 → 列表/卡片 → 通用小件 → 内容页 → 详情页 → 按钮 → 热门榜 → 404 → 页脚 → 移动端」分段，同一功能的规则只在自己的段落里。此前 `.hot__*` 整段落被夹在「详情页」中间，且 `10px` / `999px` / `#4B3FE3` / `var(--bg-soft, …)` 全是写死的（其中 `--bg-soft` 根本没定义，一直靠兜底值生效）。已全部换成 `--r-box` / `--r-pill` / `--brand` / `--fill-soft`。
+- **跨容器复用同一组链接时要查权重**：标题栏右侧链接组（`.page__invite` / `.page__hot`）放进详情页面包屑后，被 `.crumb a`（0,1,1）压成灰色，得用 `:not()` 排除，见 `.crumb` 上方注释。复用组件前先看目标容器有没有 `.xx a` 这类后代选择器。
 
 ### 卡片结构只改一处
 
@@ -207,10 +209,11 @@ const NON_RESOURCE_FILES = new Set(['site.yaml', 'tags.yaml']);
 配图与封面：
 
 ```bash
-node tools/book-cover-douban.mjs --title "书名" --out static/images/bk-001.jpg
-node tools/icon-poster.mjs --icon <图标> --out static/images/app-001.png
-node tools/set-poster.mjs --title "套装名" --out static/images/bk-006.jpg
-node tools/share-poster.mjs         # 改完站点配置后重跑，刷新 static/share.jpg
+node tools/poster.mjs douban --title "书名" --out static/images/bk-001.jpg   # 抓豆瓣正版封面（电子书优先）
+node tools/poster.mjs book   --title "书名" --out static/images/bk-002.jpg   # 豆瓣查无此书时生成兜底
+node tools/poster.mjs icon   --icon <图标> --out static/images/app-001.png   # 图标合成竖版
+node tools/poster.mjs set    --title "套装名" --out static/images/bk-006.jpg # 套装深色封面
+node tools/share-poster.mjs  # 改完站点配置后重跑，刷新 static/share.jpg
 ```
 
 资源同步 skill（`S=~/.workbuddy/skills/quark-resource-sync/scripts`）：

@@ -236,10 +236,7 @@ tools/
   share-poster.mjs       # 生成首页品牌分享卡 static/share.jpg（改站点配置后重跑）
   fill-desc.mjs          # 把 .tmp/desc-draft.json 里的简介写回 YAML（自动接回【季/集】前缀与 ｜TMDB 后缀，--strict 拦不合格稿）
   list-short-desc.mjs    # 列出正文不足指定字数的条目（npm run list:short）
-  icon-poster.mjs        # 把应用图标合成 2:3 竖版海报（软件 / 音频等非影视资源）
-  book-cover-douban.mjs  # 从豆瓣图书抓书籍封面（电子书 bk- 优先用它，见 docs/content-内容生产.md）
-  book-poster.mjs        # 豆瓣查无此书时，生成书封海报兜底
-  set-poster.mjs         # 套装 / 合辑专用深色封面（豆瓣没有对应单册封面时用，见 docs/content-内容生产.md）
+  poster.mjs             # 海报/封面生成器，单入口四模式：book（生成书封兜底）/ icon（图标合成竖版）/ set（套装深色封面）/ douban（抓豆瓣正版封面）
 docs/                # 经验类文档（4 篇 + 索引），按干活的场景划分，见 docs/README.md
   content-内容生产.md   # 入库八步、编号、失效修复、简介文案、配图、skill
   site-建站与开发.md     # URL 禁忌、样式约定、构建部署、环境速查

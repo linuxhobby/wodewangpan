@@ -55,12 +55,8 @@ import { esc, tileHtml } from './card.js';
     });
   }
 
-  /**
-   * 浏览量回填：拉 /stats.json（站点自带埋点生成，不依赖第三方），按 data-res-id 把
-   * 对应资源的 pv/uv 填进占位元素。详情页（#stat-views）显示「次浏览 · 人」，
-   * 卡片（.tile__views）显示低调的「· N人看过」；拿不到数据时元素保持空/占位。
-   * statsRes 缓存一份，卡片后续由「加载更多 / 搜索」动态渲染后也能立即填充。
-   */
+  /** 浏览量回填：按 data-res-id 把 /stats.json 的 pv/uv 填进占位元素。
+      缓存一份，动态渲染的卡片也能立即填充 */
   var statsRes = null;
   function applyViews() {
     if (!statsRes) return;
@@ -191,9 +187,8 @@ import { esc, tileHtml } from './card.js';
   function loadGlobalIndex(cb) {
     if (globalIndex || globalLoading) return cb && cb();
     globalLoading = true;
-    // 必须写根绝对路径：写成 'search-index.json' 会相对当前页面解析，
-    // 在 /resource/<id>/、/category/<slug>/ 下变成 /resource/<id>/search-index.json → 404，
-    // 蜘蛛跟着渲染结果去抓就是一批纯浪费抓取预算的硬 404
+    // 必须写根绝对路径：相对写法在 /resource/<id>/ 下会解析成 404，
+    // 蜘蛛跟着渲染结果去抓就是一批白费抓取预算的硬 404
     fetch('/search-index.json')
       .then(function (r) { return r.json(); })
       .then(function (data) { globalIndex = data; globalLoading = false; cb && cb(); })
@@ -211,10 +206,8 @@ import { esc, tileHtml } from './card.js';
   // 拉取浏览量（/stats.json），覆盖首屏静态卡片 + 详情页占位
   loadStats();
 
-  // 触屏移动端（支持 Web Share）只隐藏微信二维码那一行：扫码分享得靠另一台设备，
-  // 在手机上没有意义。但「复制资源信息」必须留着——系统面板是「分享出去」，
-  // 复制是「放进剪贴板」，两个不同的动作；而资源包文本最可靠的落地方式恰恰是
-  // 复制粘贴（不经过任何平台的卡片渲染），藏掉它就等于砍掉了最稳的那条路。
+  // 触屏端只隐藏二维码那一行（扫码分享在手机上没意义）；「复制资源信息」必须留着——
+  // 复制粘贴是资源包文本最可靠的落地方式
   if (navigator.share && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     var hints = document.querySelectorAll('.share__hint');
     for (var i = 0; i < hints.length; i++) hints[i].setAttribute('hidden', '');
@@ -303,10 +296,8 @@ import { esc, tileHtml } from './card.js';
       qrBtn.classList.add('is-on');
     }
 
-    // 原生 Web Share API：移动端直接唤起系统分享面板（含微信/QQ/微博等）；
-    // 桌面端不支持 share 时（如 Firefox）退化为复制——复制的是资源包文本而不是裸 URL，
-    // 因为卡片长什么样由平台方决定，写进消息正文的信息才是我们自己能保住的。
-    // 只有直接点到「分享」按钮才触发此逻辑；面板内的复制按钮走上面的 [data-copy] 分支。
+    // 移动端唤起系统分享面板；不支持 share 时退化为复制资源包文本（卡片长什么样由平台决定）。
+    // 只有点到「分享」按钮才走这里，面板内的复制按钮走上面的 [data-copy] 分支
     var shareBtn = e.target.closest('[data-share]');
     if (shareBtn && e.target === shareBtn) {
       var url = shareBtn.getAttribute('data-url') || location.href;

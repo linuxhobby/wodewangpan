@@ -57,11 +57,8 @@ const prevDir = prevDirName ? path.join(root, prevDirName) : '';
 
 const reused = { kept: 0, copied: 0, written: 0 };
 
-/**
- * 写文件，但内容没变就不覆盖：nginx 按 mtime + 大小生成 ETag / Last-Modified，
- * 全量重写会让蜘蛛每次都拿完整 200，304 永远落空抓取预算白烧（日志里 Google
- * 200×810、几乎没有 304 就是这症状）。只比对文本产物，图片有 sharp 缓存不必管。
- */
+/** 写文件，但内容没变就不覆盖：全量重写会让蜘蛛每次都拿 200，304 永远落空、抓取预算白烧。
+    只比对文本产物，图片有 sharp 缓存不必管 */
 function write(file, content) {
   const rel = path.relative(outDir, file);
   const candidates = [file];
@@ -432,10 +429,7 @@ if (fs.existsSync(inKey)) {
   console.log('  ! 未找到 static/indexnow-key.txt，IndexNow 推送所需的验证文件缺失');
 }
 
-/**
- * SEO 自检：只提醒「页面照常能打开、肉眼永远看不出」的隐患，不影响构建结果。
- * 已经有专门命令管的事（正文长度归 npm run list:short）不在这里重复报。
- */
+/** SEO 自检：只提醒「页面能打开、肉眼看不出」的隐患；已有专门命令管的事（正文长度）不重复报 */
 {
   const warns = [];
   if (missing) warns.push(`${missing} 条资源缺配图，详情页结构化数据与图片 sitemap 里都没有图`);

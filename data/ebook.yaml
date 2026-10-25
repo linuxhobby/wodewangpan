@@ -1,7 +1,7 @@
 # 电子书资源（12 条）
 # 来源：夸克网盘 SHARE/008电子书
 # 链接：公开链接（无提取码），永久有效；简介由人工整理
-# 封面：豆瓣图书正版封面，用 tools/book-cover-douban.mjs 抓取（约 500×750，2:3）；豆瓣查无此书时才退回 tools/book-poster.mjs 生成
+# 封面：豆瓣图书正版封面，用 `node tools/poster.mjs douban` 抓取（约 500×750，2:3）；豆瓣查无此书时才退回 `node tools/poster.mjs book` 生成
 
 - id: bk-001
   title: "飞越疯人院"

@@ -279,9 +279,9 @@ node scripts/trending-sync.mjs --dry-run --no-build --no-push   # 先看会做�
 | 官网猜路径（如 `assets.nintendo.com`） | ❌ | 试过，通不了 |
 | Google Books / Open Library | ❌ | 配额 429 / 连接超时，别耗时间 |
 
-**课程这类非影视资源 TMDB 抓不到海报**：图源优先顺序是官方封面 / 宣传图 → 维基官方图 → `tools/icon-poster.mjs` 合成竖版（配色与图标取 `scripts/lib/assets.js` 的 `CAT_STYLE`）。合成图务必打开看一眼再入库。
+**课程这类非影视资源 TMDB 抓不到海报**：图源优先顺序是官方封面 / 宣传图 → 维基官方图 → `node tools/poster.mjs icon` 合成竖版（配色与图标取 `scripts/lib/assets.js` 的 `CAT_STYLE`）。合成图务必打开看一眼再入库。
 
-**取维基官方图的标准三步**：① `prop=images` 找文件名 → ② `prop=imageinfo&iiprop=url|size|mime` 取直链 → ③ 带浏览器 UA 下载。盒绘直接 `cp`；矢量 logo 交给 `tools/icon-poster.mjs` 配品牌色合成竖版。
+**取维基官方图的标准三步**：① `prop=images` 找文件名 → ② `prop=imageinfo&iiprop=url|size|mime` 取直链 → ③ 带浏览器 UA 下载。盒绘直接 `cp`；矢量 logo 交给 `node tools/poster.mjs icon` 配品牌色合成竖版。
 
 **假图识别**：下载完先 `file` 看一眼，输出要含 image/JPEG/PNG 且分辨率宽 ≥200。常见假图：Cloudflare 拦截页（文件头 `<!D`、约 5KB）、80×80 缩略图、GitHub 组织头像被清空后的默认 identicon。
 **出图必须打开看一眼再入库**——标题顶边、图标偏小、identicon 假头像，只有看图能发现。
@@ -295,15 +295,17 @@ node scripts/trending-sync.mjs --dry-run --no-build --no-push   # 先看会做�
 
 ### 自绘兜底工具
 
-| 脚本 | 用途 |
-|---|---|
-| `tools/icon-poster.mjs` | 把应用图标合成 2:3 竖版海报（软件 / 音频等非影视资源） |
-| `tools/book-cover-douban.mjs` | 豆瓣抓书封（电子书 `bk-` 优先用它，`--title/--out/--author/--pick/--list`） |
-| `tools/book-poster.mjs` | 豆瓣查无此书时生成书封兜底 |
-| `tools/set-poster.mjs` | 套装 / 合辑专用深色封面 |
-| `tools/share-poster.mjs` | 首页品牌分享卡 `static/share.jpg` |
+四个模式共用一个入口 `tools/poster.mjs`（2026-10-25 由 book-poster / icon-poster / set-poster / book-cover-douban 四个脚本合并）：
 
-套装 / 合辑（豆瓣多半只有展开图或无图，如《斯蒂芬·金的王牌惊悚套装》17 册）用 `set-poster.mjs` 自排深色收藏版式（`--kicker/--prefix/--title/--badge/--label/--formats/--author` 都可缺省，`--accent` 换主色，输出 480×720）。
+| 模式 | 用途 |
+|---|---|
+| `node tools/poster.mjs douban --title .. --out ..` | 豆瓣抓正版书封（电子书 `bk-` 优先用它，`--author/--pick/--list`） |
+| `node tools/poster.mjs book --title .. --out ..` | 豆瓣查无此书时生成书封兜底 |
+| `node tools/poster.mjs icon --icon .. --out ..` | 应用图标合成 2:3 竖版海报（软件 / 音频等非影视资源） |
+| `node tools/poster.mjs set --title .. --out ..` | 套装 / 合辑专用深色封面 |
+| `node tools/share-poster.mjs` | 首页品牌分享卡 `static/share.jpg`（独立脚本，未并入） |
+
+套装 / 合辑（豆瓣多半只有展开图或无图，如《斯蒂芬·金的王牌惊悚套装》17 册）用 `set` 模式自排深色收藏版式（`--kicker/--prefix/--title/--badge/--label/--formats/--author` 都可缺省，`--accent` 换主色，输出 480×720）。
 排版经验：氛围光别做大范围晕染（发糊像污渍），收成书名背后一小片光池 + 四角压暗才干净。
 
 ---

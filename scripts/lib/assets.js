@@ -300,10 +300,8 @@ async function renderVariants(sharp, src, destBase) {
   }
 }
 
-/**
- * 处理全部配图：生成 240×360 海报（列表页与详情页共用）与 60×90 缩略图两份 WebP
- * 返回 id -> { detail, card, thumb }（detail 与 card 指向同一个文件）
- */
+/** 处理全部配图：生成 240×360 海报（列表页与详情页共用）与 60×90 缩略图两份 WebP，
+    返回 id -> { detail, card, thumb }（detail 与 card 指向同一个文件） */
 export async function prepareImages(items, { staticDir, rootDir, outDir }) {
   const sharp = await loadSharp();
   if (!sharp) {

@@ -1,10 +1,6 @@
 /* ============================================================================
-   设计令牌（唯一风格来源）
-   ---------------------------------------------------------------------------
-   全站的颜色、字号、行高、圆角、间距只在这里定义，下面各区块一律用 var() 引用，
-   不允许再写死数值。这样调一次「--fs-lg」就全站生效，
-   不会出现改了详情页、内容页却没跟上的情况。
-   新增样式时请先套用现有档位，确实需要新档位才在这里加一行。
+   设计令牌：全站颜色 / 字号 / 行高 / 圆角 / 间距的唯一来源。
+   下面各区块一律 var() 引用，不再写死数值；需要新档位时在这里加一行。
    ============================================================================ */
 :root {
   /* ── 颜色 ── */
@@ -60,10 +56,8 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* ── 页面宽度：窄 / 宽两档，最终落在 --page-max 上 ──
-     档位只在 <body class="page--wide"> 一处切换（见下方 body 规则），
-     顶栏 / 分类栏 / 正文 / 页脚一律读 --page-max，不再各自写一份 max-width、
-     也不再各配一个 --wide 变体：那种写法每加一个区块就要多传一次开关，
-     漏一处就会比全站窄一圈（标签页就是这么踩的）。 */
+     档位只在 <body class="page--wide"> 一处切换，各区块一律读 --page-max，
+     不再各自写 max-width——漏一处就比全站窄一圈（标签页踩过） */
   --page-w: 760px;
   --page-wide: 1180px;
   --page-max: var(--page-w);
@@ -148,8 +142,7 @@ body.page--wide { --page-max: var(--page-wide); }
 }
 .cat:hover { text-decoration: none; color: var(--brand); }
 .cat.is-on { background: var(--brand); border-color: var(--brand); color: var(--surface); font-weight: 600; }
-/* 选中的分类胶囊是品牌色实底：计数若沿用通用次要色会糊在紫底上看不清，
-   这里让它跟着标题一起反白，并抬高透明度补足小字号的对比度 */
+/* 选中态是品牌色实底，计数跟着反白才看得清 */
 .cat.is-on .cat__n { color: var(--surface); opacity: .8; }
 
 /* ── 列表页 ──────────────────────────── */
@@ -168,10 +161,7 @@ body.page--wide { --page-max: var(--page-wide); }
 }
 .tile-item { display: block; }
 
-/* ── 首页分类区块 ───────────────────────
-   首页按分类分区，每类一行海报 + 一个通往分类页的入口。
-   每类固定输出 PC 一行（5 张），窄屏由下面的断点按当前列数藏掉多出来的几张，
-   这样任何屏宽下每个区块都是整行整行地出现，不留半行零头。 */
+/* ── 首页分类区块：每类一行海报，窄屏按列数藏掉多出来的，始终是整行 ── */
 .home-cat { margin-top: 26px; }
 .home-cat:first-child { margin-top: 6px; }
 .home-cat__head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
@@ -183,12 +173,9 @@ body.page--wide { --page-max: var(--page-wide); }
 .home-all { margin: 26px 0 4px; }
 
 /* ── 末行零头 ──────────────────────────
-   列表页/首页可以接受末行不满（本来就可能有几十条），但详情页「相关推荐」只有
-   5 或 10 条，末行孤零零一张很难看。这里按当前的列数把不完整的末行整个藏掉：
-   选择器先抓住「既是某一行的行首、又落在最后 cols-1 个之内」的那张卡（正是残缺
-   末行的第一张），再用兄弟选择器把它后面的一起藏掉；末行正好排满时规则落空。
-   四个断点互斥，各自只对自己的列数生效。注：大于 5 张才加这个类（见 render.js），
-   否则藏过头会把整个区块藏没。 */
+   详情页「相关推荐」只有 5/10 条，末行孤零零一张很难看：按当前列数把不完整的
+   末行整行藏掉（先抓住「行首且落在最后 cols-1 个内」的那张，再藏它后面的）。
+   四个断点各自只对自己的列数生效；该类仅在超过 5 张时才加（见 render.js）。 */
 @media (min-width: 1001px) {
   .grid--fit > .tile-item:nth-child(5n+1):nth-last-child(-n+4),
   .grid--fit > .tile-item:nth-child(5n+1):nth-last-child(-n+4) ~ .tile-item { display: none; }
@@ -289,27 +276,24 @@ a.tag:hover { background: var(--brand-soft); }
 /* ── 通用小件 ────────────────────────── */
 .muted { color: var(--muted); }
 .empty { padding: 40px 0; text-align: center; color: var(--muted); }
-/* 计数后缀：分类条 / 标签条 / 页面标题 / 首页分类区块，四处同一规格，
-   下面只留各自的差异（缩进、字重、透明度） */
+/* ── 计数后缀：分类条 / 标签条 / 页面标题 / 首页区块，四处同一规格 ── */
 .cat__n, .tag__n, .page__n, .home-cat__n { font-size: var(--fs-sm); color: var(--muted); }
-/* 胶囊内跟在文字后面的计数要一点缩进 */
 .cat__n, .tag__n { margin-left: 5px; }
-/* 页面标题是 h1（粗体计数看着像标题的一部分），这里退回常规字重 */
+.cat__n { opacity: .65; }
+/* 页面标题是 h1，粗体计数会像标题的一部分 */
 .page__n { font-weight: 400; }
-/* 页面标题栏右侧链接组：两个邀请胶囊在前，「热榜」在最后，整组靠右 */
+
+/* ── 标题栏 / 面包屑右侧链接组：两个邀请胶囊在前，「热榜」在最后，整组靠右 ── */
 .page__invite { padding: 2px 9px; background: var(--brand-soft); border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
 .page__invite:hover { background: var(--brand-mark); text-decoration: none; }
-/* 组内第一个吃掉左侧剩余空间把整组推到行尾，其余靠父级 gap 隔开 */
+/* 组内第一个吃掉左侧剩余空间，把整组推到行尾 */
 .page__invite--lead { margin-left: auto; }
-/* 页面标题栏里的「热榜」入口：与标题、计数同一行，跟在邀请链接之后 */
 .page__hot { font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
 .page__hot:hover { text-decoration: underline; }
-.cat__n { opacity: .65; }
 
-/* ── 无 JS 时的全量索引（<noscript>） ──────
-   列表页首屏之外靠「加载更多」补齐，禁用 JS 时只剩这份纯链接清单。
-   它同时是不执行 JS 的爬虫走完全部详情页的通道，所以不能只是「能看」，
-   得排得整齐：两列栅格，链接本身带整行点击区。 */
+/* ── 无 JS 时的全量索引（<noscript>）────
+   首屏之外靠「加载更多」补齐，禁用 JS 时只剩这份清单；它同时是不执行 JS 的
+   爬虫走完全部详情页的通道，所以排成整齐的两列栅格、链接带整行点击区 */
 .ns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 18px; margin: 0; padding: 0; list-style: none; }
 .ns__h { font-size: var(--fs-h2); margin: 26px 0 12px; }
 /* 首页那份清单按分类分组，分类小标题比总标题矮一档 */
@@ -327,7 +311,7 @@ a.tag:hover { background: var(--brand-soft); }
 .card-page > :first-child { margin-top: 0; }
 .card-page h2 { font-size: var(--fs-h2); margin: 26px 0 12px; }
 /* 长文本统一走「正文档」：内容页正文 / 详情页简介 / 404 说明共用同一档，
-   字号 + 行高只在这里定义一次，各自的 margin 与特殊属性自己管 */
+   各自的 margin 与特殊属性自己管 */
 .card-page p, .card-page li, .card-page td, .card-page th,
 .detail__desc, .nf__desc {
   font-size: var(--fs-lg);
@@ -386,12 +370,9 @@ a.tag:hover { background: var(--brand-soft); }
 }
 
 /* ── 详情页 ──────────────────────────── */
-/* 详情页把右侧邀请链接组也塞进这一行：gap 只管横向，换行后靠 row-gap 不挤在一起，
-   align-items 居中避免胶囊被拉伸成整行高 */
+/* 详情页把右侧链接组也塞进这一行：换行后靠 row-gap 不挤在一起，align-items 免得胶囊被拉高 */
 .crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; row-gap: 8px; font-size: var(--fs-md); color: var(--muted); margin: 16px 0 10px; }
-/* 面包屑自身的链接是次要灰；右侧那组（邀请胶囊 + 热榜）是行动入口，
-   要用 :not() 排除掉——否则 .crumb a 的权重比 .page__invite / .page__hot 高，
-   同一组链接在详情页会褪成灰色、和首页不一致 */
+/* 面包屑链接是次要灰；右侧那组用 :not() 排除——.crumb a 权重更高，否则它会把同一组链接染灰 */
 .crumb a:not(.page__invite):not(.page__hot) { color: var(--muted); }
 .crumb a:not(.page__invite):not(.page__hot):hover { color: var(--brand); }
 
@@ -422,28 +403,8 @@ a.tag:hover { background: var(--brand-soft); }
 .share__hint { margin: 0; font-size: var(--fs-base); color: var(--muted); display: flex; align-items: center; gap: 10px; flex-basis: 100%; }
 /* hidden 属性挡不住 display:flex，要显式压掉（移动端只藏二维码这行，复制按钮留着） */
 .share__hint[hidden] { display: none !important; }
-.share__qr { width: 96px; height: 96px; flex: none; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 4px; }
+.share__qr { width: 96px; height: 96px; flex: none; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-box); padding: 4px; }
 
-/* 热门资源榜（/hot/） */
-.hot { margin-top: 8px; }
-.hot__bar { display: flex; align-items: center; gap: 8px; margin: 14px 0; }
-.hot__label { color: var(--muted); font-size: var(--fs-sm); }
-.hot__bar .btn.is-on { background: #4B3FE3; color: #fff; border-color: #4B3FE3; }
-.hot__list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-.hot__item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-.hot__item:last-child { border-bottom: none; }
-.hot__rank { flex: none; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 50%; background: var(--bg-soft, #f1f1f4); color: var(--muted); font-weight: 700; font-size: var(--fs-sm); }
-.hot__rank--top1 { background: #f5b301; color: #fff; }
-.hot__rank--top2 { background: #9aa7b5; color: #fff; }
-.hot__rank--top3 { background: #cd7f32; color: #fff; }
-.hot__main { flex: 1 1 auto; min-width: 0; display: flex; align-items: baseline; gap: 8px; }
-.hot__title { font-weight: 600; color: var(--text, #171717); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.hot__title:hover { text-decoration: underline; }
-.hot__cat { flex: none; font-size: var(--fs-xs); color: var(--muted); background: var(--bg-soft, #f1f1f4); padding: 1px 7px; border-radius: 999px; }
-.hot__pv, .hot__uv { flex: none; font-size: var(--fs-sm); color: var(--muted); white-space: nowrap; }
-.hot__uv { width: 48px; text-align: right; }
-.hot__empty { padding: 18px 14px; color: var(--muted); font-size: var(--fs-sm); }
-.hot__note { margin-top: 12px; font-size: var(--fs-sm); color: var(--muted); line-height: 1.6; }
 .detail__title { font-size: var(--fs-h1); line-height: var(--lh-tight); margin: 0 0 10px; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 .detail__desc { margin: 0 0 16px; white-space: pre-wrap; }
@@ -522,6 +483,28 @@ a.tag:hover { background: var(--brand-soft); }
 .results:empty { display: none; }
 .results__hint { font-size: var(--fs-sm); color: var(--muted); padding: 4px 2px 10px; }
 
+/* ── 热门资源榜（/hot/）───────────────── */
+.hot { margin-top: 8px; }
+.hot__bar { display: flex; align-items: center; gap: 8px; margin: 14px 0; }
+.hot__label { color: var(--muted); font-size: var(--fs-sm); }
+.hot__bar .btn.is-on { background: var(--brand); border-color: var(--brand); color: var(--surface); }
+.hot__list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: var(--r-box); overflow: hidden; }
+.hot__item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.hot__item:last-child { border-bottom: none; }
+.hot__rank { flex: none; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 50%; background: var(--fill-soft); color: var(--muted); font-weight: 700; font-size: var(--fs-sm); }
+/* 前三名金 / 银 / 铜，是榜单专用色，不入令牌 */
+.hot__rank--top1 { background: #f5b301; color: var(--surface); }
+.hot__rank--top2 { background: #9aa7b5; color: var(--surface); }
+.hot__rank--top3 { background: #cd7f32; color: var(--surface); }
+.hot__main { flex: 1 1 auto; min-width: 0; display: flex; align-items: baseline; gap: 8px; }
+.hot__title { font-weight: 600; color: var(--text); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hot__title:hover { text-decoration: underline; }
+.hot__cat { flex: none; font-size: var(--fs-xs); color: var(--muted); background: var(--fill-soft); padding: 1px 7px; border-radius: var(--r-pill); }
+.hot__pv, .hot__uv { flex: none; font-size: var(--fs-sm); color: var(--muted); white-space: nowrap; }
+.hot__uv { width: 48px; text-align: right; }
+.hot__empty { padding: 18px 14px; color: var(--muted); font-size: var(--fs-sm); }
+.hot__note { margin-top: 12px; font-size: var(--fs-sm); color: var(--muted); line-height: var(--lh-base); }
+
 /* ── 404 页 ──────────────────────────── */
 .nf { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 0 6px; text-align: center; }
 .nf__art { width: 240px; max-width: 100%; height: auto; }
@@ -538,9 +521,7 @@ a.tag:hover { background: var(--brand-soft); }
 /* 页脚本身也带 .wrap，横向间距由 .wrap 提供，这里不再重复加 padding，否则会比其他区块窄一圈 */
 .foot { padding: 28px 0 40px; text-align: center; }
 .foot p { margin: 0; font-size: var(--fs-base); color: var(--muted); line-height: var(--lh-body); }
-/* 上面 .foot p 把 margin 归零了，下面这几个要补回间距：
-   给选择器补上标签名（p.foot__icp）把特异性提到与 .foot p 持平、靠后来者取胜，
-   不用 !important 硬压 */
+/* .foot p 把 margin 归零了，这里补标签名把特异性提到持平、靠后来者取胜，不用 !important */
 p.foot__icp, p.foot__stat { margin-top: 4px; }
 p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align-items: center; gap: 14px; }
 .foot__contact a, .foot__contact span { display: inline-flex; align-items: center; padding: 3px; border-radius: var(--r-tag); color: var(--contact-icon); text-decoration: none; }
@@ -586,12 +567,10 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   .ns { grid-template-columns: 1fr; }
 }
 
-/* 窄屏整体降一档：只在这里重设字号 / 行高令牌，
-   不需要再写一堆逐个元素的覆盖，避免漏改 */
+/* 窄屏整体降一档：只重设字号 / 行高令牌，不逐个元素覆盖，避免漏改 */
 @media (max-width: 640px) {
   :root {
-    /* 站名不再跟着缩到 16px（和正文同档，太小、撑不起品牌）：
-       降到 20px 与移动端主标题同档，腾空间的活交给下面的 logo 与搜索框 */
+    /* 站名降到 20px 与移动端主标题同档，不再缩到正文那档（撑不起品牌） */
     --fs-brand: 20px;
     --fs-h1: 20px;
     --fs-h2: 18px;
@@ -603,9 +582,7 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   .poster { width: 150px; }
   .qrbox { flex: 1; width: auto; }
   .linkrow__url { flex-basis: 100%; }
-  /* 顶栏横着挤三样东西（logo + 站名 + 搜索框），390px 屏只有 358px 可用。
-     站名放大到 20px 后，靠这两处把空间还回来：logo 34→28，搜索框 180→150。
-     算下来站名还有约 150px，6～7 个汉字放得下，不必给品牌名加省略号 */
+  /* 390px 屏顶栏只有 358px 可用，站名放大后靠这两处把空间还回来 */
   .top__logo { width: 28px; height: 28px; margin-right: 8px; vertical-align: -5px; }
   .top__search { max-width: 150px; }
 }
