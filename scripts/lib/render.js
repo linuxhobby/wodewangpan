@@ -375,7 +375,7 @@ function cardHtml(item, images, isNew = false, eager = false) {
     src: img.card || img.thumb,
     title: item.title,
     category: item.category,
-    date: item.date,
+    tags: item.tags,
     isNew,
     eager,
     resId: encodeURIComponent(item.id),

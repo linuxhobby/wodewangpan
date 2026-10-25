@@ -17,7 +17,7 @@ export function tileHtml({
   title,
   titleHtml = '',
   category,
-  date = '',
+  tags = [],
   isNew = false,
   eager = false,
   resId = '',
@@ -26,6 +26,8 @@ export function tileHtml({
   // 浏览量占位：resId 取自日志里的资源路径段（与 /stats.json 的 res key 一致）。
   // 拿不到数据时 span 为空，由 CSS 的 :empty 收起，不影响卡片布局。
   const views = resId ? `<span class="tile__views" data-res-id="${esc(resId)}"></span>` : '';
+  // 副行：分类 + 标签（与分类同名的标签不重复展示），超宽由 CSS 省略号收住
+  const meta = [category, ...tags.filter((t) => t && t !== category)].map(esc).join(' · ');
   return `<li class="tile-item">
   <a class="tile" href="${esc(href)}">
     <span class="tile__poster">
@@ -33,7 +35,7 @@ export function tileHtml({
       ${isNew ? '<span class="tile__new">最新</span>' : ''}
     </span>
     <span class="tile__title">${titleHtml || esc(title)}</span>
-    <span class="tile__meta">${esc(category)}${date ? ` · ${esc(date)}` : ''}${views}</span>
+    <span class="tile__meta">${meta}${views}</span>
   </a>
 </li>`;
 }

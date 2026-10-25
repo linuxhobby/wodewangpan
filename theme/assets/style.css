@@ -219,7 +219,8 @@ body.page--wide { --page-max: var(--page-wide); }
   line-height: var(--lh-tight);
 }
 .tile:hover .tile__title { color: var(--brand); }
-.tile__meta { display: block; margin-top: 2px; font-size: var(--fs-base); color: var(--muted); }
+/* 副行：分类 + 标签 + 浏览量，一行放不下就省略号收尾 */
+.tile__meta { display: block; margin-top: 2px; font-size: var(--fs-base); color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* 浏览量占位：拿不到数据时为空，收起不占行高（填充后显示「· N人看过」） */
 .tile__views:empty { display: none; }
 

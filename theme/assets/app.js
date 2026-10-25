@@ -49,7 +49,7 @@ import { esc, tileHtml } from './card.js';
       title: it.title,
       titleHtml: titleHtml || '',
       category: it.category,
-      date: it.date,
+      tags: it.tags,
       isNew: !!isNew,
       resId: m ? m[1] : '',
     });
