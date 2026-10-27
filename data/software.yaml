@@ -3,8 +3,6 @@
   category: 软件
   tags: ["软件", "虚拟机", "macOS", "Parallels Desktop 18"]
   quark_url: "https://pan.quark.cn/s/e9d2e5ed8ccc"
-  baidu_url: "https://pan.baidu.com/s/1DqBXDFrwzI3-xLWvUVRNsA"
-  baidu_code: "5sp3"
   description: "买了 Mac 却离不开一两个 Windows 软件，是很多人真实的处境：网银插件、公司 OA、某些专业工程工具，在 Mac 上就是没有替代品。Parallels Desktop 18 是 2022 年那版的 macOS 虚拟机软件，作用就是在 Mac 上同时跑起 Windows 与 Linux。它最被称道的是「融合模式」——Windows 应用可以像 Mac 应用一样出现在程序坞里，两个系统的窗口并排放在一起，互相拖文件、共享文件夹、共用剪贴板，不必在两套桌面之间来回切换，用起来更像一台机器上装了两种软件，而不是开了两台电脑。这一版针对 Apple M 系列芯片做了适配，Apple 芯片机型上跑的是 ARM 版 Windows，装之前先确认要用的那个软件有没有对应的 ARM 版本。适合离不开 Windows 独占软件、或者需要在 Mac 上验证 Windows 环境、做跨端测试的开发者。｜Parallels"
   date: 2022-08-09
   added: 2026-10-02
@@ -15,8 +13,6 @@
   category: 软件
   tags: ["软件", "虚拟机", "macOS", "Parallels Desktop 19"]
   quark_url: "https://pan.quark.cn/s/2c1e8d006a03"
-  baidu_url: "https://pan.baidu.com/s/1wTE-lQDbKwNKfE-jD4PPQg"
-  baidu_code: "muf4"
   description: "同一款虚拟机软件的年度更新值不值得升，通常看两件事：能不能跟上新系统，以及在你的机器上是不是更快。Parallels Desktop 19 是 2023 年的那版，重点正好落在这两头——兼容当时的 macOS Sonoma，同时对 Apple 芯片机型的性能与图形表现做了优化，据官方说法，一些 Windows 游戏和图形应用的流畅度比前代明显更好。它的标志性功能依然是「融合模式」：Windows 应用直接出现在 macOS 桌面和程序坞里，两边互相拖文件、共享剪贴板，不必在两个系统之间来回切换，日常用起来几乎感觉不到那是另一套系统。适合离不开某个 Windows 独占软件、或者需要在 Mac 上验证 Windows 端表现的开发者。手上版本已经够用的话，升不升主要取决于是不是换了新机器或新系统。｜Parallels"
   date: 2023-08-21
   added: 2026-10-02
@@ -27,8 +23,6 @@
   category: 软件
   tags: ["软件", "启动器", "效率工具", "macOS", "Raycast"]
   quark_url: "https://pan.quark.cn/s/75eb7fb3f303"
-  baidu_url: "https://pan.baidu.com/s/19fJ7Xj2IgOms4-ipmNsUVA"
-  baidu_code: "sy16"
   description: "Spotlight 能帮你打开应用，也就到此为止了。Raycast 接手的是唤出输入框之后的那一整段：启动应用、找文件、翻剪贴板历史、插入常用文本片段、调整窗口布局、做单位换算，都在同一个框里完成，手不用离开键盘。用久了会发现，它的价值不在某一个功能有多强，而在于这些动作终于有了统一的入口。真正让它拉开差距的是扩展商店——查 GitHub 议题、搜图标符号、改动工单状态、接个 AI 提问，都是一键装上就能用；自己会写点脚本的话，还能把每天重复的流程压成两下按键。它的思路不是做一个更全的菜单，而是把常用动作全部键盘化，用顺手之后鼠标会明显用得少。习惯之后再回到系统自带的搜索，会觉得处处慢半拍。以 macOS 为主，近两年也开始提供 Windows 版本。｜Raycast Technologies"
   date: 2026-09-30
   added: 2026-10-02
@@ -39,8 +33,6 @@
   category: 软件
   tags: ["软件", "启动器", "效率工具", "macOS", "Alfred"]
   quark_url: "https://pan.quark.cn/s/f206383617c1"
-  baidu_url: "https://pan.baidu.com/s/1MDjLGGpGgluMQABBKBNEsQ"
-  baidu_code: "4jrm"
   description: "Alfred 在 Mac 上存在了很多年，这一版是 Alfred 5。它和 Spotlight 的区别不在唤出速度，而在输入框后面接着的那一层：除了打开应用和文件，还能当场算算术、查词典、搜联系人、执行锁屏、清废纸篓、休眠这类系统操作，剪贴板历史和常用文本片段也归它管。真正把距离拉开的是 Workflows——把一串原本要手动做的步骤串成自定义流程，想做的事基本都能拼出来，社区里现成的成品也多得是，不会写脚本照样能用别人的。从搜文件到发一条固定格式的邮件，这类每天重复的小事最值得先做成流程。核心功能免费，进阶能力靠付费的 Powerpack 解锁。它不适合装完就不管的人，愿意花一两个下午配置，后面几年每天都在收利息。它只做 Mac 上的键盘效率这一件事，多年迭代下来的稳定性和生态积累，恰恰是它最难被替代的部分。｜Running with Crayons"
   date: 2026-09-24
   added: 2026-10-02
@@ -51,8 +43,6 @@
   category: 软件
   tags: ["软件", "广告拦截", "隐私保护", "macOS", "Windows", "AdGuard"]
   quark_url: "https://pan.quark.cn/s/166c0e8f2f68"
-  baidu_url: "https://pan.baidu.com/s/1uWSdehBIIVqA00B4J5NDBg"
-  baidu_code: "2jfl"
   description: "浏览器插件只能管浏览器里的事，应用内部那些偷偷上报的脚本它够不着。AdGuard 走的是系统级路线，Mac 和 Windows 都有版本，把广告过滤、跟踪器拦截、恶意站点防护同时做在网络层和浏览器两头：网页里的横幅和贴片消失，应用后台往上报的统计请求也一并被拦下来。你可以自己订阅过滤列表、手写规则，也能通过 DNS 过滤把范围扩到整台设备的流量，连手机和电视走同一个网络都能受益。过滤强度同样可调，从只拦广告到连统计脚本一起挡，按自己的接受程度定。看得见的好处是页面干净、加载变快、流量也省了一点；看不见的好处是那些跟在你身后记录行为的脚本少了一大半。它替代不了浏览器的隐私模式，但可以当成第一道、也是覆盖面最广的一道防线。代价是需要在系统里装一个常驻客户端，这与装个浏览器插件是两种投入。｜AdGuard"
   date: 2026-10-04
   added: 2026-10-04
@@ -63,8 +53,6 @@
   category: 软件
   tags: ["软件", "Adobe", "设计", "全家桶", "macOS", "Adobe 大师版"]
   quark_url: "https://pan.quark.cn/s/bb38eda73d00"
-  baidu_url: "https://pan.baidu.com/s/1jgOJ5Gp-ZL7hIVNJxl6Q0w"
-  baidu_code: "bgx4"
   description: "做一条完整的内容，往往要在好几个软件之间来回倒：图片进 Photoshop 修，素材进 Illustrator 画，片段进 Premiere 剪，特效进 After Effects 做，最后用 Acrobat 出 PDF。这套工具本来就得逐个下载安装，还得自己确认版本之间搭不搭。Adobe 大师版把主力工具收在一个合集里，一次装完就能长期用，省掉的是反复找安装包和核对版本的时间，Windows 与 macOS 都有对应的包。它适合的对象很明确：需要修图、剪辑、做特效、画矢量这条完整链路的创作者，一次把工作面铺好，之后不用再为零散组件分心。安装前建议先看一下系统版本和剩余磁盘空间——这类大合集的安装包体积相当可观，中途发现空间不够最麻烦。｜Adobe"
   date: 2026-10-04
   added: 2026-10-04
@@ -76,8 +64,6 @@
   category: 软件
   tags: ["软件", "视频剪辑", "剪映", "短视频", "剪映 2025 国家版"]
   quark_url: "https://pan.quark.cn/s/74165e1e6f1d"
-  baidu_url: "https://pan.baidu.com/s/1EDLFqoYczGkC6qR6zjXz3A"
-  baidu_code: "b8cb"
   description: "剪映是抖音官方出的剪辑工具，这一版属于特别版本：会员素材、贴纸、字体、转场特效与高级导出直接可用，导出也不带水印。它的强项不在专业深度，而在于把短视频那一整套流程做得极顺——语音能自动转成字幕并直接套上现成样式，画面跟着音乐自动卡点，口播常用的降噪和美颜就在手边，还有成套的带货模板和图片成片，做批量内容时不用来回折腾。时间线的操作也尽量贴近直觉，拖动、分割、调速都不需要先看教程，不需要剪辑基础，跟着模板走就能出片，Windows 上可用。对已经熟悉专业剪辑软件的人来说，它反而显得限制多，胜在出片快。适合做口播、带货、需要稳定日更的创作者：这类工作的瓶颈从来不是不会剪，而是剪得太慢。提醒一句，这类特别版本建议自用学习，正式商用还是走官方渠道付费支持更稳妥。下载后按包内说明安装即可。｜剪映"
   date: 2026-10-04
   added: 2026-10-04
@@ -89,8 +75,6 @@
   category: 软件
   tags: ["软件", "下载工具", "断点续传", "Windows", "IDM 下载器"]
   quark_url: "https://pan.quark.cn/s/a66cf4ef766d"
-  baidu_url: "https://pan.baidu.com/s/1DV7bIzehnmTtUBtxh66kcA"
-  baidu_code: "uia9"
   description: "浏览器自带的下载器对付小文件够用，一碰到几个 G 的安装包、或者网络时断时续，就缺点意思。IDM（Internet Download Manager）是 Windows 上的老牌选择，这一版标注为终身会员版。它的看家本领是把一个文件切成多份并发下载，尽量把带宽吃满，再配合断点续传——中途掉线或者临时关掉，下次接着往下走，不必从头再来。浏览器集成是被称赞最多的一点：接管下载之后基本不用手工复制链接，点什么它都能接住，下载状态也集中在一个窗口里，进度和速度不用再逐个标签页去找。批量排队、按规则过滤，以及对网页视频的嗅探抓取，都是日常用得上的部分。适合经常下载大文件、网络不太稳定、或者习惯一次性拉一堆素材的人。Windows 平台，按包内说明安装配置即可长期使用。｜Tonec"
   date: 2026-10-04
   added: 2026-10-04
@@ -102,8 +86,6 @@
   category: 软件
   tags: ["软件", "笔记", "知识管理", "Markdown", "Obsidian"]
   quark_url: "https://pan.quark.cn/s/bf87d215f3a7"
-  baidu_url: "https://pan.baidu.com/s/1zHujxhR64zBckIWfS7g-Bg"
-  baidu_code: "0mdf"
   description: "换笔记软件最痛的不是迁移，是发现前几年的笔记被锁在某个私有格式里。Obsidian 从根上避开了这个问题：笔记就是你磁盘上的 .md 文件，随时能用别的编辑器打开，也能交给 Git 管起来，软件本身可以随时换掉。它的核心机制是双向链接——A 里引用了 B，B 底部就自动出现一条反向链接，时间长了笔记之间自然织成一张网，关系图谱能把这张网的结构直接画出来。链接这件事本身没有学习门槛，难的是长期坚持记录，工具能做的是降低后半部分的摩擦。插件生态是另一块分量：看板、日历、Dataview 查询、模板、发布，社区里都有现成方案，官方另有同步和发布服务。它不适合只想随手记两笔的人，但对做长期笔记、写长稿、搭个人知识库的人来说，文件始终握在自己手里比什么功能都重要。｜Obsidian"
   date: 2026-10-04
   added: 2026-10-04
@@ -115,8 +97,6 @@
   category: 软件
   tags: ["软件", "macOS", "OpenShot"]
   quark_url: "https://pan.quark.cn/s/2a7a6ceaf2e0"
-  baidu_url: "https://pan.baidu.com/s/1WcoeKLrOOD3r4YrW2e-Aqw"
-  baidu_code: "4bxo"
   description: "专业剪辑软件贵且重，系统自带的又太浅，中间这一档一直空着。OpenShot 填的就是这个位置：一款跨平台的开源剪辑软件，Windows、macOS、Linux 都有版本，拖素材进轨道、裁剪、加转场、叠标题字幕这些基础操作不看教程也能自己摸出来，关键帧动画和水印叠加同样具备。做博主视频、课件录屏、家庭影像这类需求，一个软件基本就够，不必为一年用两次的功能付订阅费。开源这一点同样重要：没有水印，也没有导出限制，做完就能直接出片，对预算有限的学生和自媒体尤其友好。横向比一下，相比 Premiere 和 DaVinci Resolve，它的门槛低得多；相比 iMovie，它在跨平台和多轨控制上更灵活。适合不想为剪辑付费、又接受不了纯命令行工具的人。这是 macOS 原生包，拖入应用程序即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -128,8 +108,6 @@
   category: 软件
   tags: ["软件", "macOS", "Zettlr"]
   quark_url: "https://pan.quark.cn/s/13f0687c73ca"
-  baidu_url: "https://pan.baidu.com/s/1ResnYGDz-VkYBvOC8A3LHA"
-  baidu_code: "ksdb"
   description: "写论文最耗时的部分往往不是论述，而是参考文献：引用格式改来改去，脚注编号一动全乱。Zettlr 是冲着这条链路来的——一款面向写作、尤其是学术写作的开源 Markdown 编辑器，不满足于当记事本，而是要把资料、卡片、成稿这条链路打通。它内置与 Zotero 联动的书库，写的时候能直接拖文献引用，LaTeX 公式、脚注、交叉引用和多种引文格式都支持；成稿可以一键导出成 Word、PDF、ODT 或 HTML，交给导师或者期刊时不用再手工重排。对写论文、读书笔记、长篇稿件的人来说，价值就在于把参考文献这类琐事自动化，让注意力留在内容上。如果只是随手记笔记，它的学术功能大概用不上；写得越长越正式，收益越明显。Windows、macOS、Linux 都有版本，这是 macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -141,8 +119,6 @@
   category: 软件
   tags: ["软件", "macOS", "Zed"]
   quark_url: "https://pan.quark.cn/s/8d336b50ada9"
-  baidu_url: "https://pan.baidu.com/s/1IIy9SIlgYOKbQNCAQzmbOQ"
-  baidu_code: "tz1m"
   description: "编辑器这些年一直在变重，开个大仓库要等半天，切个分支风扇就转起来。Zed 走的是另一条路：用 Rust 写的现代化编辑器，开发团队里有原 Atom 和 Tree-sitter 的核心成员，主打启动快、响应快、内存占用低。它该有的都有——语言服务器、语法高亮、多光标、跳转、内置终端和 Git 面板，不需要靠装一堆插件才勉强能用。最特别的一点是把多人实时协作直接做进了编辑器，结对编程和远程调试时不用来回共享屏幕或者挂会议。跟同类相比，它比 VS Code 轻量、开箱即用，比 Vim 的上手成本低得多。如果你每天要在大仓库里翻代码、又受不了 Electron 编辑器的拖沓，这个 macOS 原生包值得一试，下载后拖入应用程序文件夹即可，配置量不大，装完就能开始干活。"
   date: 2026-10-04
   added: 2026-10-04
@@ -154,8 +130,6 @@
   category: 软件
   tags: ["软件", "社交", "macOS", "WWDCScholars"]
   quark_url: "https://pan.quark.cn/s/0a433df1a8fc"
-  baidu_url: "https://pan.baidu.com/s/19S3W6VCWZje8fnTJhGq4SQ"
-  baidu_code: "njf0"
   description: "WWDC 奖学金后来延续成了 Swift Student Challenge，而这个 App 是当年那个圈子里的产物，作者 Sam Eckert。它的用处集中在大会前后：可以翻看历届获奖者的名单，看看他们提交了什么样的 Swift Playground 作品，也能认识同期入围的人，互相交流各自的项目。换句话说，它的价值几乎全在这个校友圈上，不在圈子里的人装上也找不到什么可看的。另外这是款比较早期的应用，上架在 2019 年前后，官方活动形式早已变化，联网数据现在还能不能取到并不确定，建议先装上试试能不能用再决定要不要当回事。对当年参加过、想回看那批作品的人，它更像一份纪念册；如果只是想了解这个活动，直接看官方渠道比它靠谱。支持 macOS。｜Sam Eckert"
   date: 2019-06-05
   added: 2026-10-04
@@ -167,8 +141,6 @@
   category: 软件
   tags: ["软件", "macOS", "ueli"]
   quark_url: "https://pan.quark.cn/s/9bf8e4b94001"
-  baidu_url: "https://pan.baidu.com/s/1HHY96anaTZxaLIJUWR7IQQ"
-  baidu_code: "oa8g"
   description: "Alfred 和 Raycast 都很好，但它们只属于 Mac，换个系统这套肌肉记忆就得重新建。ueli 是一款跨平台的键盘启动器，按下自定义热键唤出搜索框，敲几个字母就能启动应用、打开文件与文件夹、跑 shell 命令、做单位换算，或者把关键词直接丢给搜索引擎。它的扩展机制还能把一串动作打包成一个工作流，比如「打开项目」一次拉起编辑器、终端和几个固定网页，不必每天重复那几步。配置和扩展都落在本地文件里，方便跟着 dotfiles 一起备份迁移。相比那两款明星产品它更朴素，功能也没那么热闹，但胜在 Windows、macOS、Linux 表现一致，也不用被付费墙分成两半。它不追求插件生态的繁荣，把基础功能做扎实是它的取向。开源免费，主页 https://ueli.app。"
   date: 2026-10-04
   added: 2026-10-04
@@ -180,8 +152,6 @@
   category: 软件
   tags: ["软件", "macOS", "WezTerm"]
   quark_url: "https://pan.quark.cn/s/1d1d8d89b810"
-  baidu_url: "https://pan.baidu.com/s/1jT2Nd23D4we3x7gu0Zw0kw"
-  baidu_code: "k2q5"
   description: "终端圈有个长期分歧：一派主张工具该极简，分屏和会话交给 tmux；另一派希望开箱就有这些。Alacritty 属于前者，WezTerm 属于后者——它同样用 Rust 写、同样走 GPU 加速渲染，但把多路复用（类似 tmux 的分屏与会话管理）和 SSH 客户端直接做进了终端本身，标签页、切分面板、回溯搜索都是现成的，不必再叠一层工具。配置用 Lua 写，能细到按当前目录自动换配色、不同主机套不同外观，字体连字与回退链的调整也很完备。它想同时满足「开箱就能用」和「足够能改」这两头。Windows、Linux、macOS 体验一致。已经在 tmux 里投入多年的人迁过来的理由不算充分，新搭环境的倒是可以从它开始。开源免费，主页 https://wezterm.org/。"
   date: 2026-10-04
   added: 2026-10-04
@@ -193,8 +163,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Transmission Hub"]
   quark_url: "https://pan.quark.cn/s/90171efe5108"
-  baidu_url: "https://pan.baidu.com/s/1kf8wqIp329BkWvtc_UBVtw"
-  baidu_code: "2uph"
   description: "把下载器装在 NAS 或者一直开着的机器上，管理却要开浏览器登录网页界面，这件事本身就挺别扭。Transmission Hub 把这套管理搬到了 Mac 的菜单栏和原生窗口里：后端支持 Transmission、qBittorrent 和 Aria2 三种，接上之后每个任务的进度、速度、详细信息和文件列表都能直接看，启停、重命名、改存储位置、重新校验、删除这些操作也不用再进网页点。有个细节很实用：可以单独给某个文件设优先级，或者直接跳过不想要的部分，比如一批视频里的样片，不必为几张图把整个包下完。它本身不负责下载，只是把已有的下载服务接到桌面上，装之前需要先有能连的后端。界面是原生风格，操作比网页端顺手，也不用记登录地址。Mac 上长期挂着下载器的话，用它瞄一眼比开浏览器省心得多。｜展威 李"
   date: 2023-05-07
   added: 2026-10-04
@@ -206,8 +174,6 @@
   category: 软件
   tags: ["软件", "效率", "macOS", "Tabby - Browser Tab Manager"]
   quark_url: "https://pan.quark.cn/s/a81b30432101"
-  baidu_url: "https://pan.baidu.com/s/1hJO29V-158LFbZIZDMrcCw"
-  baidu_code: "cy4l"
   description: "浏览器开着三十个标签，其中二十个是上周查资料留下的，你不敢关，因为关了就找不回来——这就是 Tabby 要处理的状况。它不负责帮你少开标签，而是让你能放心地关掉：把当前这批标签按网站或项目存成一组，需要的时候整组恢复，不必逐个回忆那天开了些什么。对同时推进好几个项目的人来说，省下的是反复重建上下文的时间，研究、写作、查资料这类多线任务尤其明显，这一块比想象中耗神。浏览器本身也跟着受益——标签少了，内存占用和切换时的卡顿都会改善。上手第一步建议先把现有浏览器里的标签导进去，从真实状态开始分组，比从空白建起顺手得多。要注意它对系统有要求，需要 macOS 14（Sonoma）及以上版本，装之前先确认机器能不能升上去。它不限制你开多少标签，只是让你在关掉它们时不再犹豫。｜Fischnet Solutions, Inc."
   date: 2022-07-08
   added: 2026-10-04
@@ -219,8 +185,6 @@
   category: 软件
   tags: ["软件", "macOS", "Tiny Wi-Fi Analyzer"]
   quark_url: "https://pan.quark.cn/s/81797bc93355"
-  baidu_url: "https://pan.baidu.com/s/1VFcFI8UiIxSXzwAx6dRyaA"
-  baidu_code: "elwd"
   description: "Tiny Wi-Fi Analyzer 是一款小巧的 macOS 无线分析工具。它的用处很实际：把附近能搜到的所有网络按信道、信号强度和安全协议列出来并画成图，让你看清自家路由器是不是正和邻居挤在同一个信道上、2.4GHz 该不该换个信道、5GHz 哪一频段更干净。装完在菜单栏点开就能看，不联网、数据全在本地。家里 Wi-Fi 时快时慢、会议室经常掉线、或者刚搬完家想给路由器挑个位置时，对着图调一下信道往往比重启管用得多。这类排查工具平时用不上，需要的时候能省掉一整个下午。开源免费，主页 https://nolze.github.io/tiny-wifi-analyzer/。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -232,8 +196,6 @@
   category: 软件
   tags: ["软件", "macOS", "Pritunl"]
   quark_url: "https://pan.quark.cn/s/6244279c21ad"
-  baidu_url: "https://pan.baidu.com/s/1AzNAqo30a6iSnGJNR9pzng"
-  baidu_code: "dcaj"
   description: "先说清楚它是什么：Pritunl 是面向团队的 VPN 方案，分服务端和客户端。服务端那一头负责集中管理 VPN 服务、用户、群组权限与路由策略，通常由公司的运维搭好；这个 macOS 客户端只负责最后那段接入——管理员把配置文件或邀请链接发过来，导入之后就能连上，日常的切换连接、查看状态都在图形界面里完成，不用敲命令，连上之后的时长与流量也都看得到。它对准的场景是已经有 Pritunl 部署的公司或团队，比如远程办公、多地组网这类需求。反过来要提醒一句：个人用户如果只是想找个能翻墙的免费 VPN，这个完全不对路，别下错。开源免费，主页 https://forum.pritunl.com。macOS 原生包，下载后拖入应用程序文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -245,8 +207,6 @@
   category: 软件
   tags: ["软件", "购物", "macOS", "Selectedvendors"]
   quark_url: "https://pan.quark.cn/s/fbf3316effc3"
-  baidu_url: "https://pan.baidu.com/s/13MvDW6pUNlq3ky6Vk6ChHA"
-  baidu_code: "jcin"
   description: "这是 LifeArt Cabinetry 给自己经销渠道做的采购工具，不是面向普通消费者的购物平台。用法很直接：打开就能浏览产品清单，查看款式、规格与价格，直接下单，并随时跟踪订单走到哪一步。真正的价值在于把采购这件事从邮件和电话里搬出来——在客户家里现场量尺选材、在展厅挑面板、在工地临时补货，都能当场确认价格并下单，不必回头翻报价单或者等对方回邮件。在展厅给客户现场报价格外省事，也不用打电话回公司确认。另有 macOS 版本，可以在 Mac 上处理采购与管理事宜。要提醒的是它面向该品牌自己的渠道伙伴，普通人装上多半没有可用账号，客服也主要对应德语，不是这套体系里的人基本用不上。换句话说，它好不好用完全取决于你是不是这个渠道中的一环，脱离了这个前提就只是个空壳。｜LifeArt Cabinetry Corp"
   date: 2019-07-31
   added: 2026-10-04
@@ -258,8 +218,6 @@
   category: 软件
   tags: ["软件", "macOS", "Marker Data"]
   quark_url: "https://pan.quark.cn/s/196a9f4d8870"
-  baidu_url: "https://pan.baidu.com/s/1A2D5zLCASLEBil9dQEW8Tw"
-  baidu_code: "dybl"
   description: "剪辑时打的标记，往往不只是给自己的提示——客户的修改意见、配音的时间点、要交付的字幕参考，全都堆在同一条时间线上，等到交付时才发现得一条条抄出来。Marker Data 干的正是这件事：把标记数据从 FCPXML 里提取出来，整理成表格或文本导出去，可以发给客户确认，交给字幕组做参考，或者自己统计数量和时长。对手工一个个抄的人来说，省下的不只是重复劳动，还有抄漏之后来回核对的麻烦，标记一多差异就很明显。输入是 FCPXML，所以流程上需要你先从 Final Cut Pro 里导出这一份文件，多一步但换来的是完整数据。它只面向 FCP 这条工作流，用别的剪辑软件就用不上。适合接纪录片、广告、长期外包的剪辑从业者。开源免费，主页 https://markerdata.theacharya.co。macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -271,8 +229,6 @@
   category: 软件
   tags: ["软件", "macOS", "PearCleaner"]
   quark_url: "https://pan.quark.cn/s/a683246591b5"
-  baidu_url: "https://pan.baidu.com/s/1Rt_y4_oI0Dp_viIzxMgCJw"
-  baidu_code: "l8q5"
   description: "把应用图标拖进废纸篓，删掉的其实只是主程序。偏好设置、缓存、日志、应用支持目录里的那些文件还散在系统各个角落，一个应用留下几百 MB 很常见，用上几年攒下来就是好几个 G。PearCleaner 的做法是先扫后删：选中要卸载的应用，把散落各处的关联文件一并列出来给你看，确认过再动手，其中某一项不想删也能单独取消勾选，不会一刀切。删除之前会列出路径和体积，看明白再决定，比闭眼点一键清理稳妥得多。反过来它也支持查询某个应用究竟在系统里放了些什么。卸载这块做得比清理更实用，毕竟要重装系统或者换机器时，最常做的就是把一堆应用先卸干净。此外还能按体积找出大文件、清理通用缓存。界面比同类商业工具朴素，但胜在免费开源（fair-code 许可），也不会常驻后台占资源。清理这类事本就不需要每天做，攒一段时间跑一次就够。"
   date: 2026-10-04
   added: 2026-10-04
@@ -284,8 +240,6 @@
   category: 软件
   tags: ["软件", "macOS", "LeafView"]
   quark_url: "https://pan.quark.cn/s/32603f93f857"
-  baidu_url: "https://pan.baidu.com/s/1p6kv_Jj0XWgzY3Ii7qnRgA"
-  baidu_code: "p9zo"
   description: "只是想看一眼截图，却要等一个大型图像程序慢慢启动，这种等待每天都会发生好几次。LeafView 是冲着这个来的：一款极简的 Mac 图片查看器，用 Electron 打包、Leaflet.js 负责图像渲染，克制程度相当高——不做图库管理，不做批量处理，也不做任何编辑，只把「双击、看图、关掉」这件事做快。常见格式都能吃下，缩放拖拽、适应窗口和全屏浏览这些基本动作也都在，临时翻几张参考图时不用等。作者 sprout2000 还做了同系列的 Tauview，也就是 Tauri 版本，界面和功能几乎一致，差别只在打包方式：Electron 兼容性更稳，Tauri 更省内存，按自己的机器情况挑一个就行。开源免费，主页 https://github.com/sprout2000/leafview。"
   date: 2026-10-04
   added: 2026-10-04
@@ -297,8 +251,6 @@
   category: 软件
   tags: ["软件", "macOS", "OpenEmu"]
   quark_url: "https://pan.quark.cn/s/daa09128237e"
-  baidu_url: "https://pan.baidu.com/s/1M501BMiGp3d_CmSzT0-LHg"
-  baidu_code: "ik8v"
   description: "在 Mac 上重温老游戏，麻烦从来不在找 ROM，而在环境：每种主机要装一个模拟器，各配一套手柄映射，存档格式还各不相同，折腾完玩兴已经过半。OpenEmu 的思路是做前端——它自己不写模拟器核心，而是把 NES、SNES、Game Boy、世嘉 MD、PlayStation 等几十种主机核心整合进同一个图形界面。它本身不提供 ROM，游戏文件需要自己准备，这一点用之前就该清楚。拖入 ROM 就自动生成带封面和简介的游戏库，外接手柄开箱即识别，存档和即时存档都变成可视化操作，以往那套繁琐步骤一次收拢。游戏库按主机分组排列，翻起来像在逛一个自己的小展厅，这一点比命令行模拟器友好得多。想重温童年主机游戏的话这是最省事的做法。开源免费，界面友好，主页 https://openemu.org。"
   date: 2026-10-04
   added: 2026-10-04
@@ -310,8 +262,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Only Switch"]
   quark_url: "https://pan.quark.cn/s/a3a42a3d2081"
-  baidu_url: "https://pan.baidu.com/s/1zY6S0e-dnpMWtHNiIHrsjA"
-  baidu_code: "ea0r"
   description: "Mac 的系统设置越做越深，改个深色模式要翻两级面板，Only Switch 的思路是把这些散落各处的开关抽出来，堆在菜单栏一点即开的位置：隐藏桌面图标、切换深色外观、开个人热点、静音、清空废纸篓、启动屏保，常用的那几样还能自己排成一列，顺序随你。另一半功能在同类里不多见——它同时是个家居中控，家里的灯、电视、空调、窗帘、风扇、冰箱可以归到一处管理，主流品牌基本接得上，也能挂到语音助手上用嘴控制，不必为每个厂商各装一个应用。这两块看着不搭，指向的其实是同一种人：既受不了为改一个设置翻菜单，也不想让全屋设备各占一个图标。两块功能可以自由取舍，只把它当菜单栏开关用也完全成立，家居那部分不用就不开。集中之后，桌面上少几个应用，日常操作也少几步跳转。它常驻菜单栏，占的空间很小，平时几乎不会注意到。｜Sivakumar Ramamurthy"
   date: 2025-05-22
   added: 2026-10-04
@@ -323,8 +273,6 @@
   category: 软件
   tags: ["软件", "新闻", "macOS", "NetNewsWire: RSS Reader"]
   quark_url: "https://pan.quark.cn/s/90ab9b758931"
-  baidu_url: "https://pan.baidu.com/s/1o3_dKKsJm-G5CxXcZ7V2Ug"
-  baidu_code: "0ajl"
   description: "信息都在 App 里之后，看什么就由算法决定了。NetNewsWire 代表的是另一种做法：你自己订阅，自己读。它是一款免费开源的 RSS 阅读器，把你常看的博客与新闻站点的更新汇总到一个列表，已读未读都有记录，不用靠记忆判断这篇是不是看过了。它最被称道的是快——启动快、同步快、长列表滚动不卡，读的时候也没有广告和猜你喜欢插在中间打断。界面是地道的 macOS 原生风格，读长文时视线里干干净净，不会被一堆按钮分神。macOS 与 iOS 两端体验一致，同步可以走 iCloud，也可以接主流的 RSS 同步服务，换设备不用重新配置。订阅源支持批量导入导出，换阅读器时不用一个个重新找回来。作者 Brent Simmons。适合仍然愿意自己决定信息来源的人。｜Brent Simmons"
   date: 2020-03-08
   added: 2026-10-04
@@ -336,8 +284,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "MonitorControl Lite"]
   quark_url: "https://pan.quark.cn/s/92831965704d"
-  baidu_url: "https://pan.baidu.com/s/1zcoTATeVcND_pXptTH4kyg"
-  baidu_code: "y342"
   description: "苹果自家的显示器能用键盘直接调亮度，可一旦接上第三方屏幕，系统里那个亮度滑块就成了摆设——拖动没反应，你只能伸手去摸显示器边框上那排按键，按一下进菜单，再一级一级找亮度，多数时候手感还很差。MonitorControl Lite 补的就是这一块：在菜单栏放一排滑块，外接屏的亮度随手拉动，部分机型连音量也能一起管。如果接了不止一台外接屏，还能分别控制各自的亮度，不用统一拉到同一个数值。它是平滑过渡而不是一格一格跳，快捷键可以自己定，外观参照了新版 macOS 控制中心的样子，放在菜单栏里不突兀。这类工具的价值不在功能多，而在于每天要调十几次的那几秒钟终于不用起身。对调色、修图这类需要稳定亮度的工作，能在座位上快速微调比什么都实用。长期外接显示器办公的人装上基本就不会再卸下来。"
   date: 2021-11-23
   added: 2026-10-04
@@ -349,8 +295,6 @@
   category: 软件
   tags: ["软件", "效率", "macOS", "MeetingBar"]
   quark_url: "https://pan.quark.cn/s/391aadfc4405"
-  baidu_url: "https://pan.baidu.com/s/1pVLpRSLyVHUN_a_W7-nRWg"
-  baidu_code: "4k8s"
   description: "会议开始前那两分钟通常很狼狈：日历里明明写着这件事，可视频链接埋在邀请正文的角落，下一个会什么时候开始还得翻半天。MeetingBar 把今天剩下的日程直接摆进菜单栏，点开就能看到每场会的时间和一个加入按钮，Zoom、Google Meet、Teams 这类常见链接它自己认得出来，一点即进，不必再去翻邮件或日历详情。它读的是系统日历里已有的日程，不需要你额外维护一份会议清单，授权之后就一直安静待着。它还支持从菜单栏直接发起临时会议，并显示距离下一场还剩多久，让你知道这次能不能多讲五分钟。真正受益的是那些一天被切成四五段、还要在不同会议平台之间来回切换的人：省下的不是大块时间，而是每次开会前那几十秒的翻找和紧张。工具很轻，装上之后基本不用设置。｜Andrii Leitsius"
   date: 2020-10-04
   added: 2026-10-04
@@ -362,8 +306,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "MakeItHome - Screen extender"]
   quark_url: "https://pan.quark.cn/s/088180690984"
-  baidu_url: "https://pan.baidu.com/s/1RKtYBmFNOu5gSXu0o53Cpg"
-  baidu_code: "4g75"
   description: "屏幕宽度有限的时候，找东西的成本比想象中高：要打开一个藏在深层目录里的文件夹，得先最小化眼前的窗口，再去 Finder 里一层层点进去，取完还要切回来。MakeItHome 的做法是在屏幕边缘放一块可以自己定义的常驻面板，把常用的应用、文件夹和链接直接摆上去，鼠标一挥就到，中间那几步跳转全省了。它更像给 Mac 加了一条随身工具带：平时埋在系统深处的目录、这个项目临时在用的素材夹、几个需要频繁切换的小工具，都可以收进去固定下来，用完也不必想着归位。面板的位置和触发方式都能自己定，想让它常驻一角，或者只在鼠标推到边缘时才出现，都行。对显示器不够宽、或者受不了在层层窗口里翻找的人，省下的是每天几十次的小动作。作者 Riccardo Cecchini，主打开源工作区，支持 macOS。｜Riccardo Cecchini"
   date: 2022-12-02
   added: 2026-10-04
@@ -375,8 +317,6 @@
   category: 软件
   tags: ["软件", "开发工具", "macOS", "System Color Picker"]
   quark_url: "https://pan.quark.cn/s/10a30ed0fd8d"
-  baidu_url: "https://pan.baidu.com/s/13Oirh9ajdK7KyzMkp4eOBA"
-  baidu_code: "zkn5"
   description: "要抓一个颜色，通常的选择是装个专业设计工具，或者开截图软件慢慢找。System Color Picker 只做一件事：直接调起系统内置的取色器，从屏幕任意位置吸取颜色，取到的值可以复制成 HEX、RGB 等常用格式，边上还带着调色板、最近取色记录和格式转换这些顺手的小功能。它的边界作者说得很清楚——依赖 macOS 自带的取色器，因此在 macOS 26 上存在系统级的 bug，偶尔会吸到错误的颜色，应用层面绕不过去。对偶尔抓个颜色、不想为此装专业工具的人来说，这点误差影响不大；但如果做的是精细的视觉工作，值得先在自己的系统上确认这个现象会不会复现，再决定要不要依赖它。作者 Sindre Sorhus，全部功能就一个取色界面，打开即用。｜Sindre Sorhus"
   date: 2021-04-29
   added: 2026-10-04
@@ -388,8 +328,6 @@
   category: 软件
   tags: ["软件", "macOS", "UnnaturalScrollWheels"]
   quark_url: "https://pan.quark.cn/s/5ccf926dff51"
-  baidu_url: "https://pan.baidu.com/s/1vWYoTiua75ZeRjL4f-xPFg"
-  baidu_code: "frn2"
   description: "Mac 上有个一直没解决好的小问题：系统设置里的滚动方向是全局的，不区分你用的是触控板还是鼠标。开着自然滚动，触控板舒服，可一插上外接鼠标，滚轮方向就反了，往上推内容往下走；为了鼠标关掉它，触控板又变得别扭，两者只能选一个。UnnaturalScrollWheels 治的就是这个：它只反转物理滚轮的方向，触控板那套自然滚动原样保留。于是同一台 Mac 上，用触控板时内容跟着手指走，抓起鼠标时又回到传统的滚轮方向，切换输入设备不再需要去系统设置里改一遍——对在笔记本和外接键鼠之间来回切换的人，这件事每天都在发生。工具非常轻，设一次之后基本就忘了它的存在，开机自启放在后台即可。它只解决一个方向问题，其余什么都不碰，正因如此不会带来新麻烦。开源免费。"
   date: 2026-10-04
   added: 2026-10-04
@@ -401,8 +339,6 @@
   category: 软件
   tags: ["软件", "商务", "macOS", "SwiftShift Job Compare"]
   quark_url: "https://pan.quark.cn/s/d24fe4ee73d7"
-  baidu_url: "https://pan.baidu.com/s/131wF-FfUahRuyqhsNA2-xQ"
-  baidu_code: "47xp"
   description: "两份工作摆在一起，月薪高一点的那个通常就是答案——但这个答案经常是错的。SwiftShift 让你把两个 offer 逐项填进去：时薪或年薪、预期每周工时、一年工作多少周、带薪休假天数、每天通勤的时间和距离、停车费与过路费，然后算出各自的实际价值——扣掉通勤时间之后每小时究竟挣多少，假期折算成钱值多少，每天开车上下班的油钱过路费又吃掉多少。那些平时被忽略的成本一旦变成数字，结论常常和直觉相反：通勤一小时的那个 offer，看着每月多几千块，摊到每小时其实更便宜。两个 offer 填完之后还能反复改数字试算，看哪一项变动对结果影响最大。它不做职业规划，也不评价公司好坏，只是把账算清楚，让两个数字能放在一起比。适合手上不止一个 offer、或者正在纠结要不要跳槽的人，Mac 上也能直接使用。｜Ian Neuhaus"
   date: 2026-08-12
   added: 2026-10-04
@@ -414,8 +350,6 @@
   category: 软件
   tags: ["软件", "美食佳饮", "macOS", "Tomato Bar"]
   quark_url: "https://pan.quark.cn/s/d743608560e7"
-  baidu_url: "https://pan.baidu.com/s/1ZqzQ0k5AzM9gxQ_jyW_aOA"
-  baidu_code: "ocoj"
   description: "番茄工作法的要点其实不在那二十五分钟，而在于休息是被强制安排的——很多人一坐就是半天，抬头才发现脖子僵了。Tomato Bar 把它放进了 Mac 菜单栏：平时只占一格，点开能看到当前这一轮的剩余时间，也可以暂停、跳过或重置。节奏按番茄工作法来，专注一段时间、短休息一下，完成若干轮再安排一次长休息，具体时长都能自己调。它比较讨巧的地方是能和系统的勿扰或专注模式联动，计时期间自动屏蔽通知，结束时用提示音提醒，也支持全局快捷键直接开一轮。它不做任务管理和统计报表，只负责把时间切成段。它不统计完成了多少个番茄，也不生成任何报表，想要数据复盘的人得另找工具。不联网、不注册，装上就能用，适合容易被消息打断、想给自己定个明确节奏的人。开源免费，这是 macOS 原生包。｜Tomato Bar LLC"
   date: 2020-07-13
   added: 2026-10-04
@@ -427,8 +361,6 @@
   category: 软件
   tags: ["软件", "macOS", "Tauview"]
   quark_url: "https://pan.quark.cn/s/59654547d72d"
-  baidu_url: "https://pan.baidu.com/s/1RqBzhwJBo34fGDsbwygvug"
-  baidu_code: "pblj"
   description: "看图这件事，多数时候只需要一个动作：双击，看完，关掉。可系统自带的预览在某些格式上不够灵，专业软件又太重，中间缺一个轻的。Tauview 走的是极简路线，用 Leaflet.js 渲染图像、Tauri 做外壳，比起 Electron 那套体积更小、启动更快、内存也更省。它只做一件事——双击就把图打开，缩放拖拽、适应窗口和全屏浏览都在，常见格式都能吃下，想快速看一眼截图或翻几张参考图时，不用等重量级程序慢慢起来。作者 sprout2000 还有一个 Electron 版本的兄弟项目 LeafView，界面和功能差不多，差别只在打包技术：要兼容性更稳就选 Electron，要省资源就选 Tauri，两台都装着也不占什么地方。开源免费，主页 https://github.com/sprout2000/tauview。"
   date: 2026-10-04
   added: 2026-10-04
@@ -440,8 +372,6 @@
   category: 软件
   tags: ["软件", "macOS", "Swift Bar"]
   quark_url: "https://pan.quark.cn/s/7fbdc7f5420a"
-  baidu_url: "https://pan.baidu.com/s/1LNuyiNcAINS6tgpVAiNLLg"
-  baidu_code: "rlrz"
   description: "菜单栏右上角那块地方，系统只给你放固定的几样，Swift Bar 把它变成了一个可以自己填的地方：写一段 shell、Python 或 Swift 脚本，让它定时去取汇率、查服务器状态、数一下待办还剩几条、读今天的日程或者拉天气，结果就直接显示在菜单栏上，点开还能展开二级菜单挂几个快捷操作。它是老牌工具 BitBar 的 Swift 重写版，体积更小、更省电，BitBar 时代攒下的脚本生态可以直接沿用，找现成方案不难。对喜欢折腾效率工具的人来说，这是把散落在各个网页和应用里的零散信息收拢到一处的最省事办法，不用每个数据都开一个窗口。开源免费，主页 https://swiftbar.app。上手门槛在于你得愿意写几行脚本，习惯之后会上瘾。"
   date: 2026-10-04
   added: 2026-10-04
@@ -453,8 +383,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Pika"]
   quark_url: "https://pan.quark.cn/s/71a79e30adf1"
-  baidu_url: "https://pan.baidu.com/s/1n3N18VyLOUmke4c1LDs2fw"
-  baidu_code: "fsag"
   description: "设计稿上一个灰色，实现到页面上总是差那么一点，来回确认靠截图比对效率很低。Pika 是个极简的取色器，名字谐音 picker：调出来吸取屏幕上任意一点的颜色，然后按你需要的格式给你——HEX、RGB、HSL 是常规项，连 Swift 的 UIColor 写法、CSS 变量这类能直接粘进代码的格式也准备好了，省掉手动转换那一步。看到界面上某个调得挺舒服的颜色也能立刻抓下来收着，不必再问设计师要数值。它还保留最近取过的颜色历史，不至于眼睛一离开就找不回来。操作只有吸取和复制两步，没有调色板管理这类复杂功能，正因为如此才好用。作者 David Charles Gleason，原生 macOS 应用，开源，适合前端、UI 设计师，以及任何需要在别人做的界面上借一个颜色的人。｜David Charles Gleason"
   date: 2024-12-11
   added: 2026-10-04
@@ -466,8 +394,6 @@
   category: 软件
   tags: ["软件", "macOS", "SwiftQuit"]
   quark_url: "https://pan.quark.cn/s/82cf9ec8f993"
-  baidu_url: "https://pan.baidu.com/s/1fvpcVfWvEn9tKzePhS_KEg"
-  baidu_code: "v53j"
   description: "macOS 和 Windows 的习惯不一样：Windows 上关掉最后一个窗口通常就退出了程序，Mac 上关窗之后 App 还留在后台，久了 Dock 里挂一串没在用的图标，内存和电量都在悄悄消耗。SwiftQuit 把这套改回 Windows 的样子——关掉某个应用的最后一个窗口时就自动退出它。工具常驻后台、无需配置，也可以设一份例外名单，把邮件、备忘录、下载工具这类希望常驻的程序排除掉。适合从 Windows 转过来的人，或者单纯不喜欢后台堆着一堆程序的人；装上以后基本就在后台安静待着，不会打扰你。开源免费，主页 https://github.com/onebadidea/swiftquit。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -479,8 +405,6 @@
   category: 软件
   tags: ["软件", "效率", "macOS", "Reminders"]
   quark_url: "https://pan.quark.cn/s/44420c3c3961"
-  baidu_url: "https://pan.baidu.com/s/1-avCiWH2Kgfa9PJyp7GsIQ"
-  baidu_code: "uc52"
   description: "很多人装了三四个待办应用，最后还是回到系统自带的那个。「提醒事项」在 Mac 上随系统就有，不需要注册，不需要配置同步，想到什么随手记一条，购物清单、工作任务、出行准备都能往里塞。它有两种提醒方式：按时间，到了点弹出来；按地点，走到超市门口才提示你还有东西要买。后者是少数真正用得上的地理围栏场景，比如到了公司提醒交报销、离开家时提醒带东西，一次设定长期生效。清单可以分组，一件复杂的事也能拆成子任务逐项勾掉。靠着 iCloud，iPhone、iPad、Mac 三端自动同步，在哪台设备上改动都一样。再进一步可以把整个清单共享给家人，谁买完谁勾掉，对方那边立刻更新，比在群里喊一声可靠。它不给你甘特图和优先级矩阵，要的就是想到就记、到点就提醒。｜Apple"
   date: 2016-05-23
   added: 2026-10-04
@@ -492,8 +416,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Activity Bar - Menu Bar Stats"]
   quark_url: "https://pan.quark.cn/s/84426b8abf37"
-  baidu_url: "https://pan.baidu.com/s/1v0ovqlY4EjqmLKBuxat9WQ"
-  baidu_code: "l15q"
   description: "想知道 Mac 现在卡是谁造成的，系统自带的活动监视器太重，打开一次要等半天，还得切窗口。Activity Bar 把这些数值直接摆到菜单栏：CPU 占用可以按系统、用户、空闲分项看，也能按核心拆开逐个观察，显示方式在百分比和柱状图之间选；GPU 占用、内存的用量与压力、网络的实时上下行速度和当前 IP、磁盘的剩余空间，都能一眼扫到，磁盘发生写入时图标红绿闪一下，提醒你机器正在忙。这些信息平时不显眼，一旦机器变慢或网络异常，第一反应就能确认是谁在占资源。蓝牙鼠标、键盘的电量也能顺带看到，不用等系统弹低电量提示。它占用的菜单栏空间很小，小屏幕也放得下，不做历史曲线和告警，看的是此刻的状态。免费版覆盖日常监控，Pro 版解锁弹窗与小组件里的详细指标。｜Denis Litvin"
   date: 2023-04-09
   added: 2026-10-04
@@ -505,8 +427,6 @@
   category: 软件
   tags: ["软件", "macOS", "SlowQuitApps"]
   quark_url: "https://pan.quark.cn/s/4b6fa3e9b9aa"
-  baidu_url: "https://pan.baidu.com/s/1Ny66w_9jFCZcsNPvRSjQ-Q"
-  baidu_code: "zacu"
   description: "macOS 的 Command-Q 没有任何二次确认，写文档或开会投屏时手滑带上旁边的 Q，辛苦半天的窗口就没了。SlowQuitApps 的做法很轻：给全局的 Command-Q 加一段可配置的延迟（默认约一秒），按住不放才会真正退出，退出前还会显示倒计时，松手就取消。它不弹窗、不改你的使用习惯，只是把那个危险瞬间拉长到来得及后悔。可以设自选时长，也能按应用单独排除。适合经常演示、投屏、协作，或者单纯手不稳的人；装上以后它的存在感接近于零，直到哪天真救了你一次。开源免费，主页 https://github.com/dteoh/SlowQuitApps。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -518,8 +438,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Plash"]
   quark_url: "https://pan.quark.cn/s/d92462a5b9b2"
-  baidu_url: "https://pan.baidu.com/s/1Y0LLRLL7xwDgUJh6wSY93g"
-  baidu_code: "1lak"
   description: "静态壁纸看久了会腻，Plash 的办法是把网页直接铺到墙纸的位置。填一个网址，那个页面就成了桌面背景：可以是一张缓慢变化的气象雷达图，一块实时刷新的数据面板，或者干脆放个 GIF 让桌面真的动起来。它可以存好几个网页随时切换，早上看数据、晚上看风景都行，网页的加载频率和刷新时机也能自己定，不至于让一个常驻页面白白吃着 CPU。有个细节做得挺周到：你可以决定这个网页要不要响应鼠标，需要交互时让它点得到，不需要时把事件穿透到后面的桌面图标，不至于挡住你双击文件。再配合隐藏 Dock，观感上几乎就是一块活的桌面，而不像挂着个浏览器窗口。作者 Sindre Sorhus 一直做这类小而精的 Mac 工具，风格一脉相承。适合愿意让桌面有点变化、又不想折腾复杂美化方案的人。｜Sindre Sorhus"
   date: 2020-01-08
   added: 2026-10-04
@@ -531,8 +449,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Focus Sessions • Self control"]
   quark_url: "https://pan.quark.cn/s/564e4bf0ed6d"
-  baidu_url: "https://pan.baidu.com/s/1a6llLTKzAdirg2R4tjRqhQ"
-  baidu_code: "i8rl"
   description: "靠意志力抵抗刷网页这件事，失败率很高，Focus Sessions 干脆不指望它。用法是：先定一段专注时长，把这段时间里要挡住的应用和网站列出来，时间没到就是打不开，没有「再刷五分钟」的余地。它承认人的自控靠不住，所以选择先把诱惑隔断开，用外部约束换一段完整的时间。屏蔽清单可以按工作日和周末分别设，周末不必还守着工作时间那套规矩。同一套机制反过来可以用于家里：给孩子划定允许使用的范围和时段，并且用密码把设置本身锁住，避免孩子自己进去把限制改掉。这两类场景看起来一内一外，逻辑其实一样——不是教人自律，而是替人守住那条线。设定的时长建议从短的起步，一上来就定两小时容易中途放弃，反而失去意义。适合明知道该干活却总先点开社交网站的人，也适合需要管理孩子屏幕时间的家长。｜Denk Alexandru"
   date: 2020-08-22
   added: 2026-10-04
@@ -544,8 +460,6 @@
   category: 软件
   tags: ["软件", "macOS", "LinearMouse"]
   quark_url: "https://pan.quark.cn/s/c8b45ad05fdd"
-  baidu_url: "https://pan.baidu.com/s/1FvoX6FgoWkKm4_ODkVLytw"
-  baidu_code: "qlqq"
   description: "Mac 接上第三方鼠标，别扭的地方往往说不清：滚轮方向和想的反着来，指针加速的曲线也和肌肉记忆对不上，移动起来总有点黏滞。LinearMouse 把这些细节交回用户手里——滚轮方向可以反转，加速曲线能改成线性，每个按键的功能也能单独指定。它还有个针对具体软件的规则功能：比如在修图软件里让滚轮直接变成缩放，回到浏览器又恢复成滚动，同一只鼠标在不同场景下各干各的。对每天有大量鼠标操作的人，这种细微的顺手感会累积成明显的舒适，外接办公鼠标、尤其是罗技 MX 系列的用户往往一装上就能感觉到差别。设置项不少，但常用的就是方向和速度那几项，调完基本不用再管。工具常驻菜单栏，占用极低，开源免费，主页 https://linearmouse.app。"
   date: 2026-10-04
   added: 2026-10-04
@@ -557,8 +471,6 @@
   category: 软件
   tags: ["软件", "macOS", "Macdown"]
   quark_url: "https://pan.quark.cn/s/ddfafe83d514"
-  baidu_url: "https://pan.baidu.com/s/1NsnDniNEWD8mh8ReH3Fozg"
-  baidu_code: "no4a"
   description: "Macdown 是 macOS 上一款老牌开源 Markdown 编辑器，作者 uranusjr，界面走原生双栏：左边写源码，右边实时渲染，改动立刻看得见。语法上支持 GFM、表格、任务列表、脚注、MathJax 公式和代码块高亮，写完可以直接导出 HTML 或 PDF。它和后来那批 Electron 编辑器最大的区别是轻——体积小、启动快、界面干净，更像系统自带的备忘录，代价是没有标签页和插件生态。适合只想在本机安静写文档、记笔记、写博客初稿的人，不需要协同也不需要发布流程。开源免费，主页 https://macdown.uranusjr.com/。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -570,8 +482,6 @@
   category: 软件
   tags: ["软件", "macOS", "ScriptManager"]
   quark_url: "https://pan.quark.cn/s/10fe4b271739"
-  baidu_url: "https://pan.baidu.com/s/1V90wkD5wEu2hbhyWcqHh1A"
-  baidu_code: "dw1i"
   description: "运维脚本常见的一种尴尬处境：写的时候随手一存，用的时候要先开终端、进到某个目录、记得加执行权限，隔两个月连自己都忘了放在哪。Script Manager 给这些脚本套了个简单外壳——在应用里创建、导入、编辑，然后一键执行，前面那些琐碎步骤全省了。它的定位介于写完就丢的一次性脚本和正式运维系统之间：不做调度，不做权限和审计，只是让你手上那堆维护脚本有个固定的地方待着，不至于散落在桌面各处。清缓存、备份目录、拉镜像、重建索引这类活儿最适合收进来。这里是源码版，可以按自己的习惯改一改再编译使用。它不会替你决定脚本该怎么写，只是让已经写好的那些更容易被找到和跑起来。开源免费，仓库在 github.com/SmartPack/ScriptManager，支持 macOS。"
   date: 2026-10-04
   added: 2026-10-04
@@ -583,8 +493,6 @@
   category: 软件
   tags: ["软件", "音乐", "macOS", "XME LOOPS"]
   quark_url: "https://pan.quark.cn/s/806595433da3"
-  baidu_url: "https://pan.baidu.com/s/1rw-Iam4PmGgZoZB6i_wUBg"
-  baidu_code: "nneb"
   description: "XME Inc. 数十年来为职业艺人和乐队制作音乐，如今为你提供敬拜与世俗演出所需的所有 Loop。功能：全新旋律 Loop 支持实时变调；Pad 功能可在任意调性下叠加柔和铺底音色，与鼓组或打击乐 Loop 同步；歌单可跨设备分享；支持重命名 Loop；Loop 自动下载到本机，不必担心网络或服务器问题；可在应用内按需申请 Loop，把所需歌曲链接粘贴到 Contact 即可；Multiloop 为每个 Loop 提供多种变奏；庞大的曲库兼容福音与世俗歌曲，适用于入场、过渡或炫技段落；音乐与软件团队每月持续更新；可调整任意 Loop 的速度并支持 Tap Tempo（长按 Tap 键重置速度）；可创建多个歌单，为不同日期与演出提前规划，支持 macOS。｜XME Inc."
   date: 2017-05-14
   added: 2026-10-04
@@ -596,8 +504,6 @@
   category: 软件
   tags: ["软件", "游戏", "macOS", "Rectangles - Shikaku Puzzle"]
   quark_url: "https://pan.quark.cn/s/603d3bd28429"
-  baidu_url: "https://pan.baidu.com/s/18pE8D_QUwqBDNSVHcYDg7Q"
-  baidu_code: "ynl9"
   description: "Shikaku 是一种一分钟讲完规则、却能让人坐一下午的谜题。Rectangles 把它搬到了 Mac 上：棋盘上散布着若干数字，每个数字代表一块矩形的精确面积，你要做的是把整个棋盘切成若干矩形，彼此不重叠、不留空隙，并且每个矩形里恰好含一个数字。规则听起来小学生都能做，真到网格一大，靠猜完全走不通，必须从边角和唯一解的地方一步步推下去。它的气质做得挺安静——界面干净，没有计时压迫，也没有连胜排名，每通过一关给一幅可爱的像素小画作为奖励，收集本身成了继续下去的小动力。单局时间不长，随手来一盘不影响正事。它没有提供提示系统，卡住只能自己退出来重看，这一点见仁见智。适合喜欢纯逻辑推理、愿意慢慢磨的人，对数独有耐心的大概也对得上胃口。关卡从简单网格起步，难度爬升比较克制，不至于一上来就劝退。｜MoreThanThat"
   date: 2025-11-25
   added: 2026-10-04
@@ -609,8 +515,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Braver Search"]
   quark_url: "https://pan.quark.cn/s/6a616f2c31be"
-  baidu_url: "https://pan.baidu.com/s/1L40mc1Dwgk3LquumjiRkXw"
-  baidu_code: "ix4d"
   description: "用 Braver Search 提升 Safari 浏览体验：获得 Brave 出色的隐私搜索，同时保留 Safari 强大的生态功能，隐私与便利无需二选一。主要功能：iOS 与 macOS 一键设置；搜索请求即时重定向到 Brave Search；跨设备同步设置；内置支持 Brave 的 AI 摘要；简单开关随时切换。保留 Safari 生态优势：设备间接力（Handoff）、已存密码与自动填充数据、iCloud 钥匙串与验证码、你喜爱的 Safari 扩展，与 Apple 生态完整集成。隐私保护：搜索在抵达 Safari 默认引擎之前就被重定向，零数据存储、零追踪，搜索历史真正私密。iPhone、iPad 与 Mac 体验一致，设置自动同步。注：本应用并非 Brave Software 官方产品，与其无任何关联。｜Brenden Bishop"
   date: 2025-02-23
   added: 2026-10-04
@@ -622,8 +526,6 @@
   category: 软件
   tags: ["软件", "游戏", "macOS", "Quicksilver - Galaxy Road to Arcade Adventures"]
   quark_url: "https://pan.quark.cn/s/ff4a7c5c8cfb"
-  baidu_url: "https://pan.baidu.com/s/1BSoVcVQJz-cpKsqlDImYrg"
-  baidu_code: "jjt1"
   description: "2015 年上架的一款休闲街机小品，玩法可以概括成一句话：跟时间赛跑。障碍和机会轮番涌到你面前，你只能在越来越快的节奏里不断做出反应，前面靠判断，到了后段基本只能靠肌肉记忆撑着——这也是这类游戏的乐趣所在，死得多了自然就熟了，每次失败都不浪费。它比较用心的地方是听觉和视觉的配合：动感的电子配乐加上复古像素美术，两者咬得很紧，听感和手感都带着那个年代街机厅的味道，玩起来比截图看着有劲。成绩可以上传排行榜，和全球玩家比一比排位。它没有复杂的成长系统和内购养成，进去就能玩，也不用记任何前置设定。适合通勤路上、休息间隙来上几局，一局不长，失败了也没有负担。想找一款随时能放下、随时能再捡起来的小游戏，它的体量刚好。目标不是让你玩很久，而是让这十分钟玩得挺开心。支持 macOS。｜Daniel Reichert"
   date: 2015-11-21
   added: 2026-10-04
@@ -635,8 +537,6 @@
   category: 软件
   tags: ["软件", "音乐", "macOS", "Pine Player"]
   quark_url: "https://pan.quark.cn/s/b450339128ee"
-  baidu_url: "https://pan.baidu.com/s/1xeopQxCO8wp5iQkfPo0E-w"
-  baidu_code: "cozk"
   description: "一款播放器同时搞定高品质视频与 Hi-Res 音频。Pine Player Pro 是 macOS 上的高级媒体播放器，支持从常见视频格式到 Hi-Res 音频、DSD、SACD ISO、MIDI 乃至 Tracker 音乐的广泛格式。MIDI 与 SoundBank 合成器：不止播放 MIDI，还能用多种乐器音色演绎同一段音乐、可视化监视并微调演奏，支持外部 MIDI 输出以连接软硬件设备。Tracker 音乐：原生支持 VGM、VGZ、Adlib(ROL)、MOD、XM、S3M、IT 等经典格式，直接调用内嵌的乐句、采样与乐器数据播放，无需转换。视频播放与转换：支持 MP4、MOV、MKV、AVI、WMV、WebM，借 Apple 硬件加速流畅解码，支持 SRT、SMI、SUB 等字幕，提供变速、缩放与 A-B 循环。音频：MP3、M4A、FLAC、AAC、WAV、AIFF、OGG、Opus、WMA、APE、TTA、WavPack，支持 DSD（DSF/DFF）播放、DoP 输出与 SACD ISO。｜Siseong Ahn"
   date: 2016-05-14
   added: 2026-10-04
@@ -648,8 +548,6 @@
   category: 软件
   tags: ["软件", "macOS", "MarkEdit"]
   quark_url: "https://pan.quark.cn/s/0ecfeacbd2c0"
-  baidu_url: "https://pan.baidu.com/s/1TMV7kFxmQ7NvpG4Rroe8uw"
-  baidu_code: "3jy8"
   description: "MarkEdit 的定位很清楚：像 Mac 自带的「文本编辑」那样轻，但只用来写 Markdown。它由开源社区用 Swift 写成，双击打开就能写，不需要配置工作区或导入项目。语法高亮、目录大纲、即时预览、字数统计都在，还支持 TeX 公式和一批批处理命令——给列表排序、大小写转换、按列编辑这类重复操作能一次搞定。原生带来的最大好处是启动几乎没有延迟，改几行 README、记一段笔记不必等主力编辑器缓缓打开。适合把 Markdown 当日常书写格式的人；如果要 Markdown 之外还要管版本、插件和发布流程，它则有意保持克制。开源免费，主页 http://tiny.cc/markedit。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -661,8 +559,6 @@
   category: 软件
   tags: ["软件", "macOS", "MacSymbolicator"]
   quark_url: "https://pan.quark.cn/s/82e09197ea44"
-  baidu_url: "https://pan.baidu.com/s/1gDwFKsFGRbpDEDFa_bEeCg"
-  baidu_code: "uym6"
   description: "MacSymbolicator 是给苹果平台开发者排查崩溃用的工具。线上崩溃日志捞下来时，里面往往只有一串内存地址，「符号化」就是把这些地址还原成可读的函数名、文件名和行号——这一步做得成做不成，直接决定你能不能看懂问题出在哪。手工做要拼 dSYM 路径、敲命令行，版本多了之后尤其容易搞混归档。MacSymbolicator 把这些做成图形界面：拖入崩溃日志，再给到对应的 dSYM 或 App 归档，它自己匹配符号表并输出可读结果。适合经常处理线上崩溃、需要翻旧版本归档的开发者，能省下不少查 Objective-C 符号的时间。开源免费，主页 https://github.com/inket/MacSymbolicator。macOS 原生包，拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -674,8 +570,6 @@
   category: 软件
   tags: ["软件", "图形与设计", "macOS", "Image optimizer Compression"]
   quark_url: "https://pan.quark.cn/s/f52055dd0c71"
-  baidu_url: "https://pan.baidu.com/s/1hoQnAbu_Zzz1k2HppeUcNw"
-  baidu_code: "88p0"
   description: "这是一款强大的图片无损压缩工具，提供「无损」压缩服务：文件体积可减小 60%-90%，压缩后可能只有原图 1/8 大小而画质完好无损；同时也是图片格式转换工具，转换后清晰度不变并保留原始信息。只需把图片拖入即可完成压缩，无需打开浏览器手动下载。功能：支持 PNG/JPG 图片压缩；可拖入整个文件夹自动识别全部图片；支持批量压缩；压缩后可自动替换原图；支持全天自动压缩，一天可处理约 7200 张；支持图片格式转换。格式范围：压缩支持 PNG、JPG、BMP、TIFF；转换支持 PNG、JPG、HEIC、BMP、TIFF、PSD、AI，以及 DNG、NEF、CR2、ARW、RW2、RAF、CRW、CR3、MRW、PTX、PEF、X3F 等 RAW 格式，Mac 上同样可以直接使用。｜潇 罗"
   date: 2019-02-06
   added: 2026-10-04
@@ -687,8 +581,6 @@
   category: 软件
   tags: ["软件", "游戏", "macOS", "MultiCraft — Build and Mine!"]
   quark_url: "https://pan.quark.cn/s/321dec5070bc"
-  baidu_url: "https://pan.baidu.com/s/1z1lQIAxVFKavILlaJdymBw"
-  baidu_code: "o6ab"
   description: "方块沙盒这类游戏的乐趣，说到底是「自己规划、自己动手」这八个字。MultiCraft 给的是一片由方块构成的世界：往下挖能拿到各种材料，用材料打造工具与武器，再拿工具去搭自己的据点，天黑之后还要应付冒出来的怪物。你可以选创造模式，资源不受限，专心把建筑盖漂亮；也可以走生存模式，材料要省着用、状态要管理、夜里得防着点，先活下来再谈创作。两种模式对耐心和想象力的要求不太一样，后者更容易让人一抬头发现两小时过去了，而且随时可以切换，今天想安安静静盖房子就进创造模式，想找点紧张感再开生存。画面是经典的方块像素风，操作直观，没玩过同类也不难上手。一个人慢慢经营是一种玩法，几个人进同一个世界分工折腾也是一种玩法。它没有强制的主线目标，玩成什么样全看你自己给的任务，这正是沙盒类最容易耗时间的地方。支持 macOS。｜MultiCraft Studio"
   date: 2016-11-14
   added: 2026-10-04
@@ -700,8 +592,6 @@
   category: 软件
   tags: ["软件", "macOS", "Keyboard Cowboy"]
   quark_url: "https://pan.quark.cn/s/e91ea3b2841a"
-  baidu_url: "https://pan.baidu.com/s/16MGTKDeJZoMOjl7WEN6afQ"
-  baidu_code: "sx79"
   description: "Keyboard Cowboy 补的是 macOS 一直没做好的那块：系统级的快捷键与自动化。它分三层用法——最基础是把任意应用启动、菜单命令、文件夹跳转绑定到一个全局快捷键；往上是把一串操作排成流水线，比如启动某个项目时依次打开编辑器、切到指定桌面、摆好窗口、跑起本地服务；最上层是按当前所在 App 或所在桌面自动切换整套快捷键方案。配置存在本地文件里，可以跟着 dotfiles 一起备份。适合重度键盘流，或者觉得启动器只解决了一半流程、窗口管理与多步操作的组合拳还需要自己拼的人。开源免费，主页 https://github.com/zenangst/KeyboardCowboy。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -713,8 +603,6 @@
   category: 软件
   tags: ["软件", "效率", "macOS", "Maccy"]
   quark_url: "https://pan.quark.cn/s/38c43e66883d"
-  baidu_url: "https://pan.baidu.com/s/1LxWcj4-LOsVuvz2LV2_JWA"
-  baidu_code: "q5l5"
   description: "剪贴板管理器做着做着就容易变成另一个笔记应用，Maccy 明确不走这条路——它只让复制历史触手可及，别的都不管。实际用起来最突出的感受是快：不到一秒就能打开并搜索全部历史，思路不会被打断；操作也完全是键盘优先的，输入想找的内容回车即可，双手不必离开键盘。界面是原生极简风格，没有花哨装饰和冗余功能，用起来像系统本来就带着这么一个东西。隐私这块它处理得比较克制：密码管理器里的内容不会被记录，所有数据只存在你的 Mac 上，绝不上传。偏好设置覆盖到每个细节，也能接「快捷指令」做更复杂的自动化。历史条数和保存多久这类边界都能自己定，不想留太多也可以设成自动清理。源码以 MIT 许可发布在 GitHub，App Store 版本的作用主要是支持开发。适合只想要一个顺手历史、不想被附加功能分心的人。｜Antonina Ivanova"
   date: 2020-10-16
   added: 2026-10-04
@@ -726,8 +614,6 @@
   category: 软件
   tags: ["软件", "macOS", "MiniSim"]
   quark_url: "https://pan.quark.cn/s/d52d91b9730f"
-  baidu_url: "https://pan.baidu.com/s/1sj3cyo4yFLR3EyCE4Sh9QQ"
-  baidu_code: "0noc"
   description: "MiniSim 是给移动端开发者准备的菜单栏小工具。Xcode 的设备面板层级深、Android Studio 启动又慢，而日常开发中「把模拟器拉起来看一眼」这件事频率极高——它把这个动作压缩到菜单栏一点：列出本机已创建的 iOS 模拟器与 Android 虚拟设备，点一下就启动，也支持一键关机，还能按运行状态筛选、自定义设备显示名。对 Flutter、React Native 或者原生双端开发的人是日常刚需；偶尔需要截个图验证适配、或者只是想在 iPhone 模拟器里翻一翻的人，也省得先等 Xcode 转圈。开源免费，主页 https://www.minisim.app/。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -739,8 +625,6 @@
   category: 软件
   tags: ["软件", "macOS", "Karabiner-Elements"]
   quark_url: "https://pan.quark.cn/s/4dca82c98051"
-  baidu_url: "https://pan.baidu.com/s/17bYDQ01ly5S2L019aOxXVg"
-  baidu_code: "2b2p"
   description: "Karabiner-Elements 是 macOS 上改键能力的天花板。它的玩法从简单到离谱：把 Caps Lock 改成「单按是 Esc、组合按是 Control」，把闲置的Fn 键变成 Hyper 超键；也能给外接键盘单独配一套方案，笔记本自带键盘保持原样。再往上可以手写 JSON 规则，实现「左右 Shift 单按分别输出左右括号」这类复合修改，规则还能从社区分享的仓库里一键导入。对 HHKB、60% 键盘和 Vim 用户几乎是必备品。要注意它工作在驱动层面，macOS 大版本升级之后有时要等新版兼容。开源免费，主页 https://karabiner-elements.pqrs.org/。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -752,8 +636,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "iTerm2 Buddy"]
   quark_url: "https://pan.quark.cn/s/243cd6a063bd"
-  baidu_url: "https://pan.baidu.com/s/1rqrcKEHlsMVlvhLuSOqjxw"
-  baidu_code: "ls4y"
   description: "在机房、在沙发上、在通勤路上，突然想知道电脑上那个编译跑完没有——这种时刻挺常见。iTerm2 Buddy 把 iPhone 或 iPad 和 Mac 上的终端 iTerm2 连起来，配对之后不必坐回电脑前，掏出手机就能看到终端里正在发生什么：编译有没有结束、跑了半小时的任务是不是还在继续、日志是不是仍在刷，需要的时候也能直接执行操作。要先说清楚它的性质：这是个配套工具，Mac 上必须已经装好 iTerm2、完成配对并安装免费配套组件之后它才工作，单独装手机侧没有任何意义，换句话说它的前提就是你在 Mac 上确实常用 iTerm2。作者是 iTerm2 的作者 GEORGE NACHMAN。适合把大量工作放在终端里、又不总待在电脑前的人。｜GEORGE NACHMAN"
   date: 2026-09-08
   added: 2026-10-04
@@ -765,8 +647,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Keka"]
   quark_url: "https://pan.quark.cn/s/41bea86fb87a"
-  baidu_url: "https://pan.baidu.com/s/1YG2E7W8C4Ok7nrHC8vL-fQ"
-  baidu_code: "k2h9"
   description: "Mac 自带的归档工具能应付 zip，稍微复杂一点的就歇菜：要分卷、要加密，或者对方给了个 7z，全得另外想办法。Keka 处理的就是这件事，而且处理得很集中——把文件压成 zip、7z、tar、rar 这类常见格式，反过来也都能解开，分卷压缩和密码保护这些稍微专业一点的需求同样支持。最顺手的用法体现出它的 macOS 血统：直接把文件拖到 Dock 上的图标，或者在访达里右键选择，不必先打开一个窗口再层层设置参数。日常要打包交付、或者时不时收到同事各种格式的文件时，这几秒钟的差别很明显。它不追求格式覆盖面最广，但常用那几种都稳，界面也只有一层，属于装完就不用再想的工具。作者 Jorge Garcia Armero，官方在 Mac App Store 之外提供免费下载，付费属于自愿性质。｜Jorge Garcia Armero"
   date: 2011-10-27
   added: 2026-10-04
@@ -778,8 +658,6 @@
   category: 软件
   tags: ["软件", "macOS", "MacBox"]
   quark_url: "https://pan.quark.cn/s/77d078b85a67"
-  baidu_url: "https://pan.baidu.com/s/1NCGVOk8aKqFnWteHqR67Hw"
-  baidu_code: "su23"
   description: "想跑一个 DOS 时代的老软件，难点从来不是软件本身，而是先把那台机器造出来：什么机型、多大内存、挂哪块显卡声卡，配置参数和启动选项繁琐到让人半途放弃。86Box 是历史悠久的老式 PC 模拟器，能忠实还原 386、486、Pentium 那一代机器，用来跑 DOS 和 Windows 9x 时代的软件，但一直以难配置著称。MacBox 是它的 macOS 图形界面封装，把这些搬到界面里管理：选机型、定 CPU 和内存、挂载软盘硬盘镜像、挑显卡声卡，统统变成点选，不用再手搓配置文件。适合想让一台老 PC 复活、跑早期软件，或者对旧硬件本身有研究兴趣的人。开源免费，主页 https://github.com/Moonif/MacBox。macOS 原生包，拖入应用程序文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -791,8 +669,6 @@
   category: 软件
   tags: ["软件", "macOS", "Mac Mouse Fix"]
   quark_url: "https://pan.quark.cn/s/01bcfdfbdac8"
-  baidu_url: "https://pan.baidu.com/s/1e4PQi1pvPuBv6ZrWLQyCDg"
-  baidu_code: "w061"
   description: "Mac Mouse Fix 是把普通鼠标拉到 Magic Mouse 手感的那一块拼图。苹果自家的鼠标滚轮体验做得很顺，但换成几十块的第三方鼠标之后，滚动方向反了、加速曲线飘忽、侧键完全没用——它把这些全部接管：滚动方向可与触控板保持一致，加速度可以换成线性，还能给中键、侧键分别指派 Mission Control、前进后退、粘贴等动作。另外它有惯性滚动，习惯了触控板的人换回鼠标不会觉得割裂。适合主力用鼠标、又受不了 macOS 默认那套鼠标体验的人，游戏办公两头跑的场景尤其明显。开源免费，主页 https://macmousefix.com/。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -804,8 +680,6 @@
   category: 软件
   tags: ["软件", "macOS", "KeePassXC"]
   quark_url: "https://pan.quark.cn/s/1d188dd46a9c"
-  baidu_url: "https://pan.baidu.com/s/1r6L1R-60rvReWMXL_7T_Pw"
-  baidu_code: "x9wh"
   description: "把几百个密码交给一家云服务商，本质上是把安全感寄托在别人的安全能力上。KeePassXC 代表了另一种思路：密码库就是本地的一个加密文件，不依赖任何厂商的云服务，文件放在哪、用什么方式同步，全由你自己决定——可以丢进网盘，也可以只存在本机。它源自 Windows 上的 KeePass Password Safe，由社区移植到 Windows、macOS、Linux 三平台。库内支持分组、标签、自定义字段与附件，内置的生成器能产出高强度随机密码，浏览器扩展负责自动填充，也兼容 TOTP 二次验证码。代价是同步这件事得自己想办法，换设备时没有一键登录。适合信不过把密码交给第三方云、又希望多个系统用同一套方案的人。开源免费，主页 https://keepassxc.org/。"
   date: 2026-10-04
   added: 2026-10-04
@@ -817,8 +691,6 @@
   category: 软件
   tags: ["软件", "macOS", "Itsycal"]
   quark_url: "https://pan.quark.cn/s/af01f6acf4c3"
-  baidu_url: "https://pan.baidu.com/s/19fkxH7D-maf4YrgWnOi2iA"
-  baidu_code: "iiq9"
   description: "菜单栏的空间很金贵，多一个图标就少一块地方，所以能只占日期那点宽度的日历才站得住。Itsycal 就是这么一枚小月历：点开给你一个月的视图，顺便列出当天或未来几天的事件，看完就收，不必为了确认今天几号专门打开一个窗口。它的定位很清楚——不接管日程，也不自己做同步，系统日历里各个账户的事件都能显示出来，点某一天还能直接新建事件，等于给已有的日历加了个常驻入口。这种克制反而让它好相处：不抢注意力，也不要求你把日程搬过来。适合已经把系统日历用起来、只差一个随时能瞄一眼的地方的人。开源免费，官网 http://www.mowglii.com/itsycal，代码在 https://github.com/sfsam/Itsycal。macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -830,8 +702,6 @@
   category: 软件
   tags: ["软件", "摄影与视频", "macOS", "Lulucat Flow: Screen Recorder"]
   quark_url: "https://pan.quark.cn/s/83ebeeb41551"
-  baidu_url: "https://pan.baidu.com/s/1KpBbfmGn0W5OXhPBYcIqyA"
-  baidu_code: "zj8p"
   description: "Lulucat Flow 可同时录制多个信号源，并把每一路写入独立文件：选好需要的显示器、摄像头、麦克风和系统声音，按下录制，所有源同步开始。每个源一个文件：两机位加双麦克风的一次录制会生成四个文件，而不是一个混合视频：不做合成、不做混音，文件可直接导入 Final Cut Pro、DaVinci Resolve、Premiere Pro 等任何支持标准 QuickTime 与 AAC 的剪辑软件。信号源：所有连接的显示器（经 ScreenCaptureKit，最高 60fps，可含或不含光标）、所有摄像头（含连续互通相机与 USB 设备，以相机支持的最高格式录制）、每个麦克风与音频接口输入（各为独立音轨）、Mac 播放的系统声音（可录整机或指定应用）。暂停与恢复：暂停时关闭当前文件但保持预览，恢复后在同一个项目中开启新的一组文件；每段录制按启动时刻单独成文件夹，同一文件夹内的文件共享时间轴，可直接并行对齐轨道。工程目录内附 project.json（完整轨道清单）与 AGENTS.md（文件夹结构与文件命名规则说明），文件名不含空格，脚本与编码代理可直接读取处理，`*.WA.mov` 这类通配符即可挑出所有带音轨的视频。录制时可查看每路的实时画面、音量表与分辨率、帧率、编码、文件大小、写入速度，页脚显示剩余磁盘空间与当前码率下的可录时长。｜GOODWRITE LIMITED"
   date: 2026-08-04
   added: 2026-10-04
@@ -843,8 +713,6 @@
   category: 软件
   tags: ["软件", "macOS", "Kap"]
   quark_url: "https://pan.quark.cn/s/a8071c3ed1c9"
-  baidu_url: "https://pan.baidu.com/s/1r0DLvNfm0ThkHnr85GjXFg"
-  baidu_code: "zrmm"
   description: "写文档要贴一段操作演示，提缺陷单要说明 bug 怎么复现，这类需求最想要的其实不是视频，而是一张能直接贴走的动图。Kap 是开源的屏幕录制工具，基于 Web 技术构建，主打把「录下来到发出去」这一段做顺：框选区域或全屏录制，支持麦克风录入，配合音频插件还能录到系统声音；录完自带轻量编辑器，可以裁剪片头片尾、调整分辨率，然后导出 GIF、MP4 或 WebM，配好账号还能一键上传生成短链接。对 Mac 用户来说最实在的一点是 GIF 这条链路终于不用绕，几步就能做出可以直接贴走的动图。它不做长视频剪辑，录几分钟内的短片段才是它擅长的范围。适合开发者、产品经理和做教学内容的创作者。开源免费，主页 https://getkap.co。macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -856,8 +724,6 @@
   category: 软件
   tags: ["软件", "macOS", "Jan"]
   quark_url: "https://pan.quark.cn/s/eb72d9555f21"
-  baidu_url: "https://pan.baidu.com/s/1TzGAgoQ5OaIMJiWXTPViXA"
-  baidu_code: "68wz"
   description: "用大模型最现实的顾虑是数据：对话内容发到别人的服务器上，写的东西算不算外传，各人有各人的判断。Jan 给的是另一条路——一个把大模型搬到本机运行的开源桌面应用，界面和操作习惯接近 ChatGPT，区别在于所有对话、模型和配置都留在自己的电脑上，不用注册账号，断网照样能聊，数据不外传。它通过 llama.cpp 加载 GGUF 格式的开源模型，也能按需接入云端大模型作为备选，本地跑不动的任务可以临时切过去。适合在意隐私、想在飞机或无网环境里写草稿、或者只是想试试本地模型的人。要注意本地推理速度取决于内存和芯片，选模型时留意标注的体积和最低配置，别一上来就拉参数量很大的模型。开源免费，主页 https://jan.ai/。macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -869,8 +735,6 @@
   category: 软件
   tags: ["软件", "macOS", "KeyCastr"]
   quark_url: "https://pan.quark.cn/s/20cbbc7b2d01"
-  baidu_url: "https://pan.baidu.com/s/13HozXGKgvlrV0UMbHePuGw"
-  baidu_code: "0pzj"
   description: "录教程时最容易被忽略的一件事：观众看不见你的手。你按了什么组合键，画面上没有任何提示，看的人只能靠猜。KeyCastr 解决的就是这个——你敲什么，屏幕上就同步显示什么，修饰键会渲染成 ⌘、⇧、⌥ 这类符号，连击序列也能完整展示出来。显示时长、位置、字体、配色和背景都可以按自己的录屏风格调，另有只显示修饰键的简洁模式；可视化插件还能自己写，想做得更贴合也不难。演示时可以把显示层拖到画面里不挡内容的位置，观众看操作和看按键互不干扰。适合做教学内容、内部培训、开源项目演示的人，录完导出来基本就是成品，不用后期再补字幕说明按键。开源免费，主页 https://github.com/keycastr/keycastr。macOS 原生包，下载后拖入应用程序文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -882,8 +746,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "InsomniaZ - Never Sleep"]
   quark_url: "https://pan.quark.cn/s/bec6beae6ea5"
-  baidu_url: "https://pan.baidu.com/s/1nxELsyyK4FYKifJ6QlC4VA"
-  baidu_code: "bvuc"
   description: "你最需要 Mac 保持清醒时它却睡着了？InsomniaZ 来解决：合上盖子、起身离开、开始下载，无论怎样都能让 Mac 保持唤醒。无需复杂设置，菜单栏点一下即用，开启后就可以忘了它。适用场景：合上 MacBook 带去开会却中断了下载；离开工位喝咖啡被 Teams 标记为「离开」；接上外接显示器合盖后屏幕全黑。功能：合盖防睡眠（有无外接显示器、插电或电池供电皆可）；合盖状态下插拔电源仍持续生效；定时会话，设为 15 分钟、1 小时或 8 小时，到点自动关闭，不必惦记；无限模式整夜保持唤醒；全局快捷键在任何应用中即时切换；高级模式可避免办公软件把你判定为空闲。仅驻留菜单栏，同心圆图标一眼看出状态（启用时上色、关闭时低调），无 Dock 图标、无窗口管理负担。底层采用多层防睡眠机制互相备份，任何一层失效都有其他层兜底，被强制休眠后也会自动恢复保护。完全不收集数据：无分析、无追踪、无网络请求，一切本地完成。｜Pawan Dixit"
   date: 2018-12-21
   added: 2026-10-04
@@ -895,8 +757,6 @@
   category: 软件
   tags: ["软件", "macOS", "IINA"]
   quark_url: "https://pan.quark.cn/s/a3710e68737c"
-  baidu_url: "https://pan.baidu.com/s/1RI_qSohS_YNmTBgyq8ogPQ"
-  baidu_code: "9bje"
   description: "Mac 上选播放器一直是个妥协：QuickTime 好看但挑食，VLC 什么都能放但界面像从别的系统搬来的。IINA 的做法是别妥协——底层用 mpv，把 mpv 几乎通吃的解码能力和地道的 Mac 界面合到一处：原生窗口、深色模式、触控栏控制、画中画、Force Touch 快进都贴合 Mac 的使用习惯，在线字幕搜索和逐帧截图这些细节也做得很到位。mkv、HEVC、外挂字幕这些 QuickTime 吃不下的一概不在话下，观感上又比 VLC 更合 macOS 的审美。设置项藏得比较深，但默认值已经调得不错，装完不看设置也完全能用。对大多数人来说，装一个它基本就不用再留第二个播放器了。开源免费，主页 https://iina.io。macOS 原生包，拖入应用程序文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -908,8 +768,6 @@
   category: 软件
   tags: ["软件", "macOS", "HostsX"]
   quark_url: "https://pan.quark.cn/s/6390303c2481"
-  baidu_url: "https://pan.baidu.com/s/1BM0KuQHl2y6BMp7dOV9V9A"
-  baidu_code: "6fmf"
   description: "开发中总有这样的时刻：让某个域名临时指向测试机，或者把线上地址拦回本机做联调。做这件事要手工改 /etc/hosts——开终端、敲 sudo、编辑完还得记得改回来，一旦忘了，过两天排查一个「明明本地是好的」的问题能查半天。HostsX 把这套流程搬进图形界面：事先存好几组配置，本地一套、测试一套、线上验证一套，用的时候点一下切换启用哪一组，不用每次手敲，也不会留下改完忘恢复的隐患。它对准的是需要频繁在几个环境之间来回切换的开发者，做前后端联调时尤其省事。工具本身很轻，只管 hosts 这一件事。偶尔改一次的话系统自带的方式也够用，频率高起来它的价值才显现。开源免费，主页 https://github.com/jiannaiwei/HostsX。"
   date: 2026-10-04
   added: 2026-10-04
@@ -921,8 +779,6 @@
   category: 软件
   tags: ["软件", "摄影与视频", "macOS", "Hyper: VTuber Avatar Studio"]
   quark_url: "https://pan.quark.cn/s/cb144fa700dc"
-  baidu_url: "https://pan.baidu.com/s/1vz9chYYF3h2HPfk5rIORAA"
-  baidu_code: "rvyo"
   description: "面向新手与资深 VTuber 的专业虚拟形象创作工具，支持 Hyper Avatars 与 VRM 文件。创建专属 Hyper Avatar：为 VTubing 定制精美的 3D 形象，所有模型均由自家艺术家制作，全部预绑定骨骼、开箱即用，可从上百科素材中挑选。导入现有模型：已有 VRoid 3D 形象、.VRM 文件或绑定好的 VRChat 角色都能导入 Hyper Studio，在 Studio 里制作 TikTok、Twitch、Twitter 内容或与朋友分享。内置面部与手部动作捕捉：仅用摄像头即可开播，手部捕捉等更多能力持续更新。虚拟摄像头：把 Hyper Avatar 接入 Twitch、YouTube、Zoom 等任意支持摄像头输入的应用，兼容 OBS、StreamLabs，可用绿幕背景将形象叠加到直播、游戏或视频中；进入 Zoom、Discord、Google Meet、Microsoft Teams 会议也不在话下。内置上百种表情与姿势，让形象唱歌、跳舞、打斗。多模型、多角色、多套服装可在同一处统一管理。订阅 Hyper Pro 解锁完整工具，Mac 上可直接开播。｜Hyper Online, Inc."
   date: 2024-03-28
   added: 2026-10-04
@@ -934,8 +790,6 @@
   category: 软件
   tags: ["软件", "macOS", "Ice"]
   quark_url: "https://pan.quark.cn/s/2f056d98424a"
-  baidu_url: "https://pan.baidu.com/s/1p8m4lRnQIHGGWx8msHw6vg"
-  baidu_code: "qs31"
   description: "Ice 是整理 macOS 菜单栏的工具。Mac 用久了，右上角会被各种图标塞满，系统自带的收纳能力却很有限。Ice 的做法是给菜单栏划一道可拖动的分隔线：常用图标留在左边，不常用的收进右边，需要时点一下展开，或者按快捷键临时呼出。图标可以逐个设为「总显示」「自动隐藏」或「从不显示」，也能设定某些 App 在有活动时才露脸。习惯之后桌面上方会清爽很多，截图和录屏时也不用再临时去关一堆菜单栏。适合已经被菜单栏图标挤到放不下、又不想一个个进 App 设置里翻开关的人。开源免费，主页 https://github.com/jordanbaird/Ice。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -947,8 +801,6 @@
   category: 软件
   tags: ["软件", "macOS", "Hoppscotch"]
   quark_url: "https://pan.quark.cn/s/dca4ff659b8b"
-  baidu_url: "https://pan.baidu.com/s/1zMBKaSoIzpkL3I5vj5ddEw"
-  baidu_code: "8jod"
   description: "重量级 API 客户端启动一次要等十几秒，对只是想发一个请求看看返回的人来说太重了。Hoppscotch 主打的就是轻快：网页版打开就能发请求，也提供桌面客户端和命令行工具。能力上并不含糊——REST、WebSocket、GraphQL、Socket.IO 等多种协议都支持，请求可以分组存成集合、配上环境变量，比如区分本地、测试、生产三套地址，切换时不用逐个改 URL；调通的请求还能一键生成多种语言的调用代码，写对接代码时很省事。界面信息密度高，上手快，但高级功能藏在折叠面板里，要翻一翻才找得到。团队模式下可以共享集合协作，自部署时数据留在自己的服务器上。适合嫌重量级客户端启动慢、又不想把接口信息交到别人云上的开发者。开源免费，主页 https://hoppscotch.io。"
   date: 2026-10-04
   added: 2026-10-04
@@ -960,8 +812,6 @@
   category: 软件
   tags: ["软件", "macOS", "Hello HTTP"]
   quark_url: "https://pan.quark.cn/s/b42906c5e1ea"
-  baidu_url: "https://pan.baidu.com/s/1AfD7ohLdzY2WaGXmK_jFAQ"
-  baidu_code: "0281"
   description: "接口调试工具这几年纷纷往云端走，请求记录、环境变量、团队集合都存在别人的服务器上，对不少团队来说是实打实的顾虑。Hello HTTP 站在反面：一款跨平台的开源 HTTP 调试客户端，数据全部留在本机，坚持不上云。能力上并不缩水——HTTP 与 REST API、WebSocket、GraphQL（含订阅）以及 gRPC 端点都能测，定位就是 Postman、Insomnia 那一类的本地开源替代品。macOS、Windows、Linux 三端均已稳定发布，本条为 macOS 版安装包，下载后拖入应用程序文件夹即可使用。要提醒的是安装包未经开发者签名，首次打开需要在系统设置里手动放行一次。对担心接口信息外泄、又需要覆盖多种协议的开发者，它的取舍刚好对路。开源免费，主页 https://sunny-chung.github.io/hello-http/。"
   date: 2026-10-04
   added: 2026-10-04
@@ -973,8 +823,6 @@
   category: 软件
   tags: ["软件", "音乐", "macOS", "The Jukebox App - Desktop"]
   quark_url: "https://pan.quark.cn/s/a6c8245822e0"
-  baidu_url: "https://pan.baidu.com/s/1p53H8jYC91_NjTSJ92C3vQ"
-  baidu_code: "z3ja"
   description: "聚会上最麻烦的从来不是没歌，是谁来放歌。把手机递来递去排队点，或者让某个人全程当 DJ，都容易有人不满意。The Jukebox App 换个做法：以 Spotify 为曲库，在 Mac 上生成一个房间，宾客扫码或输入房间码就能用手机加入，各自把想听的加进队列，还能给别人点的歌投票，票数高的自动往前排。这样既不会出现某个人霸占播放列表，也不用为了照顾所有人的口味而反复插播。需要留意的是，发起房间的那个人得有 Spotify Premium 会员，普通宾客不必付费。它适合的场合很具体：家里聚会、生日、办公室活动这类一屋子人、口味又杂的场景，与其争论放什么，不如让大家自己投。房间关掉之后队列也就散了，它不是一个用来长期维护歌单的工具，只服务当晚那一场。Mac 端作为播放主机。｜Benjamin Barnett"
   date: 2024-08-25
   added: 2026-10-04
@@ -986,8 +834,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Compress Videos: Handbrake"]
   quark_url: "https://pan.quark.cn/s/a5094f52799d"
-  baidu_url: "https://pan.baidu.com/s/1388bxj_2G57YCnRPxAFSCw"
-  baidu_code: "i5g9"
   description: "用智能视频压缩为 iPhone 腾出空间：照片和视频可能占掉 iPhone 高达 90% 的存储，空间告急时，就该压缩视频、缩放超大文件而不牺牲画质了。Video Compressor Pro 是一款功能强大又易用的视频与文件压缩工具，借鉴 HandBrake 等工具的先进压缩技术，可将 300MB 的视频压到 30MB 并保持 Full HD 分辨率。支持几乎所有主流格式的压缩、转换与缩放，可用现成预设也可自定义分辨率、码率、压缩速度乃至目标文件大小；保存前能预览压缩后的体积，并提供高、普通、低三档画质。其他功能：把视频裁剪到任意长度；剪切后转换不额外损失画质；内置音频提取器，一键把视频转为 MP3；支持 MP4、MOV、AVI、MKV 等格式，压缩后可立即分享，为 iPhone 释放存储空间，Mac 上同样可用。｜Trang Nguyen Sy"
   date: 2021-02-16
   added: 2026-10-04
@@ -999,8 +845,6 @@
   category: 软件
   tags: ["软件", "macOS", "Freeter"]
   quark_url: "https://pan.quark.cn/s/76c09b69fe0f"
-  baidu_url: "https://pan.baidu.com/s/14O-eQodjhwQQZjBVwOzC6A"
-  baidu_code: "ktt5"
   description: "开工前那十分钟往往是这么耗掉的：打开项目文件夹、翻出那几个参考网页、启动要用的软件、把素材窗口摆好，等真正开始做事，状态已经散了一半。Freeter 想消灭的就是这段准备时间。它的单位是工作区——一个项目通常牵着一堆文件夹、几个常用网页、特定软件和一批待办，它把这一整套打包成一个工作区，点一下全部就位，切走时当前这套自动收起来，下次回来还是原样，工作区之间切换就是一次点击的事，桌面不会留下上一件事的痕迹。它也允许只用其中一部分，比如把常用文件夹钉在一个总是可见的面板上，或者干脆当成随呼随到的暂存区。适合手上同时转着好几个项目、上下文来回切换的人，做设计、剪辑、策划这类素材散在各处的工种尤其省事。开源免费，主页 https://freeter.io/。macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1012,8 +856,6 @@
   category: 软件
   tags: ["软件", "macOS", "Hammerspoon"]
   quark_url: "https://pan.quark.cn/s/84306791d1f7"
-  baidu_url: "https://pan.baidu.com/s/1MC2nEjj7szULp0QvFlzFdg"
-  baidu_code: "sx40"
   description: "Hammerspoon 是 macOS 上的桌面自动化框架，用 Lua 书写。它把窗口布局、应用切换、快捷键重绑定、剪贴板历史、菜单栏自定义、Wi-Fi 与电源状态监听这些系统接口统一暴露出来，几十行 Lua 就能拼出自己想要的行为：一个按键把窗口摆到左半屏并顺手呼出终端、连上公司网络自动开勿扰并调低音量、给常用长句绑个全局快捷键。它是当年 Mjolnir 的延续，配置即代码，改完重载即刻生效。适合愿意折腾、希望电脑完全按自己习惯运转的人；只想点几下鼠标就配置好的话，它的门槛偏高。开源免费，主页 http://www.hammerspoon.org。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1025,8 +867,6 @@
   category: 软件
   tags: ["软件", "macOS", "Flameshot"]
   quark_url: "https://pan.quark.cn/s/065d3a45378e"
-  baidu_url: "https://pan.baidu.com/s/1t-S7Jw9gep9f5-ORSO0TMw"
-  baidu_code: "pmu0"
   description: "Flameshot 是一站式截图工具，Linux 上尤其普及，Windows 和 macOS 也能用。它和系统自带截图的差别在于「截完立刻能改」：框选范围之后直接进入标注界面，箭头、方框、马赛克、模糊、高亮、序号、文字注释都摆在旁边，改完可以另存、复制到剪贴板，配好图床还能一键上传生成分享链接。选区会自动吸附窗口边界，也能按上一次的区域重复截图，批量做教程配图时省事不少。适合写文档、提缺陷单、给同事远程解释问题、或者做技术分享的人——截图这件小事一次做完，不用再打开第二个软件。开源免费，主页 https://flameshot.org。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1038,8 +878,6 @@
   category: 软件
   tags: ["软件", "macOS", "Espanso"]
   quark_url: "https://pan.quark.cn/s/3d97ce0d7e0b"
-  baidu_url: "https://pan.baidu.com/s/1Gnsg3slmsHc_x8Lq7IfJhg"
-  baidu_code: "tbw8"
   description: "一天里有多少内容是重复输入的？邮箱签名、收货地址、公司抬头、客服那几句固定回复，每次都从头打一遍。Espanso 是跨平台的文本扩展器，做法很朴素：敲一串缩写，立刻展开成你要的那段内容，比如把签名绑到 :sig、地址绑到 :addr。更进一步还能做动态展开——插入当天日期、读取剪贴板内容，或者先执行一段脚本再把结果贴进来，重复劳动因此能压到几个字符。它是隐私优先的设计，配置和展开全在本地完成，不联网也不上传，用 Rust 写成，占用很低。相比系统自带的文本替换，它跨平台、支持脚本，也更容易按项目分组管理；触发词自己定，避开正常输入里会出现的组合就行。适合经常重复输入同质内容的写作、客服、开发工作。开源免费，主页 https://espanso.org。macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1051,8 +889,6 @@
   category: 软件
   tags: ["软件", "效率", "macOS", "Bitwarden"]
   quark_url: "https://pan.quark.cn/s/a0e3d15b21b0"
-  baidu_url: "https://pan.baidu.com/s/1LseG4xBqoVrCZ2yjJBZq9w"
-  baidu_code: "njxi"
   description: "被 The Verge、U.S. News & World Report、CNET 等媒体评为最佳密码管理器。随时随地跨无限设备管理、存储、保护并共享无限量密码。Bitwarden 为每个人提供开源密码管理方案，无论在家、办公还是移动中。可按各网站的安全要求生成强随机唯一密码；Bitwarden Send 能把加密信息（文件或明文）快速直达任意收件人；Teams 与 Enterprise 方案便于企业内安全共享密码。世界级加密：密码以先进的端到端加密保护（AES-256、加盐哈希与 PBKDF2 SHA-256），数据始终安全私密。内置密码生成器；得益于全球社区，已支持 40 种语言并持续增加；跨平台应用覆盖任意浏览器、移动设备与桌面系统，敏感数据可在同一保险库内安全共享，Mac 上有专属桌面版。｜Bitwarden Inc"
   date: 2018-02-28
   added: 2026-10-04
@@ -1064,8 +900,6 @@
   category: 软件
   tags: ["软件", "macOS", "Elephicon"]
   quark_url: "https://pan.quark.cn/s/e2efab4229ac"
-  baidu_url: "https://pan.baidu.com/s/1HZ8ItY0hKg6I6jJNAIu7vw"
-  baidu_code: "ohgc"
   description: "Elephicon 是命令行工具 png2icons 的图形界面封装。做跨平台桌面应用时图标是个烦环节：macOS 要 .icns、Windows 要 .ico，各自还要求把一整套不同尺寸塞进同一个文件。用它的话，把一张 PNG（建议 1024×1024 起步）拖进窗口，一次性就把各平台需要的图标文件和尺寸序列生成出来，省掉敲命令行参数和背尺寸清单的功夫。适合正在用 Electron、Tauri、Flutter 打包桌面应用的开发者，走到发布环节会需要它。开源免费，主页 https://github.com/sprout2000/elephicon。macOS 原生包，拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1077,8 +911,6 @@
   category: 软件
   tags: ["软件", "macOS", "Diffusion Bee"]
   quark_url: "https://pan.quark.cn/s/423f58cbab17"
-  baidu_url: "https://pan.baidu.com/s/14_1_XUjyfAcaR1xWSjP2-g"
-  baidu_code: "8xe6"
   description: "本地跑 AI 绘画，卡住大多数人的从来不是模型，而是环境：装 Python、配依赖、敲命令行，还没出图人已经放弃了。Diffusion Bee 把 Stable Diffusion 打包成一个 macOS 图形界面，下载打开就能用——写好提示词，挑一下模型和步数，点几下就出图，图生图、局部重绘和放大也都在界面里，完全不必碰终端。生成结果留在本地，方便回头对比不同提示词和步数的差别。所有计算都在本机完成，不用联网，也不必为每一次生成付费，对在意隐私、或者只是想随手试几张效果的人很友好。要提前说清楚的是它对内存和磁盘都不算省，出图速度完全取决于机器配置，老机器上可能慢到需要耐心。如果只是偶尔想出几张图，它比折腾命令行环境划算得多。开源。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1090,8 +922,6 @@
   category: 软件
   tags: ["软件", "macOS", "DevToysMac"]
   quark_url: "https://pan.quark.cn/s/77a864666aec"
-  baidu_url: "https://pan.baidu.com/s/14I2dc7i0HIY0W7N8uiCubQ"
-  baidu_code: "pcm0"
   description: "DevToysMac 是 Windows 上 DevToys 的 macOS 版本，把开发过程中那些「偶尔要用一次」的零碎工具收在同一个窗口里：JSON、XML、YAML 的格式化与校验，Base64 与 URL 编解码，哈希和 HMAC 计算，UUID 生成，JWT 解析，时间戳转换，正则测试，Markdown 预览，图片压缩与格式转换，色值换算等等。以前这些需求多半要临时打开在线工具网页，既慢又担心把敏感数据贴到别人服务器上，它在本地跑完就完事。写代码时经常要临场转个数据、解段 token 的人特别合适，不必为了低频需求装一堆小软件。开源免费，主页 https://github.com/DevToys-app/DevToysMac。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1103,8 +933,6 @@
   category: 软件
   tags: ["软件", "效率", "macOS", "Cyberduck"]
   quark_url: "https://pan.quark.cn/s/c3920e5b5e64"
-  baidu_url: "https://pan.baidu.com/s/1ehGuNUu6Kr5cE1gUENbFtA"
-  baidu_code: "3aq6"
   description: "Cyberduck 是一款文件浏览器，支持 FTP、SFTP、WebDAV、Amazon S3、OpenStack Swift、Backblaze B2、Microsoft Azure 与 OneDrive、Google Drive 和 Dropbox，可向虚拟主机服务商传输文件，也能以同样顺手的界面和随手可取的标签连接 Rackspace Cloud Files、Google Storage、Amazon S3 等云存储账户。支持拖放下载、上传、移动与复制文件，树状视图便于高效浏览大型目录结构；传输管理轻松，可与本地目录双向同步。修改文件时能与任意外部编辑器无缝联动，快速改动内容。还可配置 Amazon CloudFront 与 Akamai CDN，从边缘节点向全球分发文件，Mac 上开箱即用。｜David Kocher"
   date: 2011-03-01
   added: 2026-10-04
@@ -1116,8 +944,6 @@
   category: 软件
   tags: ["软件", "效率", "macOS", "CotEditor"]
   quark_url: "https://pan.quark.cn/s/d67d7b90f4bf"
-  baidu_url: "https://pan.baidu.com/s/1Z7BmOJ4mFhg7fJlzfo9czw"
-  baidu_code: "tbvi"
   description: "CotEditor 是一款轻量级纯文本编辑器，适合源代码、笔记、Markdown、网页内容等多种场景。界面干净利落，让日常编辑简单舒适；需要进阶操作时，强大的工具随时待命。专为 Mac 打造：只面向 macOS，从一开始就遵循系统习惯，与深色模式、版本、iCloud、VoiceOver 无缝集成，设置窗口也放在 Mac 用户习惯的位置。快速、专注、能扛真活：启动迅速，界面简洁有条理；内置 70 多种语言的语法高亮与基于语法的大纲菜单，一眼看清文档结构；还提供强大的查找替换（支持正则）、多光标编辑、脚本支持，以及把细节调到顺手为止的灵活配置。对文本讲究：从文本编码、换行符到 Unicode 规范化与各类书写系统都细致处理，可显示不可见字符，在换行符混用或存在无法以所选编码保存的字符时给出警告，并提供字符检查器与放大字形预览。｜Mineko IMANISHI"
   date: 2015-10-10
   added: 2026-10-04
@@ -1129,8 +955,6 @@
   category: 软件
   tags: ["软件", "开发工具", "macOS", "Koder Code Editor"]
   quark_url: "https://pan.quark.cn/s/f4104ea610ec"
-  baidu_url: "https://pan.baidu.com/s/1KuM6ZGqr2jI1X6jHNHnhUA"
-  baidu_code: "ci62"
   description: "Koder 是 iPad 与 iPhone 上的代码编辑器，曾在 82 个国家被 App Store 列为「编辑精选」，被 GIZMODO 评为当日精选应用。媒体评价：「iPad 上的 Koder：极客们欢呼吧！你可以在 iPad 上写代码了」「界面简洁而高效，专为触屏编辑设计，售价仅 5.99 美元，性价比出色」「支持多种编程语言的成熟代码编辑器」。功能包括：80 多种语言的语法高亮（actionscript、ada、apache、applescript、awk、batch、c、cobol、coffeescript、cpp、csharp、css、elixir、fortran、haskell、html、java、javascript、jsp、latex、less、lisp、lua、markdown、matlab、mysql、objectivec、pascal、perl、php、plist、postscript、powershell、prolog、python、r、ruby、sass、scala、shell、sql、swift 风格脚本、tcltk、vb、verilog、vhdl、xml 等）；代码自动补全；代码片段管理；标签页编辑；查找与替换；多种编辑器主题；支持连接远程与本地文件。无论坐在桌前还是路上，都能随时随地写码，Mac 版同样可用。｜Reny Mustika"
   date: 2018-12-23
   added: 2026-10-04
@@ -1142,8 +966,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Clop"]
   quark_url: "https://pan.quark.cn/s/8ff8e54ce269"
-  baidu_url: "https://pan.baidu.com/s/1CSSR40Uf0_6NI6FgLw9s1w"
-  baidu_code: "e67i"
   description: "在法国买烟不是走进便利店就能解决的事。香烟基本只挂在 Buraliste 这块招牌下的烟草店出售，而这类店关门早，周日和深夜经常整条街都找不到一家开着的。找店这件事看着小，真站在街上快十点了才发现附近都关门，就知道有多烦，于是「附近哪间还营业」成了本地人和游客都真实会遇到的问题。Clop 只做这一件事：列出你周围的烟草店，并标出哪些还没打烊。它的局限也很明显：覆盖范围只有法兰西岛，也就是大巴黎地区，离开这里或者出了法国就完全用不上。另外上架时间比较早，地图数据是否还在维护，建议先实际搜一次再决定要不要依赖。它属于那种装上去可能一个月用不上、真用上时特别救命的工具，全部功能就一屏，没有账号和设置。如果你正好在大巴黎生活或短期停留，值得留着。macOS 可用。｜DatsChill"
   date: 2014-11-13
   added: 2026-10-04
@@ -1155,8 +977,6 @@
   category: 软件
   tags: ["软件", "游戏", "macOS", "Bruno Reels Casino"]
   quark_url: "https://pan.quark.cn/s/906631a0f47a"
-  baidu_url: "https://pan.baidu.com/s/1wI5LYtAipcSbmzLCinPkcw"
-  baidu_code: "nzmb"
   description: "先说清楚性质：这不是能靠技术赢的游戏。Bruno Reels Casino 走的是赌场老虎机那一套，选一个主题的盘面，押注、旋转，看符号有没有连成线，结果完全由运气决定，中间没有任何可操作的技巧空间。它做得比较用心的地方在观感——盘面主题准备了多种，转轮滚动的手感和动画收拾得顺滑，符号配色偏鲜艳，另外安排了任务清单和限时活动，每隔一阵给点奖励，让你有继续转下去的理由。也正因为内部设着投入与产出的循环，玩之前最好先给自己划一条线：限定时间、限定花销，就当消遣，别指望靠它回本。未成年人不要碰这类内容。从玩法深度上说，它和同类产品差别不大，挑的其实是你更喜欢哪套视觉和节奏。总的来说，适合想在没有压力的情况下打发十几分钟、又喜欢这种明亮视觉的人，macOS 上可以直接运行。｜EverPrime Futures Inc."
   date: 2026-05-16
   added: 2026-10-04
@@ -1168,8 +988,6 @@
   category: 软件
   tags: ["软件", "macOS", "Browserosaurus"]
   quark_url: "https://pan.quark.cn/s/6fe751342a77"
-  baidu_url: "https://pan.baidu.com/s/1tIKDCty0Du3kEggnoU3C0A"
-  baidu_code: "1cw9"
   description: "Browserosaurus 解决的是一个很小却每天都遇到的麻烦：Mac 上点开链接只会用系统默认浏览器。把它装好并设为默认之后，每次点击链接都会弹出一个选择面板，本机装的 Safari、Chrome、Firefox、Edge 之类全在上面，方向键加回车就能挑。它还能按域名或 URL 规则记住偏好——公司内网固定走某浏览器，个人邮箱固定走另一个。对同时装着好几个浏览器、工作账号和个人账号必须严格分开的人，这一个环节能省下大量来回复制粘贴。它也支持把链接直接复制到剪贴板，方便临时存着。开源免费，主页 https://browserosaurus.com。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1181,8 +999,6 @@
   category: 软件
   tags: ["软件", "体育", "macOS", "Brooklyn Nets"]
   quark_url: "https://pan.quark.cn/s/cb6a84e4391d"
-  baidu_url: "https://pan.baidu.com/s/16tEDkwuSEoU3AgDen-d6xQ"
-  baidu_code: "k7y4"
   description: "布鲁克林篮网的官方应用，服务的其实是两类人：要去现场的和不在现场的。前者可以在里面几秒内买票、管理球票并直接加进电子钱包，季票会员还能用上 My Brooklyn Rewards 的专属奖励；后者靠的是实时比赛数据——逐回合的文字播报、升级过的球员资料，以及用焦点图块和脉冲指示器标出现在正打到关键时刻的动态视觉，路上刷一眼就知道这一节发生了什么。随后的对阵用日历视图一屏看完，比分和动态推送也会及时送到，推送可以按类型关掉，不想被促销打扰也不影响看比分。内容层面做了个性化卡片和定向促销，整体比早年的官方应用轻快，加载和数据丰富度都有提升。无论坐在场边还是通勤路上刷比分，它想做的是让你跟上每一次扣篮、三分和压哨球。另有 macOS 版本，支持 Mac。｜Brooklyn Nets"
   date: 2012-10-31
   added: 2026-10-04
@@ -1194,8 +1010,6 @@
   category: 软件
   tags: ["软件", "效率", "macOS", "Corkulous - Your Ideas"]
   quark_url: "https://pan.quark.cn/s/eb65df485aa0"
-  baidu_url: "https://pan.baidu.com/s/1gpht-_8to4uMpNQqDS7p2A"
-  baidu_code: "xv9s"
   description: "Corkulous（Mac 与 iOS 版）是以自然方式收集、组织和分享创意的绝妙工具，Mac、iPhone 或 iPad 用户都值得拥有！它是一款多用途看板应用：可在看板上放置便签、标签、照片、联系人、形状、连线、PDF、链接预览与任务，还有强大的手绘工具，能用手势快速画出形状和线条。创意可以集中在一块看板上，也能分散到多块看板甚至嵌套的子看板，每块看板都有充足空间与分辨率。可用作软木板、流程图、创意墙、相册、提醒板、思维导图、目标管理、规划表、愿景板、待办清单、备考工具、课程规划等。功能：支持 PDF、视频、链接预览、Emoji、连线、便签、标签、照片、联系人、任务、索引卡、箭头文字与 40 多种形状；手绘工具支持形状与线条手势；可导出分享 PDF、PNG、文本与 Corkulous 文件；通过 iCloud 与 Dropbox 同步看板并可与其他用户共享；强大的搜索能力；完善的拖放支持；深色与浅色模式；iOS/Mac 多窗口；Markdown 文本格式；多档看板分辨率；自由平移与缩放；可把看板存为模板复用；支持嵌套看板；生物识别锁定内容；Mac 上支持触控栏与菜单快捷操作；iOS/Mac 均支持键盘快捷键。｜Corked Labs, LLC"
   date: 2017-02-14
   added: 2026-10-04
@@ -1207,8 +1021,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Hidden Bar"]
   quark_url: "https://pan.quark.cn/s/66c23a8c264c"
-  baidu_url: "https://pan.baidu.com/s/1L4JHIO7R2HG7PdZjug0XNg"
-  baidu_code: "219p"
   description: "Mac 菜单栏右侧挤满图标，是装东西太多的必然结果：输入法、云盘、VPN、电池、时间，一排看过去连时钟都快没地方了。Hidden Bar 的做法很朴素——把不常用的图标收起来，只在需要的时候露出来。隐藏和展开都能用全局快捷键触发，也可以设定成展开后若干秒自动收回去，几秒到一分钟可选，还能让它随登录自动启动，开机不用再手动点一次。小屏用户有个专门的模式：展开时占用整条菜单栏，图标不再挤成一团，13 英寸 MacBook Pro 和 MacBook Air 上差别最明显。新版把始终隐藏改得顺手了些，不用重启应用，图标样式也跟着最新 macOS 做了更新，另外支持阿拉伯语等从右向左书写的语言。需要更多信息可以联系 macos@d.foundation。｜Dwarves Foundation"
   date: 2019-02-19
   added: 2026-10-04
@@ -1220,8 +1032,6 @@
   category: 软件
   tags: ["软件", "macOS", "Calendr"]
   quark_url: "https://pan.quark.cn/s/d288f8bedd86"
-  baidu_url: "https://pan.baidu.com/s/1GdDQl1M59uRXHsQLa1joAA"
-  baidu_code: "p17n"
   description: "为了确认下一场会几点开始，专门打开日历应用占一个窗口，是很常见的低效动作。Calendr 把这件事收到了菜单栏里：平时一眼能看到接下来的日程与提醒，点开则展开完整的月历视图，看完就收，桌面上不留窗口。它的功能取向很克制——不做事件编辑这类重活，只负责把日程摆在你随时能看到的地方。有事件的那几天在格子上带标记，也能显示周数，整体观感与 macOS 原生贴合。它读的是系统日历里的事件，装好授权即可，不需要再维护一份日程。技术上采用 MVVM 架构，混合了 RxSwift、AppKit 与 SwiftUI，属于挺典型的现代 Mac 开源项目。适合不想让日历占着桌面空间、习惯把信息集中在菜单栏的人。开源免费，主页 https://github.com/pakerwreah/Calendr。macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1233,8 +1043,6 @@
   category: 软件
   tags: ["软件", "生活", "macOS", "Barton & Gray Clubhouse"]
   quark_url: "https://pan.quark.cn/s/9f2b6b82c58e"
-  baidu_url: "https://pan.baidu.com/s/1epB11sCs-pGX95Z4_qFVmQ"
-  baidu_code: "eqvk"
   description: "这是 Barton & Gray Mariners Club 给自己人用的 App，一家会员制游艇俱乐部。它把会员平时要打电话或发邮件办的事收拢到手机上：查看自己这份会籍包含哪些权益、直接联系俱乐部、管理日程、安排下一次出海，都能在里头完成。船员那侧是另一套用途——看自己的排班、提交船长报告，属于工作工具。没有会籍的人装上也只能浏览俱乐部介绍，了解这家俱乐部具体做什么，操作空间基本为零，这也是这类私域应用的常态：它不是给公众准备的，价值完全取决于你是不是会员。另有 macOS 版本，可以在 Mac 上查看日程与俱乐部信息，对习惯在电脑前安排行程的人比掏手机方便些。如果你正在考虑加入这类俱乐部，先装来看看它做什么，倒是个低成本的了解方式。｜Barton & Gray Mariners Club"
   date: 2021-05-16
   added: 2026-10-04
@@ -1246,8 +1054,6 @@
   category: 软件
   tags: ["软件", "开发工具", "macOS", "Free Ruler"]
   quark_url: "https://pan.quark.cn/s/f12c1dab66ae"
-  baidu_url: "https://pan.baidu.com/s/1rpVEECGPLVf7KzBi7n4e9g"
-  baidu_code: "55ft"
   description: "设计稿上标着 300 像素宽，屏幕上到底多宽？纸质稿要量毫米，网页要量像素，这两件事系统都不管。Free Ruler 在屏幕上摆出横竖两把标尺，颜色随你挑，单位在像素、毫米、英寸之间循环切换，量什么用什么。标尺可以浮在其他应用之上，这也意味着你能在任何软件上面直接量，不需要先截图再导入别的工具里比对，省掉中间那几步。两把既能分开拖动，也可以绑成一组整体移动；需要精确对齐时把原点挪到鼠标当前位置，弄乱了按一下组合键复位。新版把成组标尺合成了一个窗口，横竖两条臂也能各自单独隐藏，量纯宽度时不用再看着竖臂碍事，标尺的投影同样可以关掉，深色背景下看得更清楚。它用途非常单一，但对做前端、做平面、经常要核对尺寸的人来说，随手能量一下比打开专业软件快得多。macOS 专用。｜Pascal Balthrop"
   date: 2019-10-13
   added: 2026-10-04
@@ -1259,8 +1065,6 @@
   category: 软件
   tags: ["软件", "开发工具", "macOS", "Flycut (Clipboard manager)"]
   quark_url: "https://pan.quark.cn/s/14cfa8b2edb5"
-  baidu_url: "https://pan.baidu.com/s/1-zCF3oKUDeKOtuEQCLuwRw"
-  baidu_code: "crc9"
   description: "写代码的时候最烦的不是写，是来回复制：这一段刚从文档里拷下来，下一段又要从另一个文件里取，等你想粘回第一段，剪贴板早被冲掉了。Flycut 的做法是把每次复制的内容按顺序存成一条历史，需要的时候用 Shift-Command-V 沿着历史往回逐个粘贴，而不用反复切窗口去重新复制。它源自开源项目 Jumpcut，本身同样开源，仓库在 github.com/TermiT/flycut，定位上更偏向开发者——常处理的是代码片段、命令行、日志行这类碎片，而不是整段文章。默认的历史长度和热键都能在偏好设置里按自己习惯调，不必迁就它。如果你习惯开着好几个终端和编辑器来回搬东西，装上之后那种「刚才那行命令去哪了」的时刻会明显变少。macOS 专用，常驻后台，界面只有一栏列表。｜General Arcade (Pte. Ltd.)"
   date: 2011-06-08
   added: 2026-10-04
@@ -1272,8 +1076,6 @@
   category: 软件
   tags: ["软件", "macOS", "CalendarX"]
   quark_url: "https://pan.quark.cn/s/8456b9dde9d0"
-  baidu_url: "https://pan.baidu.com/s/1DJCep6Nbj1I1sk3mCVEXMQ"
-  baidu_code: "xfsi"
   description: "想知道今天是几号、下周三是不是节假日，其实不需要打开一整个日历应用——但系统偏偏没有更轻的入口。CalendarX 就是菜单栏里的一枚小日历：点开能看到整月视图和当天日期，瞄一眼就收，不必去翻「日历」或者解锁手机。它的取舍很明确：不做账号同步，也不做事件编辑，只负责把日期摆在你随时能看到的地方，和系统日历配合使用最合适。它不显示日程内容，所以如果你要的是「下一场会几点」，应该去找带事件列表的那类工具。这种工具看着简单，实际能省掉不少细小的打断——写周报排期、安排上线时间、确认下一个工作日，都不用跳出当前在做的事。适合习惯把信息集中在菜单栏、讨厌桌面上堆窗口的人。开源免费，主页 https://github.com/ZzzM/CalendarX。macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1285,8 +1087,6 @@
   category: 软件
   tags: ["软件", "macOS", "BatteryBoi"]
   quark_url: "https://pan.quark.cn/s/bacfe01bce7e"
-  baidu_url: "https://pan.baidu.com/s/1OYANl0Mx9jWyKbPtrW_1fA"
-  baidu_code: "xlb5"
   description: "系统菜单栏那个电池图标只告诉你还剩百分之几，剩下的信息一概没有，而这恰恰是笔记本用户真正想知道的部分。BatteryBoi 把这块做细了：剩余电量、充满还需要多久、当前功耗、电池健康状态，都能直接看到；充电提醒和阈值通知也能按自己的习惯设，比如充到八成就提醒拔掉，或者低于某个百分比时提示。对长期插着电源当主机用的人，它能帮着判断该不该偶尔拔一次；对天天带机器外出的人，功耗数据能让你明白这趟为什么掉电特别快。健康度这一项尤其适合二手入手的机器，买之前看一眼心里有底。工具本身轻量，常驻菜单栏几乎感觉不到，界面也干净。它不做省电优化和充电控制，只负责把数据摆在你眼前，判断留给你自己。开源免费，主页在 batteryboi.ovatar.io。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1298,8 +1098,6 @@
   category: 软件
   tags: ["软件", "音乐", "macOS", "Background Music: DJ Radios"]
   quark_url: "https://pan.quark.cn/s/46950ed71d32"
-  baidu_url: "https://pan.baidu.com/s/10N9igBsdWQEirWTgghRUqA"
-  baidu_code: "reui"
   description: "面向商业场所的专业背景音乐：DJ Radios 提供 DJ 精选的未发行音乐，专为咖啡馆、餐厅、零售店等商业场所打造。曲目不受表演版权组织（PRO）管理，可作为传统音乐授权的合法替代或补充。为什么选 DJ Radios：只放未发行音乐，所有内容由独立 DJ、制作人、艺人与厂牌直接提供并授权商业播放；PRO 合规更简单，可生成记录订阅周期的官方证明，向检查人员出示，覆盖 ASCAP、BMI、SESAC（美国）、PRS for Music（英国）、SOCAN（加拿大）、APRA AMCOS（澳新）等全球主要组织，一键证明你的音乐不在 PRO 曲库内；一份订阅在 iPhone、iPad、Mac 与 Apple TV 通用；全天候不间断直播 DJ Set，为公共空间量身打造，不重复、不中断。免费档提供 1 小时试用与全品质收听；周订阅含 7 天免费试用，可随时取消；年订阅比周订阅省 50% 以上；另可一次性购买终身访问，终身会员支持离线下载。｜SAS Corvaisier"
   date: 2025-11-24
   added: 2026-10-04
@@ -1311,8 +1109,6 @@
   category: 软件
   tags: ["软件", "音乐", "macOS", "Aural Wiz"]
   quark_url: "https://pan.quark.cn/s/258ef88041dc"
-  baidu_url: "https://pan.baidu.com/s/1LHKdPpNcurhxc9vTNR--Zw"
-  baidu_code: "qmu4"
   description: "练耳这件事，靠的是耳朵反复被同一种音响刺激后形成的条件反射，光看乐理书补不上。Aural Wiz 就是把这套重复训练搬到 Mac 上的工具：它针对音程、音阶、调式、和弦与终止式五类听辨内容分别准备材料，先让你听清楚每一种音响长什么样，再反过来考你。学习模式下可以反复播放某个音程或某个调式，把它的色彩先刻进记忆；练习模式则直接放一段旋律或和声，让你判断它属于哪一类，答完立刻知道对错，两类模式配合，相当于先认脸再点名。它的受众很明确：一边是准备听音考试、需要在这个单项上拿分的学生，另一边是已经能演奏但听辨跟不上手的乐手，后者在即兴和扒带时最常卡在这里。建议每天固定挤出十来分钟走一轮，零碎时间比周末突击有效得多。界面朴素，不需要外接 MIDI 键盘，戴上耳机就能开始，只面向 macOS。｜Bijoy Thangaraj"
   date: 2017-03-22
   added: 2026-10-04
@@ -1324,8 +1120,6 @@
   category: 软件
   tags: ["软件", "macOS", "AnyBar"]
   quark_url: "https://pan.quark.cn/s/96cf6cfd934d"
-  baidu_url: "https://pan.baidu.com/s/1yor5kb3cNzKmE0dBxnAK9A"
-  baidu_code: "7qw9"
   description: "后台跑着的任务最让人不安的不是慢，是没有反馈：备份到底跑完没有、那个定时任务是不是还活着，不看日志就不知道。AnyBar 提供一种极简的可视化：它是菜单栏上一盏彩色小圆点，本身不带任何业务逻辑，只监听本机一个 UDP 端口，你从命令行、脚本或者任何程序发一个颜色名过去，圆点就变成那个颜色。于是备份进行中挂黄色、跑完变绿色、出错变红色这种约定几行脚本就能实现，编译、下载、定时任务、服务器健康检查都能这么盯。颜色名称和端口都能改，它支持自定义图像，也能开多个实例各自监听不同端口、分别盯不同的事。极轻、无窗口、常驻不惹事，代价是你需要自己写代码给它发消息，不写脚本的人用不上。开源免费，主页 https://github.com/tonsky/AnyBar。macOS 原生包。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1337,8 +1131,6 @@
   category: 软件
   tags: ["软件", "效率", "macOS", "AltTab Switcher"]
   quark_url: "https://pan.quark.cn/s/bca9d78027ff"
-  baidu_url: "https://pan.baidu.com/s/1eHbhuLHX-MLcHlpXSnpJfg"
-  baidu_code: "hzva"
   description: "把 Windows 上熟悉而强大的 Alt + Tab 窗口切换体验带到 macOS：轻轻一按，即可在打开的应用与窗口之间瞬时切换，让 Mac 上的多任务处理更快、更顺、更直觉。无论你是刚从 Windows 迁移过来、工作中同时开着一堆应用，还是只想更高效地操作桌面，它都能帮你保持专注与效率。除键盘切换外，还提供带实时缩略图的窗口总览，一眼就能认出目标窗口；也可以用鼠标直接点击缩略图跳转，比键盘更快一步。功能：熟悉的 Alt-Tab 切换体验；快捷键可自定义（含 Control + Tab、Option + Tab）；窗口缩略图预览；点击缩略图直接切换窗口；快速高效；与 macOS 无缝融合。｜方成 印"
   date: 2024-09-14
   added: 2026-10-04
@@ -1350,8 +1142,6 @@
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Aerial Landscapes Wallpaper"]
   quark_url: "https://pan.quark.cn/s/f171ae2a4367"
-  baidu_url: "https://pan.baidu.com/s/12J60uuCFxVqqkPINAkau_g"
-  baidu_code: "peh0"
   description: "把航拍画面做成动态壁纸，看久了确实比静态图耐看，但多数方案要么占存储、要么常驻一个窗口碍事。Aerial Landscapes 的处理是：素材来自各大洲标志性地点的航拍片段，直接从云端串流，不占用 Mac 的存储空间，片段之间平滑交叉淡入淡出，换景时不会突然跳一下。它安静地驻留在菜单栏，没有 Dock 图标，也没有窗口需要管理，风景就在其他一切之下播放；点菜单栏图标可以查看正在播放的是哪一段、跳到下一段，或者在需要专注时暂停。全局快捷键让你在任意应用中直接切换或暂停，接了多台显示器时视频会在所有已连接的屏幕上一起播。它的定位就是壁纸本身，不提供屏幕保护之外的功能，也不干扰桌面图标的摆放。缺点也直白：串流意味着断网时就没有新画面可播。适合喜欢桌面有点生气、又不想为壁纸再开一个应用的人。｜Philip Loury"
   date: 2026-06-23
   added: 2026-10-04
@@ -1363,8 +1153,6 @@
   category: 软件
   tags: ["软件", "macOS", "Alacritty"]
   quark_url: "https://pan.quark.cn/s/202d4b413cc5"
-  baidu_url: "https://pan.baidu.com/s/1IhjnQEskoeo39ojSZdY2MA"
-  baidu_code: "vtp2"
   description: "Alacritty 是一款把速度放在第一位的跨平台终端模拟器，用 Rust 写成，渲染交给 GPU，滚动和大批量输出时的延迟低到几乎测不出来。它的取舍很彻底：没有标签页、没有内建分屏、没有面板，这些交给 tmux 或你自己的窗口管理器，追求的就是「一个快到不存在的终端窗口」。配置写在 ~/.config/alacritty/alacritty.toml，字体、配色、光标样式、类似 Vim 的文本选择模式都能细调。适合天天泡在命令行、嫌 iTerm2 越来越重或者受不了 Electron 终端耗资源的开发者；如果你想要开箱即用的标签页和一堆可视功能，它会显得过于朴素。开源免费，主页 https://alacritty.org。macOS 原生包，下载后拖入「应用程序」文件夹即可使用。"
   date: 2026-10-04
   added: 2026-10-04
@@ -1376,8 +1164,6 @@
   category: 软件
   tags: ["软件", "直播", "录屏", "视频", "macOS", "Windows", "OBS Studio"]
   quark_url: "https://pan.quark.cn/s/9201298c4375"
-  baidu_url: "https://pan.baidu.com/s/1szlz3eKTlkJlJWKbJl4E4w"
-  baidu_code: "h7k5"
   description: "直播和录屏这件事，商业软件往往把简单需求做得很顺、复杂需求卡在付费墙后面，OBS Studio 正好反过来——免费开源，跨 Windows、macOS、Linux 三平台，复杂场景照样能自己拼。它可以多路采集视频与音频，场景和来源自由编排，实时混流与转场都能自己搭，一键推流到 B 站、抖音、YouTube、Twitch 等平台，也能本地录制高码率视频。内置的音频混音器、绿幕抠像、虚拟摄像头、录制回放和快捷键控制覆盖了日常所需，插件与脚本生态庞大，缺什么基本都能找到人做过的方案。代价是上手需要一点时间熟悉场景和来源的概念，熟悉之后反而比多数商业软件自由。本次收录 32.2.2 版，含 macOS（Intel 与 Apple 芯片）与 Windows x64 安装包，是网络直播、网课录屏、游戏实况和视频创作的主力工具。开源免费，主页 https://obsproject.com。｜OBS Project"
   date: 2026-10-07
   added: 2026-10-07
@@ -1389,8 +1175,6 @@
   category: 软件
   tags: ["软件", "便携软件", "启动器", "效率工具", "Windows", "PortableApps"]
   quark_url: "https://pan.quark.cn/s/7b841b75f613"
-  baidu_url: "https://pan.baidu.com/s/1Q8GN9Lb07JRs1T0hlogMwQ"
-  baidu_code: "pq63"
   description: "出差时借别人的电脑，或者用公司那台不能随便装软件的机器，最难受的不是没有工具，而是装着装着把系统弄乱，走的时候还得清理。PortableApps.com 平台的启动器解决的就是这个：把常用软件装进 U 盘、移动硬盘或者一个本地文件夹随身携带，换台电脑插上就能用，不写入系统注册表，也不留使用痕迹。平台自带清晰的分类菜单与搜索，可以一键安装、更新、卸载 PortableApps 格式的便携软件，浏览器、办公、影音、开发调试等数百款都有对应便携版，另外支持主题与图标自定义、多设备同步和备份还原。本次收录的是 30.5 版安装程序。适合常出差、需要借用别人电脑、或者希望工作环境始终保持干净的人。开源免费，主页 https://portableapps.com。｜PortableApps.com"
   date: 2026-10-07
   added: 2026-10-07
@@ -1402,8 +1186,6 @@
   category: 软件
   tags: ["软件", "驱动", "无线网卡", "蓝牙", "Windows", "CF-WP1200"]
   quark_url: "https://pan.quark.cn/s/64a7085e01f2"
-  baidu_url: "https://pan.baidu.com/s/1-8VciWml4F-PigZMWzG8jw"
-  baidu_code: "24cu"
   description: "COMFAST CF-WP1200 系列 PCIe 无线网卡的 Windows 驱动合集，含 WiFi 与蓝牙两部分。该系列采用 Intel 8265AC 芯片方案，PCIe-X1 接口，双频 1200Mbps（2.4GHz 300Mbps 加 5GHz 867Mbps），支持 802.11ac / a / b / g / n 与 MU-MIMO，蓝牙 4.2，配外置 2×6dBi 高增益天线，兼容各品牌主板的 PCIe 插槽。本驱动适用于 CF-WP1200、CF-WP1200 V2、CF-WP1200 PRO、CF-WP1200-M 四个型号，覆盖 Windows 7 / 8 / 8.1 / 10，装好后无线网络与蓝牙即可正常工作。（官方网站 http://www.comfast.cn）｜COMFAST 深圳市四海众联"
   date: 2026-10-07
   added: 2026-10-07
@@ -1415,8 +1197,6 @@
   category: 软件
   tags: ["软件", "Office", "部署工具", "系统工具", "Windows", "Office Tool Plus"]
   quark_url: "https://pan.quark.cn/s/c5334a80e215"
-  baidu_url: "https://pan.baidu.com/s/1r0Gh0hg7cVE78bqICwgMyQ"
-  baidu_code: "afjw"
   description: "基于微软官方 Office 部署工具（ODT）与 Click-to-Run 机制打造的 Office 部署与管理工具，绿色免安装，本次收录的是解压目录版。可以在图形界面里创建、导入、导出安装配置，从任意更新通道下载任意语言的 Office，按需勾选 Word、Excel、PowerPoint、Outlook、OneNote、Teams、OneDrive 等组件后一键部署，也能随时增删已装组件；支持制作带静默安装配置的 ISO 镜像用于离线装机，在线、电话、KMS 三种激活方式与许可证、密钥、KMS 管理，无需重装即可升降级更新通道，强制卸载装不干净的 Office（覆盖 2003 到最新版本），另有重置设置、修复安装与激活、文档转换等内置工具箱。支持 Microsoft 365、Office 2016 / 2019 / 2021 / 2024 以及 Visio、Project 全系。（开源免费，主页 https://otp.landian.vip）｜Yerong 蓝点网"
   date: 2026-10-07
   added: 2026-10-07
@@ -1428,8 +1208,6 @@
   category: 软件
   tags: ["软件", "PDF", "编辑器", "办公工具", "Windows", "macOS", "RevPDF"]
   quark_url: "https://pan.quark.cn/s/1d7b4e6435e6"
-  baidu_url: "https://pan.baidu.com/s/1XrOuY-ggffh36utCYI0goQ"
-  baidu_code: "onfn"
   description: "免费离线 PDF 编辑器，由独立开发者打造，支持 Windows、macOS、Linux、Android 与 iOS 五个平台，本次收录 Windows 与 macOS（Intel 及 Apple Silicon 双版本）安装包。最大的特点是全程本地处理：编辑、OCR、转换、压缩全部在自己电脑上完成，文件不上传任何服务器，无需注册账号，桌面版完全免费，无订阅、无水印、无功能限制。功能覆盖日常 PDF 工作流的大部分需求：直接编辑 PDF 内的文字与图片（所见即所得，支持段落重排与查找替换），自动查找并永久删除敏感内容的智能涂黑，扫描件离线 OCR 识别成可搜索文本，表单创建、自动识别与填写，电子签名与手绘批注，PDF 与图片、Word 互转，压缩、拆分、合并、重排与旋转页面，另有水印、页眉页脚、元数据编辑与多标签阅读器。整套安装包仅约 30MB，启动快，界面克制没有弹窗推销，移动端为 9.99 美元一次性买断。（免费，主页 https://revpdf.com）｜Pawandeep Singh"
   date: 2026-10-08
   added: "2026-10-08 20:10"
@@ -1440,8 +1218,6 @@
   category: 软件
   tags: ["软件", "网盘", "云存储", "macOS", "百度网盘"]
   quark_url: "https://pan.quark.cn/s/697855b1cf6b"
-  baidu_url: "https://pan.baidu.com/s/1uQJWlRpCOup9eBFPkgHJkg"
-  baidu_code: "jujz"
   description: "百度网盘官方 macOS 客户端，本次收录 8.8.8 版 Apple Silicon（arm64）安装包，dmg 格式约 412MB，打开后拖进应用程序文件夹即可使用。作为国内覆盖面最广的网盘之一，百度网盘的 Mac 端覆盖文件上传下载、相册自动备份、离线下载、分享链接管理等核心功能，与手机端、Windows 端账号互通，多设备之间传文件、同步资料可以直接走网盘中转，不必再插 U 盘。对 Apple Silicon 用户来说，原生的 arm64 版本比转译运行效率高不少，M 系芯片上传输与解压大文件明显更省电，界面也针对 Retna 屏做了适配。免费账号的下载速度有限制，会员可享极速通道，这一点与 Windows 端一致；客户端内置的在线预览支持文档、图片、音视频等常见格式，不必下载到本地就能查看。适合已经把资料沉淀在百度网盘、需要在 Mac 上做日常存取与备份的用户，首次使用需登录百度账号，大文件传输建议在稳定网络下进行。｜百度"
   date: 2026-10-09
   added: "2026-10-09 19:44"

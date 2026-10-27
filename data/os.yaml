@@ -3,8 +3,6 @@
   category: 操作系统
   tags: ["操作系统", "Windows", "微软", "长期服务通道", "x64", "Windows 10 企业版 LTSC 2019 Windows 10 Enterprise LTSC 2019"]
   quark_url: "https://pan.quark.cn/s/8732e1e2052c"
-  baidu_url: "https://pan.baidu.com/s/1objjzuurBwSKQD5cE1LZYw"
-  baidu_code: "yjki"
   description: "资源是微软 Windows 10 企业版 LTSC 2019 的简体中文 x64 官方镜像，文件名 cn_windows_10_enterprise_ltsc_2019_x64_dvd，底层版本 1809，2018 年 11 月面向企业长期服务通道发布。LTSC 与常见的家庭版、专业版差别主要在更新策略：它只推安全补丁，不强制升级功能版本，也不预装应用商店、小娜这类消费级组件，桌面干净、后台进程少，因此在办公机、收银机、工控设备和虚拟机模板里一直很受欢迎，也是给老电脑装机的常见选择。安装时把 ISO 写入 U 盘（Rufus、Ventoy 都支持）或者挂载后从系统内执行升级，LTSC 走企业批量授权，需要自备密钥或自建 KMS 服务。系统装完占用约 15 GB，硬件要求与普通 Windows 10 一致。该版本主流支持已经结束，扩展支持到 2029 年 1 月，长期使用要留意补丁窗口。｜微软"
   date: 2018-11-13
   added: "2026-10-09 16:04"
@@ -15,8 +13,6 @@
   category: 操作系统
   tags: ["操作系统", "Windows", "微软", "26H2", "x64", "Windows 11 26H2 Windows 11 26H2"]
   quark_url: "https://pan.quark.cn/s/4cfeff8cf29b"
-  baidu_url: "https://pan.baidu.com/s/1heiSPxhhI_ELN9012bEuIQ"
-  baidu_code: "89j9"
   description: "资源是微软官方放出的 Windows 11 26H2 简体中文客户端版 ISO，版本号 26300.9457，映像生成于 2026 年 9 月，属于 2026 年度的功能更新。Client 版镜像里含家庭版、专业版、教育版、专业工作站版等多个 SKU，安装时按密钥或引导选择决定实际装成哪一个版本。26H2 与 25H2 共用同一底层平台，新功能通过启用包开启，改动集中在任务栏、开始菜单、文件资源管理器与 AI 相关组件上，内核与驱动则是例行更新。系统要求与 Windows 11 首发时一致：支持 UEFI 安全启动、TPM 2.0、8 代酷睿或锐龙 2000 系以上的处理器、4 GB 内存与 64 GB 存储，老机器安装通常要借助 Rufus 一类工具跳过 TPM 与联网账户检查。写盘启动后按向导安装即可，过程中会要求联网与微软账户。适合想直接装最新正式版，或者在虚拟机里做兼容性测试的用户。｜微软"
   date: 2026-10-01
   added: "2026-10-09 16:03"
@@ -27,8 +23,6 @@
   category: 操作系统
   tags: ["操作系统", "Linux", "Fedora", "Workstation", "x86_64", "Fedora 44 Workstation Fedora 44 Workstation"]
   quark_url: "https://pan.quark.cn/s/3644a3c0d76e"
-  baidu_url: "https://pan.baidu.com/s/1nTb17FogSFxcvAXmklT31g"
-  baidu_code: "lzdm"
   description: "资源是 Fedora 44 Workstation 的官方 Live 镜像，文件名 Fedora-Workstation-Live-44-1.7.x86_64.iso，2026 年 4 月 28 日发布，写入 U 盘后可以直接启动体验或者安装。Fedora 由 Red Hat 赞助，是 RHEL 的上游发行版，红帽的新特性大多先在它身上落地，所以内核、GNOME 与图形栈的版本比 Debian、Ubuntu LTS 新不少。Workstation 版使用接近原生的 GNOME 桌面，默认跑 Wayland 与 PipeWire，只做了少量自家调整，日常办公和开发环境都很顺手。官方仓库只收自由软件，装多媒体解码器、NVIDIA 驱动需要自行添加 RPM Fusion 源。Live 模式的好处是先进入完整桌面看硬件识别情况，满意后再点安装，Anaconda 安装器支持自动分区与手动分区两条路径，双系统也照常处理。需要注意 Fedora 每个版本的支持周期大约 13 个月，到期要滚动升级到新版本。适合想要较新内核与桌面体验，或者给开发环境做上游兼容性验证的用户。｜Fedora Project"
   date: 2026-04-28
   added: "2026-10-09 16:02"
@@ -39,8 +33,6 @@
   category: 操作系统
   tags: ["操作系统", "Linux", "Debian", "trixie", "amd64", "Debian 13.7 Debian 13.7"]
   quark_url: "https://pan.quark.cn/s/50881ca98a54"
-  baidu_url: "https://pan.baidu.com/s/1ZDh9W807-oPAr3GQOLTJrg"
-  baidu_code: "1tft"
   description: "资源是 Debian 13.7 的 amd64 DVD-1 镜像，目录里目前放的是对应的 torrent 种子文件，用 qBittorrent、Transmission 等任意 BT 客户端打开即可下载完整 ISO。13.7 是代号 trixie 的稳定版在 2026 年 9 月 12 日发布的点版本，主要把安全补丁与关键错误修复打包进来，安装介质随之刷新，已经在用 13.x 的系统正常升级即可，不需要重装。DVD-1 是第一张安装盘，内含安装器、基础系统和常用桌面环境与软件包，断网也能装出一套能用的桌面，缺的包之后再通过 apt 补上。Debian 以稳定、干净、完全由社区治理著称，适合不想频繁折腾的桌面与服务器环境，代价是软件版本偏保守，只求可靠不求新。默认软件源全是自由软件，闭源固件和常见解码器要另外启用 non-free 仓库。｜Debian Project"
   date: 2026-09-12
   added: "2026-10-09 16:01"
@@ -51,8 +43,6 @@
   category: 操作系统
   tags: ["操作系统", "Linux", "Ubuntu", "x86_64", "Ubuntu"]
   quark_url: "https://pan.quark.cn/s/4ddc76eaa376"
-  baidu_url: "https://pan.baidu.com/s/1yzVOhv4e3_gOcAxXDZWBMw"
-  baidu_code: "zw7w"
   description: "这一条目录里目前还没有实际文件，先把位置占住，资源转存进来后会出现在同一个分享里。这里先交代一下 Ubuntu 本身：它由 Canonical 维护，是最流行的 Linux 发行版之一，基于 Debian 的不稳定分支定期冻结发布，每年 4 月与 10 月各出一个版本，其中逢偶数年份的 4 月版是 LTS 长期支持版，提供五年安全更新，普通版本的支持期只有九个月。桌面默认 GNOME，配色、图标与字体做了自家定制，近年的安装器换成了基于 Flutter 的新界面，向导式分区比老版本直观不少。软件侧 snap 与 deb 两套包格式并存，主流开发工具链、服务器组件基本都能直接用 apt 装好，中文文档与社区问答的数量也远多于小众发行版，新手遇到问题比较容易搜到答案。适合第一次接触 Linux，或者需要长期稳定的桌面与服务器环境的用户。｜Canonical"
   date: 2026-10-09
   added: "2026-10-09 16:00"
@@ -64,8 +54,6 @@
   category: 操作系统
   tags: ["操作系统", "Linux", "openSUSE", "Tumbleweed", "x86_64", "openSUSE Tumbleweed openSUSE"]
   quark_url: "https://pan.quark.cn/s/8002157040c5"
-  baidu_url: "https://pan.baidu.com/s/1UvQztRjnuiQFlJCV5FB0Ig"
-  baidu_code: "x83s"
   description: "资源是 openSUSE Tumbleweed 的 DVD 安装镜像，文件名 openSUSE-Tumbleweed-DVD-x86_64-Snapshot20261007-Media.iso，对应 2026 年 10 月 7 日构建的快照，x86_64 架构，约 4.4GB，写入 U 盘即可启动安装或直接体验。Tumbleweed 是 openSUSE 的滚动发行分支，采用经过 openQA 自动化测试的快照持续推送更新，装一次就能一直滚动到最新，不需要隔年重装，软件仓库里的包普遍比传统固定版本发行版新。桌面默认提供 KDE Plasma 与 GNOME 等多种选择，DVD 镜像在安装器里即可切换桌面环境；YaST 控制中心是它最有辨识度的部分，分区、引导、防火墙、软件源都有图形界面可管，对不熟悉命令行的用户相当友好。系统使用 zypper 做包管理，支持 Btrfs 快照配合 Snapper 做系统回滚，升级失手也能退回上一个可用状态。适合想要滚动更新、软件较新，又希望有成熟图形化管理工具的桌面与工作站用户，装好后建议定期滚动更新保持系统处于最新快照。｜openSUSE Project"
   date: 2026-10-07
   added: "2026-10-09 19:41"
