@@ -1,4 +1,4 @@
-# 电影资源（387 条）
+# 电影资源（388 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -3909,3 +3909,13 @@
   date: 2026-09-10
   added: "2026-10-28 03:41"
   image: mv-401.jpg
+
+- id: mv-402
+  title: "极速：伪装者"
+  category: 电影
+  tags: ["电影", "爱情", "惊悚", "极速：伪装者 Drive – The Pretenders"]
+  quark_url: "https://pan.quark.cn/s/cbed4d196352"
+  description: "一位年轻的赛车技师假装与赛车界最具争议的的明星车手订婚，表面上是为了维护他的名声，实则是为了自己能有机会成为赛车手。但很快，这个谎言就威胁到一切，包括这段早已超越单纯交易的感情…本片类型：爱情 / 惊悚。2026 年上映，片长 103 分钟。制片国家/地区：德国。导演：Sergej Moya。编剧：克里斯·西尔弗、Malina Nwabuonwor、Tamara Lush。主演：Lisa-Marie Koroll、Amin Baahmed、Gustav Schmidt、Mišel Matičević、Lucie Heinze、Frederic Linkemann。｜TMDB 7.4"
+  date: 2026-10-27
+  added: "2026-10-29 03:41"
+  image: mv-402.jpg
