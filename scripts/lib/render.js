@@ -605,10 +605,11 @@ function feedbackBar({ site, item, baseUrl }) {
     `资源：${item.title}`,
     `ID：${item.id}`,
     `页面：${pageUrl}`,
-    `问题：（链接打不开 / 文件损坏 / 内容有误 / 其他，请描述）`,
+    `反馈类型：（链接打不开 / 文件损坏 / 内容有误 / 想找的资源 / 其他）`,
+    `说明：（请描述；选「想找的资源」请写清名称、年份或版本）`,
   ].join('\n');
 
-  const hint = item.links.length ? '链接打不开或资源有误？' : '暂无可用链接？';
+  const hint = item.links.length ? '资源许愿、链接打不开或资源有误？' : '暂无可用链接？';
   const btns = [
     qq
       ? `<a class="btn" href="${esc(qq)}" target="_blank" rel="noopener noreferrer" aria-label="加入${
@@ -617,7 +618,7 @@ function feedbackBar({ site, item, baseUrl }) {
       : '',
     email
       ? `<a class="btn" href="mailto:${email}?subject=${encodeURIComponent(
-          `[失效反馈] ${item.title}`
+          `[资源反馈] ${item.title}`
         )}&amp;body=${encodeURIComponent(body)}">邮件反馈</a>`
       : '',
   ]
