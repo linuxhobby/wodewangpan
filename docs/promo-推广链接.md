@@ -12,7 +12,7 @@
 |---|---|---|---|
 | 学生专属算力包 | `https://www.aliyun.com/activity/ecs/student-compute-package?userCode=e9esmzev` | 各页标题栏（首页 / 分类页 / 详情页），`PAGE_INVITES[0]` | 替换原「领取腾讯 WorkBuddy 2000 积分」 |
 | 一键打造你的专属AI应用 | `https://dashi.aliyun.com/activity/aigc?userCode=e9esmzev` | 各页标题栏，`PAGE_INVITES[1]` | 替换原「领取抖音 TRAE AI 5000 积分」 |
-| 分钟级部署OpenClaw | `https://www.aliyun.com/activity/ecs/clawdbot?userCode=e9esmzev` | 仅首页 H1 行（`N 个资源` 之后、同一行） | 为避免与上一行同名链接在首页重复，这里用 OpenClaw 而不是「一键打造你的专属AI应用」 |
+| 分钟级部署OpenClaw | `https://www.aliyun.com/activity/ecs/clawdbot?userCode=e9esmzev` | 详情页「浏览量」行右侧（同一行） | 原在首页 H1 行，后移至详情页浏览量行 |
 
 ## 历史链接（已替换，备查）
 

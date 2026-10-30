@@ -443,7 +443,7 @@ function homePage(ctx) {
   const shown = groups.flatMap((g) => g.shown);
   const firstImg = (images.get(shown[0] && shown[0].id) || {}).card || '';
 
-  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span><a class="page__invite" href="https://www.aliyun.com/activity/ecs/clawdbot?userCode=e9esmzev" title="分钟级部署OpenClaw" target="_blank" rel="noopener noreferrer nofollow">分钟级部署OpenClaw</a>${titleAsideLinks()}</h1>
+  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span>${titleAsideLinks()}</h1>
 <div id="results" class="results" hidden></div>
 <div id="home">
 ${groups
@@ -698,8 +698,8 @@ export function detailPage(ctx) {
     ['标签', item.tags.length ? item.tags.map((t) => esc(t)).join(' · ') : '—'],
     ['转存方式', esc(source)],
     // 浏览量：构建期只放占位，前端拉 /stats.json 后填入（拿不到数据时留「–」）。
-    // 同一行右侧挂推广链接「一键打造你的专属AI应用」（外部站统一 nofollow + noopener）
-    ['浏览量', `<span class="facts__views"><span id="stat-views" data-res-id="${esc(encodeURIComponent(item.id))}">–</span><a class="facts__promo" href="https://dashi.aliyun.com/activity/aigc?userCode=e9esmzev" target="_blank" rel="noopener noreferrer nofollow">一键打造你的专属AI应用</a></span>`],
+    // 同一行右侧挂推广链接「分钟级部署OpenClaw」（外部站统一 nofollow + noopener）
+    ['浏览量', `<span class="facts__views"><span id="stat-views" data-res-id="${esc(encodeURIComponent(item.id))}">–</span><a class="facts__promo" href="https://www.aliyun.com/activity/ecs/clawdbot?userCode=e9esmzev" target="_blank" rel="noopener noreferrer nofollow">分钟级部署OpenClaw</a></span>`],
   ];
   const factsHtml = `<table class="facts">
   <tbody>
