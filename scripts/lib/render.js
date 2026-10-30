@@ -55,14 +55,14 @@ const iconSvg = (key, cls = 'foot__icon') =>
 // 页面 H1 同一行右侧的邀请链接（首页与各分类页共用）。外部站，统一 nofollow + noopener
 const PAGE_INVITES = [
   {
-    href: 'https://www.workbuddy.cn/events/invite?inviteCode=4ktsif3n0ne',
-    label: '领取腾讯 WorkBuddy 2000 积分',
-    title: '腾讯 WorkBuddy 邀请注册，领 2000 积分',
+    href: 'https://www.aliyun.com/activity/ecs/student-compute-package?userCode=e9esmzev',
+    label: '学生专属算力包',
+    title: '阿里云学生专属算力包',
   },
   {
-    href: 'https://www.trae.cn/events/code-fission/UU44ET25EK2C?utm_source=copy_link&utm_medium=code_fission',
-    label: '领取抖音 TRAE AI 5000 积分',
-    title: '字节跳动 TRAE AI 邀请注册，领 5000 积分',
+    href: 'https://dashi.aliyun.com/activity/aigc?userCode=e9esmzev',
+    label: '一键打造你的专属AI应用',
+    title: '阿里云 AI 应用搭建',
   },
 ];
 /** 标题栏右侧整组链接：两个邀请在前，「热榜 TOP 30」在最后；首个链接吃掉左侧剩余空间，整组右对齐 */
@@ -443,7 +443,7 @@ function homePage(ctx) {
   const shown = groups.flatMap((g) => g.shown);
   const firstImg = (images.get(shown[0] && shown[0].id) || {}).card || '';
 
-  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span>${titleAsideLinks()}</h1>
+  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span><a class="page__invite" href="https://www.aliyun.com/activity/ecs/clawdbot?userCode=e9esmzev" title="分钟级部署OpenClaw" target="_blank" rel="noopener noreferrer nofollow">分钟级部署OpenClaw</a>${titleAsideLinks()}</h1>
 <div id="results" class="results" hidden></div>
 <div id="home">
 ${groups
