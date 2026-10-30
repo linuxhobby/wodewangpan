@@ -692,14 +692,14 @@ export function detailPage(ctx) {
     ? `${panNames}（${item.links.length} 个链接${item.links.some((l) => l.code) ? ' · 部分需提取码' : ''}）`
     : '暂无可用链接';
   const facts = [
-    ['分类', `<a href="${catHref(item.category)}">${esc(item.category)}</a>`],
+    // 分类：同一行右侧挂推广链接「分钟级部署OpenClaw」（外部站统一 nofollow + noopener）
+    ['分类', `<span class="facts__views"><a href="${catHref(item.category)}">${esc(item.category)}</a><a class="facts__promo" href="https://www.aliyun.com/activity/ecs/clawdbot?userCode=e9esmzev" target="_blank" rel="noopener noreferrer nofollow">分钟级部署OpenClaw</a></span>`],
     ...(year ? [['上映 / 发行', esc(year)]] : []),
     ...(item.added ? [['入库日期', esc(item.added)]] : []),
     ['标签', item.tags.length ? item.tags.map((t) => esc(t)).join(' · ') : '—'],
     ['转存方式', esc(source)],
-    // 浏览量：构建期只放占位，前端拉 /stats.json 后填入（拿不到数据时留「–」）。
-    // 同一行右侧挂推广链接「分钟级部署OpenClaw」（外部站统一 nofollow + noopener）
-    ['浏览量', `<span class="facts__views"><span id="stat-views" data-res-id="${esc(encodeURIComponent(item.id))}">–</span><a class="facts__promo" href="https://www.aliyun.com/activity/ecs/clawdbot?userCode=e9esmzev" target="_blank" rel="noopener noreferrer nofollow">分钟级部署OpenClaw</a></span>`],
+    // 浏览量：构建期只放占位，前端拉 /stats.json 后填入（拿不到数据时留「–」）
+    ['浏览量', `<span id="stat-views" data-res-id="${esc(encodeURIComponent(item.id))}">–</span>`],
   ];
   const factsHtml = `<table class="facts">
   <tbody>
