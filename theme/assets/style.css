@@ -414,6 +414,10 @@ a.tag:hover { background: var(--brand-soft); }
 .facts th, .facts td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
 .facts th { width: 84px; font-weight: 600; color: var(--muted); white-space: nowrap; }
 .facts tr:last-child th, .facts tr:last-child td { border-bottom: 0; }
+/* 浏览量行：计数在左、推广链接靠右，同一行 */
+.facts__views { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+.facts__promo { padding: 1px 8px; background: var(--brand-soft); border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
+.facts__promo:hover { background: var(--brand-mark); text-decoration: none; }
 
 .links { display: flex; flex-direction: column; gap: 8px; }
 .linkrow {
