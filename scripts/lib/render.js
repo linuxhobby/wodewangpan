@@ -755,7 +755,13 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
         data-title="${esc(item.title)}"
         data-text="${esc(shareText)}"${posterAttr}>分享</button>
       <div class="share__panel">
-        <button class="btn btn--mini" type="button" data-copy="${esc(shareText)}"${posterAttr}>复制资源信息</button>
+        <button class="btn btn--mini" type="button" data-copy="${esc(shareText)}"${posterAttr}>复制资源信息</button>${
+          // 复制海报：给微博这类「只认剪贴板图片文件、会剥掉 HTML 里 <img>」的编辑器单独留的口子，
+          // 与上面那个复用同一份资源包文本（粘得到就一起出，粘不到至少图在）
+          sharePoster
+            ? `\n        <button class="btn btn--mini" type="button" data-copy-poster="${esc(sharePoster)}" data-copy="${esc(shareText)}" title="复制海报图片：微博等只认图片的地方用，粘完再粘一次「资源信息」">复制海报</button>`
+            : ''
+        }
         <p class="share__hint">${shareQr ? `<img class="share__qr" src="${esc(shareQr)}" width="96" height="96" alt="本页分享二维码">` : ''}微信：扫一扫，把本页分享给好友</p>
       </div>
     </div>

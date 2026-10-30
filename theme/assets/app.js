@@ -269,6 +269,14 @@ import { esc, tileHtml } from './card.js';
 
   // 复制类按钮：网盘链接 / 提取码 / 资源包（含海报）
   document.addEventListener('click', function (e) {
+    // 「复制海报」要在复制文本分支之前判定：它同时带 data-copy（复用资源包文本），
+    // 落在下面会退化成只复制文本
+    var posterBtn = e.target.closest('[data-copy-poster]');
+    if (posterBtn) {
+      copyPoster(posterBtn, posterBtn.getAttribute('data-copy-poster'), posterBtn.getAttribute('data-copy'));
+      return;
+    }
+
     var copyBtn = e.target.closest('[data-copy]');
     if (copyBtn) {
       copyPacket(copyBtn, copyBtn.getAttribute('data-copy'), copyBtn.getAttribute('data-poster'));
@@ -319,6 +327,40 @@ import { esc, tileHtml } from './card.js';
       return i === 0 ? '<b>' + t + '</b>' : t;  // 首行是「片名（年份）· 分类」，加粗当标题
     });
     return '<img src="' + esc(poster) + '" alt=""><br>' + lines.join('<br>');
+  }
+
+  /** 海报 → PNG blob。剪贴板的图片口味只认 PNG，站点图是 webp，得转一手 */
+  function toPng(blob) {
+    if (blob.type === 'image/png') return Promise.resolve(blob);
+    var c = document.createElement('canvas');
+    if (!window.createImageBitmap || !c.getContext) return Promise.resolve(blob);
+    return createImageBitmap(blob)
+      .then(function (bmp) {
+        c.width = bmp.width;
+        c.height = bmp.height;
+        c.getContext('2d').drawImage(bmp, 0, 0);
+        return new Promise(function (res, rej) {
+          c.toBlob(function (b) { (b ? res(b) : rej(new Error('toBlob 失败'))); }, 'image/png');
+        });
+      });
+  }
+
+  /** 把海报当图片文件复制进剪贴板，给微博这类编辑器用：
+      它们粘贴时会把 HTML 里的 <img> 剥掉（微信认，微博不认），只收剪贴板里的图片文件。
+      write() 必须在点击里同步发起，异步部分塞进 ClipboardItem 的 Promise 值——
+      Safari 不允许 await 完再调 write，Chrome 两种都吃 */
+  function copyPoster(btn, url, text) {
+    if (!url || !window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) {
+      flash(btn, '浏览器不支持');
+      return;
+    }
+    var flavors = { 'image/png': fetch(url).then(function (r) { return r.blob(); }).then(toPng) };
+    // 文本一起塞：编辑器若肯同时收，一次粘贴图 + 文都到位；只收图的也不会更差
+    if (text) flavors['text/plain'] = Promise.resolve(new Blob([text], { type: 'text/plain' }));
+    navigator.clipboard.write([new window.ClipboardItem(flavors)]).then(
+      function () { flash(btn, '已复制海报'); },
+      function () { flash(btn, '复制失败'); }
+    );
   }
 
   function plainCopy(text, done) {

@@ -36,11 +36,12 @@
 ### 桌面端
 
 ```
-分享 · 复制资源信息
+分享 · 复制资源信息 · 复制海报
 ```
 
 - 「分享」：`navigator.share`；不支持的浏览器（如 Firefox 桌面）退化为复制——**复制的是资源包文本，不是 URL**。
 - 「复制资源信息」：复制资源包（富文本，带海报，见「海报怎么进剪贴板」）。
+- 「复制海报」：把海报当**图片文件**复制（见下），给微博这类不认 HTML 图片的地方用。
 - 微信二维码单独一行（见下）。
 
 ### 触屏移动端
@@ -74,10 +75,26 @@
 2. **占位图不复制**。`/img/placeholder*` 那张「暂无配图」粘出去只会让人以为分享坏了。
 3. **不支持就整段退回纯文本**，不做半吊子降级：`window.ClipboardItem` 缺失（老 Firefox）、`clipboard.write` 被拒、构造抛错，任何一种都走回 `writeText` → `execCommand('copy')`，行为与改前一致，不会出现「点下去什么都没复制上」。
 
+### 微博为什么没图，以及「复制海报」
+
+2026-10-30 实测：**微信粘贴有图，微博粘贴只有文字**。同一个剪贴板内容，差异全在接收方——
+
+- 微信编辑器收下 `text/html`，连里面的 `<img>` 一起渲染。
+- 微博编辑器粘贴时**把 HTML 剥成纯文本**（只留文字、话题、表情），`<img>` 一律丢掉。它唯一吃的图片形态是**剪贴板里的图片文件**，也就是平时截图粘贴进微博那条路。
+
+所以另开一个「复制海报」按钮，写的是 `image/png` flavor（`text/plain` 顺带一起塞，编辑器肯同时收就一次到位，只收图的也不更差）。微博发一条带图资源 = 点「复制资源信息」粘文字 + 点「复制海报」粘图，两步。
+
+两个实现上的硬约束：
+
+1. **PNG 转码**：剪贴板的图片口味只认 `image/png`，站点配图是 webp（`-240.webp`），必须 `createImageBitmap` → canvas → `toBlob('image/png')` 转一手，直接把 webp blob 标成 `image/png` 会被拒。
+2. **`write()` 必须同步发起**：`fetch` 图片是异步的，等它 resolve 再调 `clipboard.write()` 在 Safari 上会被判为「无用户手势」而失败。所以异步部分要塞进 `ClipboardItem` 的 **Promise 值**里——`write()` 在点击回调里同步调用，Safari / Chrome 都放行。
+
+**没有把它并进「复制资源信息」**：同时写 `image/png` + `text/html` 时，微信大概率走图片分支，变成「只出图、丢文字」——为了微博把微信弄坏不划算。宁可多一个按钮。
+
 ### 没走的两条路
 
 - **base64 内嵌（data URI）**：看起来最稳，实际两头不讨好——810 条资源每张动辄几十 KB，base64 还要再涨三成，整个 HTML 串塞进剪贴板；而微信 / QQ / 飞书 sanitize 时**普遍会剥掉 data URI**，钱花了还不一定出图。远程 URL 由接收方自己去取，反而干净。
-- **`image/png` blob**：粘到聊天窗口直接是一张图，很爽，但**文本就没了**。资源包的立身之本就是「信息写进正文」，为了一张图把链接和提取码弄丢是本末倒置。若以后真要「只复制海报」，应该另开一个按钮，而不是改这个。
+- **把 `image/png` 并进「复制资源信息」**：微信会走图片分支，变成只出图、丢文字（见上）。已改为单独按钮。
 
 ### 已知限制
 
@@ -99,7 +116,7 @@
 | 文件 | 职责 |
 |---|---|
 | `scripts/lib/render.js` | `shareTextOf(item, shareUrl)` 拼资源包文本（构建期）；`sharePoster` 拼海报绝对地址（占位图判空）；详情页 `.detail__share` 模板：「分享」按钮（`data-share` / `data-url` / `data-title` / `data-text` / `data-poster`）+ `.share__panel`（复制按钮 `data-copy` + `data-poster`、本页二维码提示）。 |
-| `theme/assets/app.js` | `copyPacket(btn, text, poster)` 统一入口：有 `data-poster` 且支持 `ClipboardItem` 就写 `text/html` + `text/plain`，否则 `plainCopy()`（原逻辑）；`packetHtml()` 生成带海报的富文本；`flash()` 给「已复制」反馈。点击 `[data-share]`：支持 `navigator.share` 则调系统面板（传 `title` + 资源包 `text` + `url`），否则调 `copyPacket`。init 里用媒体查询判定触屏移动端并隐藏面板。 |
+| `theme/assets/app.js` | `copyPoster(btn, url, text)` 复制图片文件（`toPng()` 转码，Promise 值喂给 `ClipboardItem`）；`copyPacket(btn, text, poster)` 统一入口：有 `data-poster` 且支持 `ClipboardItem` 就写 `text/html` + `text/plain`，否则 `plainCopy()`（原逻辑）；`packetHtml()` 生成带海报的富文本；`flash()` 给「已复制」反馈。点击 `[data-share]`：支持 `navigator.share` 则调系统面板（传 `title` + 资源包 `text` + `url`），否则调 `copyPacket`。init 里用媒体查询判定触屏移动端并隐藏面板。 |
 | `theme/assets/style.css` | `.detail__share`（flex 同行）、`.share__panel`（`display: contents`，让内部子元素与「分享」按钮排同一行）、`.share__hint`（`flex-basis: 100%` 强制微信二维码换行）、`.share__qr` 样式。 |
 | `scripts/lib/assets.js` | `writeShareQr(pageUrl, id, outDir)`：为每个资源生成本页 URL 的二维码 SVG，写入 `public/qr/share-<id>.svg`（依赖 `qrcode` 包）。 |
 | `scripts/build.js` | 构建期调用 `writeShareQr` 生成 `shareQrMap`，把 `shareQr` 路径注入 `detailPage` 的 `ctx`。 |

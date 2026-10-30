@@ -146,6 +146,16 @@
 
 改动：`scripts/lib/render.js`（`data-poster` + `sharePoster` 判定）、`theme/assets/app.js`（新增 `copyPacket` / `plainCopy` / `packetHtml`，替换原复制分支）。构建验证 810 个资源页全部带上 `data-poster`。
 
+### 2026-10-30 · 补「复制海报」按钮（微博只认剪贴板图片文件）
+
+上一版富文本复制上线后实测：微信粘贴出图，微博粘贴只有文字。查下来不是我们写错了——微博编辑器粘贴时把 HTML 剥成纯文本，`<img>` 一律丢掉，它唯一吃的图片形态是剪贴板里的**图片文件**（截图粘贴那条路）。微信恰好相反，认 `text/html`。
+
+处理方式是不动微信那条路，另开一个「复制海报」按钮写 `image/png`（`text/plain` 顺带一起塞）。没有把 `image/png` 并进「复制资源信息」：同时写两种口味时微信大概率走图片分支，变成只出图丢文字，为微博弄坏微信不划算。
+
+两个实现坑：剪贴板图片口味只认 PNG，站点图是 webp，得 `createImageBitmap` → canvas → `toBlob('image/png')` 转一手；`write()` 必须在点击回调里同步发起（Safari 不允许 await 完再调），异步的 fetch + 转码塞进 `ClipboardItem` 的 Promise 值。
+
+改动：`scripts/lib/render.js`（新增按钮）、`theme/assets/app.js`（`copyPoster` / `toPng`，判定顺序在 `[data-copy]` 之前）。完整口径见 [share-资源分享功能.md](share-资源分享功能.md)「微博为什么没图，以及『复制海报』」。
+
 ### 2026-10-28 · 清空全部百度网盘链接（623 条）
 
 起因：站内 623 条资源的 `baidu_url` 已全部失效，页面上挂着的都是打不开的分享。与其留着引导用户点死链，不如先撤干净，回头重新出链再补。
