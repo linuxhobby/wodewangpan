@@ -287,8 +287,8 @@ a.tag:hover { background: var(--brand-soft); }
 /* ── 标题栏 / 面包屑右侧链接组：两个邀请胶囊在前，「热榜」在最后，整组靠右 ── */
 .page__invite { padding: 2px 9px; background: var(--brand-soft); border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
 .page__invite:hover { background: var(--brand-mark); text-decoration: none; }
-/* 组内第一个吃掉左侧剩余空间，把整组推到行尾 */
-.page__invite--lead { margin-left: auto; }
+/* 邀请胶囊 + 热榜整组：桌面端靠 margin-left:auto 顶到行尾；窄屏覆盖为独占一行左对齐 */
+.page__aside { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-left: auto; }
 .page__hot { font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
 .page__hot:hover { text-decoration: underline; }
 
@@ -590,4 +590,6 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   /* 390px 屏顶栏只有 358px 可用，站名放大后靠这两处把空间还回来 */
   .top__logo { width: 28px; height: 28px; margin-right: 8px; vertical-align: -5px; }
   .top__search { max-width: 150px; }
+  /* 标题栏邀请组：窄屏独占一行、左对齐，避免胶囊右飘、热榜错行导致的参差 */
+  .page__aside { flex-basis: 100%; margin-left: 0; }
 }

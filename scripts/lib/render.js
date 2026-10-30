@@ -65,14 +65,16 @@ const PAGE_INVITES = [
     title: '阿里云 AI 应用搭建',
   },
 ];
-/** 标题栏右侧整组链接：两个邀请在前，「热榜 TOP 30」在最后；首个链接吃掉左侧剩余空间，整组右对齐 */
+/** 标题栏右侧整组链接：两个邀请 + 「热榜 TOP 30」。整组包在 .page__aside 里，
+ *  桌面端由它 margin-left:auto 顶到行尾；窄屏整组独占一行、左对齐（见 style.css 移动端） */
 const titleAsideLinks = () =>
+  '<span class="page__aside">' +
   PAGE_INVITES.map(
-    (i, n) =>
-      `<a class="page__invite${n === 0 ? ' page__invite--lead' : ''}" href="${esc(
-        i.href
-      )}" title="${esc(i.title)}" target="_blank" rel="noopener noreferrer nofollow">${esc(i.label)}</a>`
-  ).join('') + '<a class="page__hot" href="/hot/">热榜 TOP 30 →</a>';
+    (i) =>
+      `<a class="page__invite" href="${esc(i.href)}" title="${esc(i.title)}" target="_blank" rel="noopener noreferrer nofollow">${esc(i.label)}</a>`
+  ).join('') +
+  '<a class="page__hot" href="/hot/">热榜 TOP 30 →</a>' +
+  '</span>';
 
 // 全站每页底部的固定入口。abs: true 的输出时拼上站点域名
 const FOOT_NAV = [
@@ -718,7 +720,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
 
   const related = relatedOf(item, items || []);
 
-  // 面包屑同一行右侧：两个邀请 + 热榜入口，与首页/分类页共用同一组（靠右侧由 .page__invite--lead 的 margin-left:auto 顶过去）
+  // 面包屑同一行右侧：两个邀请 + 热榜入口，与首页/分类页共用同一组（靠右侧由 .page__aside 的 margin-left:auto 顶过去）
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="${catHref(item.category)}">${esc(item.category)}</a>${titleAsideLinks()}</nav>
 <article class="detail">
   <div class="detail__media">
