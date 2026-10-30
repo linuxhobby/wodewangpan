@@ -1,4 +1,4 @@
-# 电影资源（390 条）
+# 电影资源（391 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -3940,3 +3940,13 @@
   date: 2026-12-16
   added: "2026-10-30 10:13"
   image: mv-404.jpg
+
+- id: mv-405
+  title: "天启Z：新世界"
+  category: 电影
+  tags: ["电影", "动作", "惊悚", "恐怖", "天启Z：新世界 Apocalipsis Z: Nuevo mundo"]
+  quark_url: "https://pan.quark.cn/s/da03eac8f4d4"
+  description: "TSJ病毒爆发后，加纳利群岛成了欧洲最后的避难所。当一支任务小队前往马德里搜寻物资，罗贝托怀着可疑的动机加入。遭遇感染者后，团队意见出现分歧，他们在奋力求生的同时还面临道德两难：自保或为了残存的人性赌上一切？本片类型：动作 / 惊悚 / 恐怖。2026 年上映，片长 96 分钟。制片国家/地区：西班牙。导演：Carles Torrens。编剧：Manel Loureiro、Ángel Agudo。｜TMDB 9.0"
+  date: 2026-10-09
+  added: "2026-10-31 03:40"
+  image: mv-405.jpg
