@@ -710,6 +710,10 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   // 死链组件与国内零使用率的社交外链已删除，不再占详情页显眼位置。
   const shareUrl = `${baseUrl}${itemHref(item.id)}`;
   const shareText = shareTextOf(item, shareUrl);
+  // 复制 / 分享时顺带出去的海报地址：必须是绝对路径——相对路径粘到站外就解析不出图了。
+  // 占位图不复制：那张「暂无配图」粘出去只会让人以为是分享坏了。
+  const sharePoster = /\/img\/placeholder/.test(img.detail || '') ? '' : `${baseUrl}${img.detail}`;
+  const posterAttr = sharePoster ? ` data-poster="${esc(sharePoster)}"` : '';
 
   const related = relatedOf(item, items || []);
 
@@ -749,9 +753,9 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
       <button class="btn btn--mini" type="button" data-share
         data-url="${esc(shareUrl)}"
         data-title="${esc(item.title)}"
-        data-text="${esc(shareText)}">分享</button>
+        data-text="${esc(shareText)}"${posterAttr}>分享</button>
       <div class="share__panel">
-        <button class="btn btn--mini" type="button" data-copy="${esc(shareText)}">复制资源信息</button>
+        <button class="btn btn--mini" type="button" data-copy="${esc(shareText)}"${posterAttr}>复制资源信息</button>
         <p class="share__hint">${shareQr ? `<img class="share__qr" src="${esc(shareQr)}" width="96" height="96" alt="本页分享二维码">` : ''}微信：扫一扫，把本页分享给好友</p>
       </div>
     </div>

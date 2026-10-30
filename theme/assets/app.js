@@ -267,21 +267,11 @@ import { esc, tileHtml } from './card.js';
     }
   });
 
-  // 复制链接 / 提取码
+  // 复制类按钮：网盘链接 / 提取码 / 资源包（含海报）
   document.addEventListener('click', function (e) {
     var copyBtn = e.target.closest('[data-copy]');
     if (copyBtn) {
-      var text = copyBtn.getAttribute('data-copy');
-      var done = function () {
-        var old = copyBtn.textContent;
-        copyBtn.textContent = '已复制';
-        setTimeout(function () { copyBtn.textContent = old; }, 1500);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text, done); });
-      } else {
-        fallbackCopy(text, done);
-      }
+      copyPacket(copyBtn, copyBtn.getAttribute('data-copy'), copyBtn.getAttribute('data-poster'));
       return;
     }
 
@@ -310,14 +300,7 @@ import { esc, tileHtml } from './card.js';
         }).catch(function () {});  // 用户取消（AbortError）静默忽略
         return;
       }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(packet).then(
-          function () { flash(shareBtn, '已复制'); },
-          function () { fallbackCopy(packet, function () { flash(shareBtn, '已复制'); }); }
-        );
-      } else {
-        fallbackCopy(packet, function () { flash(shareBtn, '已复制'); });
-      }
+      copyPacket(shareBtn, packet, shareBtn.getAttribute('data-poster'));
     }
   });
 
@@ -326,6 +309,43 @@ import { esc, tileHtml } from './card.js';
     var old = btn.textContent;
     btn.textContent = msg;
     setTimeout(function () { btn.textContent = old; }, 1500);
+  }
+
+  /** 资源包文本 → 带海报的富文本：海报在最前当视觉锚点，其后逐行排。
+      img 必须用绝对地址（构建期已拼好 baseUrl）——相对路径粘到站外就解析不出图了 */
+  function packetHtml(text, poster) {
+    var lines = String(text || '').split('\n').map(function (l, i) {
+      var t = esc(l);
+      return i === 0 ? '<b>' + t + '</b>' : t;  // 首行是「片名（年份）· 分类」，加粗当标题
+    });
+    return '<img src="' + esc(poster) + '" alt=""><br>' + lines.join('<br>');
+  }
+
+  function plainCopy(text, done) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  }
+
+  /** 复制资源包：支持 ClipboardItem 时同时写 text/html（含海报）+ text/plain，
+      粘到微信 / QQ / 飞书 / 邮件正文这类富文本目标会连图一起出来；
+      只吃纯文本的目标拿到的仍是原来那几行，不丢信息。不支持就整个退回纯文本，行为不变。 */
+  function copyPacket(btn, text, poster, msg) {
+    var done = function () { flash(btn, msg || '已复制'); };
+    if (poster && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+      try {
+        var item = new window.ClipboardItem({
+          // Promise 形式的值：Safari 只认 Promise，Chrome 两种都吃
+          'text/plain': Promise.resolve(new Blob([text], { type: 'text/plain' })),
+          'text/html': Promise.resolve(new Blob([packetHtml(text, poster)], { type: 'text/html' })),
+        });
+        navigator.clipboard.write([item]).then(done, function () { plainCopy(text, done); });
+        return;
+      } catch (e) { /* 落到下面纯文本 */ }
+    }
+    plainCopy(text, done);
   }
 
   function fallbackCopy(text, done) {

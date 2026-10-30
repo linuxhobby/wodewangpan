@@ -40,7 +40,7 @@
 ```
 
 - 「分享」：`navigator.share`；不支持的浏览器（如 Firefox 桌面）退化为复制——**复制的是资源包文本，不是 URL**。
-- 「复制资源信息」：复制资源包文本。
+- 「复制资源信息」：复制资源包（富文本，带海报，见「海报怎么进剪贴板」）。
 - 微信二维码单独一行（见下）。
 
 ### 触屏移动端
@@ -57,6 +57,34 @@
 - 微博 / X / Telegram 对国内网盘资源站使用率近零，却占了详情页显眼位置，还稀释了真正高频的复制按钮。
 - 它们分享出去的都只是页面链接，同样逃不掉卡片降级的问题。
 
+## 海报怎么进剪贴板
+
+「复制资源信息」复制的是**富文本**，不是纯文本：`navigator.clipboard.write()` 一次写两个 flavor——
+
+| flavor | 内容 |
+|---|---|
+| `text/html` | 海报 `<img>` 在最前，其后是资源包各行（首行「片名（年份）· 分类」加粗） |
+| `text/plain` | 与改前完全一致的多行资源包文本 |
+
+粘到微信 / QQ / 飞书 / 邮件正文这类**认富文本**的目标，海报跟着文字一起出来；只吃纯文本的目标（多数手机输入法、部分 App）拿到的仍是原来那几行，**不丢信息**——这是同时写两个 flavor 的目的。
+
+三个必须守住的口子：
+
+1. **海报用绝对地址**（构建期 `baseUrl + /img/<id>-240.webp`）。相对路径粘到站外解析不出图。
+2. **占位图不复制**。`/img/placeholder*` 那张「暂无配图」粘出去只会让人以为分享坏了。
+3. **不支持就整段退回纯文本**，不做半吊子降级：`window.ClipboardItem` 缺失（老 Firefox）、`clipboard.write` 被拒、构造抛错，任何一种都走回 `writeText` → `execCommand('copy')`，行为与改前一致，不会出现「点下去什么都没复制上」。
+
+### 没走的两条路
+
+- **base64 内嵌（data URI）**：看起来最稳，实际两头不讨好——810 条资源每张动辄几十 KB，base64 还要再涨三成，整个 HTML 串塞进剪贴板；而微信 / QQ / 飞书 sanitize 时**普遍会剥掉 data URI**，钱花了还不一定出图。远程 URL 由接收方自己去取，反而干净。
+- **`image/png` blob**：粘到聊天窗口直接是一张图，很爽，但**文本就没了**。资源包的立身之本就是「信息写进正文」，为了一张图把链接和提取码弄丢是本末倒置。若以后真要「只复制海报」，应该另开一个按钮，而不是改这个。
+
+### 已知限制
+
+- 海报取的是详情页那张 240×360（与列表卡片同一张），粘出去是缩略图尺寸，不是原图——当前没有更大的变体，为它单独出一版要给 810 条资源再生成一遍图，性价比不够。
+- 出图依赖**接收方能访问本站**（远程 URL 由它去取）。站点打不开时，图自然也出不来，但文字照旧。
+- 移动端 `navigator.share` 走系统面板，海报**不会**跟着走——Web Share Level 2 的 `files` 要 `canShare` 判定 + 把图 fetch 成 File，覆盖面和稳定性都不如现在的纯文本路径，暂不做。
+
 ## 微信分享的两种路径
 
 微信网页分享没有官方 JS SDK（需公众号 + 后端签名），因此：
@@ -70,8 +98,8 @@
 
 | 文件 | 职责 |
 |---|---|
-| `scripts/lib/render.js` | `shareTextOf(item, shareUrl)` 拼资源包文本（构建期）；详情页 `.detail__share` 模板：「分享」按钮（`data-share` / `data-url` / `data-title` / `data-text`）+ `.share__panel`（复制按钮 + 本页二维码提示）。 |
-| `theme/assets/app.js` | 点击 `[data-share]`：支持 `navigator.share` 则调系统面板（传 `title` + 资源包 `text` + `url`），否则复制资源包文本；面板内 `[data-copy]` 走复制逻辑并给「已复制」反馈。init 里用媒体查询判定触屏移动端并隐藏面板。 |
+| `scripts/lib/render.js` | `shareTextOf(item, shareUrl)` 拼资源包文本（构建期）；`sharePoster` 拼海报绝对地址（占位图判空）；详情页 `.detail__share` 模板：「分享」按钮（`data-share` / `data-url` / `data-title` / `data-text` / `data-poster`）+ `.share__panel`（复制按钮 `data-copy` + `data-poster`、本页二维码提示）。 |
+| `theme/assets/app.js` | `copyPacket(btn, text, poster)` 统一入口：有 `data-poster` 且支持 `ClipboardItem` 就写 `text/html` + `text/plain`，否则 `plainCopy()`（原逻辑）；`packetHtml()` 生成带海报的富文本；`flash()` 给「已复制」反馈。点击 `[data-share]`：支持 `navigator.share` 则调系统面板（传 `title` + 资源包 `text` + `url`），否则调 `copyPacket`。init 里用媒体查询判定触屏移动端并隐藏面板。 |
 | `theme/assets/style.css` | `.detail__share`（flex 同行）、`.share__panel`（`display: contents`，让内部子元素与「分享」按钮排同一行）、`.share__hint`（`flex-basis: 100%` 强制微信二维码换行）、`.share__qr` 样式。 |
 | `scripts/lib/assets.js` | `writeShareQr(pageUrl, id, outDir)`：为每个资源生成本页 URL 的二维码 SVG，写入 `public/qr/share-<id>.svg`（依赖 `qrcode` 包）。 |
 | `scripts/build.js` | 构建期调用 `writeShareQr` 生成 `shareQrMap`，把 `shareQr` 路径注入 `detailPage` 的 `ctx`。 |

@@ -136,6 +136,16 @@
 
 按时间倒序，最新在最上面。同一天多条以三级子标题并列。
 
+### 2026-10-30 · 「复制资源信息」改为富文本复制，连海报一起进剪贴板
+
+起因：复制出去的资源包一直是纯文本，粘到微信 / QQ 里就是几行字，没有海报——而群里转发网盘资源，图才是让人停下来看的那一下。
+
+做法：`navigator.clipboard.write()` 同时写两个 flavor，`text/html`（海报 `<img>` 在最前 + 原有各行，首行加粗）+ `text/plain`（原样纯文本）。拿不到 `ClipboardItem`（老 Firefox、非安全上下文、写入被拒）就整段退回原来的 `writeText` + `execCommand` 链路，行为与改前完全一致，不存在「复制失败」的中间态。海报地址在构建期拼成绝对地址写进 `data-poster`（相对路径粘到站外解析不出图），占位图不写——那张「暂无配图」粘出去只会让人以为分享坏了。「分享」按钮在不支持 `navigator.share` 时的复制退化分支走同一条路。
+
+没有走的两条路，都写在 [share-资源分享功能.md](share-资源分享功能.md)「海报怎么进剪贴板」里：base64 内嵌（体积大且多数 App 会剥掉 data URI）、`image/png` blob（能粘出图，但丢文本，跟资源包的初衷相冲）。
+
+改动：`scripts/lib/render.js`（`data-poster` + `sharePoster` 判定）、`theme/assets/app.js`（新增 `copyPacket` / `plainCopy` / `packetHtml`，替换原复制分支）。构建验证 810 个资源页全部带上 `data-poster`。
+
 ### 2026-10-28 · 清空全部百度网盘链接（623 条）
 
 起因：站内 623 条资源的 `baidu_url` 已全部失效，页面上挂着的都是打不开的分享。与其留着引导用户点死链，不如先撤干净，回头重新出链再补。
