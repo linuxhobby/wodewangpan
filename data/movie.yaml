@@ -1,4 +1,4 @@
-# 电影资源（393 条）
+# 电影资源（394 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -4754,3 +4754,13 @@
   date: 2026-10-31
   added: "2026-11-01 16:57"
   image: mv-407.jpg
+
+- id: mv-408
+  title: "生日礼物"
+  category: 电影
+  tags: ["电影", "喜剧", "生日礼物 Das Geschenk"]
+  quark_url: "https://pan.quark.cn/s/30f3dda3f738"
+  description: "因为一份不太妥当的礼物和一群难以管束的宾客，这场原本精心安排的儿童生日派对彻底失控，引发了三观之争、家庭闹剧和一连串令人啼笑皆非的混乱。本片类型：喜剧。2026 年上映，片长 86 分钟。制片国家/地区：德国。导演：Vanessa Jopp。编剧：Ben Brooks。主演：珍妮·古尔多、埃丁·哈萨诺维奇、海纳·劳特尔巴赫、Levin Wopp、Sogol Faghani、Enzo Brumm。出品方：UFA Fiction。｜TMDB 7.1"
+  date: 2026-10-30
+  added: "2026-11-02 03:40"
+  image: mv-408.jpg
