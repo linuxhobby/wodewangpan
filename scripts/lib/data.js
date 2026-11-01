@@ -363,7 +363,10 @@ export function normalizeResources(rawList) {
         kind: preset.kind,
         name: raw[`${preset.kind}_name`] || preset.name,
         url: String(url).trim(),
-        code: raw[preset.code] ? String(raw[preset.code]).trim() : '',
+        // 提取码：优先读约定字段（baidu_code），再回退到数据里实际用的 baidu_pwd
+        code:
+          raw[preset.code] ? String(raw[preset.code]).trim()
+          : raw[`${preset.kind}_pwd`] ? String(raw[`${preset.kind}_pwd`]).trim() : '',
       });
     }
     if (Array.isArray(raw.links)) {

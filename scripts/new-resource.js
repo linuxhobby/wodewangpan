@@ -54,7 +54,7 @@ entry.push(`  category: "${category}"`);
 if (tags) entry.push(`  tags: [${tags.split(/[,，]/).map((t) => t.trim()).join(', ')}]`);
 if (quark) entry.push(`  quark_url: "${quark}"`);
 if (baidu) entry.push(`  baidu_url: "${baidu}"`);
-if (code) entry.push(`  baidu_code: "${code}"`);
+if (code) entry.push(`  baidu_pwd: "${code}"`);
 if (description) entry.push(`  description: "${description.replace(/"/g, '\\"')}"`);
 entry.push(`  date: ${date}`);
 
