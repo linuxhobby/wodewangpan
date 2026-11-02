@@ -275,6 +275,7 @@ function layout({
   keywords = '',
   noindex = false,
   assetVersion = '',
+  searchIndexUrl = '/search-index.json',
   footNavCurrent = '',
   rssHref = '/feed.xml',
   iconVersion = '',
@@ -316,6 +317,7 @@ ${ogImg ? `<meta property="og:image" content="${esc(ogImg)}">\n` : ''}${ogImg &&
 <meta name="twitter:title" content="${esc(fullTitle)}">
 <meta name="twitter:description" content="${esc(description || site.description)}">
 ${ogImg ? `<meta name="twitter:image" content="${esc(ogImg)}">\n` : ''}<link rel="stylesheet" href="/assets/style.css${v}">
+<meta name="search-index-url" content="${esc(searchIndexUrl)}">
 ${head}
 ${jsonLd ? jsonLdBlock(jsonLd) : ''}
 </head>

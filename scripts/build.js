@@ -268,6 +268,11 @@ const indexAll = items.map((it) => {
   };
 });
 
+// 搜索索引随内容变化就得换 URL：和静态资源一样用内容哈希做版本号，否则浏览器 / CDN
+// 按 nginx 的 30 天 max-age 缓存旧索引，新增资源永不进搜索（这正是「后面新增内容搜不到」的根因）
+const searchIndexVersion = crypto.createHash('md5').update(JSON.stringify(indexAll)).digest('hex').slice(0, 8);
+const searchIndexUrl = `/search-index.json?v=${searchIndexVersion}`;
+
 // 静态资源版本号用内容哈希，不能用 commit：commit 会让每次提交（哪怕只加一条数据）
 // 都改写所有页面的 ?v=，mtime 全量刷新，「内容未变不覆盖」就失效了
 const assetVersion = (() => {
@@ -298,6 +303,7 @@ const ctxBase = {
   images,
   baseUrl,
   indexAll,
+  searchIndexUrl,
   assetVersion,
   iconVersion,
   shareImage,

@@ -16,6 +16,11 @@ import { esc, tileHtml } from './card.js';
   var moreEl = document.getElementById('more');
   var input = document.getElementById('q');
   var resultsEl = document.getElementById('results');
+  // 搜索索引地址带数据版本号（build.js 注入到 <head> 的 meta），避免浏览器 / CDN 按 30 天
+  // max-age 长期缓存旧索引，导致新增资源永远搜不到
+  var SI_URL = '/search-index.json';
+  var siMeta = document.querySelector('meta[name="search-index-url"]');
+  if (siMeta && siMeta.getAttribute('content')) SI_URL = siMeta.getAttribute('content');
   var PAGE = parseInt(moreEl && moreEl.getAttribute('data-page-size'), 10) || 36;
   var MAX_HITS = 120;
   var shown = PAGE;
@@ -189,7 +194,7 @@ import { esc, tileHtml } from './card.js';
     globalLoading = true;
     // 必须写根绝对路径：相对写法在 /resource/<id>/ 下会解析成 404，
     // 蜘蛛跟着渲染结果去抓就是一批白费抓取预算的硬 404
-    fetch('/search-index.json')
+    fetch(SI_URL)
       .then(function (r) { return r.json(); })
       .then(function (data) { globalIndex = data; globalLoading = false; cb && cb(); })
       .catch(function () { globalLoading = false; cb && cb(); });
