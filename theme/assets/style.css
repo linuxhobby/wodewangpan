@@ -284,10 +284,8 @@ a.tag:hover { background: var(--brand-soft); }
 /* 页面标题是 h1，粗体计数会像标题的一部分 */
 .page__n { font-weight: 400; }
 
-/* ── 标题栏 / 面包屑右侧链接组：两个邀请胶囊在前，「热榜」在最后，整组靠右 ── */
-.page__invite { padding: 2px 9px; background: var(--brand-soft); border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
-.page__invite:hover { background: var(--brand-mark); text-decoration: none; }
-/* 邀请胶囊 + 热榜整组：桌面端靠 margin-left:auto 顶到行尾；窄屏覆盖为独占一行左对齐 */
+/* ── 标题栏 / 面包屑右侧链接组：「热榜 TOP 30」靠右 ── */
+/* 热榜整组：桌面端靠 margin-left:auto 顶到行尾；窄屏覆盖为独占一行左对齐 */
 .page__aside { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-left: auto; }
 .page__hot { font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
 .page__hot:hover { text-decoration: underline; }
@@ -416,8 +414,7 @@ a.tag:hover { background: var(--brand-soft); }
 .facts tr:last-child th, .facts tr:last-child td { border-bottom: 0; }
 /* 浏览量行：计数在左、推广链接靠右，同一行 */
 .facts__views { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
-.facts__promo { padding: 1px 8px; background: var(--brand-soft); border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight: 400; color: var(--brand); text-decoration: none; white-space: nowrap; }
-.facts__promo:hover { background: var(--brand-mark); text-decoration: none; }
+
 
 .links { display: flex; flex-direction: column; gap: 8px; }
 .linkrow {
@@ -527,7 +524,7 @@ a.tag:hover { background: var(--brand-soft); }
 .foot { padding: 28px 0 40px; text-align: center; }
 .foot p { margin: 0; font-size: var(--fs-base); color: var(--muted); line-height: var(--lh-body); }
 /* .foot p 把 margin 归零了，这里补标签名把特异性提到持平、靠后来者取胜，不用 !important */
-p.foot__icp, p.foot__stat { margin-top: 4px; }
+p.foot__icp { margin-top: 4px; }
 p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align-items: center; gap: 14px; }
 .foot__contact a, .foot__contact span { display: inline-flex; align-items: center; padding: 3px; border-radius: var(--r-tag); color: var(--contact-icon); text-decoration: none; }
 .foot__contact a:hover { color: var(--contact-icon-hover); background: var(--fill-hover); }
@@ -539,7 +536,6 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
 .foot__sep { color: var(--border); font-size: var(--fs-xs); user-select: none; }
 .foot__icon { display: block; width: 17px; height: 17px; transition: transform .15s ease; }
 .foot__contact a:hover .foot__icon { transform: translateY(-1px); }
-.foot__stat span { color: var(--text); font-variant-numeric: tabular-nums; }
 
 /* ── 移动端 ──────────────────────────── */
 /* 窄屏逐级减列：5 → 4 → 3 → 2；断点只调 --cols / --gap-x，

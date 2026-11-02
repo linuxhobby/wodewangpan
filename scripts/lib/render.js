@@ -5,11 +5,9 @@ import { esc, tileHtml } from '../../theme/assets/card.js';
 // 「最新」角标的判定不在渲染层：build.js 用 newestIdsOf() 算好后通过 ctx.newestIds 传进来，
 // 保证首页 / 分类页 / 搜索索引标的是同一批
 
-/** 页脚访问统计（stats: local 时启用）：读 VPS 上由 nginx 日志生成的 /stats.json，另种一年期 vid cookie 区分访客 */
-const STATS_HTML =
-  '<p class="foot__stat">总访问量 <span id="stat-pv">–</span> · 访客数 <span id="stat-uv">–</span>' +
-  ' · 今日 <span id="stat-tpv">–</span> · 访客 <span id="stat-tuv">–</span></p>';
-const STATS_SCRIPT = `<script>
+/** 访问追踪（stats: local 时启用）：种一年期 vid cookie + /hit 信标，供后台 sitestats.py 统计 UV。
+ *  只做追踪，不渲染任何可见数字（页脚 PV/UV 显示已移除；详情页浏览量、热门榜由 app.js 另行拉取 /stats.json） */
+const TRACK_SCRIPT = `<script>
 (function () {
   var exp = new Date(Date.now() + 31536000000).toUTCString();
   if (!/(^|; )vid=/.test(document.cookie)) {
@@ -21,16 +19,6 @@ const STATS_SCRIPT = `<script>
     if (navigator.sendBeacon) navigator.sendBeacon('/hit');
     else fetch('/hit', { method: 'POST', keepalive: true }).catch(function () {});
   } catch (e) {}
-  fetch('/stats.json', { cache: 'no-store' })
-    .then(function (r) { return r.json(); })
-    .then(function (s) {
-      var m = { 'stat-pv': s.pv, 'stat-uv': s.uv, 'stat-tpv': s.today_pv, 'stat-tuv': s.today_uv };
-      for (var id in m) {
-        var el = document.getElementById(id);
-        if (el && m[id] != null) el.textContent = m[id];
-      }
-    })
-    .catch(function () {});
 })();
 </script>`;
 
@@ -53,19 +41,8 @@ const iconSvg = (key, cls = 'foot__icon') =>
     : '';
 
 // 页面 H1 同一行右侧的邀请链接（首页与各分类页共用）。外部站，统一 nofollow + noopener
-const PAGE_INVITES = [
-  {
-    href: 'https://www.aliyun.com/activity/ecs/student-compute-package?userCode=e9esmzev',
-    label: '学生专属算力包',
-    title: '阿里云学生专属算力包',
-  },
-  {
-    href: 'https://dashi.aliyun.com/activity/aigc?userCode=e9esmzev',
-    label: '一键打造你的专属AI应用',
-    title: '阿里云 AI 应用搭建',
-  },
-];
-/** 标题栏右侧整组链接：两个邀请 + 「热榜 TOP 30」。整组包在 .page__aside 里，
+const PAGE_INVITES = [];
+/** 标题栏右侧整组链接：「热榜 TOP 30」。整组包在 .page__aside 里，
  *  桌面端由它 margin-left:auto 顶到行尾；窄屏整组独占一行、左对齐（见 style.css 移动端） */
 const titleAsideLinks = () =>
   '<span class="page__aside">' +
@@ -357,12 +334,11 @@ ${body}
 </main>
 <footer class="foot wrap">
   ${footNav(footNavCurrent, baseUrl)}
-  ${localStats ? STATS_HTML : ''}
   <p>共 ${total} 个资源 · ${esc(site.disclaimer)}</p>
   ${site.icp ? `<p class="foot__icp">${esc(site.icp)}</p>` : ''}
   ${contactHtml(site.contact, site.qqGroup)}
 </footer>
-${localStats ? STATS_SCRIPT : ''}
+${localStats ? TRACK_SCRIPT : ''}
 <script type="module" src="/assets/app.js${v}"></script>
 </body>
 </html>
@@ -694,8 +670,7 @@ export function detailPage(ctx) {
     ? `${panNames}（${item.links.length} 个链接${item.links.some((l) => l.code) ? ' · 部分需提取码' : ''}）`
     : '暂无可用链接';
   const facts = [
-    // 分类：同一行右侧挂推广链接「分钟级部署OpenClaw」（外部站统一 nofollow + noopener）
-    ['分类', `<span class="facts__views"><a href="${catHref(item.category)}">${esc(item.category)}</a><a class="facts__promo" href="https://www.aliyun.com/activity/ecs/clawdbot?userCode=e9esmzev" target="_blank" rel="noopener noreferrer nofollow">分钟级部署OpenClaw</a></span>`],
+    ['分类', `<span class="facts__views"><a href="${catHref(item.category)}">${esc(item.category)}</a></span>`],
     ...(year ? [['上映 / 发行', esc(year)]] : []),
     ...(item.added ? [['入库日期', esc(item.added)]] : []),
     ['标签', item.tags.length ? item.tags.map((t) => esc(t)).join(' · ') : '—'],
