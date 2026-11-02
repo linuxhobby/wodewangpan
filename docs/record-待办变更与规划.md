@@ -138,7 +138,7 @@
 
 ### 2026-11-02 · robots 放开 `/stats.json`
 
-`robots.txt` 里原本有 `Disallow: /stats.json`，而首页与热榜的浏览量、详情页的 pv/uv 都靠前端 `fetch('/stats.json')` 回填；Googlebot 渲染时被这条挡住，取数失败会连带影响「加载更多」与热榜的索引质量。它本身是动态接口、不参与收录，挡它没有收益，已从 `scripts/build.js` 的生成模板移除（`public/` 是 gitignore 的构建产物，直接手改线上文件会被下一次构建覆盖）。`/hit`、`/*/search-index.json`、`/*?q=` 三条保留。
+`robots.txt` 里原本有 `Disallow: /stats.json`。原因有两点：一是前端要 `fetch('/stats.json')` 取数——首页与热榜的浏览量、详情页的 pv/uv 都靠它回填；二是 Googlebot 渲染时也被这条挡住，取数失败会连带影响「加载更多」与热榜的索引质量。它本身是动态接口、不参与收录，挡它没有收益。落点在 `scripts/build.js` 的生成模板：已从那里移除该条 `Disallow`（`public/` 是 gitignore 的构建产物，直接手改线上文件会被下一次构建覆盖，改模板才有效）。`/hit`、`/*/search-index.json`、`/*?q=` 三条保留。
 
 ### 2026-10-30 · 「复制资源信息」改为富文本复制，连海报一起进剪贴板
 
