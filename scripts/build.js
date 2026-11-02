@@ -382,7 +382,7 @@ write(
   // /*?q= 挡搜索结果页（与首页高度重合，白吃配额）；必须带 ? ，否则路径里含 q= 的页面会被误伤
   // /*/search-index.json 只挡子路径：根目录那份是 Googlebot 渲染「加载更多」的取数通道
   // 下面这批 AI / SEO 爬虫九天数千次请求、referer 回流为 0，硬拦由 nginx 403 兜底
-  `User-agent: *\nAllow: /\nDisallow: /*?q=\nDisallow: /stats.json\nDisallow: /hit\nDisallow: /*/search-index.json\n\nUser-agent: ShapBot\nUser-agent: KeenableBot\nUser-agent: SkytabBot\nUser-agent: SemrushBot\nUser-agent: AhrefsBot\nUser-agent: MJ12bot\nUser-agent: SerpstatBot\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml\n`
+  `User-agent: *\nAllow: /\nDisallow: /*?q=\nDisallow: /hit\nDisallow: /*/search-index.json\n\nUser-agent: ShapBot\nUser-agent: KeenableBot\nUser-agent: SkytabBot\nUser-agent: SemrushBot\nUser-agent: AhrefsBot\nUser-agent: MJ12bot\nUser-agent: SerpstatBot\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml\n`
 );
 write(
   path.join(outDir, 'sitemap.xml'),
