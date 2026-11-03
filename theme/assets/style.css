@@ -592,9 +592,8 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   }
   .detail { flex-direction: column; }
   .detail__media { flex: 0 0 auto; flex-direction: row; align-items: flex-start; gap: 14px; }
-  /* 翻页块窄屏收成一列，「下一个」也回到左对齐 */
+  /* 翻页块窄屏收成一列：上一个靠左、下一个靠右，保持与桌面一致的镜像关系 */
   .pager { flex-direction: column; }
-  .pager__item--next { justify-content: flex-start; }
   .poster { width: 150px; }
   .qrbox { flex: 1; width: auto; }
   .linkrow__url { flex-basis: 100%; }
