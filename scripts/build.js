@@ -320,6 +320,15 @@ for (const it of items) {
   byCat.get(it.category).push(it);
 }
 
+// 详情页「上一个 / 下一个」：只在本分类内按分类页的排序顺走，首尾缺的一侧为 null。
+// 映射一次算完，避免每张详情页各 filter 一遍全量 items。
+const pagerMap = new Map();
+for (const list of byCat.values()) {
+  for (let i = 0; i < list.length; i++) {
+    pagerMap.set(list[i].id, { prev: list[i - 1] || null, next: list[i + 1] || null });
+  }
+}
+
 console.log('生成列表页…');
 write(
   path.join(outDir, 'index.html'),
@@ -334,7 +343,13 @@ console.log('生成详情页…');
 for (const item of items) {
   write(
     path.join(outDir, 'resource', item.id, 'index.html'),
-    detailPage({ ...ctxBase, item, qrLinks: qrMap.get(item.id) || [], shareQr: shareQrMap.get(item.id) || '' })
+    detailPage({
+      ...ctxBase,
+      item,
+      qrLinks: qrMap.get(item.id) || [],
+      shareQr: shareQrMap.get(item.id) || '',
+      pager: pagerMap.get(item.id) || null,
+    })
   );
 }
 

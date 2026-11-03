@@ -394,6 +394,18 @@ a.tag:hover { background: var(--brand-soft); }
 .qrbox__switch { display: flex; gap: 6px; margin-top: 8px; }
 
 .detail__main { flex: 1; min-width: 0; }
+/* 详情页同分类翻页：方向词与标题同一行，首尾缺的一侧整块不输出，单条时自然占满整行 */
+.pager { display: flex; gap: 10px; margin-top: 16px; }
+.pager__item {
+  flex: 1 1 0; min-width: 0; display: flex; align-items: baseline; gap: 8px;
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--r-box);
+  background: var(--card); color: inherit; text-decoration: none;
+}
+.pager__item:hover { border-color: var(--brand); background: var(--fill-hover); }
+.pager__dir { flex: none; font-size: var(--fs-sm); color: var(--muted); white-space: nowrap; }
+.pager__title { flex: 0 1 auto; min-width: 0; font-size: var(--fs-md); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pager__item--prev { justify-content: flex-start; }
+.pager__item--next { justify-content: flex-end; }
 /* 分享按钮：与上方转存链接区隔开一行，展开后「分享」与社交按钮同在一行 */
 .detail__share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
 .share__panel { display: contents; }
@@ -580,6 +592,9 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   }
   .detail { flex-direction: column; }
   .detail__media { flex: 0 0 auto; flex-direction: row; align-items: flex-start; gap: 14px; }
+  /* 翻页块窄屏收成一列，「下一个」也回到左对齐 */
+  .pager { flex-direction: column; }
+  .pager__item--next { justify-content: flex-start; }
   .poster { width: 150px; }
   .qrbox { flex: 1; width: auto; }
   .linkrow__url { flex-basis: 100%; }

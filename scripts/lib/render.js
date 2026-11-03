@@ -641,8 +641,24 @@ function relatedBlock(related, images) {
 <ul class="grid${fit}">${related.map((it) => cardHtml(it, images, false, false)).join('')}</ul>`;
 }
 
+/** 详情页同分类翻页：只显示标题；分类首条只有「下一个」、末条只有「上一个」，缺的一侧整块不渲染 */
+function pagerBlockOf(pager) {
+  if (!pager || (!pager.prev && !pager.next)) return '';
+  const link = (it, dir) => {
+    const dirSpan = `<span class="pager__dir">${dir === 'prev' ? '← 上一个' : '下一个 →'}</span>`;
+    const titleSpan = `<span class="pager__title">${esc(it.title)}</span>`;
+    // 方向词贴着卡片边缘：上一个在左、下一个在右，标题跟在方向词内侧，两者同一行
+    const inner = dir === 'prev' ? `${dirSpan}${titleSpan}` : `${titleSpan}${dirSpan}`;
+    return `<a class="pager__item pager__item--${dir}" href="${itemHref(it.id)}" rel="${dir}">${inner}</a>`;
+  };
+  return `<nav class="pager" aria-label="同分类翻页">
+${pager.prev ? link(pager.prev, 'prev') : ''}
+${pager.next ? link(pager.next, 'next') : ''}
+</nav>`;
+}
+
 export function detailPage(ctx) {
-  const { site, item, images, qrLinks, baseUrl, items, tagIndex, shareQr } = ctx;
+  const { site, item, images, qrLinks, baseUrl, items, tagIndex, shareQr, pager } = ctx;
   const img = images.get(item.id) || {};
   const primary = qrLinks[0];
 
@@ -746,7 +762,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
       </div>
     </div>
   </div>
-</article>${related.length ? relatedBlock(related, images) : ''}`;
+</article>${pagerBlockOf(pager)}${related.length ? relatedBlock(related, images) : ''}`;
 
   const canonicalPath = itemHref(item.id);
   const schemaType = SCHEMA_TYPE[item.category] || 'CreativeWork';
