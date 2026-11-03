@@ -3,17 +3,23 @@
 # 还原：nginx 配置已自动备份为 <conf>.bak.<时间戳>；cron 可用 crontab -e 删掉对应行。
 #
 # 用法：
-#   bash deploy/enable-stats.sh                      # 用默认路径
+#   bash deploy/enable-stats.sh                      # 用默认路径（全新站点，统计从零开始）
 #   REPO_DIR=/srv/site DOMAIN=example.com NGINX_CONF=/etc/nginx/conf.d/site.conf bash deploy/enable-stats.sh
+#   OLD_STATS_DB=/tmp/old-stats.db bash deploy/enable-stats.sh   # 迁移服务器：导入旧统计库，保留历史排名
 #
 # 前置：以 root 执行（需要 reload nginx、写 crontab）。仓库目录已 git pull 到最新。
+# 迁移注意：统计库 /var/lib/sitestats/stats.db 不在仓库里，换服务器默认丢失，热门榜排名会全部重置。
+#   想保留旧排名，先把旧机的库拷过来：scp 旧机:/var/lib/sitestats/stats.db /tmp/old-stats.db
+#   再带 OLD_STATS_DB 跑本脚本。切勿在新机已跑过统计后导入（会覆盖新机增量）。
 
 set -u
 
 REPO_DIR="${REPO_DIR:-/opt/wodewangpan}"
 NGINX_CONF="${NGINX_CONF:-/etc/nginx/conf.d/wodewangpan.conf}"
 DOMAIN="${DOMAIN:-www.wodewangpan.top}"
+STATS_DB="/var/lib/sitestats/stats.db"
 STATS_OUT="/var/lib/sitestats/stats.json"
+OLD_STATS_DB="${OLD_STATS_DB:-}"
 
 need() { command -v "$1" >/dev/null 2>&1 || { echo "缺少命令: $1"; exit 1; }; }
 need nginx; need python3; need crontab
@@ -69,11 +75,32 @@ PY
 nginx -t && systemctl reload nginx || { echo "nginx -t 失败，请用备份 $BAK 还原后检查"; exit 1; }
 echo "nginx 已重载"
 
-echo "== 2. 回填 sitestats（基于当前 access.log 全量重算） =="
+echo "== 2. 回填 sitestats =="
 cd "$REPO_DIR" || exit 1
-python3 tools/sitestats.py --reset --backfill
+if [ -n "$OLD_STATS_DB" ]; then
+  if [ ! -f "$OLD_STATS_DB" ]; then
+    echo "[错误] OLD_STATS_DB=$OLD_STATS_DB 不存在，终止以免误清空现有统计。"; exit 1
+  fi
+  # 先确认这是一份可用的 SQLite（防止 scp 半截文件把库顶坏）
+  if ! python3 - "$OLD_STATS_DB" <<'PY'
+import sys, sqlite3
+try:
+    c = sqlite3.connect(sys.argv[1]); c.execute('SELECT COUNT(*) FROM sqlite_master'); c.close()
+except Exception as e:
+    print('[错误] 不是有效 SQLite 库:', e); sys.exit(1)
+PY
+  then exit 1; fi
+  mkdir -p "$(dirname "$STATS_DB")"
+  cp "$OLD_STATS_DB" "$STATS_DB"
+  echo "已导入旧统计库 -> $STATS_DB（保留历史 PV/UV，迁移后新访问在其上累加）"
+  # 关键：导入旧库后【不能】--reset，否则历史会被清掉；只回填当前 access.log（inode 不匹配会自动从日志头重读）
+  python3 tools/sitestats.py --backfill
+else
+  echo "未指定 OLD_STATS_DB：按全新站点重置统计（旧排名会丢失，热榜从零累积）"
+  python3 tools/sitestats.py --reset --backfill
+fi
 ls -l "$STATS_OUT"
-python3 -c "import json;d=json.load(open('$STATS_OUT'));print('res 条数:',len(d['res']),'| 总PV:',d['pv'],'| 总UV:',d['uv'])"
+python3 -c "import json;d=json.load(open('$STATS_OUT'));print('res 条数:',len(d['res']),'| 总PV:',d['pv'],'| 总UV:',d['uv'],'| since:',d.get('since'))"
 
 echo "== 3. 配置 cron 增量（每 5 分钟） =="
 LINE="*/5 * * * * cd $REPO_DIR && /usr/bin/python3 tools/sitestats.py >> /var/log/sitestats.log 2>&1"
