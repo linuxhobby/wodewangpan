@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - run: npm ci
+
+      # 1) 死代码 / 未定义引用 / 重复声明拦截（no-unused-vars 为 error，新增废代码直接失败）
+      - run: npm run lint
+
+      # 2) 构建产物，供下面的 CSS 体检读取
+      - run: npm run build
+
+      # 3) 样式体检：漏样式 / 死样式 / 在样式块写死数值（违反 :root 设计令牌即失败）
+      - run: npm run audit:css

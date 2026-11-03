@@ -421,7 +421,6 @@ export function normalizeResources(rawList) {
 
   const counts = new Map();
   for (const it of items) counts.set(it.category, (counts.get(it.category) || 0) + 1);
-  const siteCats = new Set();
   return { items, counts };
 }
 

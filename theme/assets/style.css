@@ -18,6 +18,9 @@
   --fill-hover: rgba(127, 127, 127, 0.1); /* 悬浮浅底 */
   --contact-icon: #1ebafc;        /* 页脚联系方式图标（QQ 蓝） */
   --contact-icon-hover: #0d8ecf;  /* 同上，悬浮加深 */
+  --rank-gold: #f5b301;           /* 热门榜前三：金 */
+  --rank-silver: #9aa7b5;         /* 热门榜前三：银 */
+  --rank-bronze: #cd7f32;         /* 热门榜前三：铜 */
 
   /* ── 字号阶梯：全站只用这 10 档 ── */
   --fs-xs: 12px;    /* 角标、迷你按钮、页脚分隔符 */
@@ -505,11 +508,11 @@ a.tag:hover { background: var(--brand-soft); }
 .hot__list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: var(--r-box); overflow: hidden; }
 .hot__item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
 .hot__item:last-child { border-bottom: none; }
-.hot__rank { flex: none; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 50%; background: var(--fill-soft); color: var(--muted); font-weight: 700; font-size: var(--fs-sm); }
-/* 前三名金 / 银 / 铜，是榜单专用色，不入令牌 */
-.hot__rank--top1 { background: #f5b301; color: var(--surface); }
-.hot__rank--top2 { background: #9aa7b5; color: var(--surface); }
-.hot__rank--top3 { background: #cd7f32; color: var(--surface); }
+.hot__rank { flex: none; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: var(--r-pill); background: var(--fill-soft); color: var(--muted); font-weight: 700; font-size: var(--fs-sm); }
+/* 前三名金 / 银 / 铜：榜单专用色，已收进 :root 令牌 */
+.hot__rank--top1 { background: var(--rank-gold); color: var(--surface); }
+.hot__rank--top2 { background: var(--rank-silver); color: var(--surface); }
+.hot__rank--top3 { background: var(--rank-bronze); color: var(--surface); }
 .hot__main { flex: 1 1 auto; min-width: 0; display: flex; align-items: baseline; gap: 8px; }
 .hot__title { font-weight: 600; color: var(--text); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .hot__title:hover { text-decoration: underline; }

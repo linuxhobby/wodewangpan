@@ -148,7 +148,7 @@ export function tagHref(tag) {
   return `/tag/${encodeURIComponent(tagSlug(tag))}/`;
 }
 
-function catNav(categories, counts, activeCat, total, hotOn = false) {
+function catNav(categories, counts, activeCat, total, _hotOn = false) {
   const items = [
     `<a class="cat${activeCat ? '' : ' is-on'}" href="/">全部<span class="cat__n">${total}</span></a>`,
     ...categories.map(

@@ -13,6 +13,7 @@
     "dev": "node scripts/build.js && node scripts/serve.js",
     "new": "node scripts/new-resource.js",
     "audit:css": "node scripts/audit-css.js",
+    "lint": "eslint scripts theme/assets tools",
     "list:short": "node tools/list-short-desc.mjs"
   },
   "dependencies": {
@@ -22,5 +23,9 @@
   },
   "optionalDependencies": {
     "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "globals": "^15.15.0"
   }
 }

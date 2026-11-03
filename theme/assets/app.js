@@ -390,7 +390,7 @@ import { esc, tileHtml } from './card.js';
         });
         navigator.clipboard.write([item]).then(done, function () { plainCopy(text, done); });
         return;
-      } catch (e) { /* 落到下面纯文本 */ }
+      } catch { /* 落到下面纯文本 */ }
     }
     plainCopy(text, done);
   }
@@ -402,7 +402,7 @@ import { esc, tileHtml } from './card.js';
     ta.style.opacity = '0';
     document.body.appendChild(ta);
     ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) { /* ignore */ }
+    try { document.execCommand('copy'); done(); } catch { /* ignore */ }
     document.body.removeChild(ta);
   }
 
@@ -412,7 +412,7 @@ import { esc, tileHtml } from './card.js';
     if (!listEl) return;
     var indexEl = document.getElementById('hot-index');
     var index = {};
-    try { index = indexEl ? JSON.parse(indexEl.textContent) : {}; } catch (e) { index = {}; }
+    try { index = indexEl ? JSON.parse(indexEl.textContent) : {}; } catch { index = {}; }
     var btns = document.querySelectorAll('[data-hot-sort]');
     var mode = 'pv';
     var statsRes = null;
