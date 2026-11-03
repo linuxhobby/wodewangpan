@@ -1,82 +1,317 @@
-# docs · 索引与统一要求
+# docs · 站点经验总览（单一文档）
 
-「我的网盘资源站」（`www.wodewangpan.top`）的**经验类内容统一写在这个目录**：踩坑、流程、规范、SEO、待办、变更。
+本站（`www.wodewangpan.top`，我的网盘资源站）的经验类内容**统一在本篇**：踩坑、流程、规范、SEO、待办、变更。原 `docs/` 下按主题拆的多篇已合并于此，删重去旧。
 
-> 一句话原则：**结论只写一份，写在 `docs/` 里。** 只在对话里说过的结论等于没结论，下次照样踩同一个坑。
-
-**本目录当前 7 篇文档 + 本索引**（2026-10-13 由 12 篇合并为 4 篇，其后按主题逐步单列：资源分享、热门榜单、推广链接等）。
-根 `README.md` 只负责「怎么把站点跑起来」，不堆经验；两边冲突以 `docs/` 为准。
-最近更新：2026-10-30（新增推广链接专篇，当前 7 篇 + 索引）。
+> **原则**：结论只写一份；过程与历史细节在 Git 历史里随时能捞，不占正文。根 `README.md` 只讲「怎么把站点跑起来」，冲突以本篇为准。
 
 ---
 
-## 一、文件索引：写的东西往哪一篇塞
+## 一、铁律：改 URL / 数据 / 服务器之前必读
 
-| 文件 | 装什么 | 什么时候打开它 |
+（这类错了不报错，只会悄悄丢排名）
+
+- **`id` 就是 URL**（`/resource/mv-046/` 的 `mv-046` 取自 `data/*.yaml` 的 `id`）。改 id = 换地址 = 已收录页 404。**绝不能改**。
+- **分类 slug 改别名 = 换 URL**（`config/site.yaml` 的 `slugs`）。已收录后改 = 丢排名。
+- **标签 slug 三级取值，别名表只增不改**：`scripts/lib/data.js` 的 `tagSlug()` → ① `config/tags.yaml` 手写别名（34 个英文 slug，**永远别动**）② 拼音兜底 ③ 原样。已落到拼音 URL 的标签事后补别名 = 换 URL，所以 `tagSlugs` 只增不改。
+- **`pinyin-pro` 必须在 `dependencies`**：它决定标签 URL，放 devDependencies 会让部署机 `npm i --omit=dev` 时缺席 → 线上退化成 `%E7%A7%91%E5%B9%BB` 编码路径，两边不一致，直接丢排名。
+- **标签 slug 撞车**：两标签算出同 slug 会写进同一 `/tag/xxx/` 且构建**不报错**，撞了就在 `config/tags.yaml` 给其一配别名。
+
+---
+
+## 二、前端与样式约定
+
+- **页面宽度只有一个开关**：`<body class="page--wide">`（`layout()` 的 `wide` 默认 `true`）。新区块用现成的 `.wrap`/`.cats`，**不要**再造 `.xxx--wide` 变体（曾因此整页比全站窄一圈）。
+- **样式只在 `theme/assets/style.css`**：不写内联 `style=`、不写 `<style>` 块。颜色/字号/行高/圆角/间距一律用 `:root` 令牌；区块里**写死数值 `npm run audit:css` 会报错**。
+- **卡片结构只改一处**：`theme/assets/card.js` 被构建端 `render.js` 与浏览器端 `app.js` 共用，**改结构只改这一个文件**，两边各抄必致首屏与「加载更多」长得不一样。
+- 合并 CSS 规则前先查目标元素的父元素有没有实底/反白状态（曾把 `cat__n` 合并丢色）。
+- 跨容器复用同一组链接时查权重：`.crumb a`（0,1,1）会压暗详情页面包屑里的邀请/热榜链接，需用 `:not()` 排除（`.page__invite`/`.page__hot`）。
+
+---
+
+## 三、配置与数据目录
+
+- `config/site.yaml`、`config/tags.yaml` 是配置；`data/*.yaml` 一个分类一个文件，全英文命名。
+- `config/tags.yaml` 三档「标签要不要出页」：`tagExclude`（不建页，标签照常显示但不可点）、`tagOverlapAllow`（建页，接受重合）、`tagMeta`（建页 + 定制 title/h1/desc）。`tagOverlapMax: 0.8` 是 Jaccard 告警线（重合数/两页并集）。某标签归哪档是**判断不是计算**，写配置时留一句为什么。
+- 遍历 `data/` 必须排除配置：`scripts/lib/data.js` 的 `NON_RESOURCE_FILES = new Set(['site.yaml','tags.yaml'])`。**新增配置文件只改这一处**（漏改会让 `syncHeaderCounts()` 去改写该文件头部条数注释，埋雷）。
+
+---
+
+## 四、构建与产物
+
+- **内容未变不覆盖**，为的是让蜘蛛命中 304：`scripts/build.js` 的 `write()` 写盘前比对，相同则沿用旧文件并 `utimes` 保留 mtime。实测二次构建 722 文件全沿用（58.7s → 34.9s）。
+- **静态资源版本号用内容哈希，不用 commit**：用 commit 会让每次提交改写所有页面的 CSS/JS 链接，mtime 全刷，304 落空。
+- **改完数据必须 `npm run build`**：`public/` 不热更新。
+- `syncHeaderCounts` 会改 YAML 头部条数注释（正常）。
+- **下架条目 `public/` 不自动回收**，见第六节「清四处」。
+- `robots.txt` 与 `sitemap.xml` 是 `build.js` 生成产物，手改线上文件下次构建会被覆盖——要改规则改 `build.js` 模板字符串。
+
+---
+
+## 五、部署与 Nginx
+
+- 推 `main` 后 VPS **每 6 小时自动拉取重建**（`0 */6`）；急发：`ssh <host> 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'`（约 30 秒，无新提交直接 `exit 0`，频率只决定上线延迟上限）。
+- `wdwp-autoupdate.sh` 不覆盖 nginx conf，线上直改 nginx 安全，但**记得回写 `deploy/` 镜像**。
+- **`robots.txt` 只挡子路径** `Disallow: /*/search-index.json`；根 `/search-index.json` 是 Googlebot 渲染「加载更多」的通道，挡了自断发现路径。
+- 410 规则（`^/.+/search-index\.json$`）**必须排在静态资源 location 之前**（nginx 正则 location 取首个命中）。
+- `gzip_types` 必须带 `text/xml`（`mime.types` 把 `.xml` 映射成 text/xml，只写 application/xml 时 sitemap/feed 完全不压缩）。
+- **nginx 四层策略**（仓库镜像在 `deploy/`）：① `return 410` 已死 URL（`/resource/*/search-index.json`）② `return 444` 漏洞扫描 ③ `return 403` 零回流爬虫 ④ robots.txt 礼貌层。
+  - 410 而非 404：让蜘蛛衰减更快（子路径从 80→2 次/天）。
+  - `if ... return` 放 server 块最前（先于 http→https 的 if，避免探测白吃 301）；server-rewrite 阶段早于 preaccess，故优先于 `limit_req`。
+  - 444 绕开 `key.txt`/`baidu_verify_*.html`/`.well-known/acme-challenge/`/根 `search-index.json`。
+- 改 nginx 三步走：`cp -a` 备份 → 改 → `nginx -t` 通过才 `reload`；`nginx -T` 确认文件真被载入。
+
+---
+
+## 六、内容生产（从网盘到条目）
+
+### 入库八步（摘要）
+
+1. 扫描 `scan-new.mjs`，**先看重复标注**（转存两次会标 ⚠）再动手。
+2. 确认范围（目录名 + 拟定编号）给用户。
+3. **先 rename 再出链**（顺序反了链接作废）。
+4. 重新 browse 取新 fid → `share`（公开/无码/永久）。
+5. 抓 TMDB 信息（`api.tmdb.org`，代理优先）。
+6. `make-entry.mjs` 写入，**简介不照抄 TMDB 原文**。
+7. `npm run build` + 抽查详情页。
+8. 提交推送（`git status` 查别的会话改动，只 `git add` 自己文件，别 `-A`）。
+
+### 编号与 id
+
+| 网盘目录 | 站内分类 | id 前缀 | 数据文件 |
+|---|---|---|---|
+| `04电影` | 电影 | `mv-` | `movie.yaml` |
+| `03电视剧` | 电视剧 | `tv-` | `tv.yaml` |
+| `06纪录片` | 纪录片 | `dc-` | `documentary.yaml` |
+| `05动漫` | 动漫 | `an-` | `anime.yaml` |
+| `01游戏` | 游戏 | `game-` | `game.yaml` |
+| `02应用` | 软件 | `app-` | `software.yaml` |
+| `08电子书` | 电子书 | `bk-` | `ebook.yaml` |
+| `07课程` | 课程 | `cs-` | `course.yaml` |
+| `010其他` | 其他 | `ot-` | `misc.yaml` |
+| `09操作系统` | 操作系统 | `os-` | `os.yaml` |
+
+- 按扫描顺序编号，别按年份/系列重排（排序是 `added`→`id`→日期倒序，重排让系列在页面上倒过来）。
+- `id` 是 URL 绝不能改；页面标题不带编号；`added` 带时刻（`"2026-10-11 16:30"`，要引号）排序更准。
+- 新增分类动站点 5 处 + skill 2 处，漏项静默（构建不报错，但分类页 URL 变中文、缺图海报塌成文件夹样式）。
+
+### 合集拆分
+
+原目录留第一部并改名 → 其余各集新建编号目录 → 顺序 `rename → create-folder → move → share`（出链最后）→ 站点侧原 id 改第一部、其余按新编号新增。
+
+### 网盘失效修复（顺序不能颠倒）
+
+```bash
+node ~/.workbuddy/skills/quark-resource-sync/scripts/check-drive-sync.mjs   # ① 只比目录名
+node ~/.workbuddy/skills/quark-resource-sync/scripts/check-share-links.mjs  # ② 验链接
+node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-check --apply  # ③ 重出链写回 YAML
+```
+
+- `41004` 改名可重出链；`41012`/`41026` 用户取消/风控，**不可恢复**，标「待补资源」或问下架。
+- 分类目录改名须同步 skill 的 `dir` 常量（否则该分类静默扫不到）。
+
+### 下架一条要清四处
+
+1. `data/*.yaml` 删条目（改头部条数注释；**别用「按 `- id:` 切块重写」脚本删**——会吃掉文件头 `# XX资源（N 条）` 注释，用 js-yaml 校验）。
+2. `static/images/<id>.jpg` 删海报。
+3. `public/` 删 `resource/<id>/`、`img/<id>-*.webp`、`qr/<id>-*.svg`。
+4. 重新构建 + 冒烟（首页 200、已下架详情页 404）→ 提交推送。
+
+> **SEO 视角**：下架是 SEO 动作。构建期输出下架清单 + nginx 410/301（见第五/六节），把 Googlebot 重试从 33 次/天压下来。
+
+### 简介文案规范
+
+- 字数：`scripts/lib/data.js` 的 `MIN_DESC = 300`（标签 `【…】` 与结尾 `｜TMDB x.x` 署名不计入），建议写 **320–400**；上限 `MAX_DESC = 1200` 截断。自查 `npm run list:short -- --max=320`。
+- 必须：原创改写、写具体（类型/年代/看点/适合谁）、每条有区分度。
+- 禁止：关键词堆砌、编造事实、空洞形容词、复用同段、**正文用破折号**（改逗号/冒号）。
+- 特殊字段别自己写：`【第 N 季 · 共 M 集】` 与 `｜TMDB 8.5` 由 `fill-desc.mjs` 接回。
+- 各分类侧重：软件（干什么/痛点/差异）、电子书（作者与体裁/主张/读者）、OS·其他（版本，非影视 `date` 填版本发布日）、纪录片（题材/视角）、电视剧（题材/主线）、课程（内容/节数/基础/学完能做）。
+- 批量补写工具链：正文放 `.tmp/desc-draft.json`（`{ "id": "新正文" }`）→ `node tools/fill-desc.mjs`（空跑）→ `--apply` 落盘（只改 description，自动接回头尾）。
+
+### 配图：图源与兜底
+
+- 放 `static/images/`，全站平铺，文件名 = id。卡片 240×360 `fit:cover`，源图宽 ≥240 即达标（维基 ~256×364 够用）。
+- **真实素材优先**：Wikimedia ✅首选（带浏览器 UA）／ TMDB 海报 ✅ ／ iTunes 512 ✅ ／ simple-icons ✅ ／ 豆瓣图书 ✅（电子书主力）／ weserv 代理 ✅；Fandom／MobyGames／Google Books ❌。课程无 TMDB 海报：官方图→维基→`tools/poster.mjs icon` 合成。
+- **假图识别**：下载完 `file` 看 image/JPEG/PNG 且宽 ≥200；出图必须打开看一眼（`app.js` 取图、图标偏小、identicon 假头像只有看图能发现）。
+- **自绘兜底** `tools/poster.mjs`（douban/book/icon/set 四模式）+ `tools/share-poster.mjs`（首页品牌分享卡 `static/share.jpg`，改站名/分类后重跑）。
+
+### 三个 skill
+
+| skill | 版本 | 职责 |
 |---|---|---|
-| [content-内容生产.md](content-内容生产.md) | 入库八步、编号与 id、合集拆分、失效修复与下架、简介文案规范、配图图源与兜底工具、三个 skill 的用法与维护 | 要把网盘里的东西变成站点条目时 |
-| [site-建站与开发.md](site-建站与开发.md) | URL/收录禁忌、样式与卡片约定、config 与 data 目录、构建产物、部署与 Nginx、本机环境与命令速查、改完自检 | 改代码 / 改数据 / 动服务器之前 |
-| [SEO-收录与流量.md](SEO-收录与流量.md) | 未闭环问题清单（P1–P7）与本期变化、放行判断准则、抓取预算结论、日志解析三个坑、真人流量估算、nginx 四层策略与上线规范 | 推收录、看流量、拦爬虫时 |
-| [record-待办变更与规划.md](record-待办变更与规划.md) | 待办与已闭环、功能与内容规划（待评审）、变更记录 | 想知道「还要做什么 / 什么时候改的」 |
-| [promo-推广链接.md](promo-推广链接.md) | 标题栏推广 / 联盟邀请链接清单、共用 `userCode`、替换历史、nofollow 约定 | 要改标题栏邀请链接时 |
+| `quark-resource-sync` | v1.11 | 同步编排：扫描/编号/出链/抓 TMDB/写 YAML/热门反向同步/合集拆分 |
+| `quarkclouddrive` | 1.0.24（官方，自动更新） | 夸克 CLI：`browse`/`rename`/`share`/`search`/`upload` |
+| `quark-upload-share` | — | 上传本地文件并生成公开分享链接 |
 
-归不进这四类的，先想是不是该写进根 `README.md`（部署步骤、目录结构、数据格式），还是根本不值得留。
+- 真身只在 `~/.workbuddy/skills/`；`~/.codebuddy/skills/` 是符号链接。**别放进客户端 builtin/**（更新会清空）。
+- 升级 `quarkclouddrive` 用 `bash scripts/install.sh`，不用 `quark-drive.cjs update`。
+- 两台机经 `~/Documents/SynologyDrive/sync-skill/` 中转，`config.env` 含凭据不同步。
+- 脚本清单（`quark-resource-sync/scripts/`）：`scan-new` / `tmdb` / `make-entry` / `check-desc` / `check-drive-sync` / `check-share-links` / `reshare-batch` / `backfill-*` / `placeholder-fill` / `trending-sync` / `install` / `lib/config`。
 
 ---
 
-## 二、命名规范
+## 七、SEO 与流量
 
-**格式：`英文-中文.md`**（英文短横线连接，中文说明，中间一个半角 `-`）。
+### 当前未闭环问题（按优先级）
 
-> **例外**：索引文件统一用大写 `README.md`（即本文件），不加中文后缀——它是入口，要一眼认出来。
+- **P1 补 `config/site.yaml` 的 `verification`**（Google/Bing/百度/360/搜狗）：无验证码看不到真实收录量，所有判断只能靠日志反推。
+- **P2 百度断更 + 配额死循环**：根因资质（`icp` 空 + 香港节点无备案）。做：推送改**详情页优先** + 平台手工提交 sitemap；长期备案 + 大陆节点是唯一破局。
+- **P3 下架留 404 尾巴**：构建期输出下架清单 + nginx 410/301（见第五/六节）。
+- **P4 Yandex 断档**（观察）／ **P5 AI 爬虫静默**／ **P6 360 断档 + 301 单跳核对**／ **P7 首页体积**（noscript 收敛为 9 分类 + `/all/`）。
 
+### 判断准则：值不值得放行
+
+**看 referer 真人回流，不看抓取量**。零回流的 SEO/AI 爬虫（Semrush/Ahrefs/MJ12 + ShapBot/KeenableBot 等）403；会带流量的（Google/Yandex/Bing/百度 + Perplexity/OAI/Claude-SearchBot）保留。全站真人 UV 九天仅 186，三家 AI+四家 SEO 工具合计 7,723 次请求。
+
+### 抓取预算结论
+
+- **304 才是腾预算的手段**（改「内容未变不覆盖」后重复访问从 200 变 304）。
+- 版本号跟内容走，不跟 commit。
+- 推翻的结论（别回头）：冻结首页 lastmod ❌、调 priority/changefreq ❌（Google 忽略）、整条屏蔽 search-index.json ❌（只挡子路径）。
+- 页面存在理由：`/all/`（蜘蛛一次抓全站主通道，保持进 sitemap）、详情页相关推荐 10 条、热门标签前 20、`/tags/` 总览、图片 sitemap `image:loc`、真实 lastmod、占位海报排除出图索引。
+
+### 日志解析三坑
+
+1. 按引号切字段再匹配 URI（整行 grep 会误报，如 UA 含 `.php`）。
+2. 服务器 mawk：不支持 `{3}` 区间、正则 `{` 当区间、超长 alternation 报 runaway → 用 `index(u,"kw")`。
+3. 444 看 curl 退出码（52）+ 别 `set -e`。
+
+### 真人流量估算
+
+- 下界（可信）：`vid` cookie + `/hit` 信标 → UV 186/9天 ≈ 20/天。
+- 上界（宽）：浏览器 UA + 真实路由 + 剔单 IP>30 次 → 944 IP。
+- 识别伪装脚本：固定过时 UA / 请求-IP 比高 / 云厂商 IP / 扫描路径占比高（命中两条即非人）。
+
+### 复核方法
+
+权威只有两处：站点访问日志（蜘蛛来没来、抓了啥、返回啥）+ 各家站长后台（精确收录量）。**别从数据中心 IP 跑 `site:` 查询**（Google/百度返空或验证码，Bing 返查询词回显假阳性）。
+
+> 姊妹站（院采雷达）同类问题在 `~/Documents/GitHub/yuancaileida/docs/SEO-收录与流量.md`。
+
+---
+
+## 八、功能模块
+
+### 热门榜 `/hot/`
+
+- 入口：首页/分类页 H1 行右侧「热榜 TOP 30 →」+ 详情页面包屑（同组 `.page__invite/.page__hot`，面包屑里用 `:not()` 排除防褪色），已进 sitemap。
+- 排序：按浏览量(PV)/人数(UV)，前端即时切换，默认 PV 降序 Top30。
+- 数据 `/stats.json`（cron 10 分钟增量，SQLite `/var/lib/sitestats/stats.db`）→ 前端 fetch 排序；与详情页「N次浏览·M人」同口径。取不到显示「统计暂不可用」。
+- **迁移服务器排名全变是正常的**：统计库只在服务器本地，换机从零。保留旧排名：先 `scp 旧机:/var/lib/sitestats/stats.db /tmp/old-stats.db`，再 `OLD_STATS_DB=/tmp/old-stats.db bash deploy/enable-stats.sh`（须在新机未跑统计前导入）。
+
+### 资源分享功能
+
+- 分享的是**资源包文本**（网盘在前、页面在后），不是页面 URL（平台卡片渲染不可控，且群里要多走一步）。
+- 格式：`{标题}（{年份}）·{分类}\n{一句话概要}\n{网盘}：{链接}...\n更多同类→{canonical}`。概要取简介首句（`summaryOf()`，≤60 字，全角 `｜` 切尾标，退到句读断）。
+- 桌面端：分享(`navigator.share`→退化复制) / 复制资源信息(富文本带海报) / 复制海报(image/png 给微博) / 微信二维码。
+- 富文本：`navigator.clipboard.write()` 同时写 `text/html`(海报`<img>`最前+各行) + `text/plain`；不支持就整段退回纯文本。海报用绝对地址、占位图不复制。
+- 微博只吃图片文件 → 单独「复制海报」按钮（webp→canvas→`image/png`；`write()` 同步发起，异步转码塞进 `ClipboardItem` Promise 值）。**不并入「复制资源信息」**（微信会走图片分支丢文字）。
+- 微信网页分享无官方 SDK：放本页 URL 二维码 + 系统面板。
+- 实现：`render.js`(`shareTextOf`/`sharePoster`/`detail__share`) + `app.js`(`copyPoster`/`copyPacket`/`packetHtml`) + `assets.js`(`writeShareQr`) + `build.js`。
+
+### 推广 / 联盟链接
+
+2026-11-02 起全站取消所有阿里云联盟邀请链接（标题栏 `PAGE_INVITES` 置空，详情页 OpenClaw 推广移除），标题栏右侧仅保留站内「热榜 TOP 30」。历史链接见 Git 历史，不再单列。
+
+---
+
+## 九、待办、规划与变更
+
+### 当前待办（仍有效）
+
+- 补 `verification`（P1，排第一）
+- 百度破局：详情页优先推送 + 平台提交 sitemap + 长期备案/大陆节点
+- 新引擎破零：搜狗/字节/华为 提交 sitemap
+- IndexNow 主动推送（`deploy/submit-baidu` 范式）
+- 首页瘦身（noscript 收敛 9 分类 + `/all/`）
+- 重合标签差异化（仅 macOS 配了 `tagMeta`）
+- 核对 360 的 301 是否单跳
+- 重建爬虫限速（per-UA 方案，放进 `deploy/` + `deploy/nginx-site.conf.example` 补 `limit_req`）
+- 补百度网盘链接（2026-10-28 清空 623 条，补链时按原字段写回）
+
+### 功能与内容规划（待评审，只排序未决定）
+
+四个瓶颈：内容同质化 / 详情页孤岛 / 回访动机弱 / 链接失效靠人工。
+
+- 用户侧（纯前端）：A1 失效反馈 ✅已落地 / A2 收藏看过 / A3 排序筛选 / A4 上-下一个 / A5 深色模式
+- 内容结构化（抗同质化主力）：B1 series / B2 年份切面 / B3 规格字段 / B4 评分字段 / B5 分类导语+FAQ / B6 策展专题
+- 可靠性工程化（最省人工）：C1 失效自动降级(`dead:true`) / C2 public 残留回收 / C3 周体检+CI 冒烟
+- SEO 补丁：D1 verification / D2 IndexNow / D3 详情 OG 图 / D4 首页瘦身
+- **明确不做**：评论/登录/积分/投稿、在线播放、采集同类站、给短板分类硬凑、SW 全站离线缓存。
+- 红线：A2/A3 视图状态不得进 URL/canonical/sitemap；robots 已挡 `?q=`。
+- Cloudflare Pages 曾评估，结论不适合切主站（验证文件 404 + 蜘蛛治理无法平移），维持现状。
+
+### 变更记录（压缩）
+
+- 2026-11-02 robots 放开 `/stats.json`（前端 fetch 取数 + Googlebot 渲染需要；`/hit`/`/*/search-index.json`/`/*?q=` 保留）；取消全站阿里云联盟链接。
+- 2026-10-30 复制改富文本 + 复制海报按钮；2026-10-28 清空 623 条百度链接、反馈条扩到许愿。
+- 2026-10-22 分享从页面链接改资源包文本、删四平台按钮；2026-10-21 详情页反馈条/A1 落地。
+- 2026-10-13 docs 多篇合并为单篇总览；2026-10-12 多批下架使全站 676→673→729→671 条、薄内容补写 387 条全达标。
+- 2026-10-10~11 构建改「内容未变不覆盖」+ 内容哈希版本号；标签页宽度归位；7 家零回流爬虫 403；Bing/360 全量推送；相关推荐 6→10。
+
+---
+
+## 十、环境速查
+
+### 位置
+
+| 项 | 路径 |
+|---|---|
+| 仓库 | macOS `/Users/marco.chan/Documents/GitHub/wodewangpan`；Windows `C:\Users\marco\Github\wodewangpan` |
+| 远端 | `git@github.com:linuxhobby/wodewangpan.git` |
+| 线上 | https://www.wodewangpan.top |
+| 技能真身 | `~/.workbuddy/skills/`（`quark-resource-sync` v1.11 / `quarkclouddrive` / `quark-upload-share`）；`~/.codebuddy/skills/` 为符号链接 |
+| 凭据 | `~/.workbuddy/skills/quark-resource-sync/config.env`（含凭据，不写进文档） |
+| 中转 | `~/Documents/SynologyDrive/sync-skill/`（不含 `config.env`） |
+| VPS autoupdate | `/usr/local/bin/wdwp-autoupdate`（拉取→npm ci→构建→原子替换 public→reload nginx） |
+
+> 凭据真实值一律不写进文档，只记「在哪、叫什么」。
+
+### 命令
+
+| 命令 | 作用 |
+|---|---|
+| `npm run build` | 构建到 `public/`，含 SEO 自检 |
+| `npm run serve` | 预览 http://localhost:4321 |
+| `npm run dev` | 构建+预览 |
+| `npm run new` | 交互新建资源 |
+| `npm run list:short -- --max=320` | 列出正文不足字数条目 |
+| `npm run audit:css` | CSS 自检 |
+| `npm run lint` | ESLint（CI 也跑） |
+
+配图/封面：
+
+```bash
+node tools/poster.mjs douban --title "书名" --out static/images/bk-001.jpg   # 抓豆瓣正版封面（电子书优先）
+node tools/poster.mjs book   --title "书名" --out static/images/bk-002.jpg   # 豆瓣查无此书时生成兜底
+node tools/poster.mjs icon   --icon <图标> --out static/images/app-001.png   # 图标合成竖版
+node tools/poster.mjs set    --title "套装名" --out static/images/bk-006.jpg # 套装深色封面
+node tools/share-poster.mjs  # 改完站点配置后重跑，刷新 static/share.jpg
 ```
-content-内容生产.md      ✅
-site-建站与开发.md        ✅
-content.md                ❌ 看不出是什么
-内容生产.md               ❌ 必须用英文开头
-content_内容生产.md       ❌ 用短横线不用下划线
+
+资源同步 skill（`S=~/.workbuddy/skills/quark-resource-sync/scripts`）：
+
+```bash
+node $S/scan-new.mjs
+node $S/tmdb.mjs search --type movie --query "片名"
+node $S/make-entry.mjs --data '{...}'
+node $S/check-desc.mjs --file movie.yaml
+node $S/trending-sync.mjs --dry-run --no-build --no-push
 ```
 
-- 英文部分用**小写单词**，概括「这一篇属于什么」；中文部分说明「具体讲什么」。
-- **不轻易新增文件**。有新主题先找上面几篇里的归属；确实塞不下、且属于长期要维护的独立主题（如推广链接）才单列成篇，单列后记得在本索引加一行。
-- 单篇超过约 500 行时，优先把**已闭环的过程记录**删掉或压成一行结论——过程在 Git 历史里随时能捞，不必让它占正文。
+### 运行时与写脚本注意
 
----
+- Node（管理版）v22.22.2；系统 macOS(zsh)/Windows。依赖 `js-yaml`/`sharp`/`pinyin-pro`（必须 `dependencies`）。
+- 写脚本：Node 只用内置模块；临时文件走 `os.tmpdir()`，别写死 `/tmp/`（Windows 无效）。
+- Windows 坑：`data/*.yaml` 是 CRLF（正则整块匹配失效，用位置切片）；沙箱 `spawnSync` 调 CLI 会 EBUSY（改 bash 脚本）。
 
-## 三、写什么 / 不写什么
+### 改完自检
 
-**写进 `docs/`**：
+```bash
+npm run build && npm run audit:css
+```
 
-- **经验**：踩过的坑、为什么这么定、反面教材（例：标签页忘了传 `wide`，整页比全站窄一圈）
-- **注意事项**：动某类东西之前必须知道的事（例：卡片模板两端共用，只能改一处）
-- **待办 / 规划 / 变更**：还没做的优化、想做还没评审的、已经改了什么
-- **总结**：复盘数据、结论与口径（例：正文字数怎么算、各引擎收录现状）
-- **skill**：各 skill 的适用场景、触发方式、踩坑
+七类页面 `<body class="page--wide">` 应一致：
 
-**不写进 `docs/`**（留在根 README 或代码里）：
-
-- 部署步骤、Nginx 配置、cron、访问统计 → 根 `README.md`
-- 目录结构、数据格式、构建命令 → 根 `README.md`
-- 纯代码约定 → 就近写在源码注释里，`docs/` 只记「为什么这么定」
-- 凭据的真实值 → 一律不写进文档，只记「在哪、叫什么」
-
----
-
-## 四、统一要求（改 `docs/` 前照做）
-
-1. **先想归属，不新建文件**。改完顺手确认本索引里那四行的描述还准（尤其是某篇加了新章节之后）。
-2. **每篇开头三行说清**：这是什么、适用什么、最近更新时间。
-3. **结论变了就地改**：不要另开一节「新结论」，也不要只在对话里更正。被推翻的结论**保留并划掉**（`~~…~~`），注明为什么错，避免走回头路。
-4. **同类内容合并**：发现两处讲同一件事，合并成一处，不留两份会漂移的副本。
-5. **命令写成可直接复制的 bash 块**；数据给表格 + 更新时间。
-6. **交叉引用用相对链接**（`[site-建站与开发.md](site-建站与开发.md)`）。引用别的文档时顺手确认链接还有效——改名后最容易留下一堆 404。
-7. **任务型内容做完了就压成一行结论**，过程清单（逐条 id 之类）删掉，别让正文变成流水账。
-8. **待办与规划都集中在** [record-待办变更与规划.md](record-待办变更与规划.md)，不要散在其余三篇末尾。
-
----
-
-## 五、相关
-
-- 站点怎么跑起来、目录结构、数据格式 → 根 `README.md`
-- skill 的完整文档（不在本仓库）→ `~/.workbuddy/skills/quark-resource-sync/SKILL.md`
+```bash
+grep -o '<body[^>]*>\|class="wrap[^"]*"\|class="cats[^"]*"' public/index.html public/tag/<slug>/index.html
+```

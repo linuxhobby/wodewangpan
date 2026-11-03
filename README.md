@@ -237,28 +237,14 @@ tools/
   fill-desc.mjs          # 把 .tmp/desc-draft.json 里的简介写回 YAML（自动接回【季/集】前缀与 ｜TMDB 后缀，--strict 拦不合格稿）
   list-short-desc.mjs    # 列出正文不足指定字数的条目（npm run list:short）
   poster.mjs             # 海报/封面生成器，单入口四模式：book（生成书封兜底）/ icon（图标合成竖版）/ set（套装深色封面）/ douban（抓豆瓣正版封面）
-docs/                # 经验类文档（4 篇 + 索引），按干活的场景划分，见 docs/README.md
-  content-内容生产.md   # 入库八步、编号、失效修复、简介文案、配图、skill
-  site-建站与开发.md     # URL 禁忌、样式约定、构建部署、环境速查
-  SEO-收录与流量.md   # 问题清单与本期变化、抓取预算、日志解析、nginx 爬虫治理
-  record-待办变更与规划.md  # 待办 / 规划 / 变更记录
-  README.md           # 索引与文档规范
+docs/                # 经验类文档（已合并为单一 README.md，含建站/内容/SEO/待办/规划），见 docs/README.md
 deploy/              # 部署用：Nginx 配置示例、自动更新脚本、统计日志格式、搜索引擎提交脚本
 public/              # 构建产物，部署这个目录（本目录不入库）
 ```
 
 ## 文档
 
-`docs/` 只有 4 篇 + 索引，按「干活时在干什么」划分。索引与命名规范见 [`docs/README.md`](docs/README.md)。
-
-| 文档 | 内容 |
-|---|---|
-| [`docs/content-内容生产.md`](docs/content-内容生产.md) | 入库 SOP、编号与 id、失效修复与下架、简介文案红线、配图图源与兜底工具、skill 用法与维护 |
-| [`docs/site-建站与开发.md`](docs/site-建站与开发.md) | 改代码前必读：URL 与收录禁忌、样式与卡片约定、config / data、构建产物、部署与 Nginx、环境速查 |
-| [`docs/SEO-收录与流量.md`](docs/SEO-收录与流量.md) | 未闭环问题清单（P1–P7）与本期变化、放行判断准则、抓取预算结论、日志解析三个坑、真人流量估算、nginx 四层策略与上线规范 |
-| [`docs/record-待办变更与规划.md`](docs/record-待办变更与规划.md) | 待办与已闭环、待评审的功能 / 内容规划、变更记录 |
-
-完整索引与文档规范见 [`docs/README.md`](docs/README.md)。
+经验类文档已合并为单一 [`docs/README.md`](docs/README.md)，按「铁律 / 样式 / 配置 / 构建 / 部署 / 内容生产 / SEO / 功能模块 / 待办规划 / 环境速查」分节，覆盖建站、内容生产、SEO 与待办变更。结论只写一份，过程留 Git 历史。
 
 
 
