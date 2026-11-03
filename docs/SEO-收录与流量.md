@@ -198,7 +198,7 @@ code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 8 "$u"); rc=$?
 ### 改动上线的操作规范（踩坑所得）
 
 1. **`robots.txt` 和 `sitemap.xml` 是 `build.js` 生成的产物**——手改线上文件会在下一次构建时被换掉。
-2. **`site-autoupdate.sh` 不覆盖 nginx conf**，所以线上直改 nginx 是安全的，但**要记得回写 `deploy/` 镜像**。
+2. **`wdwp-autoupdate.sh` 不覆盖 nginx conf**，所以线上直改 nginx 是安全的，但**要记得回写 `deploy/` 镜像**。
 3. **不删服务器上的配置文件，改名停用。** `include /etc/nginx/conf.d/*.conf` 是 glob，改名成 `.disabled-时间戳` 即失效又可回退。
 4. **每次改 nginx 三步走**：`cp -a` 备份 → 改 → `nginx -t` 通过才 `reload`。用 `nginx -T` 确认某文件**是否真的被载入**。
 5. **两个相互依赖的改动必须在同一次 reload 里做完**：删 map 文件却留着 `limit_req zone=...`，`nginx -t` 会因 zone 悬空直接失败。

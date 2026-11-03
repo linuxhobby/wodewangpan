@@ -122,7 +122,7 @@ console.log('读取数据源…');
 const site = loadSite(configDir);
 // 必须在第一次 tagSlug() 之前加载：晚一步别名表不生效，URL 会退回拼音兜底
 const tagCfg = loadTagConfig(configDir);
-// 环境变量优先（服务器由 /etc/site-autoupdate.conf 注入），其次 site.yaml 的 baseUrl
+// 环境变量优先（服务器由 /etc/wdwp-autoupdate.conf 注入），其次 site.yaml 的 baseUrl
 const DEFAULT_BASE_URL = 'https://www.wodewangpan.top';
 const baseUrl = (process.env.BASE_URL || site.baseUrl || DEFAULT_BASE_URL).replace(/\/+$/, '');
 if (baseUrl.includes('example.com')) {

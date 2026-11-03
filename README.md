@@ -8,7 +8,7 @@
 |---|---|
 | 网站 | https://www.wodewangpan.top |
 | 仓库 | `git@github.com:linuxhobby/wodewangpan.git` |
-| 更新方式 | 推到 `main`，VPS 定时自动拉取并重建（急发用 `FORCE=1 site-autoupdate`） |
+| 更新方式 | 推到 `main`，VPS 定时自动拉取并重建（急发用 `FORCE=1 wdwp-autoupdate`） |
 
 ## 网站特性
 
@@ -106,11 +106,11 @@ sudo certbot --nginx --redirect -d 你的域名 -d www.你的域名
 推到 `main` 后服务器自动拉取、重建、reload nginx：
 
 ```bash
-sudo install -m755 deploy/site-autoupdate.sh /usr/local/bin/site-autoupdate
+sudo install -m755 deploy/wdwp-autoupdate.sh /usr/local/bin/wdwp-autoupdate
 
-# 站点专属的两个值放 /etc/site-autoupdate.conf，与脚本本身分开，
+# 站点专属的两个值放 /etc/wdwp-autoupdate.conf，与脚本本身分开，
 # 以后脚本升级只要重新 install 一次，配置不会丢
-sudo tee /etc/site-autoupdate.conf >/dev/null <<'EOF'
+sudo tee /etc/wdwp-autoupdate.conf >/dev/null <<'EOF'
 SITE_DIR=/opt/wodewangpan
 BASE_URL=https://你的域名
 EOF
@@ -119,15 +119,15 @@ sudo crontab -e
 # 加入一行（每 6 小时拉一次）
 # 频率只决定「上线延迟」的上限：脚本先比对 HEAD，没有新提交就直接退出，空跑只有一次 git fetch；
 # 真有提交时才构建，而构建现在只重写字节变了的页面，未变的保留原 mtime，不会白费蜘蛛的抓取预算
-# 急发不必等 cron：在推送方执行 ssh <host> 'flock -w 120 /tmp/site-autoupdate.lock site-autoupdate'
-0 */6 * * * /usr/local/bin/site-autoupdate >> /var/log/site-autoupdate.log 2>&1
+# 急发不必等 cron：在推送方执行 ssh <host> 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
+0 */6 * * * /usr/local/bin/wdwp-autoupdate >> /var/log/wdwp-autoupdate.log 2>&1
 ```
 
-看运行结果：`tail -20 /var/log/site-autoupdate.log`。
+看运行结果：`tail -20 /var/log/wdwp-autoupdate.log`。
 
-**想立刻发布、不等 cron**：服务器上执行 `FORCE=1 site-autoupdate`（cron 模式下本地 HEAD 与远端一致时会直接跳过，FORCE 用来强制重跑一次）。
+**想立刻发布、不等 cron**：服务器上执行 `FORCE=1 wdwp-autoupdate`（cron 模式下本地 HEAD 与远端一致时会直接跳过，FORCE 用来强制重跑一次）。
 
-**回滚**：服务器上 `git reset --hard <上一个 commit>` 再 `FORCE=1 site-autoupdate`，或本机 `git revert` 后推上去。
+**回滚**：服务器上 `git reset --hard <上一个 commit>` 再 `FORCE=1 wdwp-autoupdate`，或本机 `git revert` 后推上去。
 
 发布过程是原子的：先构建到临时的 `public.new`，全部就绪后才用两次 `mv` 换成 `public`，nginx 始终读到一个完整版本的产物，不会出现「新 HTML 配旧 CSS」这种中间态。
 
