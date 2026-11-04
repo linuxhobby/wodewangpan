@@ -111,3 +111,15 @@
   date: 2017-07-12
   added: "2026-10-25 16:09"
   image: game-011.jpg
+
+- id: game-012
+  title: "帝国时代II：决定版"
+  category: 游戏
+  tags: ["游戏", "即时战略", "策略", "帝国时代II：决定版 Age of Empires II: Definitive Edition"]
+  quark_url: "https://pan.quark.cn/s/3e0f8f1f5682"
+  baidu_url: "https://pan.baidu.com/s/1wGwLSkAHQdVsUVmEdE9r-g"
+  baidu_pwd: "dc1g"
+  description: "《帝国时代II：决定版》是 World's Edge 与 Forgotten Empires 联合开发、Xbox Game Studios 发行的即时战略重制作品，为纪念系列诞生 20 周年而推出，2019 年 11 月登陆 Steam。游戏在经典原作基础上全面翻新，支持 4K 超高清画质并重录了原声音乐。玩家依旧扮演一方领主，从黑暗时代起步，采集食物、木材、黄金与石头，指挥村民垦荒伐木、修筑城镇中心与各类建筑，逐级晋升到封建、城堡、帝国时代，最终凭借军事、经济或科技优势击败对手。决定版首发即附带《最后的可汗》内容包，新增数个战役与一批可选文明，此后又持续更新活动、玩法模式与多人合作，让这款历经多年的 RTS 常青树始终保持活力。系列以丰富的文明差异与兵种克制著称，从西欧、中东到亚洲各势力皆有独特单位与加成，单局时长适中，上手容易而精通不易。无论是怀念旧作的老玩家，还是第一次接触这一类型的新玩家，都能在其中体会到运筹帷幄、逐步扩张征服的乐趣。｜Steam 2019"
+  date: 2019-11-14
+  added: "2026-11-04 18:15"
+  image: game-012.jpg
