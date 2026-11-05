@@ -98,11 +98,12 @@ function promoHomeTop(site) {
   const alt = `${p.brand || '推广'} · ${p.text || ''}`;
   return promoBanner({ src: '/promo/hengtianyun/640x60.webp', href: promoLinkOf(site), alt, text: p.text || '', cls: 'promo--home-top', w: 640, h: 60 });
 }
-function promoDetailBottom(site) {
+// 详情页二维码卡片下方的推广位：16:9 横幅，宽度跟随媒体列（桌面 ≈218px，窄屏独占一行）
+function promoQr(site) {
   const p = site.promo;
   if (!p || p.enabled === false) return '';
   const alt = `${p.brand || '推广'} · ${p.text || ''}`;
-  return promoBanner({ src: '/promo/hengtianyun/600x400.webp', href: promoLinkOf(site), alt, text: p.text || '', cls: 'promo--detail', w: 600, h: 400 });
+  return promoBanner({ src: '/promo/hengtianyun/600x338.webp', href: promoLinkOf(site), alt, text: p.text || '', cls: 'promo--qr', w: 600, h: 338 });
 }
 
 /** contact 的 key 允许中英多写法（email / 邮箱、qq / qq群），统一转小写后比对 */
@@ -756,6 +757,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   <div class="detail__media">
     <img class="poster" src="${esc(img.detail)}" width="240" height="360" alt="${esc(item.title)}海报" decoding="async" fetchpriority="high">
     ${qrBlock}
+    ${promoQr(site)}
   </div>
   <div class="detail__main">
     <h1 class="detail__title">${esc(item.title)}</h1>
@@ -844,7 +846,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     title: `${item.title}${year ? `（${year}）` : ''}${titleSuffix}`,
     description: `${item.title}${year ? `（${year}）` : ''} · ${titleSuffix} · ${descLong.slice(0, 110)}`,
     activeCat: item.category,
-    body: body + promoDetailBottom(site),
+    body,
     canonicalPath,
     ogType: 'article',
     ogImage: img.detail,
