@@ -318,6 +318,7 @@ ${ogImg ? `<meta property="og:image" content="${esc(ogImg)}">\n` : ''}${ogImg &&
 <meta name="twitter:description" content="${esc(description || site.description)}">
 ${ogImg ? `<meta name="twitter:image" content="${esc(ogImg)}">\n` : ''}<link rel="stylesheet" href="/assets/style.css${v}">
 <meta name="search-index-url" content="${esc(searchIndexUrl)}">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5363695594162175" crossorigin="anonymous"></script>
 ${head}
 ${jsonLd ? jsonLdBlock(jsonLd) : ''}
 </head>
