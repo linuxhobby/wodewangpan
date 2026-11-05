@@ -698,6 +698,7 @@ ${pager.next ? link(pager.next, 'next') : ''}
 export function detailPage(ctx) {
   const { site, item, images, qrLinks, baseUrl, items, tagIndex, shareQr, pager } = ctx;
   const img = images.get(item.id) || {};
+  const isDead = !!item.dead;
   const primary = qrLinks[0];
 
   const qrSwitch =
@@ -753,7 +754,8 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
 
   // 面包屑同一行右侧：两个邀请 + 热榜入口，与首页/分类页共用同一组（靠右侧由 .page__aside 的 margin-left:auto 顶过去）
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="${catHref(item.category)}">${esc(item.category)}</a>${titleAsideLinks()}</nav>
-<article class="detail">
+<article class="detail${isDead ? ' detail--dead' : ''}">
+  ${isDead ? '<div class="dead-banner">⚠ 该资源分享可能已失效（链接被取消）。可在页面底部留言许愿，或浏览右侧同类资源。</div>' : ''}
   <div class="detail__media">
     <img class="poster" src="${esc(img.detail)}" width="240" height="360" alt="${esc(item.title)}海报" decoding="async" fetchpriority="high">
     ${qrBlock}
@@ -848,6 +850,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     activeCat: item.category,
     body,
     canonicalPath,
+    noindex: isDead,
     ogType: 'article',
     ogImage: img.og && img.og.includes('/og/') ? img.og : img.detail,
     ogImageSize: img.og && img.og.includes('/og/') ? { w: 1200, h: 630 } : null,

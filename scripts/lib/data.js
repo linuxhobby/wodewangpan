@@ -399,6 +399,7 @@ export function normalizeResources(rawList) {
       added,
       links,
       primary: links[0] || null,
+      dead: !!raw.dead,
       // 未填 added 视为最新，排在最前
       sortKey,
       order: index,

@@ -411,7 +411,8 @@ write(
 );
 write(
   path.join(outDir, 'sitemap.xml'),
-  sitemapXml(baseUrl, items, categories, [
+  // 失效资源（dead:true）不进 sitemap：避免把死链递给搜索引擎、拖累整站抓取预算
+  sitemapXml(baseUrl, items.filter((i) => !i.dead), categories, [
     { path: '/about/', priority: '0.5' },
     { path: '/privacy/', priority: '0.3' },
     { path: '/contact/', priority: '0.4' },

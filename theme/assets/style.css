@@ -21,6 +21,9 @@
   --rank-gold: #f5b301;           /* 热门榜前三：金 */
   --rank-silver: #9aa7b5;         /* 热门榜前三：银 */
   --rank-bronze: #cd7f32;         /* 热门榜前三：铜 */
+  --warn: #b3261e;                /* 告警文本（失效资源横幅） */
+  --warn-soft: #fff4f0;           /* 告警弱底 */
+  --warn-border: #f3c2b6;         /* 告警描边 */
 
   /* ── 字号阶梯：全站只用这 10 档 ── */
   --fs-xs: 12px;    /* 角标、迷你按钮、页脚分隔符 */
@@ -551,6 +554,11 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
 .foot__sep { color: var(--border); font-size: var(--fs-xs); user-select: none; }
 .foot__icon { display: block; width: 17px; height: 17px; transition: transform .15s ease; }
 .foot__contact a:hover .foot__icon { transform: translateY(-1px); }
+
+/* 失效资源（dead:true）：顶部告警横幅 + 转存区灰化禁点 */
+.dead-banner { margin: 0 0 1rem; padding: .75rem 1rem; border-radius: var(--r-box); background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn-border); font-size: var(--fs-base); line-height: var(--lh-body); }
+.detail--dead .detail__media, .detail--dead .links { opacity: .45; filter: grayscale(.5); }
+.detail--dead .detail__media a, .detail--dead .detail__media button, .detail--dead .links a, .detail--dead .links button { pointer-events: none; }
 
 /* ── 移动端 ──────────────────────────── */
 /* 窄屏逐级减列：5 → 4 → 3 → 2；断点只调 --cols / --gap-x，
