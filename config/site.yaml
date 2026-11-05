@@ -68,3 +68,15 @@ maintainer: 人生若只如初见
 icp: ""
 # 首页 / 分类页首屏渲染条数，其余由「加载更多」渲染（宫格建议 12 的倍数）
 pageSize: 35
+# 衡天云联盟推广（affiliate）。enabled: false 可全站一键关闭所有推广位。
+# 链接统一带 aff=31743；rel 由渲染层写成 sponsored（Google 对赞助/联盟链接的硬性要求）。
+promo:
+  enabled: true
+  brand: 衡天云
+  # 活动落地页（开年活动，主推）；注册/自定义落地页放在 registerHref 备用
+  activityHref: https://www.htstack.com/activity/act_openyear.shtml?aff=31743
+  registerHref: https://my.htstack.com/aff.php?aff=31743
+  # 推广文案（页脚条与图片 alt 复用）
+  text: 【衡天云】海外云服务器12元/月起，开年限量抢购，超高性价比！
+  # 落地页优先级：activity 用活动页，register 用注册页；改这里即可整体切换
+  defaultHref: activity

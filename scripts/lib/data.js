@@ -290,6 +290,8 @@ export function loadSite(configDir) {
     homePerCategory: Number(cfg.homePerCategory) > 0 ? Math.floor(Number(cfg.homePerCategory)) : 5,
     // 首页分类区块顺序：fixed = site.yaml 的 categories 顺序；recent = 按各分类最新入库时间倒序
     homeCatOrder: cfg.homeCatOrder === 'recent' ? 'recent' : 'fixed',
+    // 衡天云联盟推广：enabled 为 false 时渲染层不输出任何推广位
+    promo: cfg.promo && typeof cfg.promo === 'object' ? cfg.promo : null,
   };
 }
 

@@ -455,6 +455,25 @@ if (fs.existsSync(inKey)) {
 } else {
   console.log('  ! 未找到 static/indexnow-key.txt，IndexNow 推送所需的验证文件缺失');
 }
+// 联盟推广素材：static/promo/** -> public/promo/**（构建不会整体复制 static/，需显式拷贝）
+{
+  const promoSrc = path.join(staticDir, 'promo');
+  if (fs.existsSync(promoSrc)) {
+    const copyDir = (src, dest) => {
+      fs.mkdirSync(dest, { recursive: true });
+      for (const name of fs.readdirSync(src)) {
+        const s = path.join(src, name);
+        const d = path.join(dest, name);
+        if (fs.statSync(s).isDirectory()) copyDir(s, d);
+        else fs.copyFileSync(s, d);
+      }
+    };
+    copyDir(promoSrc, path.join(outDir, 'promo'));
+    console.log('  · 已复制联盟推广素材 static/promo -> public/promo');
+  } else {
+    console.log('  ! 未找到 static/promo，推广位图片将 404（站点的 promo.enabled 应设为 false）');
+  }
+}
 
 /** SEO 自检：只提醒「页面能打开、肉眼看不出」的隐患；已有专门命令管的事（正文长度）不重复报 */
 {

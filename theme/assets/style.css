@@ -606,3 +606,28 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   /* 标题栏邀请组：窄屏独占一行、左对齐，避免胶囊右飘、热榜错行导致的参差 */
   .page__aside { flex-basis: 100%; margin-left: 0; }
 }
+
+/* ============================================================================
+   联盟推广位（衡天云 affiliate）：图片链接，rel=sponsored。
+   不抢首屏、不模仿 AdSense 广告，集中在页脚 / 首页顶部 / 详情页底部。
+   ============================================================================ */
+.promo { margin: 16px 0; text-align: center; line-height: 0; }
+.promo__link { display: inline-block; line-height: 0; }
+.promo__img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+/* 页脚全站条：通栏、克制，置于页脚导航之上 */
+.promo--footer { margin: 0 0 18px; }
+.promo--footer .promo__img { width: 100%; max-width: 970px; }
+/* 首页顶部通栏：紧贴标题下方，限制最大宽，窄屏自然缩放 */
+.promo--home-top { margin: 4px 0 18px; }
+.promo--home-top .promo__img { width: 100%; max-width: 640px; }
+/* 详情页底部矩形：内容读完后的上下文位 */
+.promo--detail { margin: 24px auto 8px; max-width: 600px; }
+.promo--detail .promo__img { width: 100%; max-width: 600px; }

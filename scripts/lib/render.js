@@ -72,6 +72,39 @@ const footNav = (current = '', baseUrl = '') =>
       )}"${i.href === current ? ' aria-current="page"' : ''}>${esc(i.label)}</a>`
   ).join('')}</nav>`;
 
+// 衡天云联盟推广位：图片 + 赞助链接。rel=sponsored 是 Google 对联盟/赞助链接的硬性要求
+function promoLinkOf(site) {
+  const p = site.promo;
+  if (!p) return '';
+  return p.defaultHref === 'register' && p.registerHref ? p.registerHref : p.activityHref;
+}
+function promoBanner({ src, href, alt, text, cls = '', w = 0, h = 0 }) {
+  const dims = w && h ? ` width="${w}" height="${h}"` : '';
+  return `<div class="promo ${cls}">
+  <a class="promo__link" href="${esc(href)}" target="_blank" rel="sponsored noopener noreferrer" title="${esc(text)}">
+    <img class="promo__img" src="${esc(src)}" alt="${esc(alt)}"${dims} loading="lazy" decoding="async">
+  </a>
+</div>`;
+}
+function promoFooter(site) {
+  const p = site.promo;
+  if (!p || p.enabled === false) return '';
+  const alt = `${p.brand || '推广'} · ${p.text || ''}`;
+  return promoBanner({ src: '/promo/hengtianyun/970x250.webp', href: promoLinkOf(site), alt, text: p.text || '', cls: 'promo--footer', w: 970, h: 250 });
+}
+function promoHomeTop(site) {
+  const p = site.promo;
+  if (!p || p.enabled === false) return '';
+  const alt = `${p.brand || '推广'} · ${p.text || ''}`;
+  return promoBanner({ src: '/promo/hengtianyun/640x60.webp', href: promoLinkOf(site), alt, text: p.text || '', cls: 'promo--home-top', w: 640, h: 60 });
+}
+function promoDetailBottom(site) {
+  const p = site.promo;
+  if (!p || p.enabled === false) return '';
+  const alt = `${p.brand || '推广'} · ${p.text || ''}`;
+  return promoBanner({ src: '/promo/hengtianyun/600x400.webp', href: promoLinkOf(site), alt, text: p.text || '', cls: 'promo--detail', w: 600, h: 400 });
+}
+
 /** contact 的 key 允许中英多写法（email / 邮箱、qq / qq群），统一转小写后比对 */
 const EMAIL_KEY = /^(email|邮箱)$/;
 const QQ_KEY = /^(qq|qq群|qq group)$/;
@@ -337,6 +370,7 @@ ${catNav(categories, counts, activeCat, total, hotOn)}
 <main class="wrap">
 ${body}
 </main>
+${promoFooter(site)}
 <footer class="foot wrap">
   ${footNav(footNavCurrent, baseUrl)}
   <p>共 ${total} 个资源 · ${esc(site.disclaimer)}</p>
@@ -427,7 +461,7 @@ function homePage(ctx) {
   const firstImg = (images.get(shown[0] && shown[0].id) || {}).card || '';
 
   const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span>${titleAsideLinks()}</h1>
-<div id="results" class="results" hidden></div>
+${promoHomeTop(site)}<div id="results" class="results" hidden></div>
 <div id="home">
 ${groups
     .map(
@@ -810,7 +844,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     title: `${item.title}${year ? `（${year}）` : ''}${titleSuffix}`,
     description: `${item.title}${year ? `（${year}）` : ''} · ${titleSuffix} · ${descLong.slice(0, 110)}`,
     activeCat: item.category,
-    body,
+    body: body + promoDetailBottom(site),
     canonicalPath,
     ogType: 'article',
     ogImage: img.detail,
