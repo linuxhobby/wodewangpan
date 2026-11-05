@@ -61,6 +61,8 @@ const FOOT_NAV = [
   { href: '/tags/', label: '标签索引' },
   { href: '/sitemap.xml', label: '网站地图', abs: true },
   { href: '/rss/', label: 'RSS订阅' },
+  { href: '/privacy/', label: '隐私政策' },
+  { href: '/contact/', label: '联系我们' },
 ];
 const footNav = (current = '', baseUrl = '') =>
   `<nav class="foot__nav" aria-label="站点导航">${FOOT_NAV.map(
@@ -1308,6 +1310,124 @@ ${newest
     canonicalPath: '/about/',
     footNavCurrent: '/about/',
     keywords: `关于${site.title},${site.title},网盘资源索引`,
+  });
+}
+
+export function privacyPage(ctx) {
+  const { site, baseUrl } = ctx;
+  /** 备用邮箱（site.yaml 的 contact.邮箱），用于「联系我们」兜底 */
+  const contactEmail = emailOf(site.contact);
+  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>隐私政策</span></nav>
+<h1 class="page__title page__title--doc">隐私政策</h1>
+<div class="card-page">
+  <p class="muted">最后更新：2026 年 11 月 5 日</p>
+
+  <p><strong>${esc(site.title)}</strong>（以下简称「本站」，域名 ${esc(baseUrl)}）深知个人隐私的重要性。本政策说明本站如何收集、使用、保护与披露信息，以及你对自己数据的权利。访问本站即表示你同意本政策的约定。</p>
+
+  <h2>一、我们收集的信息</h2>
+  <p>本站是一个纯静态的资源索引站，<strong>不要求注册、登录，也不主动收集姓名、电话、邮箱等个人身份信息</strong>。在正常运行过程中，服务器或CDN可能自动记录访问日志，包含访问时间、请求的页面、浏览器类型、操作系统以及IP地址等，仅用于保障服务稳定、排查故障与统计访问量，不作身份识别用途。</p>
+
+  <h2>二、Cookie 与同类技术</h2>
+  <p>本站会出于功能与广告投放的需要使用 Cookie 及类似的本地存储技术。Cookie 是存放在你设备上的小型文本文件，可帮助站点记住你的偏好设置。你随时可以通过浏览器的设置查看、删除或屏蔽 Cookie（详见下文「如何管理 Cookie」）。</p>
+
+  <h2>三、Google AdSense 广告</h2>
+  <p>为了维持站点运营，本站接入了 <strong>Google AdSense</strong> 展示广告。作为第三方广告服务商，Google 及其合作伙伴会利用 Cookie（包括 <strong>DoubleClick DART Cookie</strong>）根据你的浏览历史、兴趣或在本站及互联网上的访问行为，向你投放个性化广告。</p>
+  <ul>
+    <li>Google 使用 DART Cookie 的方式与退出方法，详见 Google 的广告隐私政策：<a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">https://policies.google.com/technologies/ads</a>。</li>
+    <li>你可以访问 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google 广告设置</a> 关闭基于兴趣的个性化广告。</li>
+    <li>除 Google 外，其他第三方广告网络也可能使用 Cookie 来投放与衡量广告，其使用方式受其各自隐私政策约束。</li>
+  </ul>
+
+  <h2>四、如何管理 Cookie</h2>
+  <p>你可以通过以下方式管理广告与 Cookie：</p>
+  <ul>
+    <li>在浏览器中禁用或删除 Cookie（各浏览器的操作路径不同，通常位于「设置 → 隐私与安全」）。</li>
+    <li>通过 <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">aboutads.info/choices</a> 或 <a href="https://www.youronlinechoices.com/" target="_blank" rel="noopener noreferrer">youronlinechoices.com</a> 选择退出第三方广告 Cookie。</li>
+    <li>请注意：禁用 Cookie 可能导致部分广告不再精准，但不影响你浏览本站内容。</li>
+  </ul>
+
+  <h2>五、信息的使用与保护</h2>
+  <p>我们仅在为本站提供服务（包括访问统计与广告展示）所必需的范围内使用上述信息，并采取合理的物理、技术与管理制度措施保护信息安全，防止未经授权的访问、泄露或篡改。本站不出售、出租或交易你的个人信息。</p>
+
+  <h2>六、第三方链接</h2>
+  <p>本站仅对网盘资源进行索引与整理，所有文件均存储在夸克、百度、阿里等第三方网盘上。点击转存或下载链接后将离开本站并进入相应第三方平台，其隐私实践由对应平台负责，本站无法控制也不承担相关责任。建议你在使用前阅读第三方的隐私政策。</p>
+
+  <h2>七、儿童隐私</h2>
+  <p>本站内容面向一般公众，不针对 13 岁以下儿童。我们不会有意收集儿童的个人信息；若发现误收集，请通过下方方式联系，我们将尽快删除。</p>
+
+  <h2>八、本政策的变更</h2>
+  <p>我们可能不时更新本隐私政策。任何变更都会在本页面发布并更新「最后更新」日期。建议你定期查看。若变更涉及重大调整，我们会以更显著的方式提示。</p>
+
+  <h2>九、联系我们</h2>
+  <p>如对本隐私政策或本站的数据处理有任何疑问，欢迎通过以下方式联系：
+  ${contactEmail ? `<a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>` : `请通过本站<a href="/contact/">联系我们</a>页的 QQ 群或邮箱渠道`}。</p>
+
+  <p class="muted">${esc(site.title)} · <a href="${esc(baseUrl)}/">${esc(baseUrl)}</a></p>
+</div>`;
+
+  return layout({
+    ...ctx,
+    title: '隐私政策',
+    description: `${site.title}隐私政策：说明本站如何收集、使用与保护你的信息，以及 Google AdSense 广告与 Cookie 的使用方式及退出途径`,
+    activeCat: '',
+    body,
+    canonicalPath: '/privacy/',
+    footNavCurrent: '/privacy/',
+    keywords: '隐私政策,隐私权,Google AdSense,Cookie,个性化广告',
+  });
+}
+
+export function contactPage(ctx) {
+  const { site, categories, total, items, baseUrl } = ctx;
+  const updated = lastmodOfList(items);
+  /** QQ 群名（site.yaml 的 qqGroup），留空则回退为通用「QQ群」 */
+  const qqName = String(site.qqGroup || '').trim();
+  /** QQ 群链接（site.yaml 的 contact.qq / contact.qq群） */
+  const qqLink = qqLinkOf(site.contact);
+  /** 备用邮箱（site.yaml 的 contact.邮箱），加不了群时的兜底通道 */
+  const contactEmail = emailOf(site.contact);
+  /** 维护者署名（site.yaml 的 maintainer），留空则不输出这一行 */
+  const maintainer = String(site.maintainer || '').trim();
+  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>联系我们</span></nav>
+<h1 class="page__title page__title--doc">联系我们</h1>
+<div class="card-page">
+  <h2>站点定位</h2>
+  <p><strong>${esc(site.title)}</strong>（${esc(baseUrl)}）是一个纯静态的网盘资源索引站：把散落在各处的夸克 / 百度 / 阿里云盘资源整理成条目，
+  统一给出海报、简介、标签和转存链接，打开网页即可直接使用，无需注册登录。</p>
+  <ul>
+    <li>已收录资源：<strong>${total}</strong> 个</li>
+    <li>资源分类：<strong>${(categories || []).length}</strong> 类（${(categories || []).join('、')}）</li>
+    <li>整站纯静态：页面预先生成，加载快、不追踪个人信息</li>
+  </ul>
+
+  <h2>数据来源与版权</h2>
+  <p>${esc(site.disclaimer)}。本站不存储任何影片、软件或电子书本体，所有文件均存放在第三方网盘上；
+  资源条目由人工整理与索引，版权归原作者或相应权利人所有。</p>
+  <p>若你是版权方，或发现链接失效、内容不当，欢迎通过下方方式联系，我们会在核实后第一时间处理（下架、补源或更正）。</p>
+
+  <h2 id="qq-group">加入${qqName ? `「${esc(qqName)}」` : ''}QQ群</h2>
+  <p>有问题、想交流资源，或者发现链接失效？欢迎扫码加入${qqName ? `QQ群<strong>${esc(qqName)}</strong>` : '本站QQ群'}交流反馈。</p>
+  <div class="qq-qr">
+    ${qqLink ? `<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">` : ''}
+    <img src="/qq-group.png" alt="${qqName ? `${esc(qqName)} ` : ''}QQ群二维码" width="260" height="260" loading="lazy">
+    ${qqLink ? '</a>' : ''}
+    <p class="muted">扫码加入${qqName ? `QQ群「${esc(qqName)}」` : 'QQ群'}</p>
+  </div>
+  ${qqLink ? `<p>也可直接 <a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>。</p>` : ''}
+  ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}
+  ${maintainer ? `<p class="muted">本站点由 ${esc(maintainer)} 维护</p>` : ''}
+  <p class="muted">最近更新：${updated ? esc(updated) : '暂无记录'}</p>
+</div>`;
+
+  return layout({
+    ...ctx,
+    title: '联系我们',
+    description: `关于${site.title}的站点定位、数据来源与版权说明，以及 QQ 群、邮箱等联系方式`,
+    activeCat: '',
+    body,
+    canonicalPath: '/contact/',
+    footNavCurrent: '/contact/',
+    keywords: `联系我们,${site.title},网盘资源,数据来源,版权`,
   });
 }
 

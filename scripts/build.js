@@ -30,6 +30,8 @@ import {
   listPage,
   detailPage,
   aboutPage,
+  privacyPage,
+  contactPage,
   allPage,
   hotPage,
   rssPage,
@@ -362,6 +364,8 @@ console.log('生成关于本站 / RSS 页面…');
 write(path.join(outDir, 'all', 'index.html'), allPage(ctxBase));
 write(path.join(outDir, 'hot', 'index.html'), hotPage(ctxBase));
 write(path.join(outDir, 'about', 'index.html'), aboutPage(ctxBase));
+write(path.join(outDir, 'privacy', 'index.html'), privacyPage(ctxBase));
+write(path.join(outDir, 'contact', 'index.html'), contactPage(ctxBase));
 write(path.join(outDir, 'tags', 'index.html'), tagsPage(ctxBase));
 write(path.join(outDir, 'rss', 'index.html'), rssPage(ctxBase));
 
@@ -409,6 +413,8 @@ write(
   path.join(outDir, 'sitemap.xml'),
   sitemapXml(baseUrl, items, categories, [
     { path: '/about/', priority: '0.5' },
+    { path: '/privacy/', priority: '0.3' },
+    { path: '/contact/', priority: '0.4' },
     { path: '/rss/', priority: '0.4' },
     // /all/ 与 /tags/ 是蜘蛛不执行 JS 也能走完全部详情页 / 标签页的通道
     { path: '/all/', priority: '0.4', lastmod: lastmodOfList(items) },
