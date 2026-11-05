@@ -59,3 +59,12 @@ rm -rf public.old
 
 nginx -t && systemctl reload nginx
 log "发布完成：${REMOTE:0:7}"
+
+# 发布完成后把新增 / 变更的 URL 推给 IndexNow（Bing / Yandex 等），加速收录。
+# 增量模式（默认）：只推 lastmod >= 昨天的条目；首次全量补推用 ALL=1 手动跑一次。
+# 密钥以线上 /opt/indexnow/key.txt 为准（与 nginx /key.txt 同源），提交失败不影响发布。
+INDEXNOW_HOST=${BASE_URL#*://}
+if [ -x deploy/submit-indexnow.sh ]; then
+  deploy/submit-indexnow.sh "$INDEXNOW_HOST" /opt/indexnow/key.txt /opt/wodewangpan/public/sitemap.xml >> "$LOG" 2>&1 \
+    && log "IndexNow 推送完成" || log "IndexNow 推送失败（不影响发布）"
+fi
