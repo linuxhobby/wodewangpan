@@ -153,14 +153,16 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 当前未闭环问题（按优先级）
 
-- **P1 补 `config/site.yaml` 的 `verification`**（Google/Bing/百度/360/搜狗）：无验证码看不到真实收录量，所有判断只能靠日志反推。
-- **P2 百度断更 + 配额死循环**：根因资质（`icp` 空 + 香港节点无备案）。做：推送改**详情页优先** + 平台手工提交 sitemap；长期备案 + 大陆节点是唯一破局。
+- **P1 补 `config/site.yaml` 的 `verification`**：Google ✅已配（2026-11-05）；Bing 待 `msvalidate.01` 码；百度验证 ✅保留（不再关注其收录）；360/搜狗 已放弃。
+- **P2 百度收录（已搁置）**：根因资质（`icp` 空 + 香港节点无备案）。2026-11-05 决定：**百度站长验证保留，但不再跟踪其收录、不做专项 SEO 推送**；站点不备案，破局成本不划算，主动 SEO 只投 Google + Bing。360/搜狗 同理放弃。
 - **P3 下架留 404 尾巴**：构建期输出下架清单 + nginx 410/301（见第五/六节）。
 - **P4 Yandex 断档**（观察）／ **P5 AI 爬虫静默**／ **P6 360 断档 + 301 单跳核对**／ **P7 首页体积**（noscript 收敛为 9 分类 + `/all/`）。
 
 ### 判断准则：值不值得放行
 
 **看 referer 真人回流，不看抓取量**。零回流的 SEO/AI 爬虫（Semrush/Ahrefs/MJ12 + ShapBot/KeenableBot 等）403；会带流量的（Google/Yandex/Bing/百度 + Perplexity/OAI/Claude-SearchBot）保留。全站真人 UV 九天仅 186，三家 AI+四家 SEO 工具合计 7,723 次请求。
+
+- **引擎策略（2026-11-05 定，当日修正）**：站点无法 ICP 备案，**放弃 360/搜狗等境内引擎**；百度**站长验证保留**（已验证、无害），但**不再关注其收录、不做百度专项 SEO 推送**。主动 SEO 只面向 **Google + Bing**（Bing 靠已接好的 IndexNow 实时推送，全量 935 条已推，2026-11-05）。Yandex 仍保留（IndexNow 覆盖）。
 
 ### 抓取预算结论
 
@@ -218,10 +220,10 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 当前待办（仍有效）
 
-- 补 `verification`（P1，排第一）
-- 百度破局：详情页优先推送 + 平台提交 sitemap + 长期备案/大陆节点
-- 新引擎破零：搜狗/字节/华为 提交 sitemap
-- IndexNow 主动推送（`deploy/submit-baidu` 范式）
+- 补 `verification`：Google ✅已配；Bing 待 msvalidate 码；百度验证保留（不关注收录）；360/搜狗 放弃
+- ~~百度收录专项~~ → 百度验证保留但不关注收录，不投专项 SEO；360/搜狗 已放弃（站点不备案）
+- 新引擎破零：字节/华为 提交 sitemap（搜狗随境内引擎放弃）
+- IndexNow 主动推送 ✅已接发布钩子 + 全量推送 935 条（2026-11-05）
 - 首页瘦身（noscript 收敛 9 分类 + `/all/`）
 - 重合标签差异化（仅 macOS 配了 `tagMeta`）
 - 核对 360 的 301 是否单跳
