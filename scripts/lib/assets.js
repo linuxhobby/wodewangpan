@@ -302,6 +302,70 @@ async function renderVariants(sharp, src, destBase) {
 
 /** 处理全部配图：生成 240×360 海报（列表页与详情页共用）与 60×90 缩略图两份 WebP，
     返回 id -> { detail, card, thumb }（detail 与 card 指向同一个文件） */
+const OG = { w: 1200, h: 630 };
+
+/** 取分类配色（与 categorySvg 同源），供 OG 图渐变底使用 */
+function catColors(name) {
+  const s = CAT_STYLE[name];
+  if (s) return { c1: s.c1, c2: s.c2 };
+  let h = 7;
+  for (const ch of String(name)) h = (h * 31 + ch.codePointAt(0)) % 360;
+  return { c1: `hsl(${h} 42% 40%)`, c2: `hsl(${(h + 30) % 360} 52% 62%)` };
+}
+
+/**
+ * 生成 1200×630 的 OG 分享图（栅格 jpg）：渐变品牌底 + 左侧真实海报（contain，不裁切）
+ * + 右侧站点 favicon + 域名（ASCII，不依赖服务器中文字体）。
+ * 刻意不放中文：构建机（含 VPS）未必有 CJK 字体，避免中文渲染成方块
+ * （参考 tools/share-poster.mjs 注释「不依赖服务器上的中文字体」）。
+ */
+async function writeOg(sharp, { id, category, srcPoster, faviconPath, outDir, siteDomain = 'wodewangpan.top' }) {
+  const { c1, c2 } = catColors(category);
+  const W = OG.w;
+  const H = OG.h;
+  const bg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient>
+    <radialGradient id="glow" cx="30%" cy="42%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="vig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#g)"/>
+  <rect width="${W}" height="${H}" fill="url(#glow)"/>
+  <rect width="${W}" height="${H}" fill="url(#vig)"/>
+</svg>`;
+  const composites = [];
+  if (srcPoster && sharp) {
+    try {
+      const poster = await sharp(srcPoster)
+        .resize({ height: 540, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .png()
+        .toBuffer();
+      const meta = await sharp(poster).metadata();
+      composites.push({ input: poster, left: 70, top: Math.round((H - meta.height) / 2) });
+    } catch {
+      /* 海报渲染失败则不贴图，仅留品牌底 */
+    }
+  }
+  if (faviconPath && fs.existsSync(faviconPath) && sharp) {
+    try {
+      const logo = await sharp(faviconPath).resize(200, 200).png().toBuffer();
+      composites.push({ input: logo, left: Math.round(W * 0.62), top: 168 });
+    } catch {
+      /* 无 favicon 则不贴 */
+    }
+  }
+  const cx = Math.round(W * 0.62) + 100;
+  const domainSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <text x="${cx}" y="486" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="40" fill="#fff" fill-opacity=".82">${esc(siteDomain)}</text>
+</svg>`;
+  composites.push({ input: Buffer.from(domainSvg), left: 0, top: 0 });
+  const dir = path.join(outDir, 'og');
+  ensureDir(dir);
+  const outPath = path.join(dir, `${id}.jpg`);
+  await sharp(Buffer.from(bg)).composite(composites).jpeg({ quality: 86 }).toFile(outPath);
+  return `/og/${encodeURIComponent(id)}.jpg`;
+}
+
 export async function prepareImages(items, { staticDir, rootDir, outDir }) {
   const sharp = await loadSharp();
   if (!sharp) {
@@ -311,6 +375,8 @@ export async function prepareImages(items, { staticDir, rootDir, outDir }) {
   const catPlaceholders = writeCategoryPlaceholders(outDir, [
     ...new Set(items.map((i) => i.category)),
   ]);
+  const faviconPath = path.join(staticDir, 'favicon.svg');
+  const ogDomain = 'wodewangpan.top';
   const imgDir = path.join(outDir, 'img');
   ensureDir(imgDir);
 
@@ -323,17 +389,24 @@ export async function prepareImages(items, { staticDir, rootDir, outDir }) {
     if (!src) {
       // 缺图时用该资源所属分类的占位海报，一眼能看出是哪一类
       const ph = catPlaceholders.get(item.category) || placeholder;
-      map.set(item.id, { detail: ph, card: ph, thumb: ph });
+      const og = sharp
+        ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: null, faviconPath, outDir, siteDomain: ogDomain })
+        : ph;
+      map.set(item.id, { detail: ph, card: ph, thumb: ph, og });
       missing++;
       continue;
     }
     const destBase = path.join(imgDir, item.id);
     const { cardExt, thumbExt } = await renderVariants(sharp, src, destBase);
     const card = `/img/${encodeURIComponent(item.id)}-${CARD.w}.${cardExt}`;
+    const og = sharp
+      ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: src, faviconPath, outDir, siteDomain: ogDomain })
+      : card;
     map.set(item.id, {
       detail: card,
       card,
       thumb: `/img/${encodeURIComponent(item.id)}-${THUMB.w}.${thumbExt}`,
+      og,
     });
     processed++;
   }

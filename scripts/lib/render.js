@@ -538,8 +538,8 @@ ${listDataScript({ indexAll, activeCat, pageSize })}`;
     description: `${activeCat}资源合集，共 ${items.length} 个，夸克网盘链接，扫码即存`,
     body,
     canonicalPath: catHref(activeCat),
-    ogImage: firstImg,
-    ogImageSize: null,
+    ogImage: (images.get(items[0]?.id) || {}).og || firstImg,
+    ogImageSize: (images.get(items[0]?.id) || {}).og?.includes('/og/') ? { w: 1200, h: 630 } : null,
     // 不要再加 SearchAction：Google 2024-11-21 已下线该富媒体结果，其 urlTemplate `/?q=` 也被 robots 屏蔽。
     // WebSite 本身要留：Google「网站名称」仍读它（要求 name + url）。
     jsonLd: {
@@ -849,7 +849,8 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     body,
     canonicalPath,
     ogType: 'article',
-    ogImage: img.detail,
+    ogImage: img.og && img.og.includes('/og/') ? img.og : img.detail,
+    ogImageSize: img.og && img.og.includes('/og/') ? { w: 1200, h: 630 } : null,
     jsonLd,
     keywords: [item.title, titleSuffix, item.category, ...item.tags].slice(0, 10).join(','),
     rssHref: catFeedHref(item.category),
@@ -1078,7 +1079,8 @@ ${tagCloudHtml(tags, key)}`;
     body,
     canonicalPath,
     ogType: 'website',
-    ogImage: (images.get(items[0]?.id) || {}).card || '',
+    ogImage: (images.get(items[0]?.id) || {}).og || (images.get(items[0]?.id) || {}).card || '',
+    ogImageSize: (images.get(items[0]?.id) || {}).og?.includes('/og/') ? { w: 1200, h: 630 } : null,
     keywords: [label, `${label}资源`, ...topCats].join(','),
     // 卡片是全量渲染的，不依赖 JS，不需要 noscript 兜底
     jsonLd: {
