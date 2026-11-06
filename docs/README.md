@@ -44,6 +44,7 @@
 - `syncHeaderCounts` 会改 YAML 头部条数注释（正常）。
 - **下架条目 `public/` 不自动回收**，见第六节「清四处」。
 - `robots.txt` 与 `sitemap.xml` 是 `build.js` 生成产物，手改线上文件下次构建会被覆盖——要改规则改 `build.js` 模板字符串。
+- **`ads.txt` 源文件在 `static/ads.txt`**（当前一行：`google.com, pub-5363695594162175, DIRECT, f08c47fec0942fa0`），由 `build.js` 复制到 `public/` 根目录，用于 AdSense「ads.txt 片段」验证。构建**不整体复制 `static/`**，新增根目录静态文件必须在 `build.js` 里显式拷贝。
 
 ---
 
@@ -244,6 +245,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 变更记录（压缩）
 
+- 2026-11-06 加 `static/ads.txt`（AdSense 发布商 `pub-5363695594162175`），构建复制到根目录供 AdSense「ads.txt 片段」验证。
 - 2026-11-02 robots 放开 `/stats.json`（前端 fetch 取数 + Googlebot 渲染需要；`/hit`/`/*/search-index.json`/`/*?q=` 保留）；取消全站阿里云联盟链接。
 - 2026-10-30 复制改富文本 + 复制海报按钮；2026-10-28 清空 623 条百度链接、反馈条扩到许愿。
 - 2026-10-22 分享从页面链接改资源包文本、删四平台按钮；2026-10-21 详情页反馈条/A1 落地。

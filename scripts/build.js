@@ -456,6 +456,14 @@ if (fs.existsSync(inKey)) {
 } else {
   console.log('  ! 未找到 static/indexnow-key.txt，IndexNow 推送所需的验证文件缺失');
 }
+// AdSense 授权文件：static/ads.txt -> public/ads.txt（AdSense「ads.txt 片段」验证要求根目录可直接访问）
+const adsTxt = path.join(staticDir, 'ads.txt');
+if (fs.existsSync(adsTxt)) {
+  write(path.join(outDir, 'ads.txt'), fs.readFileSync(adsTxt, 'utf8'));
+  console.log('  · 已生成 ads.txt');
+} else {
+  console.log('  ! 未找到 static/ads.txt，AdSense 的 ads.txt 验证与程序化广告将失效');
+}
 // 联盟推广素材：static/promo/** -> public/promo/**（构建不会整体复制 static/，需显式拷贝）
 {
   const promoSrc = path.join(staticDir, 'promo');
