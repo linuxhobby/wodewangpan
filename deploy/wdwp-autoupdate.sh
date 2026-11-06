@@ -7,7 +7,8 @@
 # 用法：
 #   1) install -m755 本文件到 /usr/local/bin/wdwp-autoupdate
 #   2) 站点专属的两个值写进 /etc/wdwp-autoupdate.conf（与脚本分离，升级脚本时不会被覆盖）
-#   3) 加进 root 的 crontab：0 */6 * * * /usr/local/bin/wdwp-autoupdate >> /var/log/wdwp-autoupdate.log 2>&1
+#   3) 加进 root 的 crontab：30 */2 * * * /usr/local/bin/wdwp-autoupdate >> /var/log/wdwp-autoupdate.log 2>&1
+#      （线上实际频率以此为准，2026-11-06 改为每 2 小时的 30 分；ycld 在每 2 小时的第 5 分钟，错峰不抢 CPU）
 #      （频率只决定上线延迟上限：没有新提交时脚本在下面直接 exit 0，空跑只有一次 git fetch）
 #
 # 手动立即发布（不想等 cron）：FORCE=1 wdwp-autoupdate
