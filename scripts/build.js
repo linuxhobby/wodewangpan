@@ -213,8 +213,9 @@ if (staleFailed) {
 }
 
 console.log(`处理配图（${total} 条）…`);
-const { map: images, missing } = await prepareImages(items, { staticDir, rootDir: root, outDir });
+const { map: images, missing, reused: reusedImages } = await prepareImages(items, { staticDir, rootDir: root, outDir, prevDir });
 if (missing) console.log(`  · ${missing} 条缺少配图，使用占位图`);
+if (reusedImages && prevDir) console.log(`  · 配图增量复用 ${reusedImages} 张（源图未变，从 ${prevDirName}/ 沿用）`);
 
 // 配图改尺寸后，旧宽度的文件会一直堆在 public/img 里，按当前宽度集合清掉
 {

@@ -279,23 +279,77 @@ const VARIANTS = [
   { key: 'thumbExt', size: THUMB, quality: 78 },
 ];
 
-async function renderVariants(sharp, src, destBase) {
+/** 图片增量复用：dest 已存在且比源图新就不动；否则从上一版产物拷贝并沿用 mtime。
+    返回 'kept' / 'copied' / null（需要重新生成）。构建到 public.new 时 public.new 是空的，
+    所以必须能从 prevDir（线上 public/）里找同名文件，否则发布流程下增量永远不生效 */
+function reuseImage(dest, prevCandidates, srcMtimeMs) {
+  try {
+    if (fs.statSync(dest).mtimeMs >= srcMtimeMs) return 'kept';
+  } catch {
+    /* dest 不存在，往下找上一版 */
+  }
+  for (const prev of prevCandidates) {
+    let st;
+    try {
+      st = fs.statSync(prev);
+    } catch {
+      continue;
+    }
+    if (st.mtimeMs < srcMtimeMs) continue;
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.copyFileSync(prev, dest);
+    fs.utimesSync(dest, st.atime, st.mtime);
+    return 'copied';
+  }
+  return null;
+}
+
+/** 源图的最新修改时间：源图或 favicon 任一更新都算过期 */
+function freshenMtime(files) {
+  let latest = 0;
+  for (const p of files) {
+    if (!p) continue;
+    try {
+      latest = Math.max(latest, fs.statSync(p).mtimeMs);
+    } catch {
+      /* 文件不存在不计 */
+    }
+  }
+  return latest;
+}
+
+async function renderVariants(sharp, src, destBase, { outDir, prevDir, reused }) {
   const ext = path.extname(src).toLowerCase();
+  const srcMtime = fs.statSync(src).mtimeMs;
+  // 构建到 public.new 时，上一版同名文件在 prevDir（线上 public/）里
+  const prevOf = (dest) => (prevDir ? [path.join(prevDir, path.relative(outDir, dest))] : []);
+  const dests = VARIANTS.map((v) => `${destBase}-${v.size.w}`);
   if (!sharp) {
     // 没有 sharp：原图直接复用，靠 CSS 裁切
-    for (const v of VARIANTS) fs.copyFileSync(src, `${destBase}-${v.size.w}.${ext.slice(1)}`);
+    VARIANTS.forEach((v, i) => {
+      const dest = `${dests[i]}.${ext.slice(1)}`;
+      if (!reuseImage(dest, prevOf(dest), srcMtime)) fs.copyFileSync(src, dest);
+    });
     return { cardExt: ext.slice(1), thumbExt: ext.slice(1) };
   }
   try {
-    for (const v of VARIANTS) {
+    for (const [i, v] of VARIANTS.entries()) {
+      const dest = `${dests[i]}.webp`;
+      if (reuseImage(dest, prevOf(dest), srcMtime)) {
+        reused.value++;
+        continue;
+      }
       await sharp(src)
         .resize(v.size.w, v.size.h, { fit: 'cover' })
         .webp({ quality: v.quality })
-        .toFile(`${destBase}-${v.size.w}.webp`);
+        .toFile(dest);
     }
     return { cardExt: 'webp', thumbExt: 'webp' };
   } catch {
-    for (const v of VARIANTS) fs.copyFileSync(src, `${destBase}-${v.size.w}${ext}`);
+    for (const [i] of VARIANTS.entries()) {
+      const dest = `${dests[i]}${ext}`;
+      if (!reuseImage(dest, prevOf(dest), srcMtime)) fs.copyFileSync(src, dest);
+    }
     return { cardExt: ext.slice(1), thumbExt: ext.slice(1) };
   }
 }
@@ -319,7 +373,7 @@ function catColors(name) {
  * 刻意不放中文：构建机（含 VPS）未必有 CJK 字体，避免中文渲染成方块
  * （参考 tools/share-poster.mjs 注释「不依赖服务器上的中文字体」）。
  */
-async function writeOg(sharp, { id, category, srcPoster, faviconPath, outDir, siteDomain = 'wodewangpan.top' }) {
+async function writeOg(sharp, { id, category, srcPoster, faviconPath, outDir, prevDir, reused, siteDomain = 'wodewangpan.top' }) {
   const { c1, c2 } = catColors(category);
   const W = OG.w;
   const H = OG.h;
@@ -362,15 +416,21 @@ async function writeOg(sharp, { id, category, srcPoster, faviconPath, outDir, si
   const dir = path.join(outDir, 'og');
   ensureDir(dir);
   const outPath = path.join(dir, `${id}.jpg`);
+  if (reuseImage(outPath, prevDir ? [path.join(prevDir, 'og', `${id}.jpg`)] : [], freshenMtime([srcPoster, faviconPath]))) {
+    reused.value++;
+    return `/og/${encodeURIComponent(id)}.jpg`;
+  }
   await sharp(Buffer.from(bg)).composite(composites).jpeg({ quality: 86 }).toFile(outPath);
   return `/og/${encodeURIComponent(id)}.jpg`;
 }
 
-export async function prepareImages(items, { staticDir, rootDir, outDir }) {
+export async function prepareImages(items, { staticDir, rootDir, outDir, prevDir }) {
   const sharp = await loadSharp();
   if (!sharp) {
     console.log('  ! 未安装 sharp，配图将按原图输出（npm i sharp 可自动生成压缩 WebP）');
   }
+  // 复用计数：源图未变、直接沿用上一版产物的图片张数
+  const reused = { value: 0 };
   const placeholder = writePlaceholder(outDir);
   const catPlaceholders = writeCategoryPlaceholders(outDir, [
     ...new Set(items.map((i) => i.category)),
@@ -390,17 +450,17 @@ export async function prepareImages(items, { staticDir, rootDir, outDir }) {
       // 缺图时用该资源所属分类的占位海报，一眼能看出是哪一类
       const ph = catPlaceholders.get(item.category) || placeholder;
       const og = sharp
-        ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: null, faviconPath, outDir, siteDomain: ogDomain })
+        ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: null, faviconPath, outDir, prevDir, reused, siteDomain: ogDomain })
         : ph;
       map.set(item.id, { detail: ph, card: ph, thumb: ph, og });
       missing++;
       continue;
     }
     const destBase = path.join(imgDir, item.id);
-    const { cardExt, thumbExt } = await renderVariants(sharp, src, destBase);
+    const { cardExt, thumbExt } = await renderVariants(sharp, src, destBase, { outDir, prevDir, reused });
     const card = `/img/${encodeURIComponent(item.id)}-${CARD.w}.${cardExt}`;
     const og = sharp
-      ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: src, faviconPath, outDir, siteDomain: ogDomain })
+      ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: src, faviconPath, outDir, prevDir, reused, siteDomain: ogDomain })
       : card;
     map.set(item.id, {
       detail: card,
@@ -411,7 +471,7 @@ export async function prepareImages(items, { staticDir, rootDir, outDir }) {
     processed++;
   }
 
-  return { map, processed, missing };
+  return { map, processed, missing, reused: reused.value };
 }
 
 /** 构建时预生成二维码 SVG（纯静态图片，无需 JS） */
