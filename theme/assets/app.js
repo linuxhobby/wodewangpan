@@ -464,11 +464,11 @@ import { esc, tileHtml } from './card.js';
       });
     }
 
-    listEl.innerHTML = '<li class="hot__empty">加载中…</li>';
+    // 页面里已构建期渲染了静态 top N（蜘蛛可见），拉取失败就保留静态榜单不覆盖
     fetch('/stats.json', { cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(function (d) { statsRes = (d && d.res) || {}; render(); })
-      .catch(function () { render(); });
+      .catch(function () { /* 保留静态榜单 */ });
   }
   initHot();
 })();

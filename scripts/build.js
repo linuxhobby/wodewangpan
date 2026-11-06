@@ -316,9 +316,25 @@ const ctxBase = {
   newestIds,
 };
 
+// 热门榜快照：stats.json 由服务器 sitestats 每 10 分钟生成、不归构建管；
+// 构建时从上一版产物（线上 public/）读快照，把 top N 渲染成静态 HTML，蜘蛛不执行 JS 也能看到榜单
+let hotStats = null;
+for (const dir of [prevDir, outDir]) {
+  if (!dir) continue;
+  try {
+    hotStats = JSON.parse(fs.readFileSync(path.join(dir, 'stats.json'), 'utf8')).res || null;
+    if (hotStats) break;
+  } catch {
+    /* 没有快照就退化为最新入库兜底 */
+  }
+}
+if (hotStats) console.log('  · 已读取访问统计快照，热门榜按真实数据静态渲染');
+
 // 列表页与分类 RSS 各自都要按分类取子集，分组一次省掉两遍 filter
 const byCat = new Map(categories.map((c) => [c, []]));
 for (const it of items) {
+  // 死链不进分类卡片 / 翻页 / 分类 feed：详情页已 noindex，内链再往里引就白耗抓取预算
+  if (it.dead) continue;
   if (!byCat.has(it.category)) byCat.set(it.category, []);
   byCat.get(it.category).push(it);
 }
@@ -362,16 +378,20 @@ for (const t of tags) {
 }
 
 console.log('生成关于本站 / RSS 页面…');
-write(path.join(outDir, 'all', 'index.html'), allPage(ctxBase));
-write(path.join(outDir, 'hot', 'index.html'), hotPage(ctxBase));
+// /all/ 是蜘蛛的全量通道，死链详情页已 noindex，这条通道里也别再列
+{
+  const aliveItems = items.filter((i) => !i.dead);
+  write(path.join(outDir, 'all', 'index.html'), allPage({ ...ctxBase, items: aliveItems, total: aliveItems.length }));
+}
+write(path.join(outDir, 'hot', 'index.html'), hotPage({ ...ctxBase, hotStats }));
 write(path.join(outDir, 'about', 'index.html'), aboutPage(ctxBase));
 write(path.join(outDir, 'privacy', 'index.html'), privacyPage(ctxBase));
 write(path.join(outDir, 'contact', 'index.html'), contactPage(ctxBase));
 write(path.join(outDir, 'tags', 'index.html'), tagsPage(ctxBase));
 write(path.join(outDir, 'rss', 'index.html'), rssPage(ctxBase));
 
-/** 给 feed 用的资源视图：补上绝对配图路径 */
-const feedItems = items.map((it) => ({ ...it, poster: (images.get(it.id) || {}).detail || '' }));
+/** 给 feed 用的资源视图：补上绝对配图路径；死链不进 RSS（详情页已 noindex，别再推送） */
+const feedItems = items.filter((i) => !i.dead).map((it) => ({ ...it, poster: (images.get(it.id) || {}).detail || '' }));
 write(
   path.join(outDir, 'feed.xml'),
   feedXml({

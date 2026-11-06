@@ -306,6 +306,7 @@ function layout({
   canonicalPath = '/',
   ogImage = '',
   ogImageSize = null,
+  shareImage = '',
   ogType = 'website',
   jsonLd = null,
   keywords = '',
@@ -323,7 +324,9 @@ function layout({
   // 标题里已含站名（如首页 homeTitle）时不再重复拼接
   const fullTitle = title === site.title || title.includes(site.title) ? title : `${title} - ${site.title}`;
   const canonical = `${baseUrl}${canonicalPath}`;
-  const ogImg = ogImage && ogImage.startsWith('/') ? `${baseUrl}${ogImage}` : ogImage;
+  // og:image 缺图时回退站点级分享卡：详情/分类页资源没图也不能让社交分享裸奔
+  const ogSrc = ogImage || shareImage;
+  const ogImg = ogSrc && ogSrc.startsWith('/') ? `${baseUrl}${ogSrc}` : ogSrc;
   // 访问统计：页脚占位数字 + 取数脚本成对出现，判断一次就够
   const localStats = site.stats === 'local';
   return `<!DOCTYPE html>
@@ -354,6 +357,8 @@ ${ogImg ? `<meta property="og:image" content="${esc(ogImg)}">\n` : ''}${ogImg &&
 <meta name="twitter:description" content="${esc(description || site.description)}">
 ${ogImg ? `<meta name="twitter:image" content="${esc(ogImg)}">\n` : ''}<link rel="stylesheet" href="/assets/style.css${v}">
 <meta name="search-index-url" content="${esc(searchIndexUrl)}">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+<link rel="preconnect" href="https://www.clarity.ms" crossorigin>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5363695594162175" crossorigin="anonymous"></script>
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -553,6 +558,13 @@ ${listDataScript({ indexAll, activeCat, pageSize })}`;
       '@context': 'https://schema.org',
       '@graph': [
         websiteJsonLd(baseUrl, site),
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: site.title, item: `${baseUrl}/` },
+            { '@type': 'ListItem', position: 2, name: activeCat, item: `${baseUrl}${catHref(activeCat)}` },
+          ],
+        },
         collectionPageJsonLd({
           baseUrl,
           path: catHref(activeCat),
@@ -664,14 +676,15 @@ function relatedOf(item, all, n = 10) {
   const newer = (a, b) =>
     String(b.added || '').localeCompare(String(a.added || '')) || String(b.id).localeCompare(String(a.id));
   const picked = all
-    .filter((it) => it.id !== item.id && it.category === item.category)
+    // !it.dead：死链详情页是 noindex，相关推荐把蜘蛛往 noindex 页引，白耗抓取预算
+    .filter((it) => it.id !== item.id && !it.dead && it.category === item.category)
     .sort((a, b) => score(b) - score(a) || newer(a, b))
     .slice(0, n);
   if (picked.length < n) {
     const seen = new Set([item.id, ...picked.map((it) => it.id)]);
     picked.push(
       ...all
-        .filter((it) => !seen.has(it.id) && score(it) > 0)
+        .filter((it) => !seen.has(it.id) && !it.dead && score(it) > 0)
         .sort((a, b) => score(b) - score(a) || newer(a, b))
         .slice(0, n - picked.length)
     );
@@ -830,7 +843,8 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
         genre: item.tags.filter((t) => t !== item.category),
         keywords: (item.tags || []).join(' '),
         ...(img.detail ? { image: `${baseUrl}${img.detail}` } : {}),
-        ...(item.date ? { datePublished: item.date } : {}),
+        // dateModified 用入库日：与发布（作品年份）区分，也确实是页面内容的真实变化时间
+        ...(item.date ? { datePublished: item.date, dateModified: item.added || item.date } : {}),
         inLanguage: 'zh-CN',
       },
       {
@@ -1020,11 +1034,11 @@ ${more}`;
 }
 
 /** 详情页只有「片名 + 分类」两条路，而用户搜的是「题材/属性 + 网盘」的组合词（见 docs/README.md） */
-/** 热门资源排行榜：构建期只出骨架（排序按钮 + 列表容器 + 内联精简索引），
- *  实际数据由浏览器端 fetch /stats.json 后渲染（见 app.js 的 initHot）。
+/** 热门资源排行榜：构建期把 top N 直接渲染成静态 <li>（蜘蛛不执行 JS 也能看到真实榜单），
+ *  浏览器端 app.js 拉 /stats.json 后按当前维度原位重渲，支持 pv/uv 切换。
  *  索引内联为 id -> {title, href, category}，避免再请求 search-index.json。 */
 export function hotPage(ctx) {
-  const { site, items } = ctx;
+  const { site, items, baseUrl, hotStats } = ctx;
   const hotIndex = {};
   for (const it of items) {
     hotIndex[it.id] = {
@@ -1033,6 +1047,24 @@ export function hotPage(ctx) {
       category: it.category,
     };
   }
+  // stats.json 由服务器 sitestats 每 10 分钟生成，不归构建管；构建时读的是上一版产物的快照
+  const HOT_N = 30;
+  const ranked = Object.entries(hotStats || {})
+    // 只展示当前站内还存在的资源：stats.json 的 res 含历史上访问过但已删除的 id
+    .filter(([id, s]) => hotIndex[id] && (s.pv > 0 || s.uv > 0))
+    .map(([id, s]) => ({ ...hotIndex[id], pv: s.pv || 0, uv: s.uv || 0 }))
+    .sort((a, b) => b.pv - a.pv)
+    .slice(0, HOT_N);
+  // 没拿到统计快照（新站 / 本地首建）：退化为最新入库 30 条，蜘蛛看到的仍是真实链接列表
+  const rows = ranked.length
+    ? ranked
+    : items.slice(0, HOT_N).map((it) => ({ ...hotIndex[it.id], pv: 0, uv: 0 }));
+  // 行结构与 app.js 的 render() 保持同一套 class，JS 重渲后样式无缝衔接
+  const row = (x, i) => {
+    const rank = i + 1;
+    const rc = rank <= 3 ? ` hot__rank--top${rank}` : '';
+    return `<li class="hot__item"><span class="hot__rank${rc}">${rank}</span><span class="hot__main"><a class="hot__title" href="${esc(x.href)}">${esc(x.title)}</a>${x.category ? `<span class="hot__cat">${esc(x.category)}</span>` : ''}</span><span class="hot__pv">${x.pv > 0 ? `${x.pv} 次浏览` : '–'}</span><span class="hot__uv">${x.uv > 0 ? `${x.uv} 人` : '–'}</span></li>`;
+  };
   // 把 < 转义为 \u003c，防止资源标题里出现 </script> 破坏内联 JSON
   const indexJson = JSON.stringify(hotIndex).replace(/</g, '\\u003c');
   const body = `<h1 class="page__title page__title--doc">热门资源榜<span class="page__n">按真实访问统计排序</span></h1>
@@ -1042,8 +1074,10 @@ export function hotPage(ctx) {
     <button type="button" class="btn btn--mini is-on" data-hot-sort="pv">按浏览量</button>
     <button type="button" class="btn btn--mini" data-hot-sort="uv">按人数</button>
   </div>
-  <ul id="hot-list" class="hot__list"><li class="hot__empty">加载中…</li></ul>
-  <p class="hot__note">数据来自本站 nginx 访问日志的真实统计，每 10 分钟更新一次。浏览量 = 页面被打开次数；人数 = 去重后的独立访客数。</p>
+  <ul id="hot-list" class="hot__list">
+${rows.map(row).join('\n')}
+  </ul>
+  <p class="hot__note">数据来自本站 nginx 访问日志的真实统计，每 10 分钟更新一次。浏览量 = 页面被打开次数；人数 = 去重后的独立访客数。打开页面后自动刷新为最新榜单。</p>
   <script type="application/json" id="hot-index">${indexJson}</script>
 </div>`;
   return layout({
@@ -1056,6 +1090,16 @@ export function hotPage(ctx) {
     footNavCurrent: '/hot/',
     keywords: '热门资源,排行榜,网盘资源',
     wide: true,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: rows.map((x, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${baseUrl}${x.href}`,
+        name: x.title,
+      })),
+    },
   });
 }
 
