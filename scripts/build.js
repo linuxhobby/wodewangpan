@@ -407,7 +407,10 @@ write(
   // /*?q= 挡搜索结果页（与首页高度重合，白吃配额）；必须带 ? ，否则路径里含 q= 的页面会被误伤
   // /*/search-index.json 只挡子路径：根目录那份是 Googlebot 渲染「加载更多」的取数通道
   // 下面这批 AI / SEO 爬虫九天数千次请求、referer 回流为 0，硬拦由 nginx 403 兜底
-  `User-agent: *\nAllow: /\nDisallow: /*?q=\nDisallow: /hit\nDisallow: /*/search-index.json\n\nUser-agent: ShapBot\nUser-agent: KeenableBot\nUser-agent: SkytabBot\nUser-agent: SemrushBot\nUser-agent: AhrefsBot\nUser-agent: MJ12bot\nUser-agent: SerpstatBot\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml\n`
+  // 2026-11-06：名单与 nginx conf.d/00-block-ai.conf 同步，补录 DataForSeo / SERanking / Qlyze /
+  // Dot / Livelap / Reflection / BacklinksExtended / fresh-domain-watch / l9 两兄弟共 10 类；
+  // ExaSearchBot 与 CAICTMedicalResearchBot 可能带来 AI 引荐，暂不拦也暂不声明。
+  `User-agent: *\nAllow: /\nDisallow: /*?q=\nDisallow: /hit\nDisallow: /*/search-index.json\n\nUser-agent: ShapBot\nUser-agent: KeenableBot\nUser-agent: SkytabBot\nUser-agent: SemrushBot\nUser-agent: AhrefsBot\nUser-agent: MJ12bot\nUser-agent: SerpstatBot\nUser-agent: DataForSeoBot\nUser-agent: SERankingBacklinksBot\nUser-agent: QlyzeBot\nUser-agent: DotBot\nUser-agent: LivelapBot\nUser-agent: Reflectionbot\nUser-agent: BacklinksExtendedBot\nUser-agent: fresh-domain-watch\nUser-agent: l9explore\nUser-agent: l9tcpid\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml\n`
 );
 write(
   path.join(outDir, 'sitemap.xml'),
