@@ -37,6 +37,12 @@ const CLI = path.join(
   '.codebuddy/skills/quarkclouddrive/scripts/quark-drive.cjs'
 );
 
+// 网盘目录里的「占位说明文件」是同步任务自建的工作流产物，不是资源内容。
+// 2026-11-08 起 trending-sync / mirror-baidu 会预置两份（更新通知 + QQ 群缺失反馈），
+// 权威定义在 quark-resource-sync skill 的 scripts/lib/placeholder.mjs；跨仓库无法 import，改那边必须同步改这里。
+// 漏掉后果：只剩占位的空目录会被算成「有 N 个文件」，往详情页写假 files: 清单（AGENTS.md §5 红线）。
+const PLACEHOLDER_FILE_RE = /资源在24小时内更新|请先转存|资源缺失反馈请加QQ群/;
+
 const args = process.argv.slice(2);
 const getArg = (name, def) => {
   const i = args.indexOf(`--${name}`);
@@ -317,11 +323,15 @@ for (const item of pending.slice(0, maxTries)) {
       depth++;
       if (delayMs) await sleep(delayMs);
     }
-    // 占位说明文件（trending-sync / 夸克同步建目录时预置的「资源在24小时内更新-请先转存」）
+    // 占位说明文件（trending-sync / 夸克同步建目录时预置，2026-11-08 起两份）：
+    //   · 更新通知「资源在24小时内更新-请先转存-更新会自动通知.md」
+    //   · 缺失反馈「资源缺失反馈请加QQ群1045824859.md」
     // 是我们自己的工作流产物，不属于资源内容：
-    //   · 盘端只剩它时 = 资源还没到位（TMDB 今日热门建的就是这种空目录）→ 整条跳过、一个字不写；
-    //   · 否则把它从清单里剔掉，count / tree / format 只统计真实内容（AGENTS.md §5：宁缺勿假）。
-    const real = files.filter((f) => !/资源在24小时内更新|请先转存/.test(String(f.filename || '')));
+    //   · 盘端只剩它们时 = 资源还没到位（TMDB 今日热门建的就是这种空目录）→ 整条跳过、一个字不写；
+    //   · 否则把它们从清单里剔掉，count / tree / format 只统计真实内容（AGENTS.md §5：宁缺勿假）。
+    // ⚠ 新增/改名占位文件时必须同步改这里，否则占位 md 会被当成真实资源写进 files: 假清单。
+    //   权威定义在 C:/Users/marco/.qwenworkcn/skills/quark-resource-sync/scripts/lib/placeholder.mjs（跨仓库，无法 import）。
+    const real = files.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
     if (!real.length) {
       console.log('跳过（盘端只有占位说明文件，资源还没到位）');
       skip++;
