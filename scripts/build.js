@@ -38,11 +38,10 @@ import {
   feedXml,
   notFoundPage,
   sitemapXml,
-  lastmodOfList,
   catFeedHref,
   tagPage,
   tagsPage,
-  tagHref,
+  ALL_PAGE_SIZE,
 } from './lib/render.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -378,10 +377,29 @@ for (const t of tags) {
 }
 
 console.log('生成关于本站 / RSS 页面…');
-// /all/ 是蜘蛛的全量通道，死链详情页已 noindex，这条通道里也别再列
+// /all/ 是蜘蛛的全量通道，死链详情页已 noindex，这条通道里也别再列。
+// 分页写出（每页 ALL_PAGE_SIZE 条）：单页近千条链接权重摊薄，蜘蛛从上一页/下一页往下走
 {
   const aliveItems = items.filter((i) => !i.dead);
-  write(path.join(outDir, 'all', 'index.html'), allPage({ ...ctxBase, items: aliveItems, total: aliveItems.length }));
+  const allPages = Math.max(1, Math.ceil(aliveItems.length / ALL_PAGE_SIZE));
+  write(
+    path.join(outDir, 'all', 'index.html'),
+    allPage({ ...ctxBase, items: aliveItems, total: aliveItems.length })
+  );
+  for (let p = 2; p <= allPages; p++) {
+    write(
+      path.join(outDir, 'all', 'page', String(p), 'index.html'),
+      allPage({ ...ctxBase, items: aliveItems, total: aliveItems.length, page: p })
+    );
+  }
+  // 资源减少导致总页数变少后，旧分页目录会残留，按当前页数清掉
+  const { failed: staleAllFailed } = prune(
+    path.join(outDir, 'all', 'page'),
+    (name) => Number(name) >= 2 && Number(name) <= allPages
+  );
+  if (staleAllFailed) {
+    console.log(`  ! /all/page 下 ${staleAllFailed} 个旧分页目录未能清理（不影响访问）`);
+  }
 }
 write(path.join(outDir, 'hot', 'index.html'), hotPage({ ...ctxBase, hotStats }));
 write(path.join(outDir, 'about', 'index.html'), aboutPage(ctxBase));
@@ -441,16 +459,9 @@ write(
     { path: '/privacy/', priority: '0.3' },
     { path: '/contact/', priority: '0.4' },
     { path: '/rss/', priority: '0.4' },
-    // /all/ 与 /tags/ 是蜘蛛不执行 JS 也能走完全部详情页 / 标签页的通道
-    { path: '/all/', priority: '0.4', lastmod: lastmodOfList(items) },
-    { path: '/hot/', priority: '0.5', lastmod: lastmodOfList(items) },
-    { path: '/tags/', priority: '0.5', lastmod: lastmodOfList(items) },
-    // 标签页接长尾词，但与分类页有重叠，优先级压在分类页（0.8）之下不抢预算
-    ...tags.map((t) => ({
-      path: tagHref(t.label),
-      priority: '0.5',
-      lastmod: lastmodOfList(t.items),
-    })),
+    // /all/（含分页）、/hot/、/tags/ 与标签页不再进 sitemap：它们是通道页，
+    // 蜘蛛靠站内链接（页脚 / 分类导航 / 首页）就能发现，sitemap 名额让给详情页。
+    // 2026-11-07 收缩索引范围：新站配额紧张，列表页近重复度高，提交它们得不偿失
     // 第 5 个参数传 images：有它才输出 image: 扩展，海报才能进图片搜索
   ], images)
 );

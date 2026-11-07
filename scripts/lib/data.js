@@ -386,6 +386,8 @@ export function normalizeResources(rawList) {
     const date = formatDate(raw.date || raw.updated || '');
     const addedRaw = raw.added || raw.added_at || raw.created || '';
     const added = formatDate(addedRaw);
+    // 最近校验日：给旧页补内容 / 复核链接时手写的当天日期，lastmod 用它体现真实更新（不回填、不伪造）
+    const updated = formatDate(raw.verified || raw.updated || '');
     // 排序键带时间：只写日期的按当天 00:00，写了时分的可精确到入库时刻
     const sortKey = formatDateTime(addedRaw) || '9999-12-31T00:00';
     items.push({
@@ -397,6 +399,7 @@ export function normalizeResources(rawList) {
       image: raw.image ? String(raw.image) : '',
       date,
       added,
+      updated,
       links,
       primary: links[0] || null,
       dead: !!raw.dead,

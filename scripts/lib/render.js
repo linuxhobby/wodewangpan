@@ -431,10 +431,12 @@ function homeGroups(items, categories, byCat, perCat, order) {
   return groups.sort((a, b) => (key(a) < key(b) ? 1 : key(a) > key(b) ? -1 : 0));
 }
 
-/** 首页卡片只有「分类数 × 每类几条」，不执行 JS 的爬虫到首页就只剩几个入口；这份清单补上这条路 */
+/** 首页卡片只有「分类数 × 每类几条」，不执行 JS 的爬虫到首页就只剩几个入口；这份清单补一条路。
+    每分类最多再列 10 条：全量链接近千条会把首页权重摊薄，蜘蛛走 /all/ 分页或分类页就够了 */
+const HOME_NS_PER_CAT = 10;
 function noscriptHome(groups) {
   const rest = groups
-    .map((g) => ({ cat: g.cat, list: g.list.slice(g.shown.length) }))
+    .map((g) => ({ cat: g.cat, list: g.list.slice(g.shown.length, g.shown.length + HOME_NS_PER_CAT) }))
     .filter((g) => g.list.length);
   if (!rest.length) return '';
   const n = rest.reduce((sum, g) => sum + g.list.length, 0);
@@ -750,6 +752,8 @@ export function detailPage(ctx) {
     ['分类', `<span class="facts__views"><a href="${catHref(item.category)}">${esc(item.category)}</a></span>`],
     ...(year ? [['上映 / 发行', esc(year)]] : []),
     ...(item.added ? [['入库日期', esc(item.added)]] : []),
+    // 最近校验：与入库日相同就不重复展示；不同说明该页内容后来复核 / 补充过
+    ...(item.updated && item.updated !== item.added ? [['最近校验', esc(item.updated)]] : []),
     ['标签', item.tags.length ? item.tags.map((t) => esc(t)).join(' · ') : '—'],
     ['转存方式', esc(source)],
     // 浏览量：构建期只放占位，前端拉 /stats.json 后填入（拿不到数据时留「–」）
@@ -844,7 +848,9 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
         keywords: (item.tags || []).join(' '),
         ...(img.detail ? { image: `${baseUrl}${img.detail}` } : {}),
         // dateModified 用入库日：与发布（作品年份）区分，也确实是页面内容的真实变化时间
-        ...(item.date ? { datePublished: item.date, dateModified: item.added || item.date } : {}),
+        ...(item.date
+          ? { datePublished: item.date, dateModified: item.updated || item.added || item.date }
+          : {}),
         inLanguage: 'zh-CN',
       },
       {
@@ -948,14 +954,22 @@ export function notFoundPage(ctx) {
 
 /* ── 全量索引页 /all/ ─────────── */
 
-/** 存在理由：列表页卡片是 JS 补齐的，不执行 JS 的蜘蛛到列表页就没有下一条路（见 docs/README.md） */
+/** /all/ 每页多少条：单页扛近千条链接权重摊薄，拆成分页后每页 50 条 */
+export const ALL_PAGE_SIZE = 50;
+
+/** 存在理由：列表页卡片是 JS 补齐的，不执行 JS 的蜘蛛到列表页就没有下一条路（见 docs/README.md）。
+    分页版：/all/ 是第 1 页，/all/page/2..N/ 依次往后，每页按分类分区排列 */
 export function allPage(ctx) {
-  const { site, items, categories, total, baseUrl, tags } = ctx;
+  const { site, items, categories, total, baseUrl, tags, page = 1 } = ctx;
+  const pages = Math.max(1, Math.ceil(items.length / ALL_PAGE_SIZE));
+  const p = Math.min(Math.max(1, Number(page) || 1), pages);
+  const slice = items.slice((p - 1) * ALL_PAGE_SIZE, p * ALL_PAGE_SIZE);
+  const pageHref = (n) => (n <= 1 ? '/all/' : `/all/page/${n}/`);
 
   // 分类顺序沿用导航栏；site.yaml 里没列出的分类排在后面，保证这一页真的是「全量」
   const order = [...(categories || [])];
   const byCat = new Map(order.map((c) => [c, []]));
-  for (const it of items) {
+  for (const it of slice) {
     if (!byCat.has(it.category)) {
       order.push(it.category);
       byCat.set(it.category, []);
@@ -971,10 +985,20 @@ export function allPage(ctx) {
     }${tags.length ? `<span class="muted"> · ${tags.map(esc).join(' · ')}</span>` : ''}</li>`;
   };
 
+  const title = p > 1 ? `全部资源索引（第 ${p} 页）` : '全部资源索引';
+  // 复用详情页翻页的 .pager 样式：上一个在左、下一个在右
+  const pager =
+    pages > 1
+      ? `<nav class="pager" aria-label="索引分页">
+${p > 1 ? `<a class="pager__item pager__item--prev" href="${pageHref(p - 1)}" rel="prev"><span class="pager__dir">← 上一页</span><span class="pager__title">第 ${p - 1} / ${pages} 页</span></a>` : ''}
+${p < pages ? `<a class="pager__item pager__item--next" href="${pageHref(p + 1)}" rel="next"><span class="pager__title">第 ${p + 1} / ${pages} 页</span><span class="pager__dir">下一页 →</span></a>` : ''}
+</nav>`
+      : '';
+
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>全部资源</span></nav>
-<h1 class="page__title page__title--doc">全部资源索引<span class="page__n">${total} 个资源</span></h1>
+<h1 class="page__title page__title--doc">${esc(title)}<span class="page__n">${total} 个资源</span></h1>
 <div class="card-page">
-  <p>这一页列出本站全部 <strong>${total}</strong> 个资源，按分类排列，点标题直接进入详情页。</p>
+  <p>这一页列出本站全部 <strong>${total}</strong> 个资源，按分类分页排列，点标题直接进入详情页。</p>
 ${groups
   .map(
     (g) => `<h2>${esc(g.cat)}<span class="muted"> · ${g.list.length} 个</span></h2>
@@ -983,26 +1007,31 @@ ${g.list.map(row).join('\n')}
 </ul>`
   )
   .join('\n')}
-${tagCloudHtml(tags)}
+${pager}
+${p === 1 ? tagCloudHtml(tags) : ''}
 </div>`;
 
+  const canonicalPath = pageHref(p);
   return layout({
     ...ctx,
-    title: '全部资源索引',
-    description: `${site.title}全部 ${total} 个资源的完整索引，按${(categories || []).join('、')}分类排列，一页直达所有资源详情页`,
+    title,
+    description:
+      p > 1
+        ? `${site.title}全部资源索引第 ${p} 页（共 ${pages} 页），${total} 个网盘资源按分类排列`
+        : `${site.title}全部 ${total} 个资源的完整索引，按${(categories || []).join('、')}分类分页排列，直达所有资源详情页`,
     activeCat: '',
     body,
-    canonicalPath: '/all/',
+    canonicalPath,
     footNavCurrent: '/all/',
     keywords: `全部资源,资源索引,${(categories || []).join(',')},网盘资源`,
-    // 与列表页共用 CollectionPage：结构化数据里只列前 30 条，全量链接靠正文的 <a> 给蜘蛛
+    // 与列表页共用 CollectionPage：结构化数据里只列本页条目，其余链接靠正文的 <a> 给蜘蛛
     jsonLd: {
       '@context': 'https://schema.org',
       ...collectionPageJsonLd({
         baseUrl,
-        path: '/all/',
-        name: `全部资源索引 - ${site.title}`,
-        items,
+        path: canonicalPath,
+        name: `${title} - ${site.title}`,
+        items: slice,
       }),
     },
   });
@@ -1576,8 +1605,10 @@ ${catFeeds}
 
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
 
-/** 页面真实更新日期：优先入库日 added，回退内容日期 date；都没有则返回空（此时不写 lastmod） */
+/** 页面真实更新日期：优先最近校验日 updated（给旧页补内容时手写的当天日期，是最真实的变更信号），
+    回退入库日 added，再回退内容日期 date；都没有则返回空（此时不写 lastmod） */
 function lastmodOf(item) {
+  if (DAY_RE.test(item.updated || '')) return item.updated;
   if (DAY_RE.test(item.added || '')) return item.added;
   if (DAY_RE.test(item.date || '')) return item.date;
   return '';
