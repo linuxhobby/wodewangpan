@@ -74,6 +74,15 @@
   date: 2013-07-01
   added: 2026-05-02
   image: dc-074.jpg
+  updated: 2026-11-07
+  files:
+    count: 2
+    size: "1018 MB"
+    format: "MKV / SRT"
+    tree: |
+      074-BBC.骇客如何改变世界/
+      骇客如何改变世界.mkv
+      骇客如何改变世界.srt
 
 - id: dc-073
   title: "非洲的动物上班族"
