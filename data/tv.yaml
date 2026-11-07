@@ -1,4 +1,4 @@
-# 电视剧资源（154 条）
+# 电视剧资源（155 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -1781,7 +1781,21 @@
   category: 电视剧
   tags: ["电视剧", "剧情", "校园接送恋曲 第一季 Campus Drivers"]
   quark_url: "https://pan.quark.cn/s/ee9ecb4abbad"
+  baidu_url: "https://pan.baidu.com/s/1NmYirEe4PaSg0JPyRXiGKg"
+  baidu_pwd: "6emt"
   description: "【第 1 季 · 共 6 集】改编自法国作家 C.S. Quill 创作的同名系列小说。露易丝和她一生的挚爱麦克斯来到了贝尔罗斯。莱恩是校园里最火的应用\"校园司机\"的创始人，以从不与人产生感情牵绊而闻名。他们的人生轨迹原本不该有交集，但有些相遇会改变一切，重新揭开旧日伤疤。而当爱情不期而至时，一切都变得不再确定。本剧类型：剧情。2026 年首播，已获续订，仍在播出，全剧 1 季，累计 6 集。播出平台：Prime Video。｜TMDB 8.5"
   date: 2026-11-06
   added: "2026-11-07 03:41"
   image: tv-086.jpg
+
+- id: tv-087
+  title: "石油天王 第二季"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "石油天王 Landman"]
+  quark_url: "https://pan.quark.cn/s/04c6fe8ecc1a"
+  baidu_url: "https://pan.baidu.com/s/1AsC2YUdg6ZLRn_dngiUctg"
+  baidu_pwd: "yzt4"
+  description: "【第 2 季 · 共 10 集 · 全剧 3 季】西德克萨斯的油井仍在昼夜轰鸣，新一季把 Tommy Norris 推入更凶险的局面：钻井事故引发人命官司，对手公司恶意收购油藏区块，联邦环保法规收紧，让这座因原油暴富的小镇陷入新一轮利益绞杀。T-Series 掌门人 A.C. Lombardi 带着更激进的开发计划重返油田，与 Tommy 之间亦敌亦友的关系进一步激化。本季延续 Paramount+ 对当代美国石油淘金热的冷峻描摹，把镜头对准井架下的基层工人和办公室里的亿万富翁，揭露财富、贪婪与生存之间的残酷博弈。Billy Bob Thornton 与 Jon Hamm 的对手戏在本季更加紧凑，Kaye Brown、Ali Larter、Michelle Randolph 等配角群像同样丰满。｜TMDB 8.2"
+  date: 2024-11-17
+  added: 2026-11-07
+  image: tv-087.jpg
