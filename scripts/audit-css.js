@@ -28,7 +28,9 @@ const defined = new Set([...css.matchAll(/\.(-?[_a-zA-Z][\w-]*)/g)].map((m) => m
 const used = new Map();
 const collect = (text, source) => {
   for (const m of text.matchAll(/class="([^"]+)"/g)) {
-    for (const cls of m[1].split(/\s+/).filter(Boolean)) {
+    // JS 里常见 'class="foo' + v + '"' 拼接：只取第一个引号前的静态前缀，丢弃拼接段
+    const value = m[1].split(/['`]/)[0];
+    for (const cls of value.split(/\s+/).filter(Boolean)) {
       if (!used.has(cls)) used.set(cls, source);
     }
   }

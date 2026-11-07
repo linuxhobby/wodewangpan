@@ -43,6 +43,7 @@
   --lh-tight: 1.4;   /* 标题 */
   --lh-flat: 1;      /* 纯展示型大数字（404） */
   --lh-0: 0;         /* 行高归零，消除行内块图片底部间隙（推广位） */
+  --lh-mono: 1.7;    /* 等宽文本块（文件清单目录树） */
   /* 单行控件的固定高度（配合对应字号保证胶囊不散） */
   --lh-tag: 22px;    /* 标签 */
   --lh-ctl: 20px;    /* 按钮 */
@@ -443,7 +444,7 @@ a.tag:hover { background: var(--brand-soft); }
   margin: 0; padding: 10px 14px; overflow: auto; max-height: 360px;
   background: var(--fill-soft); border: 1px solid var(--border); border-radius: var(--r-box);
   font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Consolas, monospace;
-  font-size: var(--fs-sm); line-height: 1.7; white-space: pre; color: var(--text);
+  font-size: var(--fs-sm); line-height: var(--lh-mono); white-space: pre; color: var(--text);
 }
 
 .links { display: flex; flex-direction: column; gap: 8px; }
