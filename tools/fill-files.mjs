@@ -11,6 +11,7 @@
 // 用法：
 //   node tools/fill-files.mjs --limit 30            # 本次最多补 30 条（默认）
 //   node tools/fill-files.mjs --limit 3 --only misc # 只处理 data/misc.yaml，小批试跑
+//   node tools/fill-files.mjs --ids mv-427,tv-086   # 只补指定 id（同步任务入库后当场补；已有 files: 的自动跳过）
 //   node tools/fill-files.mjs --dry-run             # 只抓取打印，不写文件
 //   node tools/fill-files.mjs --limit 50 --delay 4000  # 请求更慢更稳
 //
@@ -38,6 +39,7 @@ const hasFlag = (name) => args.includes(`--${name}`);
 const limit = Number(getArg('limit', 30));
 const delayMs = Number(getArg('delay', 3000));
 const only = getArg('only', '');
+const idArg = getArg('ids', '');
 const dryRun = hasFlag('dry-run');
 
 // 北京时间今天，写进条目的 updated 字段（sitemap lastmod 依此真实更新）
@@ -196,7 +198,14 @@ function collectPending() {
   const pending = [];
   for (const name of targets) {
     const file = path.join(dataDir, name);
-    const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+    // data/*.yaml 是「CRLF 为主 + 夹少量裸 LF」的混排文件：逐行保留各自的行尾。
+    // 若统一成一种行尾，没动过的行也会进 diff，并与并行提交 data/ 的任务互相整体覆盖。
+    const raw = fs.readFileSync(file, 'utf8');
+    const parts = raw.split(/(\r\n|\r|\n)/);
+    const lines = [];
+    for (let i = 0; i < parts.length; i += 2) {
+      lines.push(i + 1 < parts.length ? parts[i] + parts[i + 1] : parts[i]);
+    }
     const starts = [];
     lines.forEach((l, i) => {
       if (/^- /.test(l)) starts.push(i);
@@ -225,9 +234,32 @@ function collectPending() {
   return pending;
 }
 
-console.log(`fill-files：${dryRun ? '试跑（不写文件）' : '写入'} · 上限 ${limit} 条 · 间隔 ${delayMs}ms · updated=${today}`);
-const pending = collectPending();
-console.log(`待补条目：${pending.length} 个\n`);
+const wantedIds = idArg
+  ? idArg
+      .split(/[,，\s]+/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+  : null;
+
+console.log(
+  `fill-files：${dryRun ? '试跑（不写文件）' : '写入'} · ${wantedIds ? `指定 ${wantedIds.length} 个 id` : `上限 ${limit} 条`} · 间隔 ${delayMs}ms · updated=${today}`
+);
+const all = collectPending();
+// --ids 只补同步任务本轮新增的那几条；已有 files: 的条目 collectPending 已排除，重复执行安全
+let pending = all;
+if (wantedIds) {
+  const set = new Set(wantedIds);
+  pending = all.filter((p) => set.has(p.id));
+  const skipped = wantedIds.filter((id) => !pending.some((p) => p.id === id));
+  console.log(
+    `全库待补：${all.length} 个 · 本次指定：${pending.length} 个` +
+      (skipped.length ? ` · 跳过（已有 files: 或仓库内不存在）：${skipped.join('、')}` : '') +
+      '\n'
+  );
+} else {
+  console.log(`待补条目：${all.length} 个\n`);
+}
+const cap = wantedIds ? pending.length : limit;
 
 // 同一文件的条目共享一份 lines；插入后把同文件里更靠后条目的插入点顺移
 const dirtyFiles = new Set();
@@ -235,7 +267,7 @@ let ok = 0;
 let fail = 0;
 const failed = [];
 
-for (const item of pending.slice(0, limit)) {
+for (const item of pending.slice(0, cap)) {
   process.stdout.write(`${item.id} … `);
   // 根目录往往只装一个总文件夹：自动下钻（最多 2 层）拿真实内容清单
   let root = await fetchAll(item.url);
@@ -270,7 +302,10 @@ for (const item of pending.slice(0, limit)) {
       if (agg.format) parts.push(agg.format);
       console.log(`完成（${parts.join(' · ') || '有内容'}）`);
       if (!dryRun) {
-        const snippet = toYamlLines(agg, !item.hasUpdated);
+        // 新增行沿用插入点那一行的行尾，与上下文保持一致
+        const after = item.lines[item.at];
+        const nl = /\r\n$/.test(after) ? '\r\n' : '\n';
+        const snippet = toYamlLines(agg, !item.hasUpdated).map((l) => l + nl);
         item.lines.splice(item.at + 1, 0, ...snippet);
         for (const other of pending) {
           if (other.file === item.file && other.at > item.at) other.at += snippet.length;
@@ -286,7 +321,7 @@ for (const item of pending.slice(0, limit)) {
 if (!dryRun) {
   for (const file of dirtyFiles) {
     const item = pending.find((p) => p.file === file);
-    fs.writeFileSync(file, item.lines.join('\n'));
+    fs.writeFileSync(file, item.lines.join(''));
   }
 }
 
