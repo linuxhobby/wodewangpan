@@ -11,6 +11,14 @@
   date: 2026-04-10
   added: 2026-10-02
   image: an-001.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "3.3 GB"
+    format: "MKV"
+    tree: |
+      001-名侦探柯南：高速公路的堕天使/
+      2026.1080p.WEB-DL.NF.AVC.AAC 2.0-SmartWeb.mkv
 
 - id: an-003
   title: "降世神通：最后的气宗 第一季"
@@ -21,6 +29,24 @@
   date: 2024-02-22
   added: 2026-10-11
   image: an-003.jpg
+  updated: 2026-11-07
+  files:
+    count: 11
+    size: "60.0 GB"
+    format: "MKV×8 / JPG×3"
+    tree: |
+      003-降世神通：最后的气宗 第一季/
+      Avatar： The Last Airbender S01E01 - 第 1 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S01E04 - 第 4 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      landscape.jpg
+      Avatar： The Last Airbender S01E02 - 第 2 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      poster.jpg
+      Avatar： The Last Airbender S01E08 - 第 8 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S01E06 - 第 6 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S01E05 - 第 5 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S01E07 - 第 7 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      thumb.jpg
+      Avatar： The Last Airbender S01E03 - 第 3 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
 
 - id: an-004
   title: "降世神通：最后的气宗 第二季"
@@ -31,6 +57,22 @@
   date: 2024-02-22
   added: "2026-10-11 12:06"
   image: an-004.jpg
+  updated: 2026-11-07
+  files:
+    count: 9
+    size: "55.4 GB"
+    format: "MKV×7 / NFO / JPG"
+    tree: |
+      004-降世神通：最后的气宗 第二季/
+      Avatar： The Last Airbender S02E01 - 第 1 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S02E02 - 第 2 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S02E07 - 第 7 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S02E05 - 第 5 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S02E06 - 第 6 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S02E03 - 第 3 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      season.nfo
+      Avatar： The Last Airbender S02E04 - 第 4 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      poster.jpg
 
 - id: an-005
   title: "哪吒之魔童闹海"
@@ -41,6 +83,14 @@
   date: 2025-01-29
   added: "2026-10-11 19:55"
   image: an-005.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "33.5 GB"
+    format: "MKV"
+    tree: |
+      005-哪吒之魔童闹海（2025）/
+      2025.2160p.WEB-DL.H265.HQ.DV.60fps.DTS5.1.mkv
 
 - id: an-006
   title: "哪吒之魔童降世"
@@ -51,6 +101,23 @@
   date: 2019-07-26
   added: "2026-10-11 19:55"
   image: an-006.jpg
+  updated: 2026-11-07
+  files:
+    count: 10
+    size: "52.4 GB"
+    format: "JPG×5 / PNG×3 / NFO / MKV"
+    tree: |
+      006-哪吒之魔童降世（2019）/
+      banner.jpg
+      logo.png
+      thumb.jpg
+      Ne Zha (2019) - 2160p UHD BluRay DV HEVC TrueHD Atmos 7.1.nfo
+      disc.png
+      clearart.png
+      poster.jpg
+      background.jpg
+      Ne Zha (2019) - 2160p UHD BluRay DV HEVC TrueHD Atmos 7.1.mkv
+      backdrop.jpg
 
 - id: an-007
   title: "时光代理人"
@@ -61,6 +128,26 @@
   date: 2021-04-30
   added: 2026-10-12
   image: an-007.jpg
+  updated: 2026-11-07
+  files:
+    count: 12
+    size: "10.7 GB"
+    format: "MP4×9 / MKV×3"
+    tree: |
+      007-时光代理人/
+      时光代理人（第三季）/
+      11.mkv
+      12.mkv
+      07.mp4
+      05.mp4
+      09.mp4
+      04.mp4
+      06.mp4
+      10.mkv
+      02.mp4
+      08.mp4
+      03.mp4
+      01.mp4
 
 - id: an-009
   title: "极恶老大"
@@ -71,6 +158,17 @@
   date: 2020-10-31
   added: 2026-10-14
   image: an-009.jpg
+  updated: 2026-11-07
+  files:
+    count: 3
+    size: "2.4 GB"
+    format: "MP4×3"
+    tree: |
+      009-极恶老大/
+      【动漫】极恶老大 第三季/
+      S03E03.mp4
+      S03E02.mp4
+      S03E01.mp4
 
 - id: an-010
   title: "南方公园"
@@ -81,6 +179,14 @@
   date: 1997-08-13
   added: 2026-10-15
   image: an-010.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "8.6 GB"
+    format: "MKV"
+    tree: |
+      010-南方公园/
+      南方公园.mkv
 
 - id: an-011
   title: "航海王"
@@ -91,6 +197,14 @@
   date: 1999-10-20
   added: 2026-10-16
   image: an-011.jpg
+  updated: 2026-11-07
+  files:
+    count: 2
+    tree: |
+      011-航海王/
+      H 海贼王/
+      海贼王(真人版).第二季[全8集][国英多音轨+简繁英字幕]/
+      海贼王 真人版 第一季[全8集][国英多音轨+简繁英字幕]/
 
 - id: an-013
   title: "死神"
@@ -101,6 +215,27 @@
   date: 2004-10-05
   added: 2026-10-18
   image: an-013.jpg
+  updated: 2026-11-07
+  files:
+    count: 14
+    format: "JPG×9 / PNG×3 / NFO"
+    tree: |
+      013-死神/
+      死神 (2004)/
+      第 17 季 - 2160p WEB-DL H264 AAC/
+      poster.jpg
+      season01-thumb.jpg
+      clearart.png
+      backdrop.jpg
+      clearlogo.png
+      logo.png
+      landscape.jpg
+      thumb.jpg
+      banner.jpg
+      season01-poster.jpg
+      tvshow.nfo
+      season01-banner.jpg
+      fanart.jpg
 - id: an-014
   title: "冰川时代"
   category: 动漫
@@ -110,6 +245,14 @@
   date: 2002-03-14
   added: "2026-10-19 17:05"
   image: an-014.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "1.9 GB"
+    format: "MP4"
+    tree: |
+      014-冰川时代/
+      冰川时代.mp4
 - id: an-015
   title: "冰雪奇缘2"
   category: 动漫
@@ -119,6 +262,14 @@
   date: 2019-11-20
   added: "2026-10-19 17:05"
   image: an-015.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "993 MB"
+    format: "MP4"
+    tree: |
+      015-冰雪奇缘2/
+      冰雪奇缘2.mp4
 - id: an-016
   title: "功夫熊猫"
   category: 动漫
@@ -128,6 +279,14 @@
   date: 2008-06-04
   added: "2026-10-19 17:05"
   image: an-016.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "1.9 GB"
+    format: "MP4"
+    tree: |
+      016-功夫熊猫/
+      功夫熊猫.mp4
 - id: an-017
   title: "头脑特工队"
   category: 动漫
@@ -137,6 +296,14 @@
   date: 2015-06-17
   added: "2026-10-19 17:05"
   image: an-017.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.1 GB"
+    format: "MP4"
+    tree: |
+      017-头脑特工队/
+      头脑特工队.mp4
 - id: an-018
   title: "寻梦环游记"
   category: 动漫
@@ -146,6 +313,14 @@
   date: 2017-10-27
   added: "2026-10-19 17:05"
   image: an-018.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.3 GB"
+    format: "MP4"
+    tree: |
+      018-寻梦环游记/
+      寻梦环游记.mp4
 - id: an-019
   title: "心灵奇旅"
   category: 动漫
@@ -155,6 +330,14 @@
   date: 2020-12-25
   added: "2026-10-19 17:05"
   image: an-019.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.6 GB"
+    format: "MP4"
+    tree: |
+      019-心灵奇旅/
+      心灵奇旅.mp4
 - id: an-020
   title: "怪兽电力公司"
   category: 动漫
@@ -164,6 +347,14 @@
   date: 2001-11-01
   added: "2026-10-19 17:05"
   image: an-020.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.0 GB"
+    format: "MP4"
+    tree: |
+      020-怪兽电力公司1/
+      怪兽电力公司1.mp4
 - id: an-021
   title: "怪兽大学"
   category: 动漫
@@ -173,6 +364,14 @@
   date: 2013-06-19
   added: "2026-10-19 17:05"
   image: an-021.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.3 GB"
+    format: "MP4"
+    tree: |
+      021-怪兽电力公司2.怪兽大学/
+      怪兽电力公司2.怪兽大学.mp4
 - id: an-022
   title: "怪物史瑞克"
   category: 动漫
@@ -182,6 +381,14 @@
   date: 2001-05-18
   added: "2026-10-19 17:05"
   image: an-022.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "1.6 GB"
+    format: "MP4"
+    tree: |
+      022-怪物史瑞克/
+      怪物史瑞克.mp4
 - id: an-023
   title: "机器人总动员"
   category: 动漫
@@ -191,6 +398,14 @@
   date: 2008-06-26
   added: "2026-10-19 17:05"
   image: an-023.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.2 GB"
+    format: "MP4"
+    tree: |
+      023-机器人总动员/
+      机器人总动员.mp4
 - id: an-024
   title: "狮子王"
   category: 动漫
@@ -200,6 +415,14 @@
   date: 1994-06-15
   added: "2026-10-19 17:05"
   image: an-024.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "1.3 GB"
+    format: "MP4"
+    tree: |
+      024-狮子王/
+      狮子王.mp4
 - id: an-025
   title: "玩具总动员"
   category: 动漫
@@ -209,6 +432,14 @@
   date: 1995-11-22
   added: "2026-10-19 17:05"
   image: an-025.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "1.4 GB"
+    format: "MP4"
+    tree: |
+      025-玩具总动员/
+      玩具总动员.mp4
 - id: an-026
   title: "疯狂动物城"
   category: 动漫
@@ -218,6 +449,14 @@
   date: 2016-02-11
   added: "2026-10-19 17:05"
   image: an-026.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "1.9 GB"
+    format: "MP4"
+    tree: |
+      026-疯狂动物城/
+      疯狂动物城.mp4
 - id: an-027
   title: "精灵旅社"
   category: 动漫
@@ -227,6 +466,14 @@
   date: 2012-09-20
   added: "2026-10-19 17:05"
   image: an-027.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.1 GB"
+    format: "MP4"
+    tree: |
+      027-精灵旅社/
+      精灵旅社.mp4
 - id: an-028
   title: "美食总动员"
   category: 动漫
@@ -236,6 +483,14 @@
   date: 2007-06-28
   added: "2026-10-19 17:05"
   image: an-028.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "3.2 GB"
+    format: "MP4"
+    tree: |
+      028-美食总动员/
+      美食总动员.mp4
 - id: an-029
   title: "虫虫危机"
   category: 动漫
@@ -245,6 +500,14 @@
   date: 1998-11-25
   added: "2026-10-19 17:05"
   image: an-029.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.1 GB"
+    format: "MP4"
+    tree: |
+      029-虫虫危机/
+      虫虫危机.mp4
 - id: an-030
   title: "赛车总动员"
   category: 动漫
@@ -254,6 +517,14 @@
   date: 2006-06-08
   added: "2026-10-19 17:05"
   image: an-030.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.0 GB"
+    format: "MP4"
+    tree: |
+      030-赛车总动员1/
+      赛车总动员1.mp4
 - id: an-031
   title: "超能陆战队"
   category: 动漫
@@ -263,6 +534,14 @@
   date: 2014-10-24
   added: "2026-10-19 17:05"
   image: an-031.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "2.2 GB"
+    format: "MP4"
+    tree: |
+      031-超能陆战队/
+      超能陆战队.mp4
 - id: an-032
   title: "飞屋环游记"
   category: 动漫
@@ -272,6 +551,14 @@
   date: 2009-05-28
   added: "2026-10-19 17:05"
   image: an-032.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "1.7 GB"
+    format: "MP4"
+    tree: |
+      032-飞屋环游记/
+      飞屋环游记.mp4
 - id: an-033
   title: "飞机总动员"
   category: 动漫
@@ -281,6 +568,14 @@
   date: 2013-08-09
   added: "2026-10-19 17:05"
   image: an-033.jpg
+  updated: 2026-11-07
+  files:
+    count: 1
+    size: "3.0 GB"
+    format: "MP4"
+    tree: |
+      033-飞机总动员/
+      飞机总动员.mp4
 
 - id: an-034
   title: "荒野丛林"
