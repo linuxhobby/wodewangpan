@@ -34,6 +34,13 @@
   date: 1993-09-10
   added: 2026-05-02
   image: dc-076.jpg
+  updated: 2026-11-07
+  files:
+    count: 2
+    tree: |
+      076-史前X球.2022/
+      1080/
+      4K/
 
 - id: dc-075
   title: "鸟瞰地球"
