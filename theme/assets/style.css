@@ -434,6 +434,17 @@ a.tag:hover { background: var(--brand-soft); }
 /* 浏览量行：计数在左、推广链接靠右，同一行 */
 .facts__views { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
 
+/* 文件清单：files.* 的真实规格表复用 .facts；区块间距与简介衔接。
+   目录树定宽滚动，是只有站长能搬出来的内容，视觉上与正文区分开 */
+.files { margin: 4px 0 16px; }
+.files h2 { font-size: var(--fs-md); margin: 0 0 8px; }
+.files .facts { margin-bottom: 8px; }
+.files__tree {
+  margin: 0; padding: 10px 14px; overflow: auto; max-height: 360px;
+  background: var(--fill-soft); border: 1px solid var(--border); border-radius: var(--r-box);
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Mono', Consolas, monospace;
+  font-size: var(--fs-sm); line-height: 1.7; white-space: pre; color: var(--text);
+}
 
 .links { display: flex; flex-direction: column; gap: 8px; }
 .linkrow {

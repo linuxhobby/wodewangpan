@@ -701,6 +701,37 @@ function relatedBlock(related, images) {
 <ul class="grid${fit}">${related.map((it) => cardHtml(it, images, false, false)).join('')}</ul>`;
 }
 
+/** 详情页「文件清单」：files.* 的真实规格数据。字段全可选、每页有啥渲染啥——
+    不同页面模块长短天然不同，正好破「884 页同一模板同一字数」的判低质特征。
+    规格表复用 .facts 样式；目录树用 <pre> 原样呈现 */
+const FILE_FIELDS = [
+  ['count', '文件总数'],
+  ['episodes', '集 / 卷数'],
+  ['size', '总大小'],
+  ['format', '格式'],
+  ['resolution', '分辨率'],
+  ['audio', '音轨'],
+  ['subtitle', '字幕'],
+  ['packed', '打包方式'],
+];
+function filesBlockOf(item) {
+  const f = item.files;
+  if (!f) return '';
+  const rows = FILE_FIELDS.filter(([k]) => f[k]).map(
+    ([k, label]) => `      <tr><th scope="row">${label}</th><td>${esc(String(f[k]))}</td></tr>`
+  );
+  if (!rows.length && !f.tree) return '';
+  return `<section class="files">
+    <h2>文件清单</h2>
+    <table class="facts">
+      <tbody>
+${rows.join('\n')}
+      </tbody>
+    </table>
+${f.tree ? `    <pre class="files__tree">${esc(f.tree)}</pre>` : ''}
+  </section>`;
+}
+
 /** 详情页同分类翻页：只显示标题；分类首条只有「下一个」、末条只有「上一个」，缺的一侧整块不渲染 */
 function pagerBlockOf(pager) {
   if (!pager || (!pager.prev && !pager.next)) return '';
@@ -806,6 +837,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     </div>
     ${factsHtml}
     <p class="detail__desc">${esc(item.description) || '<span class="muted">暂无介绍</span>'}</p>
+    ${filesBlockOf(item)}
     <div class="links">
       ${item.links.length ? item.links.map(linkRow).join('\n') : '<p class="muted">暂无可用链接</p>'}
     </div>

@@ -396,6 +396,7 @@ export function normalizeResources(rawList) {
       category: String(raw.category || '未分类').trim(),
       tags: toTags(raw.tags),
       description: clipDesc(raw.description || raw.desc || ''),
+      files: parseFiles(raw),
       image: raw.image ? String(raw.image) : '',
       date,
       added,
@@ -413,6 +414,37 @@ export function normalizeResources(rawList) {
   function idNum(id) {
     const m = String(id).match(/(\d+)$/);
     return m ? Number(m[1]) : -1;
+  }
+
+  /** 文件清单（files.*）：从网盘目录抄来的真实规格，是别站复制不了的内容。
+      全字段可选，有什么收什么；一个字段都没有就返回 null（详情页整块不渲染）。
+      tree 是多行目录结构文本，限制 40 行防止单页被超长目录撑爆 */
+  function parseFiles(raw) {
+    const f = raw.files;
+    if (!f || typeof f !== 'object' || Array.isArray(f)) return null;
+    const str = (v) => (v === undefined || v === null ? '' : String(v).trim());
+    const out = {};
+    for (const k of ['episodes', 'size', 'format', 'resolution', 'audio', 'subtitle']) {
+      if (str(f[k])) out[k] = str(f[k]);
+    }
+    if (f.count !== undefined && f.count !== null && str(f.count)) {
+      out.count = /^\d+$/.test(str(f.count)) ? `${str(f.count)} 个文件` : str(f.count);
+    }
+    // packed 布尔直译成一句话；写了字符串就按字符串收（如「分卷压缩」）
+    if (typeof f.packed === 'boolean') {
+      out.packed = f.packed ? '压缩包，需解压后使用' : '散装文件，免解压直接用';
+    } else if (str(f.packed)) {
+      out.packed = str(f.packed);
+    }
+    const tree = str(f.tree)
+      .replace(/\r/g, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .split('\n')
+      .slice(0, 40)
+      .join('\n')
+      .trim();
+    if (tree) out.tree = tree;
+    return Object.keys(out).length ? out : null;
   }
 
   // 入库时刻倒序（同一天的按实际先后）→ 同刻按编号倒序 → 上映日期倒序 → 文件内原序
