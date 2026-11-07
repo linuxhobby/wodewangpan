@@ -6,7 +6,7 @@
 // 独有数据，也是别站复制不了的部分。走夸克官方 skill 的 share-detail 命令取数。
 //
 // 写入策略：不动 YAML 里的已有内容，只在条目末尾追加 updated + files 块；
-// 已有 files: 的条目自动跳过，可安全重复执行。
+// 已有 files: 的条目自动跳过，可安全重复执行；盘端只剩占位说明文件（资源未到位）时整条跳过不写。
 //
 // 用法：
 //   node tools/fill-files.mjs --limit 30            # 本次最多补 30 条（默认）
@@ -265,7 +265,9 @@ const cap = wantedIds ? pending.length : limit;
 const dirtyFiles = new Set();
 let ok = 0;
 let fail = 0;
+let skip = 0;
 const failed = [];
+const notReady = [];
 
 for (const item of pending.slice(0, cap)) {
   process.stdout.write(`${item.id} … `);
@@ -288,8 +290,20 @@ for (const item of pending.slice(0, cap)) {
       depth++;
       if (delayMs) await sleep(delayMs);
     }
+    // 占位说明文件（trending-sync / 夸克同步建目录时预置的「资源在24小时内更新-请先转存」）
+    // 是我们自己的工作流产物，不属于资源内容：
+    //   · 盘端只剩它时 = 资源还没到位（TMDB 今日热门建的就是这种空目录）→ 整条跳过、一个字不写；
+    //   · 否则把它从清单里剔掉，count / tree / format 只统计真实内容（AGENTS.md §5：宁缺勿假）。
+    const real = files.filter((f) => !/资源在24小时内更新|请先转存/.test(String(f.filename || '')));
+    if (!real.length) {
+      console.log('跳过（盘端只有占位说明文件，资源还没到位）');
+      skip++;
+      notReady.push(item.id);
+      if (delayMs) await sleep(delayMs);
+      continue;
+    }
     // count 用实际拿到的条目数：子目录查询的 file_num 不可靠
-    const agg = aggregate({ files }, files.length);
+    const agg = aggregate({ files: real }, real.length);
     if (prefix.length && agg?.tree) agg.tree = [...prefix, ...agg.tree.split('\n')].join('\n');
     if (!agg) {
       console.log('跳过（分享内容为空）');
@@ -325,7 +339,10 @@ if (!dryRun) {
   }
 }
 
-console.log(`\n完成：成功 ${ok} · 失败 ${fail}`);
+console.log(`\n完成：成功 ${ok} · 跳过 ${skip} · 失败 ${fail}`);
+if (notReady.length) {
+  console.log(`盘端仍是占位目录、等资源到位再补：${notReady.join('、')}`);
+}
 if (failed.length) {
   console.log('失败清单（多为链接失效 / 需提取码）：');
   for (const f of failed) console.log(`  ${f}`);
