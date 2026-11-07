@@ -8,12 +8,19 @@
 // 写入策略：不动 YAML 里的已有内容，只在条目末尾追加 updated + files 块；
 // 已有 files: 的条目自动跳过，可安全重复执行；盘端只剩占位说明文件（资源未到位）时整条跳过不写。
 //
+// 队列顺序：待补条目按 added（入库时间）升序扫描，最老的资源先补；缺 added 的排最后。
+// 写入额度：--limit 是「本次要写几条」，不是「本次看几条」。占位目录 / 抓取失败不占额度，
+// 自动顺延下一条（否则 --limit 1 会被队首一个空目录永久堵死，每天 0 产出）。
+// 最多尝试条数由 --tries 兜底（默认每条额度试 20 个，防止全库空目录时空转打接口）。
+//
 // 用法：
 //   node tools/fill-files.mjs --limit 30            # 本次最多补 30 条（默认）
+//   node tools/fill-files.mjs --limit 1             # 每日例行：只补 1 条，队首是空目录就顺延
 //   node tools/fill-files.mjs --limit 3 --only misc # 只处理 data/misc.yaml，小批试跑
 //   node tools/fill-files.mjs --ids mv-427,tv-086   # 只补指定 id（同步任务入库后当场补；已有 files: 的自动跳过）
 //   node tools/fill-files.mjs --dry-run             # 只抓取打印，不写文件
 //   node tools/fill-files.mjs --limit 50 --delay 4000  # 请求更慢更稳
+//   node tools/fill-files.mjs --limit 5 --tries 30  # 每条额度最多试 30 个候选
 //
 // 建议节奏：每天跑一批（--limit 20~30），配合站点「updated 逐日分散」的策略。
 
@@ -41,6 +48,8 @@ const delayMs = Number(getArg('delay', 3000));
 const only = getArg('only', '');
 const idArg = getArg('ids', '');
 const dryRun = hasFlag('dry-run');
+// 每写入 1 条允许尝试的候选数上限（占位/失败顺延的兜底，避免空转打爆接口）
+const triesPerWrite = Math.max(1, Number(getArg('tries', 20)) || 20);
 
 // 北京时间今天，写进条目的 updated 字段（sitemap lastmod 依此真实更新）
 const today = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
@@ -218,6 +227,12 @@ function collectPending() {
       const idm = block.match(/^- id:\s*(\S+)/);
       const um = block.match(/^\s*quark_url:\s*"?([^"\s]+)"?/m);
       if (!idm || !um) continue;
+      // 排序键：入库时间 added，兼容 `2026-10-19` 与 `"2026-11-04 03:41"` 两种写法。
+      // 补齐成定宽「YYYY-MM-DD HH:MM」后按字符串比较即可，不过 Date，避开本地/UTC 时区偏移。
+      const adm = block.match(/^\s*added:\s*"?(\d{4}-\d{2}-\d{2}(?:[ T]\d{1,2}:\d{2})?)"?/m);
+      let addedKey = adm ? adm[1].trim().replace('T', ' ') : '';
+      if (/^\d{4}-\d{2}-\d{2}$/.test(addedKey)) addedKey += ' 00:00';
+      if (!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test(addedKey)) addedKey = '9999-99-99 99:99';
       // 插入点：条目内最后一个非空行之后（该行属于当前条目）
       let at = to - 1;
       while (at > from && !lines[at].trim()) at--;
@@ -227,11 +242,14 @@ function collectPending() {
         id: idm[1],
         url: um[1],
         at,
+        addedKey,
         hasUpdated: /^  updated:/m.test(block),
       });
     }
   }
-  return pending;
+  // 按 added 升序（老资源先补）。sort 稳定：同一天入库的条目保持
+  // 「文件名字母序 + 文件内条目顺序」的原有相对次序。
+  return pending.sort((a, b) => (a.addedKey < b.addedKey ? -1 : a.addedKey > b.addedKey ? 1 : 0));
 }
 
 const wantedIds = idArg
@@ -242,7 +260,9 @@ const wantedIds = idArg
   : null;
 
 console.log(
-  `fill-files：${dryRun ? '试跑（不写文件）' : '写入'} · ${wantedIds ? `指定 ${wantedIds.length} 个 id` : `上限 ${limit} 条`} · 间隔 ${delayMs}ms · updated=${today}`
+  `fill-files：${dryRun ? '试跑（不写文件）' : '写入'} · ${
+    wantedIds ? `指定 ${wantedIds.length} 个 id` : `补 ${limit} 条（占位/失败顺延，最多试 ${limit * triesPerWrite} 个）`
+  } · 按 added 升序 · 间隔 ${delayMs}ms · updated=${today}`
 );
 const all = collectPending();
 // --ids 只补同步任务本轮新增的那几条；已有 files: 的条目 collectPending 已排除，重复执行安全
@@ -259,7 +279,12 @@ if (wantedIds) {
 } else {
   console.log(`待补条目：${all.length} 个\n`);
 }
-const cap = wantedIds ? pending.length : limit;
+// --limit 是「写入额度」而不是「查看条数」：占位目录 / 抓取失败不占额度，自动顺延下一条，
+// 直到写满额度，或试到 --tries 的兜底上限（防止全库都是空目录时空转打接口）。
+// --ids 是同步任务入库后当场补的那几条，指定的全部试完，不受额度约束。
+const writeCap = wantedIds ? Infinity : limit;
+const maxTries = wantedIds ? pending.length : Math.min(pending.length, writeCap * triesPerWrite);
+let tried = 0;
 
 // 同一文件的条目共享一份 lines；插入后把同文件里更靠后条目的插入点顺移
 const dirtyFiles = new Set();
@@ -269,7 +294,9 @@ let skip = 0;
 const failed = [];
 const notReady = [];
 
-for (const item of pending.slice(0, cap)) {
+for (const item of pending.slice(0, maxTries)) {
+  if (ok >= writeCap) break;
+  tried++;
   process.stdout.write(`${item.id} … `);
   // 根目录往往只装一个总文件夹：自动下钻（最多 2 层）拿真实内容清单
   let root = await fetchAll(item.url);
@@ -339,7 +366,7 @@ if (!dryRun) {
   }
 }
 
-console.log(`\n完成：成功 ${ok} · 跳过 ${skip} · 失败 ${fail}`);
+console.log(`\n完成：成功 ${ok} · 跳过 ${skip} · 失败 ${fail} · 尝试 ${tried} 个候选`);
 if (notReady.length) {
   console.log(`盘端仍是占位目录、等资源到位再补：${notReady.join('、')}`);
 }
