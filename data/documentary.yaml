@@ -51,6 +51,19 @@
   date: 2011-12-29
   added: 2026-05-02
   image: dc-075.jpg
+  updated: 2026-11-07
+  files:
+    count: 6
+    size: "10.7 GB"
+    format: "MKV×6"
+    tree: |
+      075-BBC.鸟瞰地球/
+      5.mkv
+      4.mkv
+      3.mkv
+      6.mkv
+      2.mkv
+      1.mkv
 
 - id: dc-074
   title: "骇客如何改变世界"
