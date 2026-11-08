@@ -28,6 +28,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { sortTree } from './lib/tree-sort.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -174,15 +175,16 @@ function aggregate(data, fileNum) {
   }
   if ([...exts.keys()].some((e) => /^(ZIP|RAR|7Z|TAR|GZ|001)$/.test(e))) out.packed = true;
 
-  // 目录树：顶层条目原样列出，文件夹带斜杠，最多 40 行
-  const tree = files
-    .slice(0, 40)
-    .map((f) => {
+  // 目录树：接口返回的是盘端内部顺序（按 fid/更新时间），直接写出去是乱的；
+  // 统一交给 sortTree 排成「目录优先 → 扩展名分组 → 组内自然序」，排完再截前 40 行，
+  // 这样大目录被截断时留下的是最靠前的一批，而不是接口随手给的一批。
+  const tree = sortTree(
+    files.map((f) => {
       const name = String(f.filename || '').trim();
       return f.file_type === '0' ? `${name}/` : name;
     })
-    .filter((name) => name && name !== '/');
-  if (tree.length) out.tree = [...new Set(tree)].join('\n');
+  );
+  if (tree.length) out.tree = tree.slice(0, 40).join('\n');
 
   return Object.keys(out).length ? out : null;
 }
