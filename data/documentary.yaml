@@ -1,4 +1,4 @@
-# 纪录片资源（95 条）
+# 纪录片资源（96 条）
 # 来源：夸克网盘 SHARE/06纪录片
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -1215,3 +1215,29 @@
       [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E01.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv
       [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E02.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv
       [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E03.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv
+
+- id: dc-095
+  title: "蓝色星球 第二季"
+  category: 纪录片
+  tags: ["纪录片", "自然", "海洋", "蓝色星球2 Blue Planet II"]
+  quark_url: "https://pan.quark.cn/s/344ba8cfe36a"
+  baidu_url: "https://pan.baidu.com/s/1plWEYQjDbPEZIlYp4jE3iw"
+  baidu_pwd: "4jyj"
+  description: "【第二季 · 共 7 集】时隔十六年，BBC 把镜头重新沉入海洋，用整整换了一代的深海设备拍到第一季根本没法呈现的画面。第二季跟随洋流与季节的变迁，从极地冰海到色彩变幻的珊瑚礁、从风暴肆虐的大西洋到漆黑无光的海沟，记录章鱼、鲸群、海鸟与无数此前从没上过镜头的物种如何觅食、求偶、迁徙、求生，也直面暖化、塑料与过度捕捞给这片水域带来的新压力。解说依旧克制，主角始终是画面本身，单集主题分明，适合从头到尾按顺序看。网盘这个目录收的是七集正片，MP4 单集约 1.6GB，一次存齐不用回头补。｜TMDB 8.6"
+  date: 2017-10-29
+  added: 2026-11-08
+  image: dc-095.jpg
+  updated: 2026-11-08
+  files:
+    count: 7
+    size: "11.2 GB"
+    format: "MP4×7"
+    tree: |
+      095-BBC.蓝色星球-第二季/
+      蓝色星球2-01.mp4
+      蓝色星球2-02.mp4
+      蓝色星球2-03.mp4
+      蓝色星球2-04.mp4
+      蓝色星球2-05.mp4
+      蓝色星球2-06.mp4
+      蓝色星球2-07.mp4

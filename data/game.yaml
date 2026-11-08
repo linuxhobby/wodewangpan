@@ -123,3 +123,138 @@
   date: 2019-11-14
   added: "2026-11-04 18:15"
   image: game-012.jpg
+
+- id: game-013
+  title: "恶魔城：贝尔蒙特的诅咒"
+  category: 游戏
+  tags: ["游戏", "动作冒险", "横版", "Switch", "恶魔城：贝尔蒙特的诅咒 Castlevania Belmont’s Curse"]
+  quark_url: "https://pan.quark.cn/s/1faffa7e5db9"
+  baidu_url: "https://pan.baidu.com/s/16n6S-wN7yMmv7zpt1h10Rw"
+  baidu_pwd: "i603"
+  description: "《恶魔城：贝尔蒙特的诅咒》是科乐美联手《死亡细胞》团队 Evil Empire、Motion Twin 打造的系列重启首作，也是恶魔城诞生四十周年的纪念作品，2026 年 10 月 15 日登陆 Switch 等平台。故事设在《恶魔城 III》二十三年后的十五世纪巴黎，玩家扮演特雷弗·贝尔蒙特之女萝丝，手持圣鞭「吸血鬼杀手」在燃烧的街巷与城堡间横版探索，鞭子新增荡跃、钩索等位移，击败 Boss 还能将其封入塔罗牌、化作魔法攻击，配合对话选项与多结局，评价解禁后拿下多家外媒高分。网盘这份是 Switch 数字版拆分包，含中文美区本体 v1.1.0、升级档、DLC2、数字音乐与美术画廊，另附金手指与帧率改善 Mod，需在大气层等自制系统下安装运行，请仅用于体验你合法拥有的游戏。"
+  date: 2026-10-15
+  added: 2026-11-08
+  image: game-013.jpg
+  updated: 2026-11-08
+  files:
+    count: 7
+    format: "NSP×2 / RAR / ZIP / TXT"
+    packed: true
+    tree: |
+      013-[恶魔城贝尔蒙特的诅咒][Castlevania Belmont&#39;s Curse]/
+      数字音乐与美术画廊/
+      DLC2/
+      [本体v1.1.0][0100BA4026E94000][23.0.0][中文][US].nsp
+      [升级档v1.1.0][0100BA4026E94800][23.0.0][中文][US].nsp
+      恶魔城：贝尔蒙特的诅咒 帧率改善Mod [v1.1.0].rar
+      金手指使用说明.txt
+      金手指 [组件v8][作者 邪恶木木枭][BuildID 0F1169AA7D0FA452].zip
+
+- id: game-014
+  title: "最终幻想：共鸣"
+  category: 游戏
+  tags: ["游戏", "角色扮演", "HD-2D", "Switch", "最终幻想：共鸣 Final Fantasy Resonance"]
+  quark_url: "https://pan.quark.cn/s/d45231b0a20d"
+  baidu_url: "https://pan.baidu.com/s/1n4Sjor-rB_bSJKGNoU7xRQ"
+  baidu_pwd: "pblg"
+  description: "《最终幻想：共鸣》是 Square Enix 与 Lancarse 联合开发、2026 年 10 月 22 日发售的系列首部 HD-2D 回合制 RPG，由已停服的手游《最终幻想：勇气启示录》第一季剧情彻底重构而来，改成纯单机、买断、无内购。玩法回归回合制指令，加入命中弱点持续累积的「破防」和触发四人全员突击的「共鸣」大招，历代 FF 主角以可装备的「幻兵」形式登场，靠战斗习得他们的技能；主线约三四十小时，另有竞技场、十二武具之间、与流浪剑豪吉尔伽美什的剧情等大量反复游玩内容。网盘这份是 Switch 数字版拆分包，含中文港版本体 v1.0.0、升级档、DLC3、MOD 与金手指，需配合大气层等自制系统安装，请仅用于体验你合法拥有的游戏。"
+  date: 2026-10-22
+  added: 2026-11-08
+  image: game-014.jpg
+  updated: 2026-11-08
+  files:
+    count: 7
+    format: "TXT×2 / NSP×2 / RAR"
+    packed: true
+    tree: |
+      014-[最终幻想：共鸣][FINAL FANTASY RESONANCE]/
+      DLC 3/
+      MOD/
+      [本体v1.0.0][0100B8A026F14000][22.1.0][中文][HK].nsp
+      [升级档v1.0.1][0100B8A026F14800][22.5.0][中文][HK].nsp
+      金手指使用说明.txt
+      NS游戏仓库自购【转载请注明来源】.txt
+      金手指 [港版][游戏v1.0.1][BuildID B7F965B9D7227DB8].rar
+
+- id: game-015
+  title: "超级马里奥 奥德赛"
+  category: 游戏
+  tags: ["游戏", "动作冒险", "平台跳跃", "Switch", "超级马里奥 奥德赛 Super Mario Odyssey"]
+  quark_url: "https://pan.quark.cn/s/d249f890acf0"
+  baidu_url: "https://pan.baidu.com/s/1eGWbsZvMOaQF3OHyrrzM3A"
+  baidu_pwd: "jf0t"
+  description: "《超级马里奥 奥德赛》是任天堂 2017 年 10 月 27 日在 Switch 上推出的 3D 平台动作大作，也是《超级马里奥 阳光》之后系列在箱庭探索方向上的全面进化。玩家与帽子伙伴「凯皮」一同驾驶奥德赛号飞船周游都市、沙漠、雪国、深海等风格迥异的国度，靠把帽子甩出去附身敌人和物体来解锁新动作、解谜过关，沿途收集「力量之月」推进旅程，箱庭里藏着大量可互动的细节与金币挑战，上手简单而通关后仍有挖掘空间。本作是 Switch 公认必玩的第一方作品，媒体与玩家口碑都相当高。网盘这份是 Switch 数字版拆分包，含 nsp 本体、v1.4.1 升级档与对应金手指，需在大气层等自制系统下安装运行，请仅用于体验你合法拥有的游戏。"
+  date: 2017-10-27
+  added: 2026-11-08
+  image: game-015.jpg
+  updated: 2026-11-08
+  files:
+    count: 3
+    format: "ZIP"
+    packed: true
+    tree: |
+      015-马里奥奥德赛 Super Mario Odyssey/
+      升级档v1.4.1/
+      nsp本体/
+      1.4.1金手指.zip
+
+- id: game-016
+  title: "塞尔达传说：旷野之息"
+  category: 游戏
+  tags: ["游戏", "动作冒险", "开放世界", "Switch", "塞尔达传说：旷野之息 The Legend of Zelda Breath of the Wild"]
+  quark_url: "https://pan.quark.cn/s/19e45d2e53df"
+  baidu_url: "https://pan.baidu.com/s/1qs2LLVhY3IWIosc9jVPGpQ"
+  baidu_pwd: "3omi"
+  description: "《塞尔达传说：旷野之息》是任天堂 2017 年 3 月 3 日推出的开放世界动作冒险作品，几乎重写了玩家在「海拉鲁」冒险的方式：没有满屏任务标记，凭一双眼睛在辽阔大地上自由攀爬、滑翔、生火、御雨，用希卡之石的磁力、静止时间、制冰、遥控等符文即兴解谜与战斗，一百二十座神庙散落在角落等你发掘。武器会损坏、怪物有生态、天气与昼夜都影响一切，加上九百多个呀哈哈收集，随便一逛就是几十上百小时，也是当年度各项大奖的常客。网盘这份是 Switch 数字版拆分包，含 nsp 本体、v1.9.0 升级档（需较新固件）、DLC 与历史版本目录，需在大气层等自制系统下安装运行，请仅用于体验你合法拥有的游戏。"
+  date: 2017-03-03
+  added: 2026-11-08
+  image: game-016.jpg
+  updated: 2026-11-08
+  files:
+    count: 4
+    tree: |
+      016-塞尔达传说 旷野之息 The Legend of Zelda Breath of the Wild/
+      历史版本[不用下载]/
+      升级档v1.9.0（需要21以上固件）/
+      dlc-2/
+      nsp本体/
+
+- id: game-017
+  title: "海贼王：海洋盛宴"
+  category: 游戏
+  tags: ["游戏", "模拟", "经营", "Switch", "海贼王：海洋盛宴 ONE PIECE Grand Gourmet"]
+  quark_url: "https://pan.quark.cn/s/01507324bf08"
+  baidu_url: "https://pan.baidu.com/s/14OL8yiv-FkqfKEGdhv6cwg"
+  baidu_pwd: "twgd"
+  description: "《海贼王：海洋盛宴》是开罗游戏（Kairosoft）与万代南梦宫合作、2026 年 10 月 22 日登陆 Switch 的海上餐厅经营模拟游戏，用开罗标志性的像素画风套进《ONE PIECE》的世界观。玩家扮演「芭拉蒂 2 号店」的新员工，和山治一起收集食材、研发两百多种料理、自由搭配成套餐，再用两百多种家具把餐厅布置成自己想要的模样，招徕草帽一伙与原作角色，登场人物超过四百位，招待得当还能解锁角色专属互动，是《海贼王》IP 少见的单机买断、无内购经营作品。网盘这份是 Switch 数字版拆分包，含日区本体 v1.0.0 与升级档，需在大气层等自制系统下安装运行，请仅用于体验你合法拥有的游戏。"
+  date: 2026-10-22
+  added: 2026-11-08
+  updated: 2026-11-08
+  files:
+    count: 3
+    size: "335 MB"
+    format: "NSP×2 / TXT"
+    tree: |
+      017-[海贼王 海洋盛宴][ONE PIECE 海のごちそうレストラン]/
+      [本体v1.0.0][01008BF025F34000][22.5.0][JP].nsp
+      [升级档v1.0.4][01008BF025F34800][23.0.1][中文][JP].nsp
+      NS游戏仓库自购【转载请注明来源】.txt
+
+- id: game-018
+  title: "Switch 大气层整合包"
+  category: 游戏
+  tags: ["游戏", "自制系统", "破解", "Switch", "大气层整合包 Atmosphere"]
+  quark_url: "https://pan.quark.cn/s/6890e6002069"
+  baidu_url: "https://pan.baidu.com/s/1rGHb9p8Z0bfqdhEYuh_yPg"
+  baidu_pwd: "6l2e"
+  description: "「大气层」是目前 Switch 自制系统里最主流的破解方案之一，这份资源是整理好的大气层整合包，把刷机和日常使用需要的东西打包到位：主目录给到支持系统固件 23.0.1 的当前整合包，另设历史版本目录方便旧机器回退，还有一个「遇到问题来这里找解决办法」的排障文件夹。大气层配合自制系统装好后，即可安装 nsp、xci 等格式的游戏、使用金手指与各类插件、备份和切换存档，是前面几部 Switch 游戏拆分包共同的运行环境。目录里的「NS 游戏仓库」说明提示游戏多为用户自购分享、转载需注明来源。需要提醒：破解涉及本机安全与游戏版权，请先确认当地法规，只用于运行你合法拥有的游戏与自制内容，并自行承担改机风险。适合想一次性把大气层环境配齐、直接开始体验 Switch 游戏库的玩家。"
+  date: 2026-11-08
+  added: 2026-11-08
+  updated: 2026-11-08
+  files:
+    count: 3
+    tree: |
+      018-switch大气层整合包[ns游戏仓库]/
+      【遇到问题来这里找解决办法】/
+      大气层整合包23.0.1/
+      历史版本/
