@@ -3,66 +3,112 @@
 给在这台仓库/站点上工作的自动化 agent（定时任务、AI 会话）看的操作手册。
 人在场时可随意发挥；机器执行时**严格按本手册来**。
 
-站点：我的网盘资源站（wodewangpan）· 静态站 · Node.js 构建 · VPS + nginx
+站点：我的网盘索引站（wodewangpan）· www.wodewangpan.top · 静态站 · Node.js 构建 · VPS + nginx
+数据规模：902 个资源 · 10 个分类（`config/site.yaml` 的 `title` 就是页面标题里的站点名）
 
 ---
 
 ## 1. 常用命令
 
 ```bash
-npm run build          # 构建到 public/（本地）
-npm run serve          # 本地预览 http://localhost:4321
-npx eslint scripts/ tools/   # lint，提交前必须通过
-node scripts/new-resource.js # 交互式新增资源条目
-node tools/fill-files.mjs    # 批量补文件清单（见 §4）
-node tools/fill-desc.mjs     # 批量补/改描述（谨慎，见 §5）
+npm run build              # 构建到 public/（本地）
+npm run serve              # 本地预览 http://localhost:4321
+npx eslint scripts/ tools/ # lint，提交前必须 0 错误
+node scripts/new-resource.js        # 交互式新增资源条目
+node tools/fill-files.mjs --limit 3 # 补文件清单（见 §4）
+node tools/sort-trees.mjs --dry-run # 预览/回填目录树排序（见 §4）
+node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
 ```
+
+一次完整构建约 45~130 秒（首次全量偏慢，增量约 40 秒），第二次跑应「重新生成 0 个」。
 
 ## 2. 目录结构
 
 | 路径 | 说明 |
 |---|---|
-| `data/*.yaml` | 全部资源数据（movie/tv/anime/…），**站点的内容源** |
-| `config/site.yaml` | 站点配置（域名、导航、分类、推广位） |
+| `data/*.yaml` | 全部资源数据（movie/tv/anime/documentary/…），**站点的内容源** |
+| `config/site.yaml` | 站点配置（站点名、域名、导航、分类、推广位） |
 | `scripts/build.js` | 构建入口：读数据 → 写页面 → sitemap/RSS/搜索索引 |
 | `scripts/lib/data.js` | 数据解析与规范化（YAML 字段语义看这里） |
 | `scripts/lib/render.js` | 全部页面模板与 SEO 输出（meta/JSON-LD/sitemap） |
-| `tools/*.mjs` | 批量数据工具（补描述、补文件清单、配图） |
-| `theme/assets/style.css` | 全站样式（CSS 变量制，改动要克制） |
-| `deploy/wdwp-autoupdate.sh` | VPS 发布脚本（cron 每 2 小时的 30 分自动跑） |
+| `scripts/lib/assets.js` | 配图/二维码等静态资产处理 |
+| `tools/fill-files.mjs` | 补「文件清单」`files:` 块（§4 例行任务的主角） |
+| `tools/sort-trees.mjs` | 回填已有 `files.tree` 的行序（只重排，不动内容与日期） |
+| `tools/lib/tree-sort.mjs` | 目录树排序的唯一实现，fill-files 与 sort-trees 共用，勿另写一份 |
+| `tools/fill-desc.mjs`、`poster.mjs`、`share-poster.mjs`、`list-short-desc.mjs` | 批量补描述 / 配图 / 短描述盘点 |
+| `theme/assets/style.css` | 全站样式（CSS 变量制，改动要克制；CI 有 `npm run audit:css`） |
+| `deploy/wdwp-autoupdate.sh` | VPS 发布脚本（cron `30 */2 * * *`，见 §6） |
+| `deploy/`（其余） | `submit-indexnow.sh` / `submit-baidu.sh`（收录推送）、`nginx-site.conf.example` 与 `00-*.conf`（站点配置与探针/AI 爬虫拦截）、`enable-stats.sh` + `00-sitestats.conf`（站点统计） |
 
 **不要动**：`scripts/lib/render.js` 的渲染逻辑、`theme/`、`deploy/` 下的 nginx 配置——这些改动影响全站 SEO 与线上可用性，只允许明确的人工指令触发。
 
 ## 3. Git 约束（重要）
 
 - 分支就是 `main`，直接提交推送，不需要开分支。
-- **推送前必须 `git fetch` 并确认本地仍基于远程 HEAD**：本仓库常有并行会话（TMDB 同步、夸克同步）同时提交 `data/`，先 `git pull --rebase` 再 push。
+- **推送前必须 `git fetch` 并确认本地仍基于远程 HEAD**：本仓库有三个定时任务并行提交
+  `data/`——fill-files 补文件清单（每 2 小时的 30 分）、夸克资源同步（每 6 小时的 10 分）、
+  TMDB 今日热门（每天 3:50）。先 `git pull --rebase` 再 push，不要等被拒了才补。
+  其中 fill-files 与 VPS 的发布 cron **同刻触发**（都在偶数小时 :30），互不冲突（任务只 push 不 ssh）。
+- rebase 前工作区要干净（`git status --short` 无输出）。出现非本任务产生的改动就标注「工作区不干净」上报，
+  **不要 stash、不要丢弃**。
 - 禁止 `git push --force`、禁止改写已推送的历史。
 - commit message 风格：`类型: 一句话`，类型用 `feat / fix / seo / perf / docs / data`。
 
-## 4. 每日例行任务：补文件清单（fill-files）
+## 4. 例行任务：补文件清单（fill-files）
 
-这是本站 SEO 的核心增量工作，**每天跑一批，宁可少不可断**。
+本站 SEO 的核心增量工作，**每 2 小时一轮、每轮 3 条**（约 36 条/天），由定时任务
+「我的网盘.fill-files补文件清单」在 0:30 / 2:30 / … / 22:30（Asia/Shanghai）无人值守执行。
+原则是**宁可少不可断**。
 
 ```bash
-node tools/fill-files.mjs --limit 30
+node tools/fill-files.mjs --limit 3 --delay 3000
 ```
 
-工具行为：遍历 `data/*.yaml` 中还没有 `files:` 块的条目，从夸克分享详情接口
-（客态、无需登录）抓真实文件清单，追加 `updated: 当天` + `files:` 块。
+工具行为：遍历 `data/*.yaml` 中「有 `quark_url` 且还没有 `files:` 块」的条目，按 `added`
+升序（最老资源先补）取用，从夸克分享详情接口（客态访问、无需网盘授权）抓**盘端实际目录**，
+在条目末尾追加 `updated: 当天` + `files:` 块。**已有 `files:` 的条目自动跳过、绝不重写**——
+所以和入库时就已用 `--ids` 当场补好的「夸克资源同步」互不干扰。
+
+参数语义（容易误读）：
+
+- `--limit` 是**写入额度**，不是查看条数。队首遇到占位目录或抓取失败会自动顺延下一条
+  （每条额度最多试 20 个候选，`--tries` 可调），所以一轮实际写入可能是 1~3 条。
+- `--ids <id,id>` 只补指定条目，供同步任务入库后当场补用；例行任务不用它。
+- `--dry-run` 只抓取打印不写盘；`--only <分类>` 只处理某个 yaml；`--delay` 请求间隔毫秒。
+- 根目录只有一个总文件夹时自动下钻最多 2 层拿真实内容。
+
+**占位说明文件不进清单**：`资源在24小时内更新-请先转存-更新会自动通知.md`、
+`资源缺失反馈请加QQ群…md` 等是建目录时预置的工作流产物，工具会把它们从
+`count`/`tree`/`format` 里剔掉；若盘端只剩它们（TMDB 今日热门新建的就是这种空目录），
+整条跳过、一个字都不写，打印「跳过（盘端只有占位说明文件，资源还没到位）」，下一轮再试。
+这属正常现象，**不要**改成手工填写。
+
+**目录树排序**（2026-11-08 起）：工具写盘前把 `tree` 排成「目录优先 → 扩展名分组
+（组序与 `format` 同口径：数量多的在前，相同按字母序）→ 组内集数自然序」，实现只在
+`tools/lib/tree-sort.mjs`。历史存量用 `node tools/sort-trees.mjs` 回填——它只重排行序，
+不动 `count`/`size`/`format`，也**不写 `updated`**（行序变化不是内容变化，盖日期等于伪造
+lastmod），且幂等（复跑打印「重排 0 条」）。
 
 执行后 agent 必须做的事：
 
-1. **看失败清单**：失败多为「链接失效 / 需提取码」。链接失效的条目是死链候选，
-   逐条人工核验（浏览器打开确认）后在该条目加 `dead: true`，不要机器自动标。
-2. **抽查数据**：随机打开 2~3 个写入块，确认 count/size/tree 来自接口真实返回。
-   工具永不编造数据——如果你发现数据可疑，停下来报告，不要继续跑。
-3. 构建验证：`npm run build`（应无报错；第二次构建应 0 个文件重新生成）。
-4. 提交推送（按 §3），message 用 `data: fill-files 补 N 条文件清单`。
-5. 发布：等 cron 自动发，或手动 `ssh www 'FORCE=1 wdwp-autoupdate'`。
+1. **看失败清单**：失败多为「链接失效 / 需提取码」，是死链候选。逐条人工核验
+   （浏览器打开确认）后在该条目加 `dead: true`，不要机器自动标。
+2. **抽查数据**：打开本轮写入块，确认 `count`/`size`/`format`/`tree` 与工具打印一致、
+   确实是该资源的内容。工具永不编造数据——发现可疑就停下来报告。
+   **3 条里任一条可疑，整轮不提交**：收尾是 `git add data/` 一把过，拆开提交会把可疑那份
+   一起推上远端。
+3. 构建验证：`npm run build` 连跑两次（第一次必须通过，第二次应「重新生成 0 个」）。
+4. 提交推送（按 §3），message 用
+   `data: fill-files 补 N 条文件清单（<id1>、<id2>、<id3>）`，N 取**实际写入数**（1~3），
+   只列真写进盘的 id；本轮 0 条写入就不产生 commit。
+5. 发布：**不要手动触发**，等 VPS 的 `30 */2` cron（见 §6）。本任务与它同频同时刻，
+   本轮提交通常赶不上同一时刻的那次 pull，要等下一班（约 2 小时后）才上线，这是预期行为。
+6. 飞书汇报：每轮结束发一张标题卡（脚本 `C:/Users/marco/Scripts/wodewangpan-fillfiles-feishu.mjs`，
+   接收人内置）。一轮 3 条要用 `--name` 把「id 标题（分类）」拼成一行——`--id` 只接受单个 id；
+   第 4 行进度由脚本自己扫 `data/*.yaml` 算，天数只是量级估算（`--per-day` 可选）。
 
-剩余量与节奏：`--limit` 每天 20~30 条。不要一次跑完（约 900 条），
-一次性大规模变更反而触发「批量内容」判定。
+剩余量与节奏：截至 2026-11-08 待补 834 条，按 36 条/天约 23 天清完。**不要**因为缺口大就
+自己加量——一次性大规模变更反而触发「批量内容」判定，比慢慢补更糟。
 
 ## 5. 数据规范（data/*.yaml 字段语义）
 
@@ -83,37 +129,55 @@ node tools/fill-files.mjs --limit 30
     count: 510            # 文件总数
     episodes: 第 1-24 集
     size: 18.6 GB
-    format: MP4 / MKV
+    format: MP4 / MKV     # 扩展名分布，数量多的在前（与 tree 的分组顺序同口径）
     resolution: 1080p
     audio: 国语 AAC 2.0
     subtitle: 内封简繁中字
     packed: false         # true=压缩包
-    tree: |               # 目录结构，最多 40 行
+    tree: |               # 目录结构，最多 40 行；写入时已按「目录→扩展名分组→集数自然序」排好
       …
 ```
 
+`data/*.yaml` 是 **CRLF 为主、夹少量裸 LF** 的混排文件。任何批量写入都要逐行保留原行尾，
+否则没动过的行也会进 diff，并与并行任务互相整体覆盖。
+
 **铁律**：
 
-- **禁止伪造任何日期**。`added` 是事实，永远不改写；`updated` 只在内容真变化时
-  写当天日期。伪造日期 = sitemap lastmod 失信 = 全站降权，这是本站第一红线。
+- **禁止伪造任何日期**。`added` 是事实，永远不改写（唯一例外：补位回收把同 id 的死链旧条目
+  整块换成新资源，那属于事实更新）；`updated` 只在内容真变化时写当天日期。伪造日期 =
+  sitemap lastmod 失信 = 全站降权，这是本站第一红线。
 - `files.*`、`description` 等一切内容必须可溯源（接口返回 / 目录实拍 / 影视库）。
   编造数据会让「独有内容」变成「批量伪造内容」，比没有更糟。
 - 死链处理只有人工核验一条路：确认 → `dead: true` → 构建自动 noindex + 移出 sitemap。
 
 ## 6. 发布流程
 
-正常情况不用管：VPS cron 每 2 小时的 30 分自动
+正常情况不用管：VPS cron `30 */2 * * * /usr/local/bin/wdwp-autoupdate` 每 2 小时的 30 分自动
 `git fetch → 构建 → 原子替换 public → reload nginx → IndexNow 推送`。
 
-手动立即发布（改完想马上上线）：
+**主机别名是 `site`**（= `hty22` = `38.190.227.56:37212`，`~/.ssh/config` 里同一条 Host 记录）。
+本机**没有** `www` 别名，早期文档里的 `ssh www ...` 一律执行不了；`rc` 是另一台机（微信发布用），
+不要拿它做站点发布。
+
+判定成功看日志末行，**不要用 ssh stdout**（脚本把输出写进日志，stdout 可能为空）：
 
 ```bash
-ssh www 'FORCE=1 wdwp-autoupdate'
-tail -3 /var/log/wdwp-autoupdate.log   # 看到「发布完成：<hash>」即成功
+ssh site 'tail -3 /var/log/wdwp-autoupdate.log'   # 看到「发布完成：<hash>」即成功
 ```
 
-构建失败时脚本会保留线上旧版本不切换，此时查日志找报错，**不要**手动去 VPS
-改 `public/` 或重启 nginx。
+手动立即发布（改完想马上上线；例行任务**不要**这么干）：
+
+```bash
+ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
+```
+
+- 脚本自己比对本地 HEAD 与 origin/main，有新提交才构建；**没必要就别加 `FORCE=1`**
+  （无更新时会白跑一次 npm ci + build）。
+- 手动触发**必须套 `flock`**：脚本内部无并发锁，撞上 cron 会同时写 `public.new` 并互相破坏构建产物。
+- 单次约 42 秒。构建失败时脚本保留线上旧版本不切换，此时查日志找报错，**不要**手动去 VPS
+  改 `public/` 或重启 nginx。
+- VPS 上另有 `*/10 * * * * tools/sitestats.py`（站点统计）、每天 3:00 `submit-indexnow`、
+  3:10 `submit-baidu`，都与本仓库的发布互不干扰。
 
 ## 7. SEO 现状与禁区（改代码前必读）
 
@@ -130,9 +194,12 @@ tail -3 /var/log/wdwp-autoupdate.log   # 看到「发布完成：<hash>」即成
 ## 8. 验证清单（每次改完跑一遍）
 
 ```bash
-npx eslint scripts/ tools/     # 0 错误
+npx eslint scripts/ tools/     # 0 错误（tools/lib/ 也在覆盖范围内）
 npm run build                  # 构建通过，注意「重新生成 N 个」是否合理
 npm run build                  # 第二次构建应「重新生成 0 个」（304 机制未破坏）
 ```
 
-涉及模板改动时，抽查 1 个详情页 HTML：meta/canonical/JSON-LD/files 块是否正常。
+- 涉及模板改动时，抽查 1 个详情页 HTML：meta/canonical/JSON-LD/files 块是否正常。
+- 涉及 `data/*.yaml` 改动时，`git diff --numstat` 的加减行数应当只对得上预期改动，
+  且不应出现整文件行尾变化。
+- 只改 `AGENTS.md` 这类文档不影响构建（它不参与 `scripts/build.js` 的输出），提交推送即可。
