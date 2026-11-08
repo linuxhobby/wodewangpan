@@ -1,4 +1,4 @@
-# 电视剧资源（155 条）
+# 电视剧资源（163 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -1799,3 +1799,185 @@
   date: 2024-11-17
   added: 2026-11-07
   image: tv-087.jpg
+
+- id: tv-088
+  title: "尚公主"
+  category: "电视剧"
+  tags: [电视剧, 剧情, 尚公主]
+  quark_url: "https://pan.quark.cn/s/b4debd6f572a"
+  baidu_url: "https://pan.baidu.com/s/1GvzHeYZWk4mOrKwZvdinTg"
+  baidu_pwd: "c60e"
+  description: "【第 1 季 · 共 40 集】天家嫡女暮晚摇不甘命运摆布，在波谲云诡的朝堂与乱世烽烟中凭借过人心智杀出一条血路。寒门出身的言尚才貌双全、智谋无双，与暮晚摇因一场政治联姻结缘，从相互试探到彼此托付，携手在群雄并起的时代共筑清平天下。全剧以少女成长与权谋博弈双线并进，将言情甜宠融入宏大的家国叙事，层层反转的爽感节奏与极致的人物塑造构成核心看点。｜TMDB 9.5"
+  date: 2026-10-23
+  added: "2026-11-08 10:00"
+  image: tv-088.jpg
+  updated: 2026-11-08
+  files:
+    count: 2
+    size: "3.2 GB"
+    format: "MKV×2"
+    tree: |
+      088-尚公主/
+      S01E30.mkv
+      S01E31.mkv
+
+- id: tv-089
+  title: "塔尔萨之王 第一季"
+  category: "电视剧"
+  tags: [电视剧, 犯罪, 剧情, 喜剧, 塔尔萨之王 Tulsa King]
+  quark_url: "https://pan.quark.cn/s/59b0a6684f3d"
+  baidu_url: "https://pan.baidu.com/s/1x9xTlov8VtteGbuf-qBbew"
+  baidu_pwd: "pzfn"
+  description: "【第 1 季 · 共 9 集 · 全剧 4 季】纽约黑手党大佬德怀特·曼弗雷迪为家族坐牢二十五年，出狱后等来的不是晋升而是放逐。老板把他打发到俄克拉何马州塔尔萨这座毫无人脉的石油小城，明面上是开疆拓土，实则是发配边疆。德怀特却不服输，凭一张利嘴、一身狠劲和对黑帮规则的了然于胸，在当地招募了一群鸡飞狗跳的\"创业伙伴\"，从赌场到地产，硬生生在荒漠里搭建起自己的犯罪帝国。｜TMDB 8.3"
+  date: 2022-11-13
+  added: "2026-11-08 10:00"
+  image: tv-089.jpg
+  updated: 2026-11-08
+  files:
+    count: 9
+    size: "11.7 GB"
+    format: "MKV×9"
+    tree: |
+      089-塔尔萨之王-第一季 Tulsa King Season 1‎ (2022)/
+      Tulsa.King.S01E01.2022.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S01E02.2022.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S01E09.2022.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S01E03.2022.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S01E06.2022.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S01E05.2022.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S01E04.2022.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S01E07.2022.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S01E08.2022.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+
+- id: tv-090
+  title: "塔尔萨之王 第二季"
+  category: "电视剧"
+  tags: [电视剧, 犯罪, 剧情, 喜剧, 塔尔萨之王 Tulsa King]
+  quark_url: "https://pan.quark.cn/s/41d37820388b"
+  baidu_url: "https://pan.baidu.com/s/1wVTGznG9tqjLhCtKl1diuA"
+  baidu_pwd: "nvf3"
+  description: "【第 2 季 · 共 10 集 · 全剧 4 季】站稳脚跟的德怀特开始面对更大的挑战：纽约方面的旧怨如影随形，塔尔萨本地的新对手也不再客气。他不得不在家族忠诚与自我意志之间做出选择，同时应对合伙人之间的背叛与分歧。这一季节奏更快、冲突更密集，黑色幽默与硬派暴力并存，继续书写一个六旬老炮的荒诞帝国史。｜TMDB 8.3"
+  date: 2024-09-15
+  added: "2026-11-08 10:00"
+  image: tv-090.jpg
+  updated: 2026-11-08
+  files:
+    count: 10
+    size: "13.7 GB"
+    format: "MKV×10"
+    tree: |
+      090-塔尔萨之王-第二季 Tulsa King Season 2‎ (2024)/
+      Tulsa.King.S02E02.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S02E03.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S02E07.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S02E09.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S02E05.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S02E10.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S02E08.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S02E06.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S02E01.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+      Tulsa.King.S02E04.2024.1080p.NowPlayer.WEB-DL.DD5.1.H.264.mkv
+
+- id: tv-091
+  title: "塔尔萨之王 第三季"
+  category: "电视剧"
+  tags: [电视剧, 犯罪, 剧情, 喜剧, 塔尔萨之王 Tulsa King]
+  quark_url: "https://pan.quark.cn/s/21fc18972467"
+  baidu_url: "https://pan.baidu.com/s/1iE2EncVWXJnHoaWO-g4aAg"
+  baidu_pwd: "cr6t"
+  description: "【第 3 季 · 共 10 集 · 全剧 4 季】德怀特在塔尔萨的势力版图越来越大，但代价也水涨船高。旧日仇敌卷土重来，盟友的底线开始松动，德怀特不得不重新审视自己到底在为谁而战。本季进一步深挖角色内心，把黑帮家族剧的宿命感推向高潮。｜TMDB 8.3"
+  date: 2025-09-22
+  added: "2026-11-08 10:00"
+  image: tv-091.jpg
+  updated: 2026-11-08
+  files:
+    count: 10
+    size: "13.3 GB"
+    format: "MKV×10"
+    tree: |
+      091-塔尔萨之王-第三季 Tulsa King Season 3‎ (2025)/
+      Tulsa.King.S03E09.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S03E01.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S03E05.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S03E06.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S03E10.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S03E08.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S03E03.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S03E02.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S03E07.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S03E04.2025.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+
+- id: tv-092
+  title: "塔尔萨之王 第四季"
+  category: "电视剧"
+  tags: [电视剧, 犯罪, 剧情, 喜剧, 塔尔萨之王 Tulsa King]
+  quark_url: "https://pan.quark.cn/s/5241fd530bd0"
+  baidu_url: "https://pan.baidu.com/s/1LjY2KHo_K4yhYriyXSAXhQ"
+  baidu_pwd: "z09e"
+  description: "【第 4 季 · 共 10 集 · 全剧 4 季】经过三季的浴血经营，德怀特的犯罪帝国已初具规模，但四面楚歌的局势并未因版图扩大而缓和。新一季将面对更强大的对手和更棘手的内部矛盾，德怀特需要在智慧与铁腕之间找到平衡，守住自己打下的江山。｜TMDB 8.3"
+  date: 2025-09-22
+  added: "2026-11-08 10:00"
+  image: tv-092.jpg
+  updated: 2026-11-08
+  files:
+    count: 3
+    size: "4.4 GB"
+    format: "MKV×3"
+    tree: |
+      092-塔尔萨之王-第四季 Tulsa King Season 3‎ (2025)/
+      塔尔萨之王 第四季 Tulsa King Season 4‎ (2026)/
+      Tulsa.King.S04E02.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S04E01.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S04E03.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+
+- id: tv-093
+  title: "电幻国度"
+  category: "电视剧"
+  tags: [电视剧, 动作, 冒险, 科幻, 电幻国度 The Electric State]
+  quark_url: "https://pan.quark.cn/s/50f058fef7ad"
+  baidu_url: "https://pan.baidu.com/s/1Nd5acDFZObmxvazRC6OMRg"
+  baidu_pwd: "h79a"
+  description: "1990年代平行宇宙，机器人起义失败后遭到全面驱逐与隔离，人类世界表面恢复平静。父母双亡的少女米歇尔带着自闭天才少年弟弟踏上旅途，途中偶遇一个形似漫画角色的废弃机器人，由此结识走私客及其搭档。四人一路西行穿越美国荒漠，抵达与世隔绝的机器人隔离区，发现弟弟失踪的真相背后藏着一个足以颠覆人类文明的惊天阴谋。影片由罗素兄弟执导，以复古未来主义美术风格与大量实景特效构建了一个荒凉而瑰丽的后启示录世界。｜TMDB 6.5"
+  date: 2025-02-24
+  added: "2026-11-08 10:00"
+  image: tv-093.jpg
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "10.1 GB"
+    format: "MKV"
+    tree: |
+      093-电幻国度 (2025) 4K Dv/
+      The.Electric.State.2025.2160p.NF.WEB-DL.DDP5.1.Atmos.DV.H.265.mkv
+
+- id: tv-094
+  title: "伟大的长征"
+  category: "电视剧"
+  tags: [电视剧, 战争, 伟大的长征]
+  quark_url: "https://pan.quark.cn/s/d2898372e01b"
+  baidu_url: "https://pan.baidu.com/s/1Z3hU6MqQDkBxe9k6wxwcmQ"
+  baidu_pwd: "ewlj"
+  description: "【第 1 季 · 共 60 集】以 1934 年至 1937 年为时代背景，以中央红军长征为主线，全景式展现红一、红二、红四方面军和红二十五军等多路红军战略转移的壮阔历程。从第五次反\"围剿\"失利、被迫放弃中央苏区写起，到遵义会议的生死抉择、四渡赤水的军事奇迹、飞夺泸定桥的血战、翻雪山过草地的极限行军，直至三大主力会师，完整再现了中国革命史上这段决定命运的史诗远征。全剧以严谨的史料为基础，兼顾多线叙事与人物群像刻画。｜TMDB 8.5"
+  date: 2026-10-09
+  added: "2026-11-08 10:00"
+  image: tv-094.jpg
+
+- id: tv-095
+  title: "错过了，遗憾吗？"
+  category: "电视剧"
+  tags: [电视剧, 喜剧, 爱情, 错过了，遗憾吗？]
+  quark_url: "https://pan.quark.cn/s/cee9582a1a26"
+  baidu_url: "https://pan.baidu.com/s/1jV1AfbHTfwrDvgJNDeRGuQ"
+  baidu_pwd: "c4bz"
+  description: "刚毕业的吴小北被初恋男友断崖式分手，陷入漫长的自我怀疑和情绪反扑。闺蜜米亚一直陪伴左右做她的解药。生活还在继续，她阴差阳错先后与情场高手老崔、热情小狗弟弟小李产生交集，又邂逅了灵魂高度契合却难以走近的 Crush 王哲远。几段暧昧交错，像一面面镜子照出她在爱情里的执念、妥协与成长。影片以轻喜剧笔触切入当代都市青年的情感困境：错过一个人，是遗憾还是幸运。｜TMDB 2.5"
+  date: 2026-05-20
+  added: "2026-11-08 10:00"
+  image: tv-095.jpg
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "5.8 GB"
+    format: "MKV"
+    tree: |
+      095-错过了，遗憾吗？ (2026)/
+      Be.Yourself.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv

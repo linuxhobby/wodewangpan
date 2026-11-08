@@ -1,3 +1,4 @@
+# 其他资源（8 条）
 - id: ot-001
   title: "喜马拉雅付费音频课大合集"
   category: 其他
@@ -151,3 +152,25 @@
       1.0留档/
       【出问题必看】智能排错指南+免费领百度网盘SVIP.rar
       Qwen-Image-2.1-Turbo整合包V1.1.rar
+
+- id: ot-008
+  title: "丝绸之路20周年纪念特辑"
+  category: "其他"
+  tags: [其他, 音乐, 丝绸之路20周年纪念特辑 Silk Road Music 20th anniversary]
+  quark_url: "https://pan.quark.cn/s/5fc95e4afc18"
+  baidu_url: "https://pan.baidu.com/s/1yKQmxU58EipAirVg4dSdEA"
+  baidu_pwd: "ugvq"
+  description: "Various Artists 合辑，收录丝绸之路音乐计划成立二十周年精选曲目，涵盖中国、伊朗、印度、土耳其、亚美尼亚、阿塞拜疆等沿线国家的传统与现代融合音乐。WAV 无损格式附 CUE 分轨文件，适合发烧友欣赏与收藏。丝绸之路由大提琴家马友友于 2000 年发起，汇集世界顶级音乐家以即兴对话跨越文化边界，本辑是对这段音乐交流旅程最凝练的回顾。"
+  date: 2020
+  added: "2026-11-08 10:00"
+  updated: 2026-11-08
+  files:
+    count: 5
+    format: "JPG / WAV / LOG / CUE"
+    tree: |
+      008-Various Artists - Silk Road Music 20th anniversary 丝绸之路20周年纪念特辑 wav+cue/
+      Artwork/
+      folder.jpg
+      Various Artists - Silk Road Music 20th anniversary.wav
+      Various Artists - Silk Road Music 20th anniversary.log
+      Various Artists - Silk Road Music 20th anniversary.cue

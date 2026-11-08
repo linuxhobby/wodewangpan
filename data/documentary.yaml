@@ -1,4 +1,4 @@
-# 纪录片资源（92 条）
+# 纪录片资源（95 条）
 # 来源：夸克网盘 SHARE/06纪录片
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -1061,3 +1061,64 @@
   added: "2026-10-24 14:55"
   image: dc-092.jpg
 
+- id: dc-017
+  title: "真正的剃刀党 第一季"
+  category: "纪录片"
+  tags: [纪录片, 纪录, 犯罪, 真正的剃刀党 The Real Peaky Blinders]
+  quark_url: "https://pan.quark.cn/s/377b7b269c89"
+  baidu_url: "https://pan.baidu.com/s/1Pu56w2z8vghB2U4P-07isw"
+  baidu_pwd: "lw4s"
+  description: "【第 1 季 · 共 2 集】伯明翰剃刀党是英国黑帮史上最具传奇色彩的犯罪团伙之一，也是热门剧集《浴血黑帮》的历史原型。本纪录片剥离影视的浪漫滤镜，回到十九世纪末二十世纪初真实的伯明翰街头：帮派如何从斗鸡场和街头斗殴起家，剃刀帽檐为何致命，女性成员在犯罪网络中扮演什么角色，以及警方的铁腕扫荡如何终结了他们的统治。学者与犯罪史研究者以档案材料为据，还原了一段粗粝而血腥的城市底层编年史。｜TMDB 7.6"
+  date: 2022-03-07
+  added: "2026-11-08 10:00"
+  image: dc-017.jpg
+  updated: 2026-11-08
+  files:
+    count: 2
+    size: "3.5 GB"
+    format: "MKV×2"
+    tree: |
+      017-真正的剃刀党 第一季 The Real Peaky Blinders Season 1 (2022)/
+      [真正的剃刀党 第一季].The.Real.Peaky.Blinders.2022.S01E01.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+      [真正的剃刀党 第一季].The.Real.Peaky.Blinders.2022.S01E02.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+
+- id: dc-093
+  title: "鳏夫疑案：至死不渝"
+  category: "纪录片"
+  tags: [纪录片, 鳏夫疑案 The Widower Till Death Do Us Part]
+  quark_url: "https://pan.quark.cn/s/37b4bd27549b"
+  baidu_url: "https://pan.baidu.com/s/1TSTKzkXJf3IzS2voIdRxGQ"
+  baidu_pwd: "dv44"
+  description: "2026 年出品的真实犯罪纪录片，聚焦一起以婚姻为伪装、以保险金为动机的谋杀悬案。当一位丈夫在意外中丧生，妻子成为唯一受益人，看似完美的不在场证明之下暗流涌动。调查记者与刑侦专家逐帧还原时间线，从保险条款的异常到社交圈的证词矛盾，层层揭开一段精心策划的致命关系。影片以冷静克制的叙事风格探讨了亲密关系中最极端的欺骗形态：至死不渝，究竟是誓言还是灭口。"
+  date: 2026
+  added: "2026-11-08 10:00"
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "12.5 GB"
+    format: "MKV"
+    tree: |
+      093-鳏夫疑案：至死不渝 The Widower：‘Til Death Do Us Part (2026)/
+      The.Widower.Til.Death.Do.Us.Part.2026.2160p.NF.WEB-DL.DDP5.1.Atmos.HDR.H.265-3MWEB.mkv
+
+- id: dc-094
+  title: "落网之谜：墨西哥大毒枭的坠落"
+  category: "纪录片"
+  tags: [纪录片, 纪录, 落网之谜 The Fall of El Mayo]
+  quark_url: "https://pan.quark.cn/s/2f77169750de"
+  baidu_url: "https://pan.baidu.com/s/1pzeENdceqyv0qS-BhIL5vg"
+  baidu_pwd: "8bwe"
+  description: "【第 1 季 · 共 3 集】\"矮子\"古兹曼的锡那罗亚贩毒集团权倾一方，而埃尔·马约·桑塔纳·洛佩斯作为古兹曼最神秘的搭档，数十年来隐于幕后操控着帝国最核心的可卡因贸易通道。他为何在风光无限时突然选择投案自首？是良心发现还是被自己人出卖？本纪录片通过执法部门档案、内部线人证词与新闻调查，拼凑出一个大毒枭落网前夜惊心动魄的权力崩塌全过程。｜TMDB 8.6"
+  date: 2026-10-29
+  added: "2026-11-08 10:00"
+  image: dc-094.jpg
+  updated: 2026-11-08
+  files:
+    count: 3
+    size: "10.3 GB"
+    format: "MKV×3"
+    tree: |
+      094-落网之谜：墨西哥大毒枭的坠落 The Fall of El Mayo (2026)/
+      [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E01.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv
+      [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E03.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv
+      [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E02.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv
