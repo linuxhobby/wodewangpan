@@ -372,6 +372,15 @@
   date: 2011-10-09
   added: 2026-05-02
   image: dc-062.jpg
+  updated: 2026-11-08
+  files:
+    count: 4
+    tree: |
+      062-BBC.脑力大挑战/
+      脑力大挑战 第1季/
+      脑力大挑战 第2季/
+      脑力大挑战 第3季/
+      脑力大挑战 第4季/
 
 - id: dc-061
   title: "老虎失落之地"
@@ -382,6 +391,19 @@
   date: 2010-09-21
   added: 2026-05-02
   image: dc-061.jpg
+  updated: 2026-11-08
+  files:
+    count: 6
+    size: "5.2 GB"
+    format: "MKV×3 / SRT×3"
+    tree: |
+      061-BBC.老虎失落之地/
+      老虎失落之地.E01.mkv
+      老虎失落之地.E02.mkv
+      老虎失落之地.E03.mkv
+      老虎失落之地.E01.srt
+      老虎失落之地.E02.srt
+      老虎失落之地.E03.srt
 
 - id: dc-060
   title: "翩翩蝴蝶：英国式迷恋"
@@ -392,6 +414,14 @@
   date: 2010-12-17
   added: 2026-05-02
   image: dc-060.jpg
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "753 MB"
+    format: "MKV"
+    tree: |
+      060-BBC.翩翩蝴蝶.英国式迷恋/
+      翩翩蝴蝶.英国式迷恋.mkv
 
 - id: dc-059
   title: "纳粹国防军"
