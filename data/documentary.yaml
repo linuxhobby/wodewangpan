@@ -495,6 +495,13 @@
   added: 2026-05-02
   image: dc-056.jpg
   updated: 2026-11-08
+  files:
+    count: 1
+    size: "2.2 GB"
+    format: "TS"
+    tree: |
+      056-BBC.神奇的青蛙/
+      神奇的青蛙.ts
 
 - id: dc-055
   title: "生命循环：奇异的腐烂科学"
@@ -505,6 +512,14 @@
   date: 2011-12-06
   added: 2026-05-02
   image: dc-055.jpg
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "910 MB"
+    format: "MKV"
+    tree: |
+      055-BBC.生命循环 奇异的腐烂科学/
+      生命循环.奇异的腐烂科学.mkv
 
 - id: dc-054
   title: "生命博物馆"
@@ -515,6 +530,19 @@
   date: 2010-03-18
   added: 2026-05-02
   image: dc-054.jpg
+  updated: 2026-11-08
+  files:
+    count: 6
+    size: "10.8 GB"
+    format: "MKV×6"
+    tree: |
+      054-BBC.生命博物馆/
+      01.mkv
+      02.mkv
+      03.mkv
+      04.mkv
+      05.mkv
+      06.mkv
 
 - id: dc-053
   title: "生命"
