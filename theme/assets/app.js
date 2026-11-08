@@ -163,6 +163,8 @@ import { esc, tileHtml } from './card.js';
   }
 
   function renderResults(query) {
+    // 容器缺失就整段跳过（正常页面都渲染了 #results；这是防御，别在这里抛错把搜索静默搞死）
+    if (!resultsEl) return;
     var q = query.trim();
     var hits = search(query);
     if (!hits) {

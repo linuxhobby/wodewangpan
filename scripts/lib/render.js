@@ -808,7 +808,9 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   const related = relatedOf(item, items || []);
 
   // 面包屑同一行右侧：两个邀请 + 热榜入口，与首页/分类页共用同一组（靠右侧由 .page__aside 的 margin-left:auto 顶过去）
+  // 搜索结果容器：顶部搜索框是共享布局，详情页也得有 #results，否则 app.js 拿到 null 直接抛错，搜索静默失效
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="${catHref(item.category)}">${esc(item.category)}</a>${titleAsideLinks()}</nav>
+<div id="results" class="results" hidden></div>
 <article class="detail${isDead ? ' detail--dead' : ''}">
   ${isDead ? '<div class="dead-banner">⚠ 该资源分享可能已失效（链接被取消）。可在页面底部留言许愿，或浏览右侧同类资源。</div>' : ''}
   <div class="detail__media">
