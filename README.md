@@ -33,6 +33,8 @@
 | B · GitHub Pages | 免费、不想管服务器 | 国内访问不稳定 |
 | C · Cloudflare Pages | 免费、海外快 | 同上，国内偶发不通 |
 
+> 本站线上跑的是**方案 A**，服务器用的[衡天云](https://www.htstack.com/activity/act_openyear.shtml?aff=31743)的海外 VPS——选它就是因为便宜（12 元/月起），跑这种纯静态站绰绰有余，没有数据库、内存占用低，最便宜的款也扛得住。
+
 前置：Node ≥ 18（VPS 方案另需 Nginx、Git，Python 3 只在用访问统计时需要）。
 
 ### 方案 A：VPS + Nginx
