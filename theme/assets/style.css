@@ -36,6 +36,8 @@
   --fs-h1: 23px;    /* 页面主标题（资源页 / 内容页共用） */
   --fs-brand: 26px; /* 顶栏站名（原 30px，按反馈缩减一号） */
   --fs-display: 72px; /* 404 大数字 */
+  /* 输入框防 iOS 聚焦缩放专用：必须恒为 16px，任何窄屏重定义都不得降档 */
+  --fs-input: 16px;
 
   /* ── 行高 ── */
   --lh-base: 1.65;   /* 常规元素继承值 */
@@ -626,8 +628,8 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   /* 390px 屏顶栏只有 358px 可用，站名放大后靠这两处把空间还回来 */
   .top__logo { width: 28px; height: 28px; margin-right: 8px; vertical-align: -5px; }
   .top__search { max-width: 150px; }
-  /* iOS 聚焦字号 <16px 的输入框会自动放大页面；用 16px 令牌取消该行为 */
-  .top__search input { font-size: var(--fs-lg); }
+  /* iOS 聚焦字号 <16px 的输入框会自动放大页面；--fs-input 恒为 16px，窄屏不降档 */
+  .top__search input { font-size: var(--fs-input); }
   /* 标题栏邀请组：窄屏独占一行、左对齐，避免胶囊右飘、热榜错行导致的参差 */
   .page__aside { flex-basis: 100%; margin-left: 0; }
 }
