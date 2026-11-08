@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| 网站 | https://www.wodewangpan.top | [衡天云VPS每月12元起](https://www.htstack.com/activity/act_openyear.shtml?aff=31743)
+| 网站 | https://www.wodewangpan.top [衡天云VPS每月12元起](https://www.htstack.com/activity/act_openyear.shtml?aff=31743) | 
 | 仓库 | `git@github.com:linuxhobby/wodewangpan.git` |
 | 更新方式 | 推到 `main`，VPS 定时自动拉取并重建（急发用 `FORCE=1 wdwp-autoupdate`） |
 
@@ -29,7 +29,7 @@
 
 | 方式 | 适合 | 说明 |
 |---|---|---|
-| **A · VPS + Nginx**（推荐，本站线上方案） | 有域名、有VPS主机 | 完全可控，SEO 与访问速度最好 |
+| **A · [VPS + Nginx](https://www.htstack.com/activity/act_openyear.shtml?aff=31743)**（推荐，本站线上方案） | 有域名、有VPS主机 | 完全可控，SEO 与访问速度最好 |
 | B · GitHub Pages | 免费、不想管服务器 | 国内访问不稳定 |
 | C · Cloudflare Pages | 免费、海外快 | 同上，国内偶发不通 |
 
@@ -37,7 +37,7 @@
 
 前置：Node ≥ 18（VPS 方案另需 Nginx、Git，Python 3 只在用访问统计时需要）。
 
-### 方案 A：VPS + Nginx
+### 方案 A：[VPS + Nginx](https://www.htstack.com/activity/act_openyear.shtml?aff=31743)
 
 站点目录 `/opt/wodewangpan`；下面命令走 `apt`，Debian / Ubuntu 都能照抄。
 
