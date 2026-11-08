@@ -206,6 +206,17 @@
   date: 2017-11-07
   added: 2026-05-02
   image: dc-069.jpg
+  updated: 2026-11-08
+  files:
+    count: 4
+    size: "3.7 GB"
+    format: "MP4×4"
+    tree: |
+      069-BBC.里克·斯坦的墨西哥美食之旅/
+      E03.mp4
+      E04.mp4
+      E01.mp4
+      E02.mp4
 
 - id: dc-068
   title: "谁在引导我们消费"
