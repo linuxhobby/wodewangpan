@@ -811,6 +811,14 @@
   date: 2016-07-19
   added: 2026-05-02
   image: dc-041.jpg
+  updated: 2026-11-09
+  files:
+    count: 1
+    size: "250 MB"
+    format: "MP4"
+    tree: |
+      041-BBC.新西兰.神话之岛/
+      新西兰：神话之岛.mp4
 
 - id: dc-040
   title: "探究班诺克本之战"
@@ -821,6 +829,15 @@
   date: 2014-06-02
   added: 2026-05-02
   image: dc-040.jpg
+  updated: 2026-11-09
+  files:
+    count: 2
+    size: "4.3 GB"
+    format: "MKV×2"
+    tree: |
+      040-BBC.探究班诺克本之战/
+      探究班诺克本之战.E01.mkv
+      探究班诺克本之战.E02.mkv
 
 - id: dc-039
   title: "猎捕"
@@ -832,6 +849,19 @@
   added: 2026-05-02
   image: dc-039.jpg
   updated: 2026-11-08
+  files:
+    count: 7
+    size: "48.4 GB"
+    format: "MKV×7"
+    tree: |
+      039-BBC.捕猎/
+      捕猎.E01.mkv
+      捕猎.E02.mkv
+      捕猎.E03.mkv
+      捕猎.E04.mkv
+      捕猎.E05.mkv
+      捕猎.E06.mkv
+      捕猎.E07.mkv
 
 - id: dc-038
   title: "挑战珠穆朗玛峰"
