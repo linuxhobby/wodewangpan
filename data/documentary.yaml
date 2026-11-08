@@ -629,6 +629,19 @@
   date: 2014-12-01
   added: 2026-05-02
   image: dc-050.jpg
+  updated: 2026-11-09
+  files:
+    count: 6
+    size: "3.9 GB"
+    format: "SRT×3 / MP4×3"
+    tree: |
+      050-BBC.狂野天气探秘/
+      狂野天气探秘.E01.mp4
+      狂野天气探秘.E02.mp4
+      狂野天气探秘.E03.mp4
+      狂野天气探秘.E01.srt
+      狂野天气探秘.E02.srt
+      狂野天气探秘.E03.srt
 - id: dc-049
   title: "灌丛下的生命"
   category: 纪录片
@@ -638,6 +651,20 @@
   date: 2005-11-23
   added: 2026-05-02
   image: dc-049.jpg
+  updated: 2026-11-09
+  files:
+    count: 7
+    size: "11.2 GB"
+    format: "MKV×5 / SRT×2"
+    tree: |
+      049-BBC.灌丛下的生命/
+      灌丛下的生命.E01.大举登陆.mkv
+      灌丛下的生命.E02.翩翩飞舞.mkv
+      灌丛下的生命.E03.吐丝织网.mkv
+      灌丛下的生命.E04.相互依存.mkv
+      灌丛下的生命.E05.庞大社会.mkv
+      灌丛下的生命.E01.srt
+      灌丛下的生命.E02.srt
 
 - id: dc-048
   title: "寂静之战"
@@ -648,6 +675,15 @@
   date: 2013-12-05
   added: 2026-05-02
   image: dc-048.jpg
+  updated: 2026-11-09
+  files:
+    count: 2
+    size: "5.3 GB"
+    format: "MKV×2"
+    tree: |
+      048-BBC.潜艇舱内的战争与生活/
+      潜艇舱内的战争与生活.E01.mkv
+      潜艇舱内的战争与生活.E02.mkv
 
 - id: dc-047
   title: "深蓝"
