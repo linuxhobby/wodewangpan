@@ -554,6 +554,22 @@
   added: 2026-05-02
   image: dc-053.jpg
   updated: 2026-11-08
+  files:
+    count: 10
+    size: "65.3 GB"
+    format: "MKV×10"
+    tree: |
+      053-BBC.生命/
+      BBC.Life.E01.mkv
+      BBC.Life.E02.mkv
+      BBC.Life.E03.mkv
+      BBC.Life.E04.mkv
+      BBC.Life.E05.mkv
+      BBC.Life.E06.mkv
+      BBC.Life.E07.mkv
+      BBC.Life.E08.mkv
+      BBC.Life.E09.mkv
+      BBC.Life.E10.mkv
 
 - id: dc-052
   title: "弗朗西斯科玩转意大利"
@@ -564,6 +580,17 @@
   date: 2006-06-11
   added: 2026-05-02
   image: dc-052.jpg
+  updated: 2026-11-08
+  files:
+    count: 4
+    size: "6.1 GB"
+    format: "MKV×4"
+    tree: |
+      052-BBC.玩转意大利/
+      玩转意大利.E01.浪漫北部行.mkv
+      玩转意大利.E02.风流英国佬.mkv
+      玩转意大利.E03.半岛中心带.mkv
+      玩转意大利.E04.老妈的故乡.mkv
 
 - id: dc-051
   title: "王朝"
@@ -575,6 +602,23 @@
   added: 2026-05-02
   image: dc-051.jpg
   updated: 2026-11-08
+  files:
+    count: 11
+    size: "19.7 GB"
+    format: "MP4×11"
+    tree: |
+      051-BBC.王朝/
+      01.黑猩猩统治的强者.mp4
+      02.帝企鹅顽强生存.mp4
+      03.狮子守卫家园.mp4
+      04.杂色狼争夺领地.mp4
+      05.老虎保护族群.mp4
+      06 幕后花絮.mp4
+      S02E01.4K.H265.AAC-YYDS.mp4
+      S02E02.4K.H265.AAC-YYDS.mp4
+      S02E03.4K.H265.AAC-YYDS.mp4
+      S02E04.4K.H265.AAC-YYDS.mp4
+      S02E05.4K.H265.AAC-YYDS.mp4
 
 - id: dc-050
   title: "狂野天气探秘"
