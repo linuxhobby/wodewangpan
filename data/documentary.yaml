@@ -305,6 +305,22 @@
   date: 2017-01-12
   added: 2026-05-02
   image: dc-065.jpg
+  updated: 2026-11-08
+  files:
+    count: 9
+    size: "47.9 GB"
+    format: "MKV×9"
+    tree: |
+      065-BBC.荒野间谍/
+      荒野间谍.S01.E01.mkv
+      荒野间谍.S01.E02.mkv
+      荒野间谍.S01.E03.mkv
+      荒野间谍.S01.E04.mkv
+      荒野间谍.S01.E05.mkv
+      荒野间谍.S02.E01.mkv
+      荒野间谍.S02.E02.mkv
+      荒野间谍.S02.E03.mkv
+      荒野间谍.S02.E04.mkv
 
 - id: dc-064
   title: "英雄列传"
@@ -315,6 +331,18 @@
   date: 2007-11-11
   added: 2026-05-02
   image: dc-064.jpg
+  updated: 2026-11-08
+  files:
+    count: 5
+    size: "25.2 GB"
+    format: "MKV×5"
+    tree: |
+      064-BBC.英雄列传/
+      英雄列传.E01.mkv
+      英雄列传.E02.mkv
+      英雄列传.E04.mkv
+      英雄列传.E05.mkv
+      英雄列传.E06.mkv
 
 - id: dc-063
   title: "苏格兰海战"
@@ -325,6 +353,15 @@
   date: 2015-04-07
   added: 2026-05-02
   image: dc-063.jpg
+  updated: 2026-11-08
+  files:
+    count: 2
+    size: "2.6 GB"
+    format: "MKV×2"
+    tree: |
+      063-BBC.苏格兰海战/
+      苏格兰海战.E01.斯卡帕湾的无畏舰.mkv
+      苏格兰海战.E02.猎杀德国Ｕ型潜艇.mkv
 
 - id: dc-062
   title: "脑力大挑战"
