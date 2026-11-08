@@ -434,6 +434,18 @@
   date: 2007-11-13
   added: 2026-05-02
   image: dc-059.jpg
+  updated: 2026-11-08
+  files:
+    count: 5
+    size: "2.4 GB"
+    format: "MKV×5"
+    tree: |
+      059-BBC.纳粹国防军/
+      01 闪电战.mkv
+      02 转折点.mkv
+      03 罪行.mkv
+      04 反抗.mkv
+      05 结局.mkv
 
 - id: dc-058
   title: "植物之歌"
@@ -444,6 +456,16 @@
   date: 2012-02-07
   added: 2026-05-02
   image: dc-058.jpg
+  updated: 2026-11-08
+  files:
+    count: 3
+    size: "15.6 GB"
+    format: "MKV×3"
+    tree: |
+      058-BBC.种出个地球/
+      种出个地球.E01.mkv
+      种出个地球.E02.mkv
+      种出个地球.E03.mkv
 
 - id: dc-057
   title: "神秘的玛雅"
@@ -454,6 +476,14 @@
   date: 1995-01-01
   added: 2026-05-02
   image: dc-057.jpg
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "3.2 GB"
+    format: "TS"
+    tree: |
+      057-BBC.神秘的玛雅/
+      神秘的玛雅.ts
 
 - id: dc-056
   title: "神奇的青蛙"
