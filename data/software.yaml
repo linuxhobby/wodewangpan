@@ -1264,6 +1264,7 @@
   description: "基于 WireGuard 协议的零配置组网工具，无需公网 IP、无需手动配置端口转发或防火墙规则，安装客户端后设备自动发现、秒级互联。支持跨平台（Windows / macOS / Linux / iOS / Android / NAS / 路由器），适合远程办公组网、NAS 外网访问、联机游戏和 IoT 设备管理等场景。免费个人版支持 3 用户 100 设备，企业版可按团队规模弹性扩展。相比传统 VPN 的复杂部署，Tailscale 把打洞、中继、NAT 穿透全部交给云端自动处理，开箱即用。"
   date: 2024
   added: "2026-11-08 10:00"
+  image: app-031.jpg
   updated: 2026-11-08
   files:
     count: 6

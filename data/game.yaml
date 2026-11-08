@@ -7,6 +7,15 @@
   date: 2016-10-20
   added: 2026-10-02
   image: game-001.jpg
+  updated: 2026-11-08
+  files:
+    count: 2
+    size: "14.2 GB"
+    format: "DMG / DOCX"
+    tree: |
+      001-文明6/
+      文明6.Civilization.VI.v1.4.6.dmg
+      文明6安装教程.docx
 
 - id: game-002
   title: "文明7"
@@ -17,6 +26,14 @@
   date: 2025-02-10
   added: 2026-10-02
   image: game-002.jpg
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "17.0 GB"
+    format: "DMG"
+    tree: |
+      002-文明7/
+      文明7.Sid.Meiers.Civilization.VII.v1.2.3.Incl.DLC.MacOS-ARM.dmg
 
 - id: game-003
   title: "龙神模拟器"
@@ -27,6 +44,18 @@
   date: 2026-10-09
   added: "2026-10-09 19:35"
   image: game-003.jpg
+  updated: 2026-11-08
+  files:
+    count: 3
+    size: "389 MB"
+    format: "ZIP×2 / DMG"
+    packed: true
+    tree: |
+      003-龙神模拟器 10.10/
+      19.0.1 固件、密钥，安装包/
+      Firmware 19.0.1.zip
+      ProdKeys.net-v19.0.1.zip
+      Ryujinx.dmg
 
 
 - id: game-004
@@ -38,6 +67,15 @@
   date: 2026-10-09
   added: "2026-10-09 19:36"
   image: game-004.jpg
+  updated: 2026-11-08
+  files:
+    count: 3
+    format: "TXT"
+    tree: |
+      004-switch模拟器/
+      手机端/
+      PC端/
+      所有的SWITCH游戏下载地址.txt
 
 
 - id: game-005
@@ -49,6 +87,20 @@
   date: 2026-10-09
   added: "2026-10-09 19:37"
   image: game-005.jpg
+  updated: 2026-11-08
+  files:
+    count: 8
+    format: "EXE×2"
+    tree: |
+      005-红色警戒/
+      红警1 必须xp系统/
+      红警2（别直接下载文件夹点进去下载安装包）/
+      红警3（别直接下载文件夹点进去下载安装包）/
+      红警大礼包111/
+      战网下载地址/
+      MOD版本安装包（别直接下载文件夹点进去下载安装包）/
+      红警共辉版【推荐】.exe
+      红色警戒2和尤里复仇【推荐】.exe
 
 
 - id: game-006
@@ -60,6 +112,15 @@
   date: 2023-05-12
   added: "2026-10-09 19:38"
   image: game-006.jpg
+  updated: 2026-11-08
+  files:
+    count: 2
+    format: "ZIP"
+    packed: true
+    tree: |
+      006-王国之泪1.21  究极版整合包/
+      PC端/
+      王国之泪1.21.zip
 
 
 - id: game-007
@@ -71,6 +132,16 @@
   date: 2026-10-09
   added: "2026-10-09 19:39"
   image: game-007.jpg
+  updated: 2026-11-08
+  files:
+    count: 2
+    size: "1.4 GB"
+    format: "ZIP / 7Z"
+    packed: true
+    tree: |
+      007-YUZU模拟器全汉化版本/
+      YUZU模拟器4176版18.1固件全汉化版本.7z
+      YUZU模拟器4176版18.0.1固件全汉化版本.zip
 
 
 - id: game-008
@@ -82,6 +153,14 @@
   date: 2026-10-09
   added: "2026-10-09 19:40"
   image: game-008.jpg
+  updated: 2026-11-08
+  files:
+    count: 2
+    format: "EXE"
+    tree: |
+      008-暴雪游戏客户端官方版/
+      Battle.net-Setup- macOS.app/
+      Battle.net-Setup-widnwos.exe
 
 - id: game-009
   title: "命运重生"
@@ -92,6 +171,14 @@
   date: 2025-03-12
   added: "2026-10-18 02:15"
   image: game-009.jpg
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "1.1 GB"
+    format: "APK"
+    tree: |
+      009-命运-重生/
+      命运：重生【内置菜单】.apk
 
 - id: game-010
   title: "口袋妖怪"
@@ -101,6 +188,15 @@
   description: "口袋妖怪即宝可梦系列，是任天堂旗下全球最畅销的游戏 IP，本作初代于 1996 年在 Game Boy 上推出，游戏 「精灵宝可梦 红／绿」 首创了收集、养成、对战、交换四位一体的玩法：玩家扮演初出茅庐的训练家，从博士那里领到第一只宝可梦，走遍各地挑战道馆、收服野生宝可梦、挫败邪恶组织的阴谋，最终登上联盟顶点。系列最独特的设计是双版本机制，部分宝可梦只在特定版本出现，逼着玩家与朋友互动机器交换，这个社交属性成了系列三十年来长盛不衰的根基。皮卡丘、妙蛙种子、杰尼龟、小火龙这些初代形象早已成为全球流行文化的符号，衍生出的动画、卡牌、电影构成了庞大的宝可梦宇宙。本次网盘收录的是系列经典作品合集，包含多部早期世代的作品，适合想重温像素时代宝可梦味道的老玩家，也适合从没玩过初代、想看看这个 IP 起点的新玩家。模拟器环境即可运行，存档方便，随时可玩可停。"
   added: "2026-10-19 13:58"
   image: game-010.jpg
+  updated: 2026-11-08
+  files:
+    count: 3
+    format: "APK / DOCX"
+    tree: |
+      010-口袋妖怪/
+      口袋妖怪：究极绿宝石/
+      宝可梦图鉴.apk
+      食用方式.docx
 
 - id: game-011
   title: "街头霸王4：冠军版"
@@ -111,6 +207,14 @@
   date: 2017-07-12
   added: "2026-10-25 16:09"
   image: game-011.jpg
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "31.3 MB"
+    format: "APK"
+    tree: |
+      011-街头霸王4：冠军版v1.05.00 解锁全模式/
+      街霸：冠军版1.05.apk
 
 - id: game-012
   title: "帝国时代II：决定版"
@@ -123,6 +227,15 @@
   date: 2019-11-14
   added: "2026-11-04 18:15"
   image: game-012.jpg
+  updated: 2026-11-08
+  files:
+    count: 1
+    size: "806 MB"
+    format: "RAR"
+    packed: true
+    tree: |
+      012-帝国时代II：决定版/
+      3DMGAME_Age_of_Empires_II_HD.CHS.Green.rar
 
 - id: game-013
   title: "恶魔城：贝尔蒙特的诅咒"
@@ -149,7 +262,6 @@
       恶魔城：贝尔蒙特的诅咒 帧率改善Mod [v1.1.0].rar
       金手指使用说明.txt
       金手指 [组件v8][作者 邪恶木木枭][BuildID 0F1169AA7D0FA452].zip
-
 - id: game-014
   title: "最终幻想：共鸣"
   category: 游戏
@@ -163,8 +275,8 @@
   image: game-014.jpg
   updated: 2026-11-08
   files:
-    count: 7
-    format: "TXT×2 / NSP×2 / RAR"
+    count: 6
+    format: "NSP×2 / TXT / RAR"
     packed: true
     tree: |
       014-[最终幻想：共鸣][FINAL FANTASY RESONANCE]/
@@ -172,10 +284,8 @@
       MOD/
       [本体v1.0.0][0100B8A026F14000][22.1.0][中文][HK].nsp
       [升级档v1.0.1][0100B8A026F14800][22.5.0][中文][HK].nsp
-      金手指使用说明.txt
-
       金手指 [港版][游戏v1.0.1][BuildID B7F965B9D7227DB8].rar
-
+      金手指使用说明.txt
 - id: game-015
   title: "超级马里奥 奥德赛"
   category: 游戏
@@ -197,7 +307,6 @@
       升级档v1.4.1/
       nsp本体/
       1.4.1金手指.zip
-
 - id: game-016
   title: "塞尔达传说：旷野之息"
   category: 游戏
@@ -218,7 +327,6 @@
       升级档v1.9.0（需要21以上固件）/
       dlc-2/
       nsp本体/
-
 - id: game-017
   title: "海贼王：海洋盛宴"
   category: 游戏
