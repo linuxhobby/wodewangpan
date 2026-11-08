@@ -4,7 +4,7 @@
 人在场时可随意发挥；机器执行时**严格按本手册来**。
 
 站点：我的网盘索引站（wodewangpan）· www.wodewangpan.top · 静态站 · Node.js 构建 · VPS + nginx
-数据规模：902 个资源 · 10 个分类（`config/site.yaml` 的 `title` 就是页面标题里的站点名）
+数据规模：912 个资源 · 10 个分类（`config/site.yaml` 的 `title` 就是页面标题里的站点名）
 
 ---
 
@@ -191,7 +191,73 @@ ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
 - 联盟链接已是 `rel="sponsored noopener noreferrer"`，规范状态，不要改成 nofollow。
 - 每日 GSC「请求编入」限额约 10 条，属人工操作，agent 可在日报里提醒，不要代刷。
 
-## 8. 验证清单（每次改完跑一遍）
+## 8. 配图（海报）获取规范
+
+海报存放 `static/images/<id>.jpg`（480×720，2:3 竖版，jpg），条目里在 `added:` 之后写
+`image: <id>.jpg`。**任何来源的图都要先验类型（`file`）再看内容**——下载到 HTML/占位图、
+搜错条目是最高频事故，下面各来源的坑都出自实战。
+
+按分类选来源，优先级从上到下：
+
+### 影视类（mv-/tv-/dc-/an-）：TMDB 官方海报
+
+```bash
+T=~/.codebuddy/skills/quark-resource-sync/scripts/tmdb.mjs
+node $T search --type movie --query "All Quiet on the Western Front" --year 2022   # 先拿 id
+node $T detail --type movie --id 49046 --poster static/images/mv-212.jpg           # 再下海报
+```
+
+- 中文条目名多为意译/别名，**必须用原名或英文名 + 年份检索**（「鳏夫疑案：至死不渝」=
+  `The Widower: 'Til Death Do Us Part`，TMDB 1758536；同名旧作 60750/121893 都不对）。
+- `search` 结果里用**年份 + 简介**甄别同名作品，选对了再 `detail`。
+- ⚠️ `detail --poster` **不覆盖已存在文件**：目标路径有旧图时先 `rm` 再下载，否则静默跳过。
+- 原图偏大（>300KB）或比例异常时用 sharp 统一：`resize(480,720,{fit:'cover'}).jpeg({quality:82})`。
+  **sharp 必须在仓库根目录运行**（依赖本仓库 node_modules，`/tmp` 下解析不到）。
+
+### 图书（bk-）：豆瓣书封
+
+```bash
+node tools/poster.mjs douban --title "书名" --author "作者名" --out static/images/bk-xxx.jpg
+```
+
+- 豆瓣模式**只按标题关键词模糊匹配，误抓高发**（「丝绸之路」抓到过黄自乐谱和大村一朗的
+  丝路游记书）。工具打印的「作者/出版社/日期」行必须核一眼，图片必须看一眼。
+- 标题搜不到/搜错就换**作者名**当关键词；仍不行别硬凑，退 `poster.mjs set` 自绘。
+
+### 软件（app-）：App Store 官方图标 → icon 模式
+
+```bash
+curl -s "https://itunes.apple.com/search?term=tailscale&entity=software&limit=3&country=us"
+# 取 results[].artworkUrl512 下载后：
+node tools/poster.mjs icon --icon <图> --out static/images/app-xxx.jpg --title "名称" --sub "一句话副题"
+```
+
+- GitHub 头像接口（`github.com/<org>.png`）可能返回 HTML 而非图片，下载后必须 `file` 验证；
+  失败就改走 iTunes Search API。
+
+### 游戏（game-）：官网包装图优先
+
+1. **官网实体版包装图**（发行商官网 product 页）：sharp `.trim()` 裁白边后
+   `resize({height:720})` + 白底 extend 补到 480×720。
+2. TMDB（有收录的游戏）。
+3. **非游戏的 Switch 生态资源**（整合包/模拟器等）：Wikimedia Commons 的主机官方照
+   （搜 `Nintendo Switch Joy-Con` 等，自由授权），`poster.mjs icon` 合成标题版。
+4. 都没有 → `poster.mjs set` 自绘。
+
+### 无封面资源（音乐合辑、特辑等）：自绘，不硬凑
+
+```bash
+node tools/poster.mjs set --title "丝绸之路" --badge "马友友 · 20 周年纪念特辑" --out static/images/ot-xxx.jpg
+```
+
+搜到的图对不上内容就删掉重来，**宁可自绘也不放错图**。
+
+### 完成动作
+
+`image:` 字段写入 → 复扫全库无缺图无坏链 → `npm run build` 两次 → 抽查详情页海报引用。
+（批量改 yaml 时注意行尾混排问题，见 §5。）
+
+## 9. 验证清单（每次改完跑一遍）
 
 ```bash
 npx eslint scripts/ tools/     # 0 错误（tools/lib/ 也在覆盖范围内）
