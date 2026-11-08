@@ -40,12 +40,12 @@ const CLI = path.join(
 
 // 网盘目录里的「占位说明文件」是同步任务自建（或人工放过）的工作流产物，不是资源内容。
 // 2026-11-08 起 trending-sync / mirror-baidu 预置三份：更新通知、QQ 群缺失反馈、站点导流；
-// 站点导流当天改过一次名字，旧名已铺进 643 个夸克目录且网盘 CLI 无删除命令 → 新旧两名都必须识别，
-// 漏掉任何一个就等于把几百份说明文件当真实资源写进 files:（AGENTS.md §5 红线，规模化造假）。
+// 站点导流当天改过名，铺下去的旧名「我的网盘网址www.wodewangpan.top.md」已在 643 个夸克目录里
+// 且网盘 CLI 无删除命令 → 新旧两名都必须识别，漏任一个就等于把几百份说明文件当真实资源写进 files:。
 // 另有历史/人工放过的一份「资源正在陆续更新上传中…」（实测全盘仅 1 处，在 04电影/005-山竹刀）。
 // 权威定义在 quark-resource-sync skill 的 scripts/lib/placeholder.mjs（PLACEHOLDER_PREFIXES）；
 // 跨仓库无法 import，改那边必须同步改这里。
-const PLACEHOLDER_FILE_RE = /^(资源在24小时内更新|资源缺失反馈请加QQ群|www\.wodewangpan\.top索引|我的网盘网址|资源正在陆续更新上传中)/;
+const PLACEHOLDER_FILE_RE = /^(资源在24小时内更新|资源缺失反馈请加QQ群|关于我的网盘索引站|我的网盘网址|资源正在陆续更新上传中)/;
 
 const args = process.argv.slice(2);
 const getArg = (name, def) => {
