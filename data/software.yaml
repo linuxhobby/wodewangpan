@@ -1183,7 +1183,7 @@
 
 
 - id: app-122
-  title: "COMFAST CF-WP1200 驱动"
+  title: "无线网卡驱动 - COMFAST CF-WP1200 驱动"
   category: 软件
   tags: ["软件", "驱动", "无线网卡", "蓝牙", "Windows", "CF-WP1200"]
   quark_url: "https://pan.quark.cn/s/64a7085e01f2"
@@ -1194,7 +1194,7 @@
 
 
 - id: app-124
-  title: "Office Tool Plus"
+  title: "Office Tool Plus - 全自动安装Microsoft Office"
   category: 软件
   tags: ["软件", "Office", "部署工具", "系统工具", "Windows", "Office Tool Plus"]
   quark_url: "https://pan.quark.cn/s/c5334a80e215"
@@ -1205,7 +1205,7 @@
 
 
 - id: app-125
-  title: "RevPDF"
+  title: "RevPDF - Adobe最好的免费替代品"
   category: 软件
   tags: ["软件", "PDF", "编辑器", "办公工具", "Windows", "macOS", "RevPDF"]
   quark_url: "https://pan.quark.cn/s/1d7b4e6435e6"
@@ -1255,7 +1255,7 @@
   image: app-129.jpg
 
 - id: app-031
-  title: "Tailscale"
+  title: "Tailscale-最便捷的网络打洞工具"
   category: "软件"
   tags: [软件, 网络工具, VPN, Tailscale]
   quark_url: "https://pan.quark.cn/s/2bf8da65d73d"
