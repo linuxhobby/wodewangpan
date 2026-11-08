@@ -1,10 +1,10 @@
-title: 我的网盘资源站
+title: 我的网盘
 description: 夸克 / 百度网盘资源索引，打开即用，扫码即存
 # 站点域名（可选）：写进 canonical / OG / sitemap
 # 不配就用构建脚本里的默认域名 https://www.wodewangpan.top
 # 换域名时用 BASE_URL=... npm run build，或在这里写 baseUrl: https://新域名
 # 首页 SEO 文案（可选，不填则回退用站名与站描述）；{total} = 资源总数，{categories} = 分类列表
-homeTitle: 我的网盘资源站 - 夸克/百度网盘资源索引        # 首页 title，构建时自动追加「（396 项）」
+homeTitle: 我的网盘索引站 - 夸克/百度网盘资源索引        # 首页 title，构建时自动追加「（396 项）」
 homeDesc: 夸克 / 百度网盘资源索引，收录 {total} 个{categories}资源，打开即用，扫码即存
 homeH1: 网盘资源索引 · 分类浏览                        # 首页 H1（分类页仍用分类名）
 # 首页按分类分区展示。homePerCategory = 每个分类给几条（PC 端宫格 5 列，5 条正好一行；
