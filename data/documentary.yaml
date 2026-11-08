@@ -694,6 +694,15 @@
   date: 2009-07-15
   added: 2026-05-02
   image: dc-047.jpg
+  updated: 2026-11-09
+  files:
+    count: 2
+    size: "8.6 GB"
+    format: "MKV×2"
+    tree: |
+      047-BBC.深蓝/
+      深蓝.E01.mkv
+      深蓝.E02.mkv
 
 - id: dc-046
   title: "追踪海洋巨兽"
@@ -704,6 +713,16 @@
   date: 2020-11-12
   added: 2026-05-02
   image: dc-046.jpg
+  updated: 2026-11-09
+  files:
+    count: 3
+    size: "8.3 GB"
+    format: "MKV×3"
+    tree: |
+      046-BBC.海洋巨兽/
+      海洋巨兽.E01.mkv
+      海洋巨兽.E02.mkv
+      海洋巨兽.E03.mkv
 
 - id: dc-045
   title: "法国花园"
@@ -714,6 +733,16 @@
   date: 2013-02-01
   added: 2026-05-02
   image: dc-045.jpg
+  updated: 2026-11-09
+  files:
+    count: 3
+    size: "2.9 GB"
+    format: "MP4×2 / MKV"
+    tree: |
+      045-BBC.法国花园之旅/
+      法国花园之旅.E02.mp4
+      法国花园之旅.E03.mp4
+      法国花园之旅.E01.mkv
 
 - id: dc-044
   title: "沉没城市"
