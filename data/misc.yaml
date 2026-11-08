@@ -13,19 +13,19 @@
     count: 13
     tree: |
       001-喜马拉雅付费音频课大合集（13个大类，全免费）/
-      06职场管理/
-      10烧脑记忆/
-      07情感心理/
+      01传统国学/
       02健康养生/
-      13音乐艺术/
-      11文学艺术/
       03金融财经/
+      04亲子育儿/
       05外语语言/
+      06职场管理/
+      07情感心理/
       08演讲语言/
       09诗歌小说/
-      01传统国学/
-      04亲子育儿/
+      10烧脑记忆/
+      11文学艺术/
       12女神养成/
+      13音乐艺术/
 
 - id: ot-002
   title: "剪映字幕预设合集"
@@ -41,10 +41,10 @@
     format: 字幕预设 / 模板文件
     packed: false
     tree: |
+      8.10 模板更新/
+      83 个基础文字动画音效预设/
       109 个高级感字幕预设/
       318 个高级感字幕预设/
-      83 个基础文字动画音效预设/
-      8.10 模板更新/
   image: ot-002.jpg
 
 - id: ot-003
@@ -63,11 +63,11 @@
     format: "FLAC×4 / JPG"
     tree: |
       003-歌手-2026-第8期/
-      2026 第8期.jpg
-      Elliot James Reay - Oh Pretty Women (live).flac
-      刘惜君 - 送流水 (live).flac
       窦靖童 - Fruit Fly  (live).flac
       胡彦斌 - 庙堂之外 (live).flac
+      刘惜君 - 送流水 (live).flac
+      Elliot James Reay - Oh Pretty Women (live).flac
+      2026 第8期.jpg
 
 - id: ot-004
   title: "林俊杰《无声之上》单曲"
@@ -85,9 +85,9 @@
     format: "FLAC×2 / JPG"
     tree: |
       004-林俊杰-2026最新单曲/
-      Cover.jpg
-      Rise Without A Sound - 林俊杰[Hi-Res 无损音质].flac
       Rise Without A Sound - 林俊杰[臻品2.0].flac
+      Rise Without A Sound - 林俊杰[Hi-Res 无损音质].flac
+      Cover.jpg
 
 - id: ot-005
   title: "我在绝地求生捡碎片（有声书）"
@@ -103,10 +103,10 @@
     count: 4
     format: "MP3"
     tree: |
-      005-我在绝地求生捡碎片/
-      1000-1120完结/
-      0501-1000/
       0001-0500/
+      005-我在绝地求生捡碎片/
+      0501-1000/
+      1000-1120完结/
       严重剧透！打游戏也能走上人生巅峰，他是怎么做到的！.mp3
 
 
@@ -123,14 +123,14 @@
   files:
     count: 7
     tree: |
+      【2022年】高考押题卷/
       006-历年高考试卷500张押题卷/
+      2023【风向卷】预测卷/
+      2023【金考卷百校联盟】预测卷/
+      2023【王后雄】押题卷/
+      2023年 天星《高考临考预测 · 押题密卷》【新高考】/
       2024金考卷《10年高考试题汇编》全科/
       2025高考押题【黑白卷】/
-      2023【王后雄】押题卷/
-      【2022年】高考押题卷/
-      2023【金考卷百校联盟】预测卷/
-      2023年 天星《高考临考预测 · 押题密卷》【新高考】/
-      2023【风向卷】预测卷/
 
 
 - id: ot-007
@@ -148,8 +148,8 @@
     format: "RAR×2"
     packed: true
     tree: |
-      007-Qwen-image-2.1-Turbo整合包/
       1.0留档/
+      007-Qwen-image-2.1-Turbo整合包/
       【出问题必看】智能排错指南+免费领百度网盘SVIP.rar
       Qwen-Image-2.1-Turbo整合包V1.1.rar
 
@@ -170,7 +170,7 @@
     tree: |
       008-Various Artists - Silk Road Music 20th anniversary 丝绸之路20周年纪念特辑 wav+cue/
       Artwork/
-      folder.jpg
-      Various Artists - Silk Road Music 20th anniversary.wav
-      Various Artists - Silk Road Music 20th anniversary.log
       Various Artists - Silk Road Music 20th anniversary.cue
+      folder.jpg
+      Various Artists - Silk Road Music 20th anniversary.log
+      Various Artists - Silk Road Music 20th anniversary.wav

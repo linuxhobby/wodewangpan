@@ -37,16 +37,16 @@
     tree: |
       003-降世神通：最后的气宗 第一季/
       Avatar： The Last Airbender S01E01 - 第 1 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
-      Avatar： The Last Airbender S01E04 - 第 4 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
-      landscape.jpg
       Avatar： The Last Airbender S01E02 - 第 2 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
-      poster.jpg
-      Avatar： The Last Airbender S01E08 - 第 8 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
-      Avatar： The Last Airbender S01E06 - 第 6 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
-      Avatar： The Last Airbender S01E05 - 第 5 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
-      Avatar： The Last Airbender S01E07 - 第 7 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
-      thumb.jpg
       Avatar： The Last Airbender S01E03 - 第 3 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S01E04 - 第 4 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S01E05 - 第 5 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S01E06 - 第 6 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S01E07 - 第 7 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S01E08 - 第 8 集 - 2160p WEB-DL HDR H265 DDP 5.1 Atmos.mkv
+      landscape.jpg
+      poster.jpg
+      thumb.jpg
 
 - id: an-004
   title: "降世神通：最后的气宗 第二季"
@@ -66,13 +66,13 @@
       004-降世神通：最后的气宗 第二季/
       Avatar： The Last Airbender S02E01 - 第 1 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
       Avatar： The Last Airbender S02E02 - 第 2 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
-      Avatar： The Last Airbender S02E07 - 第 7 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S02E03 - 第 3 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S02E04 - 第 4 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
       Avatar： The Last Airbender S02E05 - 第 5 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
       Avatar： The Last Airbender S02E06 - 第 6 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
-      Avatar： The Last Airbender S02E03 - 第 3 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
-      season.nfo
-      Avatar： The Last Airbender S02E04 - 第 4 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
+      Avatar： The Last Airbender S02E07 - 第 7 集 - 2160p WEB-DL DV H265 DDP 5.1 Atmos.mkv
       poster.jpg
+      season.nfo
 
 - id: an-005
   title: "哪吒之魔童闹海"
@@ -108,16 +108,16 @@
     format: "JPG×5 / PNG×3 / NFO / MKV"
     tree: |
       006-哪吒之魔童降世（2019）/
-      banner.jpg
-      logo.png
-      thumb.jpg
-      Ne Zha (2019) - 2160p UHD BluRay DV HEVC TrueHD Atmos 7.1.nfo
-      disc.png
-      clearart.png
-      poster.jpg
-      background.jpg
-      Ne Zha (2019) - 2160p UHD BluRay DV HEVC TrueHD Atmos 7.1.mkv
       backdrop.jpg
+      background.jpg
+      banner.jpg
+      poster.jpg
+      thumb.jpg
+      clearart.png
+      disc.png
+      logo.png
+      Ne Zha (2019) - 2160p UHD BluRay DV HEVC TrueHD Atmos 7.1.mkv
+      Ne Zha (2019) - 2160p UHD BluRay DV HEVC TrueHD Atmos 7.1.nfo
 
 - id: an-007
   title: "时光代理人"
@@ -136,18 +136,18 @@
     tree: |
       007-时光代理人/
       时光代理人（第三季）/
+      01.mp4
+      02.mp4
+      03.mp4
+      04.mp4
+      05.mp4
+      06.mp4
+      07.mp4
+      08.mp4
+      09.mp4
+      10.mkv
       11.mkv
       12.mkv
-      07.mp4
-      05.mp4
-      09.mp4
-      04.mp4
-      06.mp4
-      10.mkv
-      02.mp4
-      08.mp4
-      03.mp4
-      01.mp4
 
 - id: an-009
   title: "极恶老大"
@@ -164,11 +164,11 @@
     size: "2.4 GB"
     format: "MP4×3"
     tree: |
-      009-极恶老大/
       【动漫】极恶老大 第三季/
-      S03E03.mp4
-      S03E02.mp4
+      009-极恶老大/
       S03E01.mp4
+      S03E02.mp4
+      S03E03.mp4
 
 - id: an-010
   title: "南方公园"
@@ -202,9 +202,9 @@
     count: 2
     tree: |
       011-航海王/
-      H 海贼王/
-      海贼王(真人版).第二季[全8集][国英多音轨+简繁英字幕]/
       海贼王 真人版 第一季[全8集][国英多音轨+简繁英字幕]/
+      海贼王(真人版).第二季[全8集][国英多音轨+简繁英字幕]/
+      H 海贼王/
 
 - id: an-013
   title: "死神"
@@ -221,21 +221,21 @@
     format: "JPG×9 / PNG×3 / NFO"
     tree: |
       013-死神/
-      死神 (2004)/
       第 17 季 - 2160p WEB-DL H264 AAC/
-      poster.jpg
-      season01-thumb.jpg
-      clearart.png
+      死神 (2004)/
       backdrop.jpg
+      banner.jpg
+      fanart.jpg
+      landscape.jpg
+      poster.jpg
+      season01-banner.jpg
+      season01-poster.jpg
+      season01-thumb.jpg
+      thumb.jpg
+      clearart.png
       clearlogo.png
       logo.png
-      landscape.jpg
-      thumb.jpg
-      banner.jpg
-      season01-poster.jpg
       tvshow.nfo
-      season01-banner.jpg
-      fanart.jpg
 - id: an-014
   title: "冰川时代"
   category: 动漫

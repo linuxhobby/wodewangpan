@@ -19,11 +19,11 @@
     tree: |
       077-绿色星球/
       01.mp4
-      04.mp4
+      02.mp4
       03.mp4
+      04.mp4
       05.mp4
       06.mp4
-      02.mp4
 
 - id: dc-076
   title: "史前星球"
@@ -42,16 +42,16 @@
     format: "MP4×10"
     tree: |
       076-史前X球.2022/
-      1080/01.mp4
-      1080/02.mp4
-      1080/03.mp4
-      1080/04.mp4
-      1080/05.mp4
       4K/S01E01.mp4
       4K/S01E02.mp4
       4K/S01E03.mp4
       4K/S01E04.mp4
       4K/S01E05.mp4
+      1080/01.mp4
+      1080/02.mp4
+      1080/03.mp4
+      1080/04.mp4
+      1080/05.mp4
 
 - id: dc-075
   title: "鸟瞰地球"
@@ -69,12 +69,12 @@
     format: "MKV×6"
     tree: |
       075-BBC.鸟瞰地球/
-      5.mkv
-      4.mkv
-      3.mkv
-      6.mkv
-      2.mkv
       1.mkv
+      2.mkv
+      3.mkv
+      4.mkv
+      5.mkv
+      6.mkv
 
 - id: dc-074
   title: "骇客如何改变世界"
@@ -112,11 +112,11 @@
     tree: |
       073-BBC.非洲/
       BBC.Africa.E01.Kalahari.mkv
-      BBC.Africa.E05.Sahara.mkv
-      BBC.Africa.E06.The.Future.mkv
       BBC.Africa.E02.Savannah.mkv
       BBC.Africa.E03.Congo.mkv
       BBC.Africa.E04.Cape.mkv
+      BBC.Africa.E05.Sahara.mkv
+      BBC.Africa.E06.The.Future.mkv
 
 - id: dc-072
   title: "铭记历史"
@@ -134,18 +134,18 @@
     format: "MKV×12"
     tree: |
       072-BBC.铭记历史/
+      铭记历史.E01.mkv
+      铭记历史.E02.mkv
+      铭记历史.E03.mkv
+      铭记历史.E04.mkv
+      铭记历史.E05.mkv
+      铭记历史.E06.mkv
       铭记历史.E07.mkv
       铭记历史.E08.mkv
       铭记历史.E09.mkv
-      铭记历史.E05.mkv
-      铭记历史.E04.mkv
-      铭记历史.E02.mkv
       铭记历史.E10.mkv
       铭记历史.E11.mkv
-      铭记历史.E03.mkv
-      铭记历史.E06.mkv
       铭记历史.E12.mkv
-      铭记历史.E01.mkv
 
 - id: dc-071
   title: "铁路漫步"
@@ -163,18 +163,18 @@
     format: "MKV×6 / ASS×4 / SRT×2"
     tree: |
       071-BBC.铁路漫步/
+      铁路漫步.E01.德比郡・建在山顶的铁路.mkv
+      铁路漫步.E02.威尔士・发现斯诺登尼亚.mkv
       铁路漫步.E03.康沃尔・蒸汽机车诞生地.mkv
       铁路漫步.E04.斯佩赛德・威士忌酒火车.mkv
-      铁路漫步.E05.韦茅斯・天然海港的历史.ass
-      铁路漫步.E03.康沃尔・蒸汽机车诞生地.ass
-      铁路漫步.E06.卡伦德・苏格兰高原通道.srt
-      铁路漫步.E02.威尔士・发现斯诺登尼亚.mkv
-      铁路漫步.E01.德比郡・建在山顶的铁路.srt
-      铁路漫步.E01.德比郡・建在山顶的铁路.mkv
-      铁路漫步.E02.威尔士・发现斯诺登尼亚.ass
       铁路漫步.E05.韦茅斯・天然海港的历史.mkv
-      铁路漫步.E04.斯佩赛德・威士忌酒火车.ass
       铁路漫步.E06.卡伦德・苏格兰高原通道.mkv
+      铁路漫步.E02.威尔士・发现斯诺登尼亚.ass
+      铁路漫步.E03.康沃尔・蒸汽机车诞生地.ass
+      铁路漫步.E04.斯佩赛德・威士忌酒火车.ass
+      铁路漫步.E05.韦茅斯・天然海港的历史.ass
+      铁路漫步.E01.德比郡・建在山顶的铁路.srt
+      铁路漫步.E06.卡伦德・苏格兰高原通道.srt
 
 - id: dc-070
   title: "野性南美洲"
@@ -192,9 +192,9 @@
     format: "AVI×4"
     tree: |
       070-BBC.野性南美洲/
+      [野性南美洲].BBC.Wild.South.America.EP1.2002.DVDRip.Dual-Audio.XviD(ED2000.COM).avi
       [野性南美洲].BBC.Wild.South.America.EP2.2002.DVDRip.Dual-Audio.XviD(ED2000.COM).avi
       [野性南美洲].BBC.Wild.South.America.EP3.2002.DVDRip.Dual-Audio.XviD(ED2000.COM).avi
-      [野性南美洲].BBC.Wild.South.America.EP1.2002.DVDRip.Dual-Audio.XviD(ED2000.COM).avi
       [野性南美洲].BBC.Wild.South.America.EP4.2002.DVDRip.Dual-Audio.XviD(ED2000.COM).avi
 
 - id: dc-069
@@ -213,10 +213,10 @@
     format: "MP4×4"
     tree: |
       069-BBC.里克·斯坦的墨西哥美食之旅/
-      E03.mp4
-      E04.mp4
       E01.mp4
       E02.mp4
+      E03.mp4
+      E04.mp4
 
 - id: dc-068
   title: "谁在引导我们消费"
@@ -253,11 +253,11 @@
     format: "MP4×5"
     tree: |
       067-BBC.行星/
-      第5集：黑暗之地——太阳系外缘.mp4
-      第2集：两颗姐妹行星——地球与火星.mp4
       第1集：沐浴阳光——类地行星.mp4
-      第4集：太阳系远端的生命——土星.mp4
+      第2集：两颗姐妹行星——地球与火星.mp4
       第3集：教父——木星.mp4
+      第4集：太阳系远端的生命——土星.mp4
+      第5集：黑暗之地——太阳系外缘.mp4
 
 - id: dc-066
   title: "蓝色星球 第一季"
@@ -275,26 +275,26 @@
     format: "MKV×10 / SRT×10"
     tree: |
       066-BBC.蓝色星球/
-      蓝色星球1-10.mkv
-      蓝色星球1-07.mkv
-      蓝色星球1-06.srt
-      蓝色星球1-05.mkv
-      蓝色星球1-05.srt
-      蓝色星球1-08.srt
-      蓝色星球1-10.srt
-      蓝色星球1-02.mkv
-      蓝色星球1-09.mkv
-      蓝色星球1-03.srt
-      蓝色星球1-03.mkv
-      蓝色星球1-08.mkv
-      蓝色星球1-04.srt
-      蓝色星球1-09.srt
-      蓝色星球1-04.mkv
       蓝色星球1-01.mkv
+      蓝色星球1-02.mkv
+      蓝色星球1-03.mkv
+      蓝色星球1-04.mkv
+      蓝色星球1-05.mkv
+      蓝色星球1-06.mkv
+      蓝色星球1-07.mkv
+      蓝色星球1-08.mkv
+      蓝色星球1-09.mkv
+      蓝色星球1-10.mkv
       蓝色星球1-01.srt
       蓝色星球1-02.srt
+      蓝色星球1-03.srt
+      蓝色星球1-04.srt
+      蓝色星球1-05.srt
+      蓝色星球1-06.srt
       蓝色星球1-07.srt
-      蓝色星球1-06.mkv
+      蓝色星球1-08.srt
+      蓝色星球1-09.srt
+      蓝色星球1-10.srt
 
 - id: dc-065
   title: "荒野间谍"
@@ -1176,5 +1176,5 @@
     tree: |
       094-落网之谜：墨西哥大毒枭的坠落 The Fall of El Mayo (2026)/
       [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E01.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv
-      [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E03.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv
       [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E02.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv
+      [落网之谜：墨西哥大毒枭的坠落].The.Fall.of.El.Mayo.2026.S01E03.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-UBWEB.mkv

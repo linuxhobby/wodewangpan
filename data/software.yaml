@@ -1272,9 +1272,9 @@
     packed: true
     tree: |
       031-tailscale-最便捷的网络打洞工具/
-      苹果系统版-Tailscale-1.104.5-macos.pkg
-      苹果系统版-Tailscale-1.104.5-macos.zip
-      windows版-tailscale-setup-1.104.5.exe
       Linux版-tailscale_1.104.5_amd64.tgz
       Linux版-tailscale_1.104.5_arm64.tgz
       安卓版-tailscale-android-universal-1.104.5.apk
+      windows版-tailscale-setup-1.104.5.exe
+      苹果系统版-Tailscale-1.104.5-macos.pkg
+      苹果系统版-Tailscale-1.104.5-macos.zip
