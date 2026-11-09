@@ -1130,6 +1130,16 @@
   date: 2018-01-11
   added: 2026-05-02
   image: dc-026.jpg
+  updated: 2026-11-09
+  files:
+    count: 3
+    size: "3.1 GB"
+    format: "MP4×3"
+    tree: |
+      026-BBC.大猫.终极猎食者（中英文字幕）/
+      01.mp4
+      02.mp4
+      03.mp4
 
 - id: dc-025
   title: "老爵爷的大堡礁之旅"
@@ -1140,6 +1150,16 @@
   date: 2015-12-30
   added: 2026-05-02
   image: dc-025.jpg
+  updated: 2026-11-09
+  files:
+    count: 3
+    size: "17.5 GB"
+    format: "MKV×3"
+    tree: |
+      025-BBC.大堡礁/
+      大堡礁.E01.mkv
+      大堡礁.E02.mkv
+      大堡礁.E03.mkv
 
 - id: dc-024
   title: "夜色中的地球"
@@ -1151,6 +1171,12 @@
   added: 2026-05-02
   image: dc-024.jpg
   updated: 2026-11-08
+  files:
+    count: 2
+    tree: |
+      024-BBC.夜色中的地球（内嵌字幕）/
+      夜色中的地球1/
+      夜色中的地球2/
 
 - id: dc-023
   title: "伟大的苏格兰人：那些塑造了一个民族的作家"
