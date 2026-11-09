@@ -930,6 +930,19 @@
   date: 2011-09-14
   added: 2026-05-02
   image: dc-035.jpg
+  updated: 2026-11-09
+  files:
+    count: 6
+    size: "2.1 GB"
+    format: "MKV×6"
+    tree: |
+      035-BBC.恐龙星球/
+      恐龙星球.E01.mkv
+      恐龙星球.E02.mkv
+      恐龙星球.E03.mkv
+      恐龙星球.E04.mkv
+      恐龙星球.E05.mkv
+      恐龙星球.E06.mkv
 
 - id: dc-034
   title: "徒步尼罗河"
@@ -940,6 +953,17 @@
   date: 2015-01-04
   added: 2026-05-02
   image: dc-034.jpg
+  updated: 2026-11-09
+  files:
+    count: 4
+    size: "4.2 GB"
+    format: "MP4×4"
+    tree: |
+      034-BBC.徒步尼罗河/
+      Walking.The.Nile.E01.mp4
+      Walking.The.Nile.E02.mp4
+      Walking.The.Nile.E03.mp4
+      Walking.The.Nile.E04.mp4
 
 - id: dc-033
   title: "巴塔哥尼亚：地球秘密乐园"
@@ -950,6 +974,16 @@
   date: 2015-09-25
   added: 2026-05-02
   image: dc-033.jpg
+  updated: 2026-11-09
+  files:
+    count: 3
+    size: "14.3 GB"
+    format: "MKV×3"
+    tree: |
+      033-BBC.巴塔哥尼亚：地球秘密乐园/
+      巴塔哥尼亚.E01.mkv
+      巴塔哥尼亚.E02.mkv
+      巴塔哥尼亚.E03.mkv
 
 - id: dc-032
   title: "宠物：内心狂野"
