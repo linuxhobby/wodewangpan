@@ -76,7 +76,7 @@ promo:
   # 活动落地页（开年活动，主推）；注册/自定义落地页放在 registerHref 备用
   activityHref: https://www.htstack.com/activity/act_openyear.shtml?aff=31743
   registerHref: https://my.htstack.com/aff.php?aff=31743
-  # 推广文案（页脚条与图片 alt 复用）
+  # 推广文案（首页顶部条与图片 alt 复用）
   text: 【衡天云】海外云服务器12元/月起，开年限量抢购，超高性价比！
   # 落地页优先级：activity 用活动页，register 用注册页；改这里即可整体切换
   defaultHref: activity

@@ -86,12 +86,6 @@ function promoBanner({ src, href, alt, text, cls = '', w = 0, h = 0 }) {
   </a>
 </div>`;
 }
-function promoFooter(site) {
-  const p = site.promo;
-  if (!p || p.enabled === false) return '';
-  const alt = `${p.brand || '推广'} · ${p.text || ''}`;
-  return promoBanner({ src: '/promo/hengtianyun/970x250.webp', href: promoLinkOf(site), alt, text: p.text || '', cls: 'promo--footer', w: 970, h: 250 });
-}
 function promoHomeTop(site) {
   const p = site.promo;
   if (!p || p.enabled === false) return '';
@@ -383,7 +377,6 @@ ${catNav(categories, counts, activeCat, total, hotOn)}
 <main class="wrap">
 ${body}
 </main>
-${promoFooter(site)}
 <footer class="foot wrap">
   ${footNav(footNavCurrent, baseUrl)}
   <p>共 ${total} 个资源 · ${esc(site.disclaimer)}</p>

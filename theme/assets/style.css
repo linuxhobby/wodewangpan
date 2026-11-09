@@ -649,9 +649,6 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   border: 1px solid var(--border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
-/* 页脚全站条：通栏、克制，置于页脚导航之上 */
-.promo--footer { margin: 0 0 18px; }
-.promo--footer .promo__img { width: 100%; max-width: 970px; }
 /* 首页顶部通栏：紧贴标题下方，限制最大宽，窄屏自然缩放 */
 .promo--home-top { margin: 4px 0 18px; }
 .promo--home-top .promo__img { width: 100%; max-width: 640px; }
