@@ -1064,6 +1064,15 @@
   date: 2007-07-18
   added: 2026-05-02
   image: dc-029.jpg
+  updated: 2026-11-09
+  files:
+    count: 2
+    size: "3.1 GB"
+    format: "MKV×2"
+    tree: |
+      029-BBC.孟买铁路/
+      孟买铁路.E01.压力.mkv
+      孟买铁路.E02.梦想.mkv
 
 - id: dc-028
   title: "奥斯维辛集中营"
@@ -1074,6 +1083,18 @@
   date: 2013-11-15
   added: 2026-05-02
   image: dc-028.jpg
+  updated: 2026-11-09
+  files:
+    count: 5
+    size: "911 MB"
+    format: "RMVB×5"
+    tree: |
+      028-BBC.奥斯维辛集中营/
+      奥斯威辛集中营.E01.rmvb
+      奥斯威辛集中营.E03.rmvb
+      奥斯威辛集中营.E04.rmvb
+      奥斯威辛集中营.E05.rmvb
+      奥斯威辛集中营.E06.rmvb
 
 - id: dc-027
   title: "发明天才"
@@ -1085,6 +1106,20 @@
   added: 2026-05-02
   image: dc-027.jpg
   updated: 2026-11-08
+  files:
+    count: 8
+    size: "5.7 GB"
+    format: "SRT×4 / MKV×4"
+    tree: |
+      027-BBC.天才发明/
+      天才发明.E01.动力.mkv
+      天才发明.E01.速度.mkv
+      天才发明.E03.通讯.mkv
+      天才发明.E04.视觉影像.mkv
+      天才发明.E01.动力.srt
+      天才发明.E02.速度.srt
+      天才发明.E03.通讯.srt
+      天才发明.E04.视觉影像.srt
 
 - id: dc-026
   title: "大猫"
