@@ -54,7 +54,6 @@ sudo bash /tmp/wdwp-setup.sh --domain example.com --email me@example.com
 curl -fsSL https://raw.githubusercontent.com/linuxhobby/wodewangpan/main/deploy/setup-vps.sh | sudo bash -s -- --domain example.com --email me@example.com
 ```
 
-Fork 之后把 URL 换成你仓库里的 raw 地址，并加 `--repo https://github.com/<你>/<仓库>.git`；填自己的仓库才会默认启用定时发布。
 
 | 参数 | 说明 |
 |---|---|
