@@ -994,6 +994,18 @@
   date: 2015-01-21
   added: 2026-05-02
   image: dc-032.jpg
+  updated: 2026-11-09
+  files:
+    count: 5
+    size: "3.7 GB"
+    format: "MKV×2 / ASS×2 / TXT"
+    tree: |
+      032-BBC.宠物的天性/
+      宠物的天性.E01.顽皮的生物.ass
+      宠物的天性.E02.神秘的生物.ass
+      宠物的天性.E01.顽皮的生物.mkv
+      宠物的天性.E02.神秘的生物.mkv
+      必看.txt
 
 - id: dc-031
   title: "完美星球"
@@ -1004,6 +1016,23 @@
   date: 2021-01-03
   added: 2026-05-02
   image: dc-031.jpg
+  updated: 2026-11-09
+  files:
+    count: 10
+    size: "48.7 GB"
+    format: "MKV×5 / SRT×5"
+    tree: |
+      031-BBC.完美星球/
+      完美星球01.mkv
+      完美星球02.mkv
+      完美星球03.mkv
+      完美星球04.mkv
+      完美星球05.mkv
+      完美星球01.srt
+      完美星球02.srt
+      完美星球03.srt
+      完美星球04.srt
+      完美星球05.srt
 
 - id: dc-030
   title: "宇宙的奇迹"
@@ -1014,6 +1043,17 @@
   date: 2011-03-06
   added: 2026-05-02
   image: dc-030.jpg
+  updated: 2026-11-09
+  files:
+    count: 4
+    size: "15.9 GB"
+    format: "MKV×4"
+    tree: |
+      030-BBC.宇宙的奇迹/
+      宇宙的奇迹.E01.命运.mkv
+      宇宙的奇迹.E02.星尘.mkv
+      宇宙的奇迹.E03.陷落.mkv
+      宇宙的奇迹.E04.信使.mkv
 
 - id: dc-029
   title: "孟买的铁路"
