@@ -1351,6 +1351,17 @@
   date: 2013-01-14
   added: 2026-05-02
   image: dc-016.jpg
+  updated: 2026-11-09
+  files:
+    count: 4
+    size: "5.9 GB"
+    format: "MKV×4"
+    tree: |
+      016-BBC.南美失落王国/
+      南美失落王国.E01.云之子民查查波亚文化.mkv
+      南美失落王国.E02.世界石心蒂瓦纳库王国.mkv
+      南美失落王国.E03.金矿穆伊斯卡和泰荣纳.mkv
+      南美失落王国.E04.沙漠中的伟大王国奇穆.mkv
 
 - id: dc-015
   title: "低地国家的高雅艺术"
@@ -1361,6 +1372,16 @@
   date: 2013-04-04
   added: 2026-05-02
   image: dc-015.jpg
+  updated: 2026-11-09
+  files:
+    count: 3
+    size: "10.0 GB"
+    format: "TS×3"
+    tree: |
+      015-BBC.北欧艺术游/
+      北欧艺术游01.ts
+      北欧艺术游02.ts
+      北欧艺术游03.ts
 
 - id: dc-014
   title: "加拉帕戈斯群岛"
@@ -1371,6 +1392,19 @@
   date: 2006-09-29
   added: 2026-05-02
   image: dc-014.jpg
+  updated: 2026-11-09
+  files:
+    count: 6
+    size: "13.1 GB"
+    format: "SRT×3 / MKV×3"
+    tree: |
+      014-BBC.加拉帕戈斯群岛/
+      Galapagos.E01.mkv
+      Galapagos.E02.mkv
+      Galapagos.E03.mkv
+      Galapagos.E01.srt
+      Galapagos.E02.srt
+      Galapagos.E03.srt
 
 - id: dc-013
   title: "漫游世界建筑群"
