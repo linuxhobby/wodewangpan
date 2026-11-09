@@ -70,6 +70,7 @@ export function parseSerialFile(file, raw = fs.readFileSync(file, 'utf8')) {
       to,
       title: unquote((text.match(/^  title:\s*(.*)$/m) || [])[1]),
       quarkUrl,
+      date: unquote((text.match(/^  date:\s*"?([^"\n]*)"?/m) || [])[1]),
       added: unquote((text.match(/^  added:\s*"?([^"\n]*)"?/m) || [])[1]),
       updated: unquote((text.match(/^  updated:\s*"?([^"\n]*)"?/m) || [])[1]),
       dead: /^  dead:\s*true/m.test(text),

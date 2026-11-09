@@ -18,6 +18,12 @@
 // 剧集，只读判断盘端是否仍只有占位说明文件，空目录汇总成 [待加资源] 清单推给飞书。
 // 加完资源后下轮自动从清单消失，不需要任何销账动作。
 //
+// 追更提醒（2026-11-10 起）：复用连载轮询已抓到的盘端快照，查 TMDB 的 status 与
+// last_episode_to_air（播出日期是精确事实）。最近 7 天播了新集且在播的剧，打印 [追更提醒]
+// 推给飞书，让人确认盘端要不要追。只提醒、不解析也不写入「还差几集」的结论——
+// tree 会截断 40 行、混 .xltd.cfg、动漫分类里还有电影和合辑，集数不是可靠事实。
+// 凭据只读环境变量或本机 skill 的 config.env（tools/lib/tmdb.mjs），匹配不确定就静默跳过。
+//
 // 队列顺序：待补条目按 added（入库时间）升序扫描，最老的资源先补；缺 added 的排最后。
 // 写入额度：--limit 是「本次要写几条」，不是「本次看几条」。占位目录 / 抓取失败不占额度，
 // 自动顺延下一条（否则 --limit 1 会被队首一个空目录永久堵死，每天 0 产出）。
@@ -33,6 +39,7 @@
 //   node tools/fill-files.mjs --limit 5 --tries 30  # 每条额度最多试 30 个候选
 //   node tools/fill-files.mjs --serials 1 --limit 0 # 只跑连载轮询（调试）
 //   node tools/fill-files.mjs --serials 0           # 临时关掉连载轮询
+//   node tools/fill-files.mjs --airing 0            # 临时关掉追更提醒
 //   node tools/fill-files.mjs --limit 0 --serials 0 --todo 40 --dry-run  # 一次看待加资源清单
 //
 // 建议节奏：每天跑一批（--limit 20~30），配合站点「updated 逐日分散」的策略。
@@ -50,6 +57,14 @@ import {
   signatureFromLines,
   rewriteSerialFiles,
 } from './lib/serials.mjs';
+import {
+  readCredentials,
+  searchTvId,
+  tvAiring,
+  airedWithin,
+  hasEpisodeNames,
+  seasonOf,
+} from './lib/tmdb.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -84,6 +99,8 @@ const serialsN = Math.max(0, Number(getArg('serials', 1)) || 0);
 // 每轮抽查几条「最近入库」的剧集目录，找出盘端仍空、需要人工加资源的（默认 3；0 = 关闭）。
 // 只读，不占补齐额度、不写盘；结果由任务 agent 塞进飞书 --follow。
 const todoN = Math.max(0, Number(getArg('todo', 3)) || 0);
+// 连载轮询时顺带查 TMDB 播出事件（默认开；0 = 关闭）。只读、不写数据、零额外夸克请求。
+const airingN = Math.max(0, Number(getArg('airing', 1)) || 0);
 // 每写入 1 条允许尝试的候选数上限（占位/失败顺延的兜底，避免空转打爆接口）
 const triesPerWrite = Math.max(1, Number(getArg('tries', 20)) || 20);
 
@@ -423,7 +440,9 @@ async function runSerialRefresh() {
   }
   const picked = pickSerials(all, Date.now(), serialsN, today);
   console.log(`\n[连载轮询] 候选 ${all.length} 条 · 本轮抽查 ${picked.length} 条（只有盘端变了才写盘）`);
+  const cred = airingN > 0 ? readCredentials() : { token: '' };
   const issues = [];
+  const reminders = [];
   let changed = 0;
   let unchanged = 0;
   for (const item of picked) {
@@ -458,6 +477,23 @@ async function runSerialRefresh() {
         console.log(dryRun ? '有变化（试跑，不写盘）' : `已刷新（${agg.count ?? '?'} 项）`);
         changed++;
       }
+      // 追更提醒（只读）：复用本轮已抓的盘端快照，零额外夸克请求。TMDB 只提供「播出事件」
+      // 这个事实，不解析、不写入任何集数结论；凭据缺失 / 匹配不确定就静默跳过。
+      if (agg && airingN > 0 && cred.token && hasEpisodeNames(agg.tree)) {
+        const year = /(\d{4})/.exec(item.date || item.added || '')?.[1] || '';
+        const hit = searchTvId(item.title, year, cred);
+        const air = hit ? tvAiring(hit.id, cred) : null;
+        const ep = air?.last;
+        const season = seasonOf(agg.tree, item.title);
+        const sameSeason = season == null || ep?.season == null || season === ep.season;
+        if (hit && air && /Returning Series|In Production|Planned/.test(air.status) && ep && airedWithin(ep.date, today) && sameSeason) {
+          console.log(
+            `[追更提醒] ${item.id} ${item.title} · TMDB《${hit.name}》S${ep.season}E${ep.episode} 于 ${ep.date} 播出` +
+            ` · 盘端当前 ${agg.count ?? '?'} 项，请确认是否已追 ${item.quarkUrl}`
+          );
+          reminders.push(item.id);
+        }
+      }
     }
     if (delayMs) await sleep(delayMs);
   }
@@ -465,6 +501,13 @@ async function runSerialRefresh() {
   if (issues.length) {
     console.log('连载轮询失败清单（多为链接失效 / 需提取码，需人工核验后再标 dead）：');
     for (const s of issues) console.log(`  ${s}`);
+  }
+  if (airingN > 0) {
+    if (!cred.token) {
+      console.log('[追更提醒] 未找到 TMDB_TOKEN（环境变量或 skill config.env），本轮跳过；不影响补齐 / 轮询 / 待办');
+    } else {
+      console.log(`[追更提醒] 本轮命中 ${reminders.length} 条${reminders.length ? `：${reminders.join('、')}` : ''}`);
+    }
   }
 }
 
