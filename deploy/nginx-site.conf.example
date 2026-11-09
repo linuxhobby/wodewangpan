@@ -49,6 +49,12 @@ server {
     # 分类合并残留 URL：2026-11-10「操作系统」并入「软件」，旧分类页与分类 RSS 一律 301（SEO 换路径必配）
     rewrite ^/category/os/(feed\.xml)?$ /category/software/$1 permanent;
 
+    # 资源换分类残留 URL：2026-11-10 ot-006「历年高考押题卷合集」→ cs-018（盘端移到 07课程/018-），
+    # ot-007「Qwen-Image 2.1 Turbo 本地整合包」→ app-141（盘端移到 02应用/141-）。
+    # id 变了就是详情页 URL 变了，旧地址必须 301，否则蜘蛛与外链全部落到 404。
+    rewrite ^/resource/ot-006(/index\.html|/)?$ /resource/cs-018/ permanent;
+    rewrite ^/resource/ot-007(/index\.html|/)?$ /resource/app-141/ permanent;
+
     # 静态资源长期缓存；HTML 不缓存，更新即时生效
     location ~* \.(css|js|json|svg|webp|png|jpg|jpeg|gif|ico)$ {
         expires 30d;
