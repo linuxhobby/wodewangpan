@@ -872,6 +872,16 @@
   date: 2013-12-28
   added: 2026-05-02
   image: dc-038.jpg
+  updated: 2026-11-09
+  files:
+    count: 3
+    size: "4.5 GB"
+    format: "MKV×3"
+    tree: |
+      038-BBC.挺进珠峰/
+      挺进珠峰.E01.皮划艇漂流.mkv
+      挺进珠峰.E02.无补氧攀登.mkv
+      挺进珠峰.E03.热气球飞度.mkv
 
 - id: dc-037
   title: "打破边界：我们星球的科学"
@@ -882,6 +892,14 @@
   date: 2021-06-03
   added: 2026-05-02
   image: dc-037.jpg
+  updated: 2026-11-09
+  files:
+    count: 1
+    size: "2.7 GB"
+    format: "MKV"
+    tree: |
+      037-BBC.打破边界.我们星球的科学/
+      打破边界.我们星球的科学.mkv
 
 - id: dc-036
   title: "意大利歌剧"
@@ -892,6 +910,16 @@
   date: 2010-05-24
   added: 2026-05-02
   image: dc-036.jpg
+  updated: 2026-11-09
+  files:
+    count: 3
+    size: "5.2 GB"
+    format: "MKV×3"
+    tree: |
+      036-BBC.意大利歌剧/
+      1.mkv
+      2.mkv
+      3.mkv
 
 - id: dc-035
   title: "恐龙星球"
