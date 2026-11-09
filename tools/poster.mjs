@@ -8,6 +8,7 @@
  *   node tools/poster.mjs douban --title "飞越疯人院" --author "肯·克西" --out static/images/bk-001.jpg
  *
  * book / set 是「没封面时自己画一张」，icon 是把现成图标合成竖版，douban 是抓正版封面（优先）。
+ * icon 模式的标题按估算宽度自适应：放得下用 50px，超了先缩到 34px，仍超则折两行 —— 不要再手改字号（旧 bug：cs-016 被裁掉首尾）。
  * 出图后务必打开看一眼再入库：标题顶边、图标偏小、豆瓣的「封面+封底」展开图，只有看图能发现。
  */
 import fs from 'node:fs';
@@ -31,6 +32,49 @@ const sharp = async () => (await import('sharp')).default;
 async function writeJpeg(svg, out, opts) {
   fs.mkdirSync(path.dirname(out), { recursive: true });
   await (await sharp())(Buffer.from(svg)).jpeg(opts).toFile(out);
+}
+
+// 标题排版的宽度估算：480 画布两侧各留 30px，可用宽 420。
+// SVG 文本由 sharp 渲染，拿不到真实字体度量，只能按字符类型估宽（字号 1 时的 em 宽），宁松勿紧。
+const TITLE_MAX_W = 420;
+const charW = (ch) => {
+  if (/[⺀-〿一-鿿豈-﫿＀-￯]/.test(ch)) return 1.0; // CJK 汉字 / 假名 / 全角标点
+  if (ch === ' ') return 0.3;
+  if (ch === '·') return 0.5;
+  if (/[0-9]/.test(ch)) return 0.58; // 数字等宽
+  if (/[A-Z]/.test(ch)) return 0.66;
+  if (/[a-z]/.test(ch)) return 0.53;
+  return 0.45; // 半角标点等
+};
+const estW = (s, size) => [...String(s)].reduce((w, ch) => w + charW(ch) * size, 0);
+
+// 单行放得下就缩字号（最低 34），仍放不下则按自然断点折两行、再按最宽一行重算字号。
+function titleLayout(title, { base = 50, min = 34 } = {}) {
+  const s = String(title).trim();
+  const sizeFor = (line) => Math.min(base, Math.floor((TITLE_MAX_W / estW(line, base)) * base));
+  if (estW(s, base) <= TITLE_MAX_W) return { lines: [s], size: base };
+  const fit = sizeFor(s);
+  if (fit >= min) return { lines: [s], size: fit };
+  const chars = [...s];
+  const BRK = /[，,、。：:；;·｜|/—\s]/;
+  let cut = Math.ceil(chars.length / 2);
+  let best = Infinity;
+  let bestAlt = Infinity;
+  for (let i = 2; i <= chars.length - 2; i++) {
+    if (!BRK.test(chars[i] || '') && !BRK.test(chars[i - 1] || '')) continue;
+    const a = chars.slice(0, i).join('');
+    const b = chars.slice(i).join('');
+    const wide = Math.max(estW(a, base), estW(b, base));
+    const alt = Math.abs(a.length - b.length);
+    if (wide < best - 0.5 || (Math.abs(wide - best) <= 0.5 && alt < bestAlt)) {
+      best = wide;
+      bestAlt = alt;
+      cut = i;
+    }
+  }
+  const lines = [chars.slice(0, cut).join(''), chars.slice(cut).join('')];
+  const widest = lines.reduce((a, b) => (estW(a, base) >= estW(b, base) ? a : b));
+  return { lines, size: Math.max(min, sizeFor(widest)) };
 }
 
 // ── book：生成式书封（豆瓣查无此书时的兜底）──────────────────
@@ -159,13 +203,21 @@ async function posterIcon() {
   <rect width="${W}" height="${H}" fill="url(#glow)"/>
 </svg>`;
 
+  const lay = titleLayout(title);
+  const twoLine = lay.lines.length > 1;
+  const titleSvg = title
+    ? lay.lines
+        .map(
+          (l, i) =>
+            `<text x="${W / 2}" y="${(sub ? 592 : 604) + i * (lay.size + 8)}" text-anchor="middle" font-size="${lay.size}" font-weight="700" font-family="${FONT}" fill="#fff">${esc(l.trim())}</text>`
+        )
+        .join('\n  ')
+    : '';
+  const subY = twoLine ? 664 : 638;
+
   const text = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-  ${
-    title
-      ? `<text x="${W / 2}" y="${sub ? 592 : 604}" text-anchor="middle" font-size="50" font-weight="700" font-family="${FONT}" fill="#fff">${esc(title)}</text>`
-      : ''
-  }
-  ${sub ? `<text x="${W / 2}" y="638" text-anchor="middle" font-size="23" font-family="${FONT}" fill="#fff" fill-opacity=".86">${esc(sub)}</text>` : ''}
+  ${titleSvg}
+  ${sub ? `<text x="${W / 2}" y="${subY}" text-anchor="middle" font-size="23" font-family="${FONT}" fill="#fff" fill-opacity=".86">${esc(sub)}</text>` : ''}
 </svg>`;
 
   const sh = await sharp();
