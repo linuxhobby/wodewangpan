@@ -48,6 +48,10 @@ server {
     # 必须放在下面静态资源 location 之前：nginx 的正则 location 按出现顺序取第一个命中。
     location ~ ^/.+/search-index\.json$ { return 410; }
 
+    # 分类合并残留 URL：2026-11-10「操作系统」并入「软件」，旧分类页与分类 RSS 一律 301（SEO 换路径必配）
+    # 注意要放在上面 search-index 410 与下面静态资源正则之前：nginx 的正则 location 按出现顺序取第一个命中
+    location ~ ^/category/os/(feed\.xml)?$ { return 301 /category/software/$1; }
+
     # 静态资源长期缓存；HTML 不缓存，更新即时生效
     location ~* \.(css|js|json|svg|webp|png|jpg|jpeg|gif|ico)$ {
         expires 30d;

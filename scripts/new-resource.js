@@ -27,7 +27,6 @@ const DATA_FILE = {
   动漫: 'anime',
   游戏: 'game',
   软件: 'software',
-  操作系统: 'os',
   电子书: 'ebook',
   课程: 'course',
   其他: 'misc',
