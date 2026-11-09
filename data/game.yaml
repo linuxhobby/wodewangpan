@@ -489,3 +489,70 @@
       024-银松镇-Silver Pines/
       [本体v1.0.0][0100D5B026844000][22.5.0][中文].nsp
       [升级档v1.0.1][0100D5B026844800][23.0.0][中文].nsp
+
+- id: game-025
+  title: "EA SPORTS FC 27"
+  category: 游戏
+  tags: ["游戏", "体育", "足球", "EA体育FC足球27 EA SPORTS FC 27"]
+  quark_url: "https://pan.quark.cn/s/f7cd626c8571"
+  description: "《EA SPORTS FC 27》是 EA Sports 旗下足球模拟系列的 2026 年度作品，于 2026 年 9 月 25 日在全球发售，登陆 PS5、PS4、Xbox Series X|S、Xbox One、PC、Nintendo Switch 与 Switch 2 等平台。本作最大的变化是加入了名为 The Grounds 的开放世界模式，玩家不再是某个球星，而是从零捏一个属于自己的角色，在可自由漫游的街区里参加从一对一到十一人制的各类比赛、技能挑战与趣味小游戏，边踢边升级、攒装备。核心的 Ultimate Team 模式引入全新收藏馆系统，卡片自动入库并按联赛等主题归类评级换取代币；生涯、俱乐部与重新设计的角球、SBC 提交规则等也做了细节调整。系列标志性的真实授权阵容、细腻手感与丰富线上赛事依旧保留，适合长期追更的足球游戏玩家。"
+  date: 2026-09-25
+  added: "2026-11-10 00:22"
+  image: game-025.jpg
+  updated: 2026-11-10
+  files:
+    count: 7
+    format: "NSP×3"
+    tree: |
+      025-EA体育FC足球27 EA SPORTS FC 27/
+      历史版本[不用下载]/
+      游戏报错修复补丁（必须用ums或者读卡器替换，不许用dbi，直接丢到根目录即可）/
+      DLC 1/
+      DLC/
+      [本体v1.0.0][0100C49025D3E000][22.5.0][中文][US].nsp
+      [升级档v1.8d.310c][0100C49025D3E800][23.0.1][中文][US].nsp
+      [升级档v1.8d.6523][0100C49025D3E800][23.0.1][中文].nsp
+
+- id: game-026
+  title: "植物大战僵尸 精华版"
+  category: 游戏
+  tags: ["游戏", "塔防", "休闲", "植物大战僵尸 Plants vs. Zombies"]
+  quark_url: "https://pan.quark.cn/s/d3c91f733969"
+  description: "《植物大战僵尸》是 PopCap Games 开发、EA 发行的经典塔防游戏，初代于 2009 年 5 月 5 日推出，玩家要在自家前院布置向日葵、豌豆射手、坚果墙等各具功能的植物，抵御一波波来袭的僵尸，靠阳光资源与植物搭配守住家园。本作流传极广、上手简单却策略耐玩，白天、黑夜、泳池、屋顶等场景与迷你游戏、生存模式构成丰富的关卡体系。你收录的是在原版基础上改造的玩家精华版本 PvZ Ultimate，加入了西游记人物主题、长城关卡等原创内容，并在设置里自带金手指一类的作弊开关，可在关卡与资源上做自由调整，适合想要重温并玩出新鲜花样的老玩家。请注意这是民间修改版，仅供个人娱乐体验，与官方发行版本并不相同。"
+  date: 2009-05-05
+  added: "2026-11-10 00:22"
+  image: game-026.jpg
+  updated: 2026-11-10
+  files:
+    count: 5
+    size: "320 MB"
+    format: "JPG×3 / TXT / RAR"
+    packed: true
+    tree: |
+      026-植物大战僵尸 精华版 PvZ Ultimate - 包含西游记人物+长城+设置里自带金手指/
+      精华版内容简介1.jpg
+      精华版内容简介2.jpg
+      精华版内容简介3.jpg
+      植物大战僵尸2.12精华版 PvZ Ultimate【包含西游记人物+长城+设置里自带金手指】.rar
+      移植游戏安装说明.txt
+
+- id: game-027
+  title: "1-2-Switch"
+  category: 游戏
+  tags: ["游戏", "体感", "派对", "Nintendo Switch", "1-2-Switch"]
+  quark_url: "https://pan.quark.cn/s/20ab2e7cdb55"
+  description: "《1-2-Switch》是任天堂在 2017 年 3 月 3 日随 Nintendo Switch 主机同期推出的体感派对游戏，由《Wii Sports》系列的制作班底操刀。它的玩法理念与众不同：大多数小游戏不需要盯着电视屏幕，而是两名玩家各持一只 Joy-Con 手柄面对面站立，靠 HD 震动、红外动作摄像头与体感感应，观察对方的动作并即时反应，在拔枪决斗、空气吉他、刮胡子、数牛等二十多个双人项目里一较高下。游戏前期只开放少数几个项目，其余需在对战中逐步解锁，还包含支持多至二十人、以大富翁式棋盘推进的团队对战模式。它更像一台用来热场的聚会道具，强调面对面的互动与笑点，适合朋友聚会、家庭娱乐时随手拿出来玩上几局。"
+  date: 2017-03-03
+  added: "2026-11-10 00:22"
+  image: game-027.jpg
+  updated: 2026-11-10
+  files:
+    count: 3
+    size: "1.4 GB"
+    format: "NSP×2 / ZIP"
+    packed: true
+    tree: |
+      027-1-2-Switch！ 1-2-Switch/
+      [本体v1.0.0][01000320000CC000][1.0.0][US].nsp
+      [升级档v1.1.0][01000320000CC800][4.0.0][US].nsp
+      1.1.0汉化补丁.zip
