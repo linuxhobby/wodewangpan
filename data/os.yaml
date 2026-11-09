@@ -81,3 +81,20 @@
   added: "2026-10-23 17:15"
   image: os-008.jpg
 
+- id: os-009
+  title: "Proxmox VE 8.4 虚拟化系统镜像"
+  category: 操作系统
+  tags: ["操作系统", "虚拟化", "虚拟机", "容器", "服务器", "Proxmox VE 8.4 Proxmox Virtual Environment"]
+  quark_url: "https://pan.quark.cn/s/094d04678357"
+  description: "Proxmox VE（Virtual Environment）是一套基于 Debian 的开源服务器虚拟化管理平台，把 KVM 虚拟机与 LXC 容器统一在同一个网页控制台里管理，社区版完全免费，企业版按需订阅。它自带 Web 图形界面、RESTful API、命令行工具，支持在线实时迁移、高可用集群、快照、集中备份（vzdump 或与 Proxmox Backup Server 联动）、软件防火墙和 ZFS、Ceph、LVM-thin 等多种存储方案，被大量家庭实验室和中小私有云当作 VMware 的开源替代。本目录提供的是 proxmox-ve_8.4-1.iso，即 8.4 版本的 x86_64 官方安装镜像，体积约 1.5 GB，写入 U 盘或用光驱引导即可进入图形安装向导，可自由选择文件系统、配置管理网络与集群节点，装好后浏览器打开 8006 端口就能接管整套虚拟化环境。Proxmox VE 8.4 于 2025 年 4 月发布，是 8.x 系列基于 Debian 12 bookworm 的一次维护更新，默认内核 6.8.12，新增了 NVIDIA vGPU 等介导设备的实时迁移、面向第三方备份厂商的接入 API 以及 virtiofs 主机目录共享等能力，适合想低成本搭建私有云、跑多台虚拟机与容器、或从 VMware 迁出的用户。｜Proxmox 官方 ISO"
+  date: 2025-04-09
+  added: "2026-11-09 13:44"
+  image: os-009.jpg
+  updated: 2026-11-09
+  files:
+    count: 1
+    size: "1.5 GB"
+    format: "ISO"
+    tree: |
+      009-Proxmox VE虚拟机（PVE）/
+      proxmox-ve_8.4-1.iso
