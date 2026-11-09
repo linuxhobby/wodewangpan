@@ -1,4 +1,4 @@
-# 课程资源（18 条）
+# 课程资源（21 条）
 # 来源：夸克网盘 SHARE/07课程
 # 链接：公开链接（无提取码），永久有效；简介由人工整理
 # 封面：TMDB 抓不到课程信息。优先用课程官方封面 / 宣传图，找不到再用 `node tools/poster.mjs icon` 合成竖版
@@ -293,3 +293,119 @@
       2023年 天星《高考临考预测 · 押题密卷》【新高考】/
       2024金考卷《10年高考试题汇编》全科/
       2025高考押题【黑白卷】/
+
+- id: cs-019
+  title: "私域运营增量班，培养能拿结果的私域操盘手，打造客户自循环赚钱系统"
+  category: 课程
+  tags: ["课程", "私域运营", "增长", "营销"]
+  quark_url: "https://pan.quark.cn/s/284a2ce823d5"
+  description: "这是一套围绕私域流量运营展开的视频课程，目录内约十节视频课，主讲内容聚焦于如何把一次性的公域客户沉淀成可反复触达、能自循环增长的私域资产。课程从操盘手的视角切入，讲清楚一个能拿结果的私域体系该怎么搭建，包括客户分层、内容触达、社群维护、复购转化和裂变拉新等常见环节的思路与做法，目标是帮助学员建立一套不依赖持续投放、能自己滚起来的客户经营系统。适合中小商家、个人创业者、社群运营和想做私域增长的人，用来了解整体框架和落地打法。这是一门以实操和经验总结为主的课程，偏落地而非纯理论，具体课时、讲法与配套资料请以目录内的视频为准。"
+  date: 2026-11-09
+  added: "2026-11-10 06:20"
+  updated: 2026-11-10
+  files:
+    count: 10
+    size: "1.5 GB"
+    format: "MP4×9 / HTML"
+    tree: |
+      019-私域运营增量班，培养能拿结果的私域操盘手，打造客户自循环赚钱系统/
+      01_1.企业为什么要做私域_ev.mp4
+      02_2.私域和社群的区别_ev.mp4
+      03_3.什么是私域商业模式_ev.mp4
+      04_4.如何让客户持续复购_ev.mp4
+      05_5.如何让客户持续转介绍_ev.mp4
+      06_6.客户自循环理论_ev.mp4
+      07_7.顶层设计-创始人的发心_ev.mp4
+      08_8.顶层设计-品牌体系规划_ev.mp4
+      09_9.顶层设计-私域团队规划_ev.mp4
+      10_考试题.html
+
+- id: cs-020
+  title: "WorkBuddy全能AI工作台实战课，系统提升职场效率"
+  category: 课程
+  tags: ["课程", "AI", "职场效率", "WorkBuddy"]
+  quark_url: "https://pan.quark.cn/s/b2522d59612e"
+  description: "这是一套讲 AI 办公与提效的实战视频课程，围绕 WorkBuddy 这套 AI 工作台，演示如何把人工智能用到日常职场任务里，让文档、信息整理和流程自动化一类的活儿做得更快更顺。目录除主讲视频外，还附有配套的素材与源文件，方便边看边动手跟着操作。内容面向具体的职场效率场景，适合想系统提升办公效率、又不满足于零散用几个工具的上班族和自由职业者，整体以官方工具和实操演示为主，偏落地而非空谈概念。它能帮你把 AI 从偶尔尝鲜变成日常工作流里的一环，具体课时与讲法请以目录内的视频和素材为准。"
+  date: 2026-11-09
+  added: "2026-11-10 06:20"
+  updated: 2026-11-10
+  files:
+    count: 19
+    format: "MP4×17"
+    tree: |
+      020-WorkBuddy全能AI工作台实战课，系统提升职场效率/
+      素材/
+      源文件/
+      01_workbuddy-只需3步，快速拥有一个自己的全能AI工作台.mp4
+      02_workbuddy-只需3步，让AI工作台自动更新公众号.mp4
+      03_workbuddy-只需3步，让AI工作台自动更新独立网站.mp4
+      04_workbuddy-10分钟让AI编写一个画画板.mp4
+      05_workbuddy-5分钟，让AI为你制作一个精美的PPT文档.mp4
+      07_workbuddy-零基础，制作自己的免费生文、生图、生视频 skill（技能）.mp4
+      08_workbuddy-10分钟搭建自己的赚钱项目个人知识库.mp4
+      09_workbuddy-1分钟让电脑中散乱的文件全部归类.mp4
+      10_workbuddy-全自动快速清理电脑垃圾文件.mp4
+      11_workbuddy-快速制作一款自己的免费视频录制软件.mp4
+      12_workbuddy-5 分钟快速构建企业自动报价系统.mp4
+      13_workbuddy-AI 助理：远程连接控制 workbuddy 工作台.mp4
+      14_workbuddy-一键做同款：快速搭建生活全能工作台.mp4
+      15_workbuddy-一句话让 AI 重新设计整个软件的 UI 界面.mp4
+      16_workbuddy-一句话批量识别图片并对图片进行批量重命名.mp4
+      17_workbuddy-一句话识别表格内容并对文件名批量重命名.mp4
+      18_workbuddy-一句话识别文档内容并对文件名批量重命名+自进化工作空间.mp4
+
+- id: cs-021
+  title: "WorkBuddy 全套 AI 提效实战课：Codex + OpenClaw 自定义 Skill 全教程"
+  category: 课程
+  tags: ["课程", "AI", "Codex", "OpenClaw", "WorkBuddy"]
+  quark_url: "https://pan.quark.cn/s/9c8feac04b6f"
+  description: "这是一套面向 AI 编程与效率进阶的实战视频课程，围绕 WorkBuddy、Codex 以及 OpenClaw 展开，重点讲如何把大模型的能力真正接进自己的工作流，尤其是自定义 Skill 的配置与使用。全课节数较多，从环境准备、基本用法到实战案例一步步演示，教你用自然语言驱动 AI 完成代码与任务自动化，并把常用的能力沉淀成可复用的技能。适合开发者、AI 重度用户和想把大模型用到日常产出里的学习者，课程以实操教程为主，不堆概念。它更像一本能跟着敲的说明书，帮你从零搭起自己的 AI 提效流程，具体章节与内容请以目录内的视频为准。"
+  date: 2026-11-09
+  added: "2026-11-10 06:20"
+  updated: 2026-11-10
+  files:
+    count: 50
+    size: "1.2 GB"
+    format: "MP4×50"
+    tree: |
+      021-WorkBuddy 全套 AI 提效实战课：Codex + OpenClaw 自定义 Skill 全教程/
+      01.1.WorkBuddy 课程介绍.mp4
+      02.2.WorkBuddy 基础入门.mp4
+      03.3.WorkBuddy 快速上手.mp4
+      04.4.WorkBuddy 创建任务.mp4
+      05.5.WorkBuddy 任务管理.mp4
+      06.6.WorkBuddy 结果查看.mp4
+      07.7.WorkBuddy 文件管理.mp4
+      08.8.WorkBuddy 整理会议纪要.mp4
+      09.9.WorkBuddy 外语视频总结.mp4
+      10.10.WorkBuddy 生成 Word 文档.mp4
+      11.11.WorkBuddy 制作 PPT 文档.mp4
+      12.12.WorkBuddy 制作 Excel 可视化图表.mp4
+      13.13.WorkBuddy 搜集数据生成可视化报告.mp4
+      14.14.WorkBuddy 文案写作与视频脚本生成.mp4
+      15.15.WorkBuddy 每日推送资讯简报.mp4
+      16.16.WorkBuddy 远程遥控龙虾.mp4
+      17.17.WorkBuddy 零代码制作本地应用.mp4
+      18.18.为什么我们需要 Skills.mp4
+      19.19.Skill 基础概念与工程定义.mp4
+      20.20.Skill 运行环境与核心原理.mp4
+      21.21.Skill 工程实践指南.mp4
+      22.22.Skill 企业级应用实战.mp4
+      23.23.Claude Code 搭建Skill.mp4
+      24.24.Trae IDE 搭建 Skill.mp4
+      25.25.扣子编程部署Skill.mp4
+      26.26.Skill 总结与展望.mp4
+      27.27.CodeBuddy 技能市场安装Skill.mp4
+      28.28.CodeBuddy 管理项目和用户Skill.mp4
+      29.29.CodeBuddy 搭建企业级Skill.mp4
+      30.30.Codex Skills 概述.mp4
+      31.31.Codex Skills 搭建.mp4
+      32.32.Codex Skills 使用.mp4
+      33.33.OpenClaw Skills 搭建.mp4
+      34.34.OpenClaw Skills 使用.mp4
+      35.35.ClawHub 技能商店使用.mp4
+      36.36.WorkBuddy 搭建个人专用Skill.mp4
+      37.37.WorkBuddy AI自驱动完成任务.mp4
+      38.38.WorkBuddy 智能化管理腾讯会议.mp4
+      39.39.WorkBuddy 智能化管理腾讯文档.mp4
+      40.40.WorkBuddy 十个养虾技巧.mp4
