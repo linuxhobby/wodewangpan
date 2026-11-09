@@ -41,38 +41,18 @@
 
 #### 一键部署（推荐）
 
-前置：一台干净的 Debian / Ubuntu VPS、root 权限、裸域与 `www` 的 A 记录指向本机。DNS 还没生效也能先跑，脚本会停在可用的 HTTP 状态，之后再重跑即可补上证书。
+一台干净的 Debian / Ubuntu VPS、root 权限，域名 A 记录指向本机即可：
 
 ```bash
 curl -fsSL -o /tmp/wdwp-setup.sh https://raw.githubusercontent.com/linuxhobby/wodewangpan/main/deploy/setup-vps.sh
 sudo bash /tmp/wdwp-setup.sh --domain example.com --email me@example.com
 ```
 
-不想存文件、参数一次给全，也可以真的只跑一行（这种方式无法交互提问）：
+**除域名外一律保持仓库原值**：脚本只写 `config/site.yaml` 的 `baseUrl`，Nginx、证书、构建、自动发布与统计都随 `--domain` 配好；DNS 未生效时先停在可用的 HTTP，之后重跑即可补上证书。
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/linuxhobby/wodewangpan/main/deploy/setup-vps.sh | sudo bash -s -- --domain example.com --email me@example.com
-```
+常用参数：`--email`、`--repo` / `--branch` / `--dir`、`--skip-https`、`--no-stats`、`--autoupdate`；全部参数看 `--help`。
 
-
-| 参数 | 说明 |
-|---|---|
-| `--domain example.com` | 必填，裸域（不要带 `www`）；**也是唯一会改的内容** |
-| `--email me@example.com` | Let's Encrypt 通知邮箱；不填则匿名注册 |
-| `--repo` / `--branch` / `--dir` | 仓库地址 / 分支（默认 `main`）/ 站点目录（默认 `/opt/wodewangpan`） |
-| `--skip-https` | 只上 HTTP；DNS 生效后去掉本参数重跑就会签证书并切 HTTPS |
-| `--force-https` | 解析 IP 与本机出口 IP 不一致时仍尝试签证书（CDN 场景） |
-| `--no-stats` | 不装统计 cron 与初始化；站点配置仍保持 `stats: local`，页脚数字会留空 |
-| `--autoupdate` / `--no-autoupdate` | 强制装 / 不装定时发布 |
-| `--help` | 全部参数与说明 |
-
-脚本 `deploy/setup-vps.sh` 把下面手工的 1~9 步串成一次执行：装 Nginx / Node ≥18 / certbot → clone 并 `npm ci` → 写入域名 → `BASE_URL` 构建 → 写 Nginx 配置（含扫描器拦截、目录式 URL、gzip、404 页）→ 申请证书并把 http 与裸域单跳 301 到 `https://www.<域名>` → 装定时发布、访问统计、IndexNow 密钥 → 自检首页 / sitemap / 分类页 / canonical / 404。
-
-
-
-可重复执行：仓库已 clone、证书已签不会重做，`baseUrl` 每次同步为当前 `--domain`；参数记在 `/etc/wodewangpan-setup.env`，第二次只需 `sudo bash /tmp/wdwp-setup.sh`。日志 `/var/log/wdwp-setup.log`。
-
-启用定时发布时，`git reset --hard origin/main` 会覆盖本地的 `baseUrl` 改动，需把 `config/site.yaml` 提交到该仓库。
+脚本可重复执行，参数记在 `/etc/wodewangpan-setup.env`。启用定时发布时需把 `config/site.yaml` 提交到该仓库，否则 `git reset --hard` 会覆盖 `baseUrl`。
 
 <details>
 <summary>展开：deploy/setup-vps.sh 全文（可直接复制保存为文件执行）</summary>
@@ -642,9 +622,10 @@ fi
 
 </details>
 
-#### 手工分步
+<details>
+<summary>展开：手工分步（与一键脚本等价，排错时看）</summary>
 
-下面 1~9 步与一键脚本等价，想看每一步在做什么、或需要排错时再照抄。站点目录默认 `/opt/wodewangpan`；命令走 `apt`，Debian / Ubuntu 都能照抄。
+下面 1~9 步与一键脚本等价。站点目录默认 `/opt/wodewangpan`；命令走 `apt`，Debian / Ubuntu 都能照抄。
 
 **1）装环境**
 
@@ -683,13 +664,7 @@ sudo sed -i 's/your-domain.com/你的域名/g' /etc/nginx/conf.d/wodewangpan.con
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-Nginx 关键三处（示例文件里都有，不用手改）：
-
-| 配置 | 作用 |
-|---|---|
-| `root /opt/wodewangpan/public` | 指向 `public/` 目录本身 |
-| `try_files $uri $uri/ $uri/index.html =404` | 让 `/resource/mv-010/` 命中目录下的 `index.html` |
-| `error_page 404 /404.html` | 走站内 404 页 |
+示例配置已含 `root`、`try_files`、`error_page`，不用手改。
 
 **6）HTTPS**
 
@@ -698,7 +673,7 @@ sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx --redirect -d 你的域名 -d www.你的域名
 ```
 
-`-d` 写两个名字，证书同时覆盖裸域与 www；`--redirect` 让 certbot 自动把 80 端口改成 301 跳 https（并保留 acme 校验路径），省得手工改。签完再按 `deploy/nginx-site.conf.example` 里的第 2 段把裸域 https 也 301 到 www——全站只留 `https://www.<域名>/` 一个 200，搜索引擎才不会把 http / https、裸域 / www 各收一份。
+`-d` 写两个名字覆盖裸域与 www；`--redirect` 自动把 80 端口 301 到 https。签完按 `deploy/nginx-site.conf.example` 第 2 段把裸域 https 也 301 到 www，全站只留一个 200。
 
 **7）验证**
 
@@ -710,29 +685,18 @@ sudo certbot --nginx --redirect -d 你的域名 -d www.你的域名
 
 ```bash
 sudo install -m755 deploy/wdwp-autoupdate.sh /usr/local/bin/wdwp-autoupdate
-
-# 站点专属的两个值放 /etc/wdwp-autoupdate.conf，与脚本本身分开，
-# 以后脚本升级只要重新 install 一次，配置不会丢
 sudo tee /etc/wdwp-autoupdate.conf >/dev/null <<'EOF'
 SITE_DIR=/opt/wodewangpan
 BASE_URL=https://你的域名
 EOF
-
 sudo crontab -e
-# 加入一行（每 6 小时拉一次）
-# 频率只决定「上线延迟」的上限：脚本先比对 HEAD，没有新提交就直接退出，空跑只有一次 git fetch；
-# 真有提交时才构建，而构建现在只重写字节变了的页面，未变的保留原 mtime，不会白费蜘蛛的抓取预算
-# 急发不必等 cron：在推送方执行 ssh <host> 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
+# 加入一行：
 0 */6 * * * /usr/local/bin/wdwp-autoupdate >> /var/log/wdwp-autoupdate.log 2>&1
 ```
 
 看运行结果：`tail -20 /var/log/wdwp-autoupdate.log`。
 
-**想立刻发布、不等 cron**：服务器上执行 `FORCE=1 wdwp-autoupdate`（cron 模式下本地 HEAD 与远端一致时会直接跳过，FORCE 用来强制重跑一次）。
-
-**回滚**：服务器上 `git reset --hard <上一个 commit>` 再 `FORCE=1 wdwp-autoupdate`，或本机 `git revert` 后推上去。
-
-发布过程是原子的：先构建到临时的 `public.new`，全部就绪后才用两次 `mv` 换成 `public`，nginx 始终读到一个完整版本的产物，不会出现「新 HTML 配旧 CSS」这种中间态。
+急发用 `FORCE=1 wdwp-autoupdate`；回滚用 `git reset --hard <上一个 commit>` 再 `FORCE=1 wdwp-autoupdate`。发布先构建到 `public.new` 再整体替换，nginx 不会读到半成品。
 
 **9）访问统计（可选）**
 
@@ -745,7 +709,9 @@ sudo crontab -e
 */5 * * * * /usr/local/bin/sitestats.py >> /var/log/sitestats.log 2>&1
 ```
 
-`config/site.yaml` 里保持 `stats: local` 即可；不想统计就删掉这段（页脚数字留空）。已签发证书后 Nginx 配置里的 `access_log ... sitestats;` 才会生效，reload 一次：`sudo nginx -t && sudo systemctl reload nginx`。
+`config/site.yaml` 保持 `stats: local`；不想统计就跳过本步（页脚数字留空）。改完 `sudo nginx -t && sudo systemctl reload nginx`。
+
+</details>
 
 ### 方案 B：GitHub Pages
 
@@ -809,8 +775,6 @@ curl -s $S/ | grep canonical       # 应是你的真实域名
 
 除 `/nope` 应为 **404**，其余全部 **200**。中文分类页用 curl 要 percent-encoding，浏览器直接访问正常。
 
-
-
 ## 目录结构
 
 ```
@@ -847,6 +811,4 @@ public/              # 构建产物，部署这个目录（本目录不入库）
 ## 文档
 
 经验类文档已合并为单一 [`docs/README.md`](docs/README.md)，按「铁律 / 样式 / 配置 / 构建 / 部署 / 内容生产 / SEO / 功能模块 / 待办规划 / 环境速查」分节，覆盖建站、内容生产、SEO 与待办变更。结论只写一份，过程留 Git 历史。
-
-
 
