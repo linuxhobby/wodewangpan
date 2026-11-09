@@ -44,6 +44,7 @@ node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
 | `tools/fill-desc.mjs`、`poster.mjs`、`share-poster.mjs`、`list-short-desc.mjs` | 批量补描述 / 配图 / 短描述盘点 |
 | `theme/assets/style.css` | 全站样式（CSS 变量制，改动要克制；CI 有 `npm run audit:css`） |
 | `deploy/wdwp-autoupdate.sh` | VPS 发布脚本（cron `30 */2 * * *`，见 §6） |
+| `deploy/setup-vps.sh` | 方案 A 一键部署脚本（换新 VPS / 别人复制本站时用；参数与流程见 README 方案 A） |
 | `deploy/`（其余） | `submit-indexnow.sh` / `submit-baidu.sh`（收录推送）、`nginx-site.conf.example` 与 `00-*.conf`（站点配置与探针/AI 爬虫拦截）、`enable-stats.sh` + `00-sitestats.conf`（站点统计） |
 
 **不要动**：`scripts/lib/render.js` 的渲染逻辑、`theme/`、`deploy/` 下的 nginx 配置——这些改动影响全站 SEO 与线上可用性，只允许明确的人工指令触发。
