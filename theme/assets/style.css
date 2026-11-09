@@ -649,9 +649,10 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   border: 1px solid var(--border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
-/* 页脚全站条：640×60，置于页脚导航之上，窄屏自然缩放 */
-.promo--footer { margin: 0 0 18px; }
+/* 页脚全站条：640×60，置于页脚导航之上；下边距收为 0，紧跟的 .foot 单独收紧上内边距 */
+.promo--footer { margin: 8px 0 0; }
 .promo--footer .promo__img { width: 100%; max-width: 640px; }
+.promo--footer + .foot { padding-top: 12px; }
 /* 详情页二维码下方的推广位：跟随媒体列宽（桌面 ≈218px），与二维码框同宽对齐 */
 .promo--qr { margin: 0; }
 .promo--qr .promo__img { width: 100%; }
