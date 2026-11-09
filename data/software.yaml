@@ -1325,10 +1325,18 @@
   category: 软件
   tags: ["操作系统", "Linux", "Ubuntu", "x86_64", "Ubuntu"]
   quark_url: "https://pan.quark.cn/s/79c0f3c4f5ff"
-  description: "这一条目录里目前还没有实际文件，先把位置占住，资源转存进来后会出现在同一个分享里。这里先交代一下 Ubuntu 本身：它由 Canonical 维护，是最流行的 Linux 发行版之一，基于 Debian 的不稳定分支定期冻结发布，每年 4 月与 10 月各出一个版本，其中逢偶数年份的 4 月版是 LTS 长期支持版，提供五年安全更新，普通版本的支持期只有九个月。桌面默认 GNOME，配色、图标与字体做了自家定制，近年的安装器换成了基于 Flutter 的新界面，向导式分区比老版本直观不少。软件侧 snap 与 deb 两套包格式并存，主流开发工具链、服务器组件基本都能直接用 apt 装好，中文文档与社区问答的数量也远多于小众发行版，新手遇到问题比较容易搜到答案。适合第一次接触 Linux，或者需要长期稳定的桌面与服务器环境的用户。｜Canonical"
+  description: "资源是 Ubuntu 26.04.1 桌面版 amd64 安装镜像，文件名 ubuntu-26.04.1-desktop-amd64.iso，约 6.0 GB，写入 U 盘或挂载到虚拟机即可启动安装，也能先进 Live 桌面体验硬件兼容情况。Ubuntu 由 Canonical 维护，是最流行的 Linux 发行版之一，基于 Debian 的不稳定分支定期冻结发布，每年 4 月与 10 月各出一个版本，其中逢偶数年份的 4 月版是 LTS 长期支持版，提供五年安全更新，普通版本的支持期只有九个月。桌面默认 GNOME，配色、图标与字体做了自家定制，近年的安装器换成了基于 Flutter 的新界面，向导式分区比老版本直观不少。软件侧 snap 与 deb 两套包格式并存，主流开发工具链、服务器组件基本都能直接用 apt 装好，中文文档与社区问答的数量也远多于小众发行版，新手遇到问题比较容易搜到答案。适合第一次接触 Linux，或者需要长期稳定的桌面与服务器环境的用户。｜Canonical"
   date: 2026-10-09
   added: "2026-10-09 16:00"
   image: os-005.jpg
+  updated: 2026-11-10
+  files:
+    count: 1
+    size: "6.0 GB"
+    format: "ISO"
+    tree: |
+      132-ubuntu/
+      ubuntu-26.04.1-desktop-amd64.iso
 
 
 - id: os-006
