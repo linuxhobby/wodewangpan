@@ -86,11 +86,11 @@ function promoBanner({ src, href, alt, text, cls = '', w = 0, h = 0 }) {
   </a>
 </div>`;
 }
-function promoHomeTop(site) {
+function promoFooter(site) {
   const p = site.promo;
   if (!p || p.enabled === false) return '';
   const alt = `${p.brand || '推广'} · ${p.text || ''}`;
-  return promoBanner({ src: '/promo/hengtianyun/640x60.webp', href: promoLinkOf(site), alt, text: p.text || '', cls: 'promo--home-top', w: 640, h: 60 });
+  return promoBanner({ src: '/promo/hengtianyun/640x60.webp', href: promoLinkOf(site), alt, text: p.text || '', cls: 'promo--footer', w: 640, h: 60 });
 }
 // 详情页二维码卡片下方的推广位：沿用 600x400 原设计图，宽度跟随媒体列（桌面 ≈218px，窄屏独占一行）
 function promoQr(site) {
@@ -377,6 +377,7 @@ ${catNav(categories, counts, activeCat, total, hotOn)}
 <main class="wrap">
 ${body}
 </main>
+${promoFooter(site)}
 <footer class="foot wrap">
   ${footNav(footNavCurrent, baseUrl)}
   <p>共 ${total} 个资源 · ${esc(site.disclaimer)}</p>
@@ -469,7 +470,7 @@ function homePage(ctx) {
   const firstImg = (images.get(shown[0] && shown[0].id) || {}).card || '';
 
   const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span>${titleAsideLinks()}</h1>
-${promoHomeTop(site)}<div id="results" class="results" hidden></div>
+<div id="results" class="results" hidden></div>
 <div id="home">
 ${groups
     .map(
