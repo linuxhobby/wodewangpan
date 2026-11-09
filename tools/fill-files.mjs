@@ -13,6 +13,11 @@
 // 重写 files 块并写当天 updated，没变一个字都不写。静止满 60 天降为低频复查，永不宣称完结。
 // 判定口径只在 tools/lib/serials.mjs，list-ongoing 与本工具共用，不要另写一份。
 //
+// 待办扫描（2026-11-10 起）：trending-sync 建的是空编号目录，正片由人工转存。补齐队列按
+// added 升序先补老资源，新空目录排在最末发现太慢。每轮另抽查 3 条「最近入库且无清单」的
+// 剧集，只读判断盘端是否仍只有占位说明文件，空目录汇总成 [待加资源] 清单推给飞书。
+// 加完资源后下轮自动从清单消失，不需要任何销账动作。
+//
 // 队列顺序：待补条目按 added（入库时间）升序扫描，最老的资源先补；缺 added 的排最后。
 // 写入额度：--limit 是「本次要写几条」，不是「本次看几条」。占位目录 / 抓取失败不占额度，
 // 自动顺延下一条（否则 --limit 1 会被队首一个空目录永久堵死，每天 0 产出）。
@@ -28,6 +33,7 @@
 //   node tools/fill-files.mjs --limit 5 --tries 30  # 每条额度最多试 30 个候选
 //   node tools/fill-files.mjs --serials 1 --limit 0 # 只跑连载轮询（调试）
 //   node tools/fill-files.mjs --serials 0           # 临时关掉连载轮询
+//   node tools/fill-files.mjs --limit 0 --serials 0 --todo 40 --dry-run  # 一次看待加资源清单
 //
 // 建议节奏：每天跑一批（--limit 20~30），配合站点「updated 逐日分散」的策略。
 
@@ -75,6 +81,9 @@ const idArg = getArg('ids', '');
 const dryRun = hasFlag('dry-run');
 // 每轮顺带抽查几条连载条目（默认 1；0 = 临时关闭）。与 --limit 的补齐额度互相独立。
 const serialsN = Math.max(0, Number(getArg('serials', 1)) || 0);
+// 每轮抽查几条「最近入库」的剧集目录，找出盘端仍空、需要人工加资源的（默认 3；0 = 关闭）。
+// 只读，不占补齐额度、不写盘；结果由任务 agent 塞进飞书 --follow。
+const todoN = Math.max(0, Number(getArg('todo', 3)) || 0);
 // 每写入 1 条允许尝试的候选数上限（占位/失败顺延的兜底，避免空转打爆接口）
 const triesPerWrite = Math.max(1, Number(getArg('tries', 20)) || 20);
 
@@ -469,3 +478,57 @@ if (failed.length) {
   console.log('失败清单（多为链接失效 / 需提取码）：');
   for (const f of failed) console.log(`  ${f}`);
 }
+
+/**
+ * 人工待办扫描：trending-sync 建的是空编号目录（先出永久链、入库，正片由人工转存），
+ * 而补齐队列按 added 升序先补老资源，这些新空目录排在最末，发现太慢。
+ * 这里按 added 降序抽查最近入库的剧集 / 动漫，只读判断盘端是否仍只有占位说明文件。
+ * 空 = 需要人往夸克目录加资源；一旦加了内容，下轮自动从清单消失，无需手工销账。
+ */
+async function runTodoScan() {
+  if (wantedIds || todoN <= 0 || (only && !SERIAL_FILES.includes(`${only}.yaml`))) return;
+  const recent = all
+    .filter((p) => SERIAL_FILES.includes(path.basename(p.file)))
+    .slice(-todoN)
+    .reverse();
+  if (!recent.length) return;
+  console.log(`\n[待加资源] 抽查最近入库 ${recent.length} 条（盘端仍空 = 需要往夸克目录加资源）`);
+  const empty = [];
+  const errors = [];
+  for (const item of recent) {
+    process.stdout.write(`  ${item.id} … `);
+    const r = await fetchAll(item.url);
+    if (!r.files) {
+      console.log(`抓取失败（${r.error || '分享内容为空'}）`);
+      errors.push(`${item.id}: ${r.error || '分享内容为空'}`);
+    } else {
+      let files = r.files;
+      let depth = 0;
+      while (files.length === 1 && files[0].file_type === '0' && depth < 2) {
+        const sub = await fetchAll(item.url, files[0].fid);
+        if (!sub.files) break;
+        files = sub.files;
+        depth++;
+        if (delayMs) await sleep(delayMs);
+      }
+      const real = files.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
+      if (!real.length) {
+        console.log(`空（只有占位说明文件） ${item.url}`);
+        empty.push(item.id);
+      } else {
+        console.log(`已有内容（${real.length} 项），交给补齐队列`);
+      }
+    }
+    if (delayMs) await sleep(delayMs);
+  }
+  console.log(`[待加资源] 盘端仍空 ${empty.length} 条：${empty.join('、') || '无'}`);
+  if (empty.length) {
+    console.log('↑ 这些 id 照抄进飞书 --follow（脚本按 id 回查 data/*.yaml 拼标题与夸克链接）；加完资源后下轮自动消失。');
+  }
+  if (errors.length) {
+    console.log('待办扫描失败清单（需人工核验链接）：');
+    for (const e of errors) console.log(`  ${e}`);
+  }
+}
+
+await runTodoScan();
