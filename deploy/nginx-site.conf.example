@@ -55,6 +55,19 @@ server {
     rewrite ^/resource/ot-006(/index\.html|/)?$ /resource/cs-018/ permanent;
     rewrite ^/resource/ot-007(/index\.html|/)?$ /resource/app-141/ permanent;
 
+    # 2026-11-10 前缀统一：原「操作系统」11 条 os-001~011 → app-130~140（尾号对齐 02应用 盘端目录号）
+    rewrite ^/resource/os-001(/index\.html|/)?$ /resource/app-134/ permanent;
+    rewrite ^/resource/os-002(/index\.html|/)?$ /resource/app-135/ permanent;
+    rewrite ^/resource/os-003(/index\.html|/)?$ /resource/app-130/ permanent;
+    rewrite ^/resource/os-004(/index\.html|/)?$ /resource/app-131/ permanent;
+    rewrite ^/resource/os-005(/index\.html|/)?$ /resource/app-132/ permanent;
+    rewrite ^/resource/os-006(/index\.html|/)?$ /resource/app-133/ permanent;
+    rewrite ^/resource/os-007(/index\.html|/)?$ /resource/app-138/ permanent;
+    rewrite ^/resource/os-008(/index\.html|/)?$ /resource/app-139/ permanent;
+    rewrite ^/resource/os-009(/index\.html|/)?$ /resource/app-140/ permanent;
+    rewrite ^/resource/os-010(/index\.html|/)?$ /resource/app-136/ permanent;
+    rewrite ^/resource/os-011(/index\.html|/)?$ /resource/app-137/ permanent;
+
     # 静态资源长期缓存；HTML 不缓存，更新即时生效
     location ~* \.(css|js|json|svg|webp|png|jpg|jpeg|gif|ico)$ {
         expires 30d;

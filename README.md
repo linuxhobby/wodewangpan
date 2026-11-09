@@ -219,7 +219,7 @@ data/                # 一个分类一个 YAML（英文文件名），构建时�
   documentary.yaml   # 纪录片
   anime.yaml         # 动漫
   game.yaml          # 游戏
-  software.yaml      # 软件（2026-11-10 起「操作系统」并入，os- 前缀条目也在本文件）
+  software.yaml      # 软件（2026-11-10 起「操作系统」并入；系统镜像条目已统一为 app-130~140）
   ebook.yaml         # 电子书
   course.yaml        # 课程
   misc.yaml          # 其他
