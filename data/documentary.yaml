@@ -1500,6 +1500,21 @@
   date: 2004-08-17
   added: 2026-05-02
   image: dc-010.jpg
+  updated: 2026-11-10
+  files:
+    count: 8
+    size: "2.7 GB"
+    format: "SRT×4 / AVI×4"
+    tree: |
+      010-BBC.光的故事/
+      光的故事.E01.avi
+      光的故事.E02.avi
+      光的故事.E03.avi
+      光的故事.E04.avi
+      光的故事.E01.srt
+      光的故事.E02.srt
+      光的故事.E03.srt
+      光的故事.E04.srt
 
 - id: dc-009
   title: "你最想知道的科学"
@@ -1510,6 +1525,29 @@
   date: 2011-06-20
   added: 2026-05-02
   image: dc-009.jpg
+  updated: 2026-11-10
+  files:
+    count: 16
+    size: "17.7 GB"
+    format: "FLV×10 / MKV×3 / TS×3"
+    tree: |
+      009-BBC.你最想知道的科学/
+      【纪录片】你最想知道的科学1.flv
+      【纪录片】你最想知道的科学2-1.flv
+      【纪录片】你最想知道的科学2-2.flv
+      【纪录片】你最想知道的科学3-1.flv
+      【纪录片】你最想知道的科学3-2.flv
+      【纪录片】你最想知道的科学4-1.flv
+      【纪录片】你最想知道的科学4-2.flv
+      【纪录片】你最想知道的科学5-1.flv
+      【纪录片】你最想知道的科学5-2.flv
+      【纪录片】你最想知道的科学6-1.flv
+      04.mkv
+      05.mkv
+      06.mkv
+      01.ts
+      02.ts
+      03.ts
 
 - id: dc-008
   title: "企鹅之岛"
@@ -1520,6 +1558,19 @@
   date: 2010-07-14
   added: 2026-05-02
   image: dc-008.jpg
+  updated: 2026-11-10
+  files:
+    count: 6
+    size: "5.0 GB"
+    format: "MKV×6"
+    tree: |
+      008-BBC.企鹅之岛/
+      企鹅之岛.E01.爱在空中洋溢.mkv
+      企鹅之岛.E02.繁殖地的危机.mkv
+      企鹅之岛.E03.鱼都哪儿去了.mkv
+      企鹅之岛.E04.热浪席卷群落.mkv
+      企鹅之岛.E05.洛基的罗曼史.mkv
+      企鹅之岛.E06.小岛夏季落幕.mkv
 
 - id: dc-007
   title: "政府怎样花你的钱"
