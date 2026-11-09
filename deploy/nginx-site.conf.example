@@ -46,11 +46,8 @@ server {
     # 现已改为根绝对路径，但蜘蛛仍会重试旧地址，且每发现一个新资源页就多一条（日志里逐日递增）。
     # 410 Gone 比 404 衰退更快；只匹配「带目录前缀」的，根目录那份要留给 Googlebot 渲染「加载更多」。
     # 必须放在下面静态资源 location 之前：nginx 的正则 location 按出现顺序取第一个命中。
-    location ~ ^/.+/search-index\.json$ { return 410; }
-
     # 分类合并残留 URL：2026-11-10「操作系统」并入「软件」，旧分类页与分类 RSS 一律 301（SEO 换路径必配）
-    # 注意要放在上面 search-index 410 与下面静态资源正则之前：nginx 的正则 location 按出现顺序取第一个命中
-    location ~ ^/category/os/(feed\.xml)?$ { return 301 /category/software/$1; }
+    rewrite ^/category/os/(feed\.xml)?$ /category/software/$1 permanent;
 
     # 静态资源长期缓存；HTML 不缓存，更新即时生效
     location ~* \.(css|js|json|svg|webp|png|jpg|jpeg|gif|ico)$ {
