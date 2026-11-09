@@ -104,7 +104,7 @@
   title: "Windows 11 TINY11-ARM 精简版"
   category: 操作系统
   tags: ["操作系统", "Windows", "微软", "TINY11", "ARM64", "精简版", "Windows 11 TINY11-ARM版 windows11-tiny11arm.iso"]
-  quark_url: "https://pan.quark.cn/s/1b71925fe49f"
+  quark_url: "https://pan.quark.cn/s/58befb8781d6"
   description: "这套是社区 TINY11 项目做的 Windows 11 精简定制镜像，架构是 ARM64，和站内前面那条官方 Windows 11 26H2 中文版不是一条线，也不是微软官方发布的镜像，想要官方原版请走那一条。TINY11 是开发者 NTDEV 放出的开源小工具，做法是拿一份官方 Windows 镜像当输入，在命令行或图形界面里勾选要去掉的组件，脚本自动裁剪并重新打包出一个体积更小、后台进程更少的定制 ISO，社区常用它给老机器、虚拟机和演示环境做系统盘。ARM 版针对的是 ARM64 处理器，常见用途是骁龙本、部分 ARM 平板，以及 Apple 芯片 Mac 上的 Parallels、UTM 这类虚拟机；x86 的普通台式机、笔记本装不进去，认架构是这一步最容易踩的坑，动手前先确认机器是 ARM64。精简版的代价是官方镜像里的部分预装组件被删掉，微软商店、Cortana、Teams、OneDrive 客户端、Edge、Copilot 这类消费向内容按裁剪选项可能整批不见，好处很直接：磁盘占用小、首次进桌面无推广、后台进程少、内存和 CPU 峰值负载更轻，虚拟机里跑起来比官方镜像轻不少。需要提醒的是，这类定制镜像没有官方镜像的兜底，被裁掉的组件补装不一定顺利，Windows Update 行为也可能和官方不一致；ARM64 的驱动面本来就比 x64 窄，外设兼容性要自己确认；生产环境、需要入域或 BitLocker 的场景不建议直接上定制版。目录内就一个 windows11-tiny11arm.iso，4.2 GB，挂进虚拟机或写 U 盘即可安装，具体裁了什么以装完进系统看已安装组件列表为准。｜NTDEV TINY11 社区"
   date: 2026-11-09
   added: "2026-11-09 14:20"
@@ -123,7 +123,7 @@
   title: "Windows 11 TINY 2311 x64 精简版"
   category: 操作系统
   tags: ["操作系统", "Windows", "微软", "TINY11", "23H2", "x64", "精简版", "Windows 11 TINY-2311-x64版 windows11-tiny2311x64.iso"]
-  quark_url: "https://pan.quark.cn/s/9a9630cc47fc"
+  quark_url: "https://pan.quark.cn/s/f15765490bb4"
   description: "同样是社区 TINY11 定制出来的 Windows 11 精简镜像，这一份是 x64 架构，文件名里的 2311 一般对应微软 23H2 那一批构建（22631 系），具体构建号目录里没有再标注，这一点装完可以用 winver 自己核。和前面官方 26H2 中文版是两条不同的东西：官方镜像走完整组件加常规更新，这份走裁剪路线，体积更小、后台更干净，老机器、虚拟机、演示环境、不想开机被推广和预装应用刷屏的用户会比较喜欢。TINY11 的工作方式是把官方镜像和一份裁剪清单交给脚本，去掉 OneDrive 客户端、Teams、Edge、Copilot、Xbox、Cortana 这类预装包与开机首启推广，重新打包成可直接安装的 ISO；精简之后磁盘占用和内存底噪都会降下来，装完首启速度快很多，虚拟机里跑尤其明显。x64 是绝大多数台式机和笔记本的架构，普通装机直接选它，驱动、PE 工具和教程也最全，出问题好排查。要提醒的仍是定制版的共性风险：被裁掉的组件补装不一定顺利，个别功能比如商店应用、部分依赖 Edge WebView2 的软件可能受影响，Windows Update 的行为和官方镜像未必一致，生产环境、需要入域或 BitLocker 的机器建议直接用官方镜像；文件名只给了 2311 这个时间标识，没有更精确的版本号。目录内就一个 windows11-tiny2311x64.iso，3.5 GB，x64 架构，写 U 盘、Ventoy 或挂进虚拟机都能装。｜NTDEV TINY11 社区"
   date: 2023-11-01
   added: "2026-11-09 14:20"
