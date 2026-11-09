@@ -134,7 +134,7 @@ body.page--wide { --page-max: var(--page-wide); }
 /* ── 分类标签栏 ───────────────────────── */
 /* 页宽与居中已在上面的 .wrap, .cats 里统一，这里只管自身布局与上下留白 */
 .cats {
-  padding: 12px var(--gutter) 4px;
+  padding: 12px var(--gutter) 2px;
   display: flex;
   gap: 8px;
   overflow-x: auto;
@@ -157,8 +157,9 @@ body.page--wide { --page-max: var(--page-wide); }
 
 /* ── 列表页 ──────────────────────────── */
 .page__title { font-size: var(--fs-xl); margin: 16px 0 12px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-/* 首页 H1 比分类页高半档：下面还有一排分类区块标题，同级会分不清主次 */
-.page__title--home { font-size: var(--fs-h2); }
+/* 首页 H1 比分类页高半档：下面还有一排分类区块标题，同级会分不清主次。
+   首屏三行（分类栏 → H1 → 首个分类标题）按反馈收紧：行高用标题档，上下留白各减一档 */
+.page__title--home { font-size: var(--fs-h2); line-height: var(--lh-tight); margin: 6px 0 4px; }
 
 /* 海报宫格：等宽自适应列，列宽由 --tile-w 决定（详情页海报复用同一个值） */
 .grid {
@@ -173,7 +174,8 @@ body.page--wide { --page-max: var(--page-wide); }
 
 /* ── 首页分类区块：每类一行海报，窄屏按列数藏掉多出来的，始终是整行 ── */
 .home-cat { margin-top: 26px; }
-.home-cat:first-child { margin-top: 6px; }
+/* 首个区块紧跟 H1，后续区块之间仍保持 26px 的分组距离 */
+.home-cat:first-child { margin-top: 2px; }
 .home-cat__head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
 .home-cat__title { font-size: var(--fs-xl); margin: 0; }
 .home-cat__title a { color: var(--text); }
