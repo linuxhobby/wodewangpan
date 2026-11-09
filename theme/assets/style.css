@@ -83,6 +83,12 @@
   /* ── 卡片内边距 ── */
   --pad-card: 16px;  /* 详情卡片 */
   --pad-page: 20px;  /* 内容页卡片 */
+
+  /* ── 页面顶部纵向节奏：分类栏 → 面包屑/页面标题 → 内容首行 ──
+     首页、分类页、内容页、详情页共用同一套值，不要给单页写覆盖 */
+  --gap-nav-bottom: 2px;   /* 分类栏底部与正文之间 */
+  --gap-head-top: 6px;     /* 面包屑 / 页面标题之上 */
+  --gap-head-bottom: 4px;  /* 面包屑 / 页面标题之下、内容首行之上；也用作标题换行行距 */
 }
 
 * { box-sizing: border-box; }
@@ -134,7 +140,7 @@ body.page--wide { --page-max: var(--page-wide); }
 /* ── 分类标签栏 ───────────────────────── */
 /* 页宽与居中已在上面的 .wrap, .cats 里统一，这里只管自身布局与上下留白 */
 .cats {
-  padding: 12px var(--gutter) 2px;
+  padding: 12px var(--gutter) var(--gap-nav-bottom);
   display: flex;
   gap: 8px;
   overflow-x: auto;
@@ -156,10 +162,11 @@ body.page--wide { --page-max: var(--page-wide); }
 .cat.is-on .cat__n { color: var(--surface); opacity: .8; }
 
 /* ── 列表页 ──────────────────────────── */
-.page__title { font-size: var(--fs-xl); margin: 16px 0 12px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-/* 首页 H1 比分类页高半档：下面还有一排分类区块标题，同级会分不清主次。
-   首屏三行（分类栏 → H1 → 首个分类标题）按反馈收紧：行高用标题档，上下留白各减一档 */
-.page__title--home { font-size: var(--fs-h2); line-height: var(--lh-tight); margin: 6px 0 4px; }
+/* 所有页面的 H1 共用 :root 的顶部节奏：margin / 行高 / 换行行距全站一致，
+   首页、分类页、内容页不再各写一套覆盖 */
+.page__title { font-size: var(--fs-xl); line-height: var(--lh-tight); margin: var(--gap-head-top) 0 var(--gap-head-bottom); display: flex; align-items: baseline; column-gap: 8px; row-gap: var(--gap-head-bottom); flex-wrap: wrap; }
+/* 首页 H1 比分类页高半档：下面还有一排分类区块标题，同级会分不清主次 */
+.page__title--home { font-size: var(--fs-h2); }
 
 /* 海报宫格：等宽自适应列，列宽由 --tile-w 决定（详情页海报复用同一个值） */
 .grid {
@@ -174,8 +181,8 @@ body.page--wide { --page-max: var(--page-wide); }
 
 /* ── 首页分类区块：每类一行海报，窄屏按列数藏掉多出来的，始终是整行 ── */
 .home-cat { margin-top: 26px; }
-/* 首个区块紧跟 H1，后续区块之间仍保持 26px 的分组距离 */
-.home-cat:first-child { margin-top: 2px; }
+/* 首个区块沿用全站标题底部节奏，后续区块之间仍保持 26px 的分组距离 */
+.home-cat:first-child { margin-top: var(--gap-head-bottom); }
 .home-cat__head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
 .home-cat__title { font-size: var(--fs-xl); margin: 0; }
 .home-cat__title a { color: var(--text); }
@@ -382,7 +389,7 @@ a.tag:hover { background: var(--brand-soft); }
 
 /* ── 详情页 ──────────────────────────── */
 /* 详情页把右侧链接组也塞进这一行：换行后靠 row-gap 不挤在一起，align-items 免得胶囊被拉高 */
-.crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; row-gap: 8px; font-size: var(--fs-md); color: var(--muted); margin: 16px 0 10px; }
+.crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; row-gap: var(--gap-head-bottom); font-size: var(--fs-md); line-height: var(--lh-tight); color: var(--muted); margin: var(--gap-head-top) 0 var(--gap-head-bottom); }
 /* 面包屑链接是次要灰；右侧那组用 :not() 排除——.crumb a 权重更高，否则它会把同一组链接染灰 */
 .crumb a:not(.page__invite):not(.page__hot) { color: var(--muted); }
 .crumb a:not(.page__invite):not(.page__hot):hover { color: var(--brand); }
@@ -521,7 +528,7 @@ a.tag:hover { background: var(--brand-soft); }
 .results__hint { font-size: var(--fs-sm); color: var(--muted); padding: 4px 2px 10px; }
 
 /* ── 热门资源榜（/hot/）───────────────── */
-.hot { margin-top: 8px; }
+.hot { margin-top: var(--gap-head-bottom); }
 .hot__bar { display: flex; align-items: center; gap: 8px; margin: 14px 0; }
 .hot__label { color: var(--muted); font-size: var(--fs-sm); }
 .hot__bar .btn.is-on { background: var(--brand); border-color: var(--brand); color: var(--surface); }
