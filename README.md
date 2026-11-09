@@ -48,7 +48,7 @@ curl -fsSL -o /tmp/wdwp-setup.sh https://raw.githubusercontent.com/linuxhobby/wo
 sudo bash /tmp/wdwp-setup.sh --domain example.com --email me@example.com
 ```
 
-**除域名外一律保持仓库原值**：脚本只写 `config/site.yaml` 的 `baseUrl`，Nginx、证书、构建、自动发布与统计都随 `--domain` 配好；DNS 未生效时先停在可用的 HTTP，之后重跑即可补上证书。
+**配置域名**：脚本只写 `config/site.yaml` 的 `baseUrl`，Nginx、证书、构建、自动发布与统计都随 `--domain` 配好；DNS 未生效时先停在可用的 HTTP，之后重跑即可补上证书。
 
 常用参数：`--email`、`--repo` / `--branch` / `--dir`、`--skip-https`、`--no-stats`、`--autoupdate`；全部参数看 `--help`。
 
@@ -784,7 +784,7 @@ data/                # 一个分类一个 YAML（英文文件名），构建时�
   documentary.yaml   # 纪录片
   anime.yaml         # 动漫
   game.yaml          # 游戏
-  software.yaml      # 软件（2026-11-10 起「操作系统」并入；系统镜像条目已统一为 app-130~140）
+  software.yaml      # 软件
   ebook.yaml         # 电子书
   course.yaml        # 课程
   misc.yaml          # 其他
