@@ -5,8 +5,13 @@
 // （无需登录），能拿到真实的文件名 / 大小 / 类型 / 总数——这是只有本站能提供的
 // 独有数据，也是别站复制不了的部分。走夸克官方 skill 的 share-detail 命令取数。
 //
-// 写入策略：不动 YAML 里的已有内容，只在条目末尾追加 updated + files 块；
+// 写入策略（补齐）：不动 YAML 里的已有内容，只在条目末尾追加 updated + files 块；
 // 已有 files: 的条目自动跳过，可安全重复执行；盘端只剩占位说明文件（资源未到位）时整条跳过不写。
+//
+// 连载轮询（2026-11-10 起）：电视剧 / 动漫的夸克目录会持续追加资源，首份清单写完就过期。
+// 每轮例行顺带抽查 1 条「已有 files: 块」的剧集，重抓盘端目录；只有内容真变了才整体
+// 重写 files 块并写当天 updated，没变一个字都不写。静止满 60 天降为低频复查，永不宣称完结。
+// 判定口径只在 tools/lib/serials.mjs，list-ongoing 与本工具共用，不要另写一份。
 //
 // 队列顺序：待补条目按 added（入库时间）升序扫描，最老的资源先补；缺 added 的排最后。
 // 写入额度：--limit 是「本次要写几条」，不是「本次看几条」。占位目录 / 抓取失败不占额度，
@@ -21,6 +26,8 @@
 //   node tools/fill-files.mjs --dry-run             # 只抓取打印，不写文件
 //   node tools/fill-files.mjs --limit 50 --delay 4000  # 请求更慢更稳
 //   node tools/fill-files.mjs --limit 5 --tries 30  # 每条额度最多试 30 个候选
+//   node tools/fill-files.mjs --serials 1 --limit 0 # 只跑连载轮询（调试）
+//   node tools/fill-files.mjs --serials 0           # 临时关掉连载轮询
 //
 // 建议节奏：每天跑一批（--limit 20~30），配合站点「updated 逐日分散」的策略。
 
@@ -29,6 +36,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sortTree } from './lib/tree-sort.mjs';
+import {
+  SERIAL_FILES,
+  parseSerialFile,
+  pickSerials,
+  signatureOf,
+  signatureFromLines,
+  rewriteSerialFiles,
+} from './lib/serials.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -58,6 +73,8 @@ const delayMs = Number(getArg('delay', 3000));
 const only = getArg('only', '');
 const idArg = getArg('ids', '');
 const dryRun = hasFlag('dry-run');
+// 每轮顺带抽查几条连载条目（默认 1；0 = 临时关闭）。与 --limit 的补齐额度互相独立。
+const serialsN = Math.max(0, Number(getArg('serials', 1)) || 0);
 // 每写入 1 条允许尝试的候选数上限（占位/失败顺延的兜底，避免空转打爆接口）
 const triesPerWrite = Math.max(1, Number(getArg('tries', 20)) || 20);
 
@@ -380,6 +397,69 @@ if (!dryRun) {
     fs.writeFileSync(file, item.lines.join(''));
   }
 }
+
+/**
+ * 连载资源轮询：每轮抽查少量剧集 / 动漫，重抓盘端目录与已有 files 块比对。
+ * 只有内容真变了才整体重写并写当天 updated（真实内容变化，不是伪造 lastmod）；
+ * 无变化 / 盘端只剩占位 / 抓取失败一律一个字不写。
+ * 抓取口径与上面的补齐流程一致（下钻 2 层、剔除占位、前缀回填），改一处要同步改另一处。
+ */
+async function runSerialRefresh() {
+  // 同步任务用 --ids 当场补新条目时不掺轮询；--only 非剧集分类的试跑也不轮询。
+  if (wantedIds || serialsN <= 0 || (only && !SERIAL_FILES.includes(`${only}.yaml`))) return;
+  const all = [];
+  for (const name of SERIAL_FILES) {
+    const file = path.join(dataDir, name);
+    if (fs.existsSync(file)) all.push(...parseSerialFile(file));
+  }
+  const picked = pickSerials(all, Date.now(), serialsN, today);
+  console.log(`\n[连载轮询] 候选 ${all.length} 条 · 本轮抽查 ${picked.length} 条（只有盘端变了才写盘）`);
+  const issues = [];
+  let changed = 0;
+  let unchanged = 0;
+  for (const item of picked) {
+    process.stdout.write(`  ${item.id} … `);
+    const rootRes = await fetchAll(item.quarkUrl);
+    if (!rootRes.files) {
+      const msg = rootRes.error || '分享内容为空';
+      console.log(`失败（${msg}）`);
+      issues.push(`${item.id}: ${msg}`);
+    } else {
+      let files = rootRes.files;
+      const prefix = [];
+      let depth = 0;
+      while (files.length === 1 && files[0].file_type === '0' && depth < 2) {
+        const sub = await fetchAll(item.quarkUrl, files[0].fid);
+        if (!sub.files) break;
+        prefix.push(`${String(files[0].filename || '').trim()}/`);
+        files = sub.files;
+        depth++;
+        if (delayMs) await sleep(delayMs);
+      }
+      const real = files.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
+      const agg = real.length ? aggregate({ files: real }, real.length) : null;
+      if (agg?.tree && prefix.length) agg.tree = [...prefix, ...agg.tree.split('\n')].join('\n');
+      if (!agg) {
+        console.log('跳过（盘端只有占位说明文件，资源还没到位）');
+      } else if (signatureFromLines(item.lines, item.filesFrom, item.filesEnd) === signatureOf(agg)) {
+        console.log('无变化');
+        unchanged++;
+      } else {
+        if (!dryRun) rewriteSerialFiles(item.file, item.id, () => toYamlLines(agg, true));
+        console.log(dryRun ? '有变化（试跑，不写盘）' : `已刷新（${agg.count ?? '?'} 项）`);
+        changed++;
+      }
+    }
+    if (delayMs) await sleep(delayMs);
+  }
+  console.log(`[连载轮询] 刷新 ${changed} · 无变化 ${unchanged} · 失败 ${issues.length}`);
+  if (issues.length) {
+    console.log('连载轮询失败清单（多为链接失效 / 需提取码，需人工核验后再标 dead）：');
+    for (const s of issues) console.log(`  ${s}`);
+  }
+}
+
+await runSerialRefresh();
 
 console.log(`\n完成：成功 ${ok} · 跳过 ${skip} · 失败 ${fail} · 尝试 ${tried} 个候选`);
 if (notReady.length) {
