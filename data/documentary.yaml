@@ -1415,6 +1415,29 @@
   date: 2008-04-02
   added: 2026-05-02
   image: dc-013.jpg
+  updated: 2026-11-10
+  files:
+    count: 16
+    size: "8.7 GB"
+    format: "SRT×8 / MKV×8"
+    tree: |
+      013-BBC.划时代建筑/
+      01.mkv
+      02.mkv
+      03.mkv
+      04.mkv
+      05.mkv
+      06.mkv
+      07.mkv
+      08.mkv
+      01.srt
+      02.srt
+      03.srt
+      04.srt
+      05.srt
+      06.srt
+      07.srt
+      08.srt
 
 - id: dc-012
   title: "冰河巨兽"
@@ -1425,6 +1448,17 @@
   date: 2013-05-19
   added: 2026-05-02
   image: dc-012.jpg
+  updated: 2026-11-10
+  files:
+    count: 4
+    size: "4.0 GB"
+    format: "MKV×3 / ASS"
+    tree: |
+      012-BBC.冰河巨兽/
+      冰河巨兽.1.剑齿虎之地.mkv
+      冰河巨兽.2.洞熊的领地.mkv
+      冰河巨兽.3.最后的巨人.mkv
+      冰河巨兽.1.剑齿虎之地.ass
 
 - id: dc-011
   title: "冰冻星球"
@@ -1436,6 +1470,26 @@
   added: 2026-05-02
   image: dc-011.jpg
   updated: 2026-11-08
+  files:
+    count: 14
+    size: "40.8 GB"
+    format: "MKV×8 / MP4×6"
+    tree: |
+      011-BBC.冰冻星球/
+      冰冻星球.E01.mkv
+      冰冻星球.E02.mkv
+      冰冻星球.E03.mkv
+      冰冻星球.E04.mkv
+      冰冻星球.E05.mkv
+      冰冻星球.E06.mkv
+      冰冻星球.E07.mkv
+      冰冻星球.E08.mkv
+      Frozen.Planet.II.S02E01.2022.HD1080P.X264.AAC-YYDS.mp4
+      Frozen.Planet.II.S02E02.2022.HD1080P.X264.AAC-YYDS.mp4
+      Frozen.Planet.II.S02E03.2022.HD1080P.X264.AAC-YYDS.mp4
+      S01E04.mp4
+      S01E05.mp4
+      S01E06.mp4
 
 - id: dc-010
   title: "光的故事"
