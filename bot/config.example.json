@@ -1,0 +1,13 @@
+{
+  "site_url": "https://www.wodewangpan.top",
+  "listen_host": "127.0.0.1",
+  "listen_port": 6700,
+  "napcat_api": "http://127.0.0.1:3000",
+  "access_token": "",
+  "group_whitelist": [],
+  "group_no_at_slash": true,
+  "allow_private": true,
+  "cooldown_seconds": 15,
+  "global_rate_per_minute": 20,
+  "reply_at_sender": false
+}

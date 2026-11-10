@@ -1,0 +1,8 @@
+# 机器人本机配置：含真实群号，只留在本机，不入库。
+# 首次部署时把 config.example.json 复制成 config.json 再改。
+config.json
+
+# 运行日志与本地产物
+logs/
+__pycache__/
+*.pyc

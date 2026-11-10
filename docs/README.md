@@ -196,7 +196,8 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### QQ 群查询机器人（2026-11-10 上线）
 
-- 独立仓库 `C:\Users\marco\Github\wodewangpan-bot`，**不在本站仓库内**，本站数据与构建完全不受影响。
+- 代码在本站仓库的 `bot/` 目录下（原独立目录 `wodewangpan-bot` 已于 2026-11-10 并入）。**与站点构建完全隔离**：`npm run lint` 只扫 `scripts theme/assets tools`，`scripts/build.js` 只从 `theme/`、`static/`、`share.jpg` 等显式路径取文件、从不扫描仓库根目录，所以 `bot/` 不会被打进 `public/` 上线。
+- `bot/config.json`（真实群号）与 `bot/logs/` 走 `bot/.gitignore`，不入库；`bot/config.example.json` 是模板，首次部署复制成 `config.json` 再改。
 - 链路：群消息 → NapCat（真 QQ 号 909008620「艾特我」）→ OneBot HTTP 上报 `127.0.0.1:6700` → 查 `www.wodewangpan.top` → 回群。
 - **只读线上站**：数据源只有 `/search-index.json` 与 `/resource/<id>/` 两个 HTTP GET，不读 `data/*.yaml`，不依赖仓库，也不写任何本地资源。
 - 群里以 `/` 开头**免 @** 直接执行；裸关键词仍需 @（否则正常群聊会被当搜索，刷屏且招风控）。开关 `config.json` 的 `group_no_at_slash`。
@@ -282,7 +283,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 变更记录（压缩）
 
-- 2026-11-10 新增 QQ 群查询机器人（独立仓库 `wodewangpan-bot`，NapCat + OneBot，群里 `/` 开头免 @ 查资源回夸克链接）；详见第八节。
+- 2026-11-10 新增 QQ 群查询机器人（代码在本站仓库 `bot/`，NapCat + OneBot，群里 `/` 开头免 @ 查资源回夸克链接）；详见第八节。
 - 2026-11-06 加 `static/ads.txt`（AdSense 发布商 `pub-5363695594162175`），构建复制到根目录供 AdSense「ads.txt 片段」验证。
 - 2026-11-02 robots 放开 `/stats.json`（前端 fetch 取数 + Googlebot 渲染需要；`/hit`/`/*/search-index.json`/`/*?q=` 保留）；取消全站阿里云联盟链接。
 - 2026-10-30 复制改富文本 + 复制海报按钮；2026-10-28 清空 623 条百度链接、反馈条扩到许愿。
@@ -299,7 +300,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 | 项 | 路径 |
 |---|---|
 | 仓库 | macOS `/Users/marco.chan/Documents/GitHub/wodewangpan`；Windows `C:\Users\marco\Github\wodewangpan` |
-| QQ 机器人仓库 | `C:\Users\marco\Github\wodewangpan-bot`（独立；NapCat 在 `C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell`） |
+| QQ 机器人代码 | 站内 `bot/`（原 `C:\Users\marco\Github\wodewangpan-bot` 已并入；NapCat 在 `C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell`） |
 | 远端 | `git@github.com:linuxhobby/wodewangpan.git` |
 | 线上 | https://www.wodewangpan.top |
 | 技能真身 | `~/.workbuddy/skills/`（`quark-resource-sync` v1.11 / `quarkclouddrive` / `quark-upload-share`）；`~/.codebuddy/skills/` 为符号链接 |
