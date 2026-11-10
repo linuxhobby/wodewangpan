@@ -166,6 +166,12 @@
   date: 2025-12-26
   added: 2026-07-05
   image: tv-001.jpg
+  updated: 2026-11-10
+  files:
+    count: 1
+    tree: |
+      001-现金英雄/
+      1080P【内封简繁英】/
 
 - id: tv-016
   title: "夜魔侠：重生"
