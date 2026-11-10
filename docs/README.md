@@ -218,6 +218,8 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 **富媒体试过但不可用**：OneBot 的 `markdown` 段被 QQ 内核拒绝（`NodeIKernelMsgService/sendMsg` 超时，普通 QQ 号没有签名能力，NapCat 源码里该转换器标注 `// Need signing`）；Ark 卡片（`json` 段）能发出去、retcode 0，但多数客户端提示「发送者版本过低，无法展示内容」。所以最终走纯文本，靠 QQ 自动识别 URL 成可点击。
 
+**Telegram 通道（2026-11-10 加）**：`bot/app/telegram_bot.py` + `bot/app/tg_render.py`，共用 `handlers.py` 与 `site_client.py`，只换了收发层。TG 支持 HTML 富文本，所以那边网盘名直接是可点超链接，正文不出现裸链；命令名因为 TG 只认拉丁字符，改用 `/s` `/more` `/latest` `/today` `/cats` `/random` `/help` `/id`。配置在 `config.json` 的 `telegram` 段（token、allowed_chats、proxy）。本机把它作为 QQ 机器人进程里的后台线程跑，桌面上的启动/重启/结束脚本一并管理；放到海外 VPS 时可 `python app/telegram_bot.py` 独立运行。国内必须配 `telegram.proxy`，否则连不上 `api.telegram.org`。详见 `bot/README.md` 的「Telegram 群」一节。
+
 - 拼音直接命中：索引自带 `py`/`py1`（全拼 + 首字母），`qingzhixiang`、`qzx` 都能搜。
 - 端口全绑 `127.0.0.1`：NapCat WebUI `6099`、OneBot HTTP `3000`、机器人上报 `6700`。
 
@@ -290,6 +292,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 变更记录（压缩）
 
+- 2026-11-10 新增 Telegram 群通道（`bot/app/telegram_bot.py`，长轮询，与 QQ 共用查询逻辑）；TG 侧网盘名为可点超链接，命令名改拉丁字符；本机随 QQ 机器人进程跑，可独立部署到海外 VPS。
 - 2026-11-10 新增 QQ 群查询机器人（代码在本站仓库 `bot/`，NapCat + OneBot，群里 `/` 开头免 @ 查资源回夸克链接）；回复版式两次调整，定稿为「名称 ｜ 类型」+ 每网盘一行「网盘名<TAB>链接」、末尾固定「更多资源访问 + /帮助」，并加 `/更多` 翻页处理命中过多；详见第八节。
 - 2026-11-06 加 `static/ads.txt`（AdSense 发布商 `pub-5363695594162175`），构建复制到根目录供 AdSense「ads.txt 片段」验证。
 - 2026-11-02 robots 放开 `/stats.json`（前端 fetch 取数 + Googlebot 渲染需要；`/hit`/`/*/search-index.json`/`/*?q=` 保留）；取消全站阿里云联盟链接。

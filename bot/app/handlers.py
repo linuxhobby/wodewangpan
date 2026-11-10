@@ -50,7 +50,7 @@ ALIAS = {
     "更多": "more", "more": "more", "下页": "more", "下一页": "more", "next": "more",
     "最新": "latest", "new": "latest", "latest": "latest",
     "今日": "today", "today": "today",
-    "分类": "category", "categories": "category", "category": "category",
+    "分类": "category", "categories": "category", "category": "category", "cats": "category",
     "随机": "random", "随便": "random", "random": "random",
     "帮助": "help", "help": "help", "h": "help", "说明": "help",
 }

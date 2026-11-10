@@ -338,6 +338,15 @@ def main():
     log(f"群白名单：{wl if wl else '未设置（所有群都响应，建议首次运行后回填群号）'}")
     log("=" * 52)
     threading.Thread(target=_warm, daemon=True).start()
+
+    # Telegram 作为同进程的后台线程跑，共享 handlers 与站点缓存。
+    # 没配 telegram.token 就自动跳过，不影响 QQ 这边。
+    try:
+        import telegram_bot
+        telegram_bot.start(CFG)
+    except Exception:
+        log("× Telegram 适配器启动失败\n" + traceback.format_exc())
+
     srv = ThreadingHTTPServer((host, port), Handler)
     srv.daemon_threads = True
     try:

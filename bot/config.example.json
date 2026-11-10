@@ -9,5 +9,17 @@
   "allow_private": true,
   "cooldown_seconds": 3,
   "global_rate_per_minute": 20,
-  "reply_at_sender": false
+  "reply_at_sender": false,
+
+  "telegram": {
+    "enabled": true,
+    "token": "",
+    "allowed_chats": [],
+    "proxy": "",
+    "poll_timeout": 25,
+    "allow_private": true,
+    "cooldown_seconds": 3,
+    "global_rate_per_minute": 20,
+    "reply_to_any_text": false
+  }
 }
