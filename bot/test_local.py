@@ -23,6 +23,7 @@ CFG = json.load(open(os.path.join(BASE, "config.json"), encoding="utf-8"))
 
 CASES = [
     "/搜索 青之箱",
+    "/搜索 杀人执照",      # mv-412：同时有夸克与百度（带提取码），验证双网盘排版
     "权力的游戏",
     "qingzhixiang",
     "/s 夏洛克",

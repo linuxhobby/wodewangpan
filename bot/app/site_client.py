@@ -24,7 +24,7 @@ TIMEOUT = 10
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36"
 
 _cache = {"data": None, "at": 0.0}
-_link_cache = {}          # id -> (quark_url, ts)
+_link_cache = {}          # id -> ([{name,url,code}], ts)
 LINK_TTL = 6 * 3600
 
 
@@ -166,33 +166,62 @@ def pick_random(site_url):
 _QUARK_RE = re.compile(r"https?://pan\.quark\.cn/s/[A-Za-z0-9]+")
 _BAIDU_RE = re.compile(r"https?://pan\.baidu\.com/s/[A-Za-z0-9_\-]+")
 
+# 详情页的网盘链接是结构化区块，一条链接一段：
+#   <div class="linkrow"><span class="linkrow__name">百度网盘</span>
+#   <code class="linkrow__url">https://pan.baidu.com/s/xxx</code>
+#   <span class="linkrow__code">提取码 <b>fw1j</b>...</span></div>
+_LINKROW_RE = re.compile(r'<div class="linkrow">(.*?)</div>', re.S)
+_LR_NAME_RE = re.compile(r'class="linkrow__name">\s*([^<]+?)\s*<')
+_LR_URL_RE = re.compile(r'class="linkrow__url">\s*(https?://[^<\s]+)\s*<')
+_LR_CODE_RE = re.compile(r'class="linkrow__code">.*?<b>\s*([^<]+?)\s*</b>', re.S)
+
+
+def _parse_links(html):
+    """返回 [{name, url, code}]，顺序与页面一致（夸克在前、百度在后）。"""
+    out = []
+    for block in _LINKROW_RE.findall(html):
+        mu = _LR_URL_RE.search(block)
+        if not mu:
+            continue
+        url = mu.group(1)
+        mn = _LR_NAME_RE.search(block)
+        name = mn.group(1) if mn else ""
+        if not name:
+            name = "夸克网盘" if "quark" in url else ("百度网盘" if "baidu" in url else "网盘")
+        mc = _LR_CODE_RE.search(block)
+        out.append({"name": name, "url": url, "code": mc.group(1) if mc else ""})
+    if out:
+        return out
+
+    # 老页面没有 linkrow 区块时回退：整页只抓一个链接
+    m = _QUARK_RE.search(html)
+    if m:
+        return [{"name": "夸克网盘", "url": m.group(0), "code": ""}]
+    m = _BAIDU_RE.search(html)
+    if m:
+        return [{"name": "百度网盘", "url": m.group(0), "code": ""}]
+    return []
+
 
 def fetch_links(site_url, item):
-    """打开资源详情页，取出夸克链接。带 6 小时缓存，避免重复打站点。"""
+    """打开资源详情页，取出全部网盘链接。带 6 小时缓存，避免重复打站点。"""
     iid = item.get("id") or ""
     now = time.time()
     if iid in _link_cache:
-        url, ts = _link_cache[iid]
+        links, ts = _link_cache[iid]
         if now - ts < LINK_TTL:
-            return url
+            return links
 
     href = item.get("href") or ""
     if not href.startswith("/"):
-        return None
+        return []
     host = urlparse(site_url).hostname or ""
     html = _get(site_url.rstrip("/") + href, host).decode("utf-8", "ignore")
 
-    url = None
-    m = _QUARK_RE.search(html)
-    if m:
-        url = m.group(0)
-    else:
-        m = _BAIDU_RE.search(html)
-        if m:
-            url = m.group(0)
-    if url:
-        _link_cache[iid] = (url, now)
-    return url
+    links = _parse_links(html)
+    if links:
+        _link_cache[iid] = (links, now)
+    return links
 
 
 def stats(site_url):

@@ -20,7 +20,7 @@ MAX_MSG_LEN = 900
 HELP_TEXT = (
     "我的网盘索引站 · 指令\n"
     "\n"
-    "/搜索 关键词   查资源，回夸克链接\n"
+    "/搜索 关键词   查资源，回网盘链接\n"
     "/最新          最近上架的资源\n"
     "/今日          今天更新的资源\n"
     "/分类          各分类有多少资源\n"
@@ -67,13 +67,27 @@ def parse(text):
     return "search", sanitize(t)
 
 
-def _fmt_item(idx, it, url):
-    lines = [f"{idx}. {it.get('title') or '未命名'}"]
-    meta = " · ".join(x for x in [it.get("category") or "", it.get("date") or ""] if x)
-    if meta:
-        lines.append(f"   {meta}")
-    lines.append(f"   {url}" if url else "   （该条目暂无网盘链接，可到站内查看）")
+def _fmt_item(it, links):
+    """一条资源：首行「名称 | 类型 | 网盘」，下行是链接；有第二个网盘就再接一组。"""
+    title = (it.get("title") or "未命名").strip()
+    cat = (it.get("category") or "其他").strip()
+    links = [x for x in (links or []) if x.get("url")]
+    if not links:
+        return f"{title} | {cat} | 暂无网盘链接"
+    lines = []
+    for i, lk in enumerate(links):
+        name = lk.get("name") or "网盘"
+        if lk.get("code"):
+            name = f"{name}（提取码 {lk['code']}）"
+        lines.append(f"{title} | {cat} | {name}" if i == 0 else name)
+        lines.append(lk["url"])
     return "\n".join(lines)
+
+
+def _fmt_list(site_url, items, urls):
+    """多条资源之间空一行，网站地址只在最后出现一次。"""
+    blocks = [_fmt_item(it, u) for it, u in zip(items, urls)]
+    return "\n\n".join(blocks) + f"\n\n网站地址：{site_url}"
 
 
 def _fetch_many(site_url, items):
@@ -87,9 +101,9 @@ def _fetch_many(site_url, items):
 
 def _safe_links(site_url, it):
     try:
-        return sc.fetch_links(site_url, it)
+        return sc.fetch_links(site_url, it) or []
     except Exception:
-        return None
+        return []
 
 
 def split_messages(text, limit=MAX_MSG_LEN):
@@ -130,34 +144,30 @@ def handle(text, cfg):
             hits, total = sc.search(site_url, arg, MAX_RESULT)
             if not hits:
                 return [
-                    f"没找到「{arg}」。\n"
-                    "换个关键词试试，或者去站里翻翻：https://www.wodewangpan.top"
+                    f"没找到「{arg}」，换个关键词试试。\n"
+                    f"网站地址：{site_url}"
                 ]
             urls = _fetch_many(site_url, hits)
-            body = "\n\n".join(_fmt_item(i + 1, it, u) for i, (it, u) in enumerate(zip(hits, urls)))
+            body = _fmt_list(site_url, hits, urls)
             if total > len(hits):
-                head = f"命中 {total} 条，先给前 {len(hits)} 条"
-            else:
-                head = f"找到 {total} 条"
-            return split_messages(f"{head}\n\n{body}")
+                body = f"命中 {total} 条，先给前 {len(hits)} 条\n\n{body}"
+            return split_messages(body)
 
         if cmd == "latest":
             items = sc.recent(site_url, 8)
             urls = _fetch_many(site_url, items)
-            body = "\n\n".join(_fmt_item(i + 1, it, u) for i, (it, u) in enumerate(zip(items, urls)))
-            return split_messages(f"最近上架的 {len(items)} 条\n\n{body}")
+            return split_messages(_fmt_list(site_url, items, urls))
 
         if cmd == "today":
             items, date = sc.today(site_url, 8)
             if not items:
                 return ["今天还没有新增，明天再来看看。"]
-            if date != time.strftime("%Y-%m-%d"):
-                note = f"最近一次更新是 {date}，共 {len(items)} 条（今天暂无新增）"
-            else:
-                note = f"今天新增的 {len(items)} 条"
             urls = _fetch_many(site_url, items)
-            body = "\n\n".join(_fmt_item(i + 1, it, u) for i, (it, u) in enumerate(zip(items, urls)))
-            return split_messages(f"{note}\n\n{body}")
+            body = _fmt_list(site_url, items, urls)
+            if date != time.strftime("%Y-%m-%d"):
+                # 只有退回到更早的更新日时才加一行说明，正常情况保持「第一行就是资源名」
+                body = f"今天暂无新增，以下是 {date} 更新的 {len(items)} 条\n\n{body}"
+            return split_messages(body)
 
         if cmd == "category":
             cats, total = sc.categories(site_url)
@@ -172,7 +182,7 @@ def handle(text, cfg):
             if not it:
                 return ["暂时抽不出来，稍后再试。"]
             u = _safe_links(site_url, it)
-            return split_messages("随便抽一个\n\n" + _fmt_item(1, it, u))
+            return split_messages(_fmt_list(site_url, [it], [u]))
 
         return [HELP_TEXT + "\n\n没看懂这条指令，发 /帮助 看用法。"]
 
