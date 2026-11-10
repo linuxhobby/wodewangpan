@@ -1,4 +1,4 @@
-# 软件资源（130 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
+# 软件资源（131 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
 - id: app-001
   title: "Parallels Desktop 18"
   category: 软件
@@ -1495,3 +1495,26 @@
       trendFinder-v1.0.6-windows-x64.zip
       trendFinder-v1.0.6-linux-x64.tar.gz.crdownload
       trendFinder-v1.0.6-mac-arm64.tar.gz.crdownload
+
+- id: app-057
+  title: "NapCat"
+  category: 软件
+  tags: ["软件", "QQ机器人", "聊天机器人", "开源工具", "NapCat"]
+  quark_url: "https://pan.quark.cn/s/a17694ba1b5a"
+  description: "想在 QQ 里给自己挂一个能自动回复、定时提醒、查询信息的机器人，又不想开着整个图形界面的 QQ 客户端，NapCat 就是冲着这个场景来的。它是 NapNeko 团队开源的 QQ 机器人框架，核心思路是基于 NTQQ（新版 QQ 的底层实现）做无头化运行——不渲染聊天窗口，只在后台提供一个干净的接口层，把 QQ 的消息收发、好友与群管理等能力交给上层的机器人程序。它兼容 OneBot 11/12 这一通用的机器人协议，所以 NoneBot、Koishi 等主流机器人框架都能直接对接，写好的插件基本不用改就能跑。部署方式也比较灵活，可以装在 Windows、Linux 服务器上长期挂机，也提供 Docker 镜像方便容器化。对喜欢折腾自动化的用户来说，它能做的事情很实际：群管自动审批与关键词回复、消息汇总推送、结合脚本做签到或通知机器人。需要提醒的是，第三方机器人始终存在被风控的风险，建议用小号尝试、控制消息频率。项目在 GitHub 上持续更新，社区文档与插件生态都比较成熟。｜NapNeko"
+  date: 2026-11-10
+  added: 2026-11-10
+  image: app-057.jpg
+  updated: 2026-11-10
+  files:
+    count: 4
+    size: "189 MB"
+    format: "ZIP×4"
+    packed: true
+    tree: |
+      057-NapCat/
+      NapCat.Framework.zip
+      NapCat.Shell.Windows.Node.zip
+      NapCat.Shell.Windows.OneKey.zip
+      NapCat.Shell.zip
+
