@@ -49,7 +49,7 @@ STATE_FILE = os.path.join(LOG_DIR, "tg-state.json")
 
 TAG = "[TG]"
 MAX_TG_LEN = 3900        # Telegram 上限 4096，留出 HTML 标签的余量
-PRIVATE_PAGE_SIZE = 50   # 私发一次最多给几条；私聊不刷屏，默认一次给一大批（config 可改）
+PRIVATE_PAGE_SIZE = 10   # 私发一次最多给几条；私聊不刷屏，给一批比群里多（config 可改，0=不限）
 
 _log_lock = threading.Lock()
 
