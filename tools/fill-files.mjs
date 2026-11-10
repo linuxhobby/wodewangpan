@@ -175,6 +175,31 @@ async function fetchAll(url, pdirFid = '') {
   return { files };
 }
 
+/**
+ * 定位盘端真实内容的唯一口径（补齐与连载轮询共用，2026-11-10 定稿）。
+ *   · 判断「本级是否只有一个内容条目且是目录」之前先剔除占位说明文件——
+ *     占位 md 自 2026-11-08 起铺满全部分类目录，若按未剔除的原始条数判断，
+ *     「真内容目录 + 两份占位 md」会让下钻提前停一层，把目录级快照当清单写盘
+ *     （实测 an-007：12 集被写成 count 1、size/format 全丢）。
+ *   · 最多下钻 2 级（depth < 2），标准固定；再深就按「目录层」如实呈现，不追。
+ *   · 下钻中途抓取失败一律返回 { error }：调用方按失败处理，绝不写残缺清单。
+ * 返回 { files, prefix }：files 为最终定位层（已剔占位），prefix 为沿途目录名。
+ */
+async function locateContent(url, rootFiles) {
+  let files = rootFiles.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
+  const prefix = [];
+  let depth = 0;
+  while (files.length === 1 && files[0].file_type === '0' && depth < 2) {
+    const sub = await fetchAll(url, files[0].fid);
+    if (!sub.files) return { error: sub.error || '下钻抓取失败' };
+    prefix.push(`${String(files[0].filename || '').trim()}/`);
+    files = sub.files.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
+    depth++;
+    if (delayMs) await sleep(delayMs);
+  }
+  return { files, prefix };
+}
+
 const humanSize = (bytes) => {
   const units = ['B', 'KB', 'MB', 'GB', 'TB'];
   let v = bytes;
@@ -352,7 +377,7 @@ for (const item of pending.slice(0, maxTries)) {
   if (ok >= writeCap) break;
   tried++;
   process.stdout.write(`${item.id} … `);
-  // 根目录往往只装一个总文件夹：自动下钻（最多 2 层）拿真实内容清单
+  // 根目录往往只装一个总文件夹：按 locateContent 的口径下钻（最多 2 级）拿真实内容清单
   let root = await fetchAll(item.url);
   if (!root.files) {
     const msg = root.error || '分享内容为空';
@@ -360,17 +385,6 @@ for (const item of pending.slice(0, maxTries)) {
     fail++;
     failed.push(`${item.id}: ${msg}`);
   } else {
-    let files = root.files;
-    const prefix = [];
-    let depth = 0;
-    while (files.length === 1 && files[0].file_type === '0' && depth < 2) {
-      const sub = await fetchAll(item.url, files[0].fid);
-      if (!sub.files) break;
-      prefix.push(`${String(files[0].filename || '').trim()}/`);
-      files = sub.files;
-      depth++;
-      if (delayMs) await sleep(delayMs);
-    }
     // 占位说明文件（trending-sync / 夸克同步建目录时预置，2026-11-08 起两份）：
     //   · 更新通知「资源在24小时内更新-请先转存-更新会自动通知.md」
     //   · 缺失反馈「资源缺失反馈请加QQ群1045824859.md」
@@ -379,7 +393,17 @@ for (const item of pending.slice(0, maxTries)) {
     //   · 否则把它们从清单里剔掉，count / tree / format 只统计真实内容（AGENTS.md §5：宁缺勿假）。
     // ⚠ 新增/改名占位文件时必须同步改这里，否则占位 md 会被当成真实资源写进 files: 假清单。
     //   权威定义在 C:/Users/marco/.qwenworkcn/skills/quark-resource-sync/scripts/lib/placeholder.mjs（跨仓库，无法 import）。
-    const real = files.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
+    // 下钻（最多 2 级）与剔占位的口径只在 locateContent 一份，连载轮询共用（2026-11-10 定稿）。
+    const loc = await locateContent(item.url, root.files);
+    if (loc.error) {
+      console.log(`失败（${loc.error}）`);
+      fail++;
+      failed.push(`${item.id}: ${loc.error}`);
+      if (delayMs) await sleep(delayMs);
+      continue;
+    }
+    const real = loc.files;
+    const prefix = loc.prefix;
     if (!real.length) {
       console.log('跳过（盘端只有占位说明文件，资源还没到位）');
       skip++;
@@ -428,7 +452,8 @@ if (!dryRun) {
  * 连载资源轮询：每轮抽查少量剧集 / 动漫，重抓盘端目录与已有 files 块比对。
  * 只有内容真变了才整体重写并写当天 updated（真实内容变化，不是伪造 lastmod）；
  * 无变化 / 盘端只剩占位 / 抓取失败一律一个字不写。
- * 抓取口径与上面的补齐流程一致（下钻 2 层、剔除占位、前缀回填），改一处要同步改另一处。
+ * 抓取口径（下钻最多 2 级、先剔占位再判断、前缀回填）补齐 / 连载轮询 / 待办扫描三处
+ * 共用 locateContent 一份实现，不要再另写一份，否则签名会误判「有变化」。
  */
 async function runSerialRefresh() {
   // 同步任务用 --ids 当场补新条目时不掺轮询；--only 非剧集分类的试跑也不轮询。
@@ -453,29 +478,27 @@ async function runSerialRefresh() {
       console.log(`失败（${msg}）`);
       issues.push(`${item.id}: ${msg}`);
     } else {
-      let files = rootRes.files;
-      const prefix = [];
-      let depth = 0;
-      while (files.length === 1 && files[0].file_type === '0' && depth < 2) {
-        const sub = await fetchAll(item.quarkUrl, files[0].fid);
-        if (!sub.files) break;
-        prefix.push(`${String(files[0].filename || '').trim()}/`);
-        files = sub.files;
-        depth++;
-        if (delayMs) await sleep(delayMs);
-      }
-      const real = files.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
-      const agg = real.length ? aggregate({ files: real }, real.length) : null;
-      if (agg?.tree && prefix.length) agg.tree = [...prefix, ...agg.tree.split('\n')].join('\n');
-      if (!agg) {
-        console.log('跳过（盘端只有占位说明文件，资源还没到位）');
-      } else if (signatureFromLines(item.lines, item.filesFrom, item.filesEnd) === signatureOf(agg)) {
-        console.log('无变化');
-        unchanged++;
+      // 下钻（最多 2 级）与剔占位与补齐流程共用同一份 locateContent（2026-11-10 定稿）。
+      // 下钻中途抓取失败一律按失败上报：残缺的目录级快照不是「盘端变了」，绝不能整体重写清单。
+      const loc = await locateContent(item.quarkUrl, rootRes.files);
+      let agg = null;
+      if (loc.error) {
+        console.log(`失败（${loc.error}）`);
+        issues.push(`${item.id}: ${loc.error}`);
       } else {
-        if (!dryRun) rewriteSerialFiles(item.file, item.id, () => toYamlLines(agg, true));
-        console.log(dryRun ? '有变化（试跑，不写盘）' : `已刷新（${agg.count ?? '?'} 项）`);
-        changed++;
+        const real = loc.files;
+        agg = real.length ? aggregate({ files: real }, real.length) : null;
+        if (agg?.tree && loc.prefix.length) agg.tree = [...loc.prefix, ...agg.tree.split('\n')].join('\n');
+        if (!agg) {
+          console.log('跳过（盘端只有占位说明文件，资源还没到位）');
+        } else if (signatureFromLines(item.lines, item.filesFrom, item.filesEnd) === signatureOf(agg)) {
+          console.log('无变化');
+          unchanged++;
+        } else {
+          if (!dryRun) rewriteSerialFiles(item.file, item.id, () => toYamlLines(agg, true));
+          console.log(dryRun ? '有变化（试跑，不写盘）' : `已刷新（${agg.count ?? '?'} 项）`);
+          changed++;
+        }
       }
       // 追更提醒（只读）：复用本轮已抓的盘端快照，零额外夸克请求。TMDB 只提供「播出事件」
       // 这个事实，不解析、不写入任何集数结论；凭据缺失 / 匹配不确定就静默跳过。
@@ -545,21 +568,17 @@ async function runTodoScan() {
       console.log(`抓取失败（${r.error || '分享内容为空'}）`);
       errors.push(`${item.id}: ${r.error || '分享内容为空'}`);
     } else {
-      let files = r.files;
-      let depth = 0;
-      while (files.length === 1 && files[0].file_type === '0' && depth < 2) {
-        const sub = await fetchAll(item.url, files[0].fid);
-        if (!sub.files) break;
-        files = sub.files;
-        depth++;
-        if (delayMs) await sleep(delayMs);
-      }
-      const real = files.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
-      if (!real.length) {
+      // 与补齐 / 连载轮询共用同一份 locateContent：先剔占位再判断下钻，最多 2 级。
+      // 这里只读盘点，不回填 prefix、不写盘；下钻失败只算抓取失败，不进「待加资源」清单。
+      const loc = await locateContent(item.url, r.files);
+      if (loc.error) {
+        console.log(`抓取失败（${loc.error}）`);
+        errors.push(`${item.id}: ${loc.error}`);
+      } else if (!loc.files.length) {
         console.log(`空（只有占位说明文件） ${item.url}`);
         empty.push(item.id);
       } else {
-        console.log(`已有内容（${real.length} 项），交给补齐队列`);
+        console.log(`已有内容（${loc.files.length} 项），交给补齐队列`);
       }
     }
     if (delayMs) await sleep(delayMs);
