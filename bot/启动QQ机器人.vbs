@@ -38,7 +38,7 @@ For Each p In list
     If InStr(1, p.CommandLine & "", "bot.py", 1) > 0 Then running = True
   End If
   If InStr(1, p.Name & "", "napcat", 1) > 0 Then napcat = True
-  If LCase(p.Name & "") = "qq.exe" Then napcat = True
+  If LCase(p.Name & "") = "qq.exe" And InStr(1, p.CommandLine & "", "NapCat", 1) > 0 Then napcat = True
 Next
 
 ' 第一步：NapCat 不在就先拉起来，不管机器人本体在不在跑

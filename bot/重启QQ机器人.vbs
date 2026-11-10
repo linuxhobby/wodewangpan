@@ -44,7 +44,7 @@ For Each p In list
       killed = killed + 1
     End If
   End If
-  If InStr(1, nm, "napcat", 1) > 0 Or LCase(nm) = "qq.exe" Then
+  If InStr(1, nm, "napcat", 1) > 0 Or (LCase(nm) = "qq.exe" And InStr(1, cmdline, "NapCat", 1) > 0) Then
     p.Terminate
     napcatKilled = napcatKilled + 1
   End If
