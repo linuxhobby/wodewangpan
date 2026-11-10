@@ -87,5 +87,59 @@ for q in ["/s 青之箱", "/latest", "/today", "/cats", "/random", "/help", "/mo
         bad += 1
         print("  ✗ %-12s 异常：%s" % (q, e))
 
+print("6) 入群欢迎语")
+w = tg.welcome_text()
+print("  文案来源：%s，共 %d 字" % (os.path.basename(tg.WELCOME_FILE), len(w)))
+check("读到的是文件而不是兜底", "网盘资源索引站" in w, True)
+check("含 /s 用法", "/s 关键词" in w, True)
+check("含 /more 用法", "/more" in w, True)
+check("含站点地址", "https://www.wodewangpan.top" in w, True)
+wh = tg_render.to_html(w)
+check("站点地址转成超链接", '<a href="https://www.wodewangpan.top"' in wh, True)
+check("没有裸链接残留", ">https://" in wh or wh.count("https://") == wh.count("href=\"https://"), True)
+
+print("7) handle_update 对新成员的反应（拦截发送，不联网）")
+sent = []
+
+
+def fake_send(chat_id, text, reply_to=None):
+    sent.append((chat_id, text))
+    return True
+
+
+real_send = tg.send
+tg.send = fake_send
+tg.TG = {"welcome_enabled": True, "allowed_chats": []}
+
+
+def mk_update(members, text=None):
+    msg = {"message_id": 9001, "chat": {"id": -100123, "type": "supergroup", "title": "测试群"},
+           "from": {"id": 42, "first_name": "新人"}}
+    if members:
+        msg["new_chat_members"] = members
+    if text:
+        msg["text"] = text
+    return {"update_id": 1, "message": msg}
+
+
+sent.clear()
+tg.handle_update(mk_update([{"id": 42, "first_name": "新人", "is_bot": False}]))
+check("真人入群发一次欢迎", len(sent), 1)
+check("发到的是当前群", sent[0][0] if sent else None, -100123)
+
+sent.clear()
+tg.handle_update(mk_update([{"id": 77, "first_name": "别家Bot", "is_bot": True}]))
+check("机器人入群不理", len(sent), 0)
+
+sent.clear()
+tg.handle_update(mk_update(None, "/welcome"))
+check("/welcome 手动补发", len(sent), 1)
+
+sent.clear()
+tg.TG = {"welcome_enabled": False, "allowed_chats": []}
+tg.handle_update(mk_update([{"id": 42, "first_name": "新人", "is_bot": False}]))
+check("welcome_enabled=false 时不发", len(sent), 0)
+tg.send = real_send
+
 print("\n结果：%d 通过，%d 失败" % (ok, bad))
 sys.exit(1 if bad else 0)

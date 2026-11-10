@@ -69,6 +69,7 @@ TG_HELP = (
     "/cats       各分类有多少资源\n"
     "/random     随便抽一个\n"
     "/id         看当前会话的信息\n"
+    "/welcome    把入群欢迎语再发一遍\n"
     "/help       再看一次这份说明\n"
     "\n"
     "群里直接发 /s 关键词 就行，不用 @ 我。\n"
@@ -85,6 +86,27 @@ CMD_MAP = {
     "cats": "/cats", "category": "/cats", "categories": "/cats",
     "random": "/random",
 }
+
+# 入群欢迎语：正文放在 welcome-tg.txt，改文案不用动代码，也不用重启（按文件修改时间热加载）
+WELCOME_FILE = os.path.join(ROOT, "welcome-tg.txt")
+_WELCOME_FALLBACK = (
+    "欢迎。发 /s 关键词 查资源，例如 /s 神探狄仁杰。\n"
+    "发 /help 看全部指令。"
+)
+_welcome_cache = {"text": "", "mtime": 0.0}
+
+
+def welcome_text():
+    try:
+        mtime = os.path.getmtime(WELCOME_FILE)
+        if mtime != _welcome_cache["mtime"]:
+            with open(WELCOME_FILE, "r", encoding="utf-8") as f:
+                _welcome_cache["text"] = f.read().strip()
+            _welcome_cache["mtime"] = mtime
+    except Exception:
+        pass
+    return _welcome_cache["text"] or _WELCOME_FALLBACK
+
 
 
 def log(msg):
@@ -284,16 +306,31 @@ def handle_update(update):
     user = msg.get("from") or {}
     uid = user.get("id")
     name = user.get("username") or user.get("first_name") or str(uid)
-    text_raw = _text_of(msg)
 
-    if not chat_id or not text_raw:
-        return
-    if user.get("is_bot"):
+    if not chat_id:
         return
 
     wl = [str(x) for x in (TG.get("allowed_chats") or [])]
     if wl and str(chat_id) not in wl:
         log("· 跳过非白名单会话 %s（%s）" % (chat_id, chat.get("title") or ctype))
+        return
+
+    # 新成员入群：发一遍欢迎语（里面就是指令表）。只对真人触发，别家机器人入群不理。
+    joined = [m for m in (msg.get("new_chat_members") or []) if not m.get("is_bot")]
+    if joined:
+        if not TG.get("welcome_enabled", True):
+            return
+        if _dup("%s:join:%s" % (chat_id, msg.get("message_id"))):
+            return
+        who = "、".join(m.get("username") or m.get("first_name") or str(m.get("id")) for m in joined)
+        log("· %s 有新成员入群（%s），发欢迎语" % (chat_id, who))
+        send(chat_id, welcome_text(), reply_to=msg.get("message_id"))
+        return
+
+    text_raw = _text_of(msg)
+    if not text_raw:
+        return
+    if user.get("is_bot"):
         return
 
     username = _ME.get("username") or ""
@@ -327,6 +364,10 @@ def handle_update(update):
         return
     if low in ("/help", "/start", "/帮助"):
         send(chat_id, TG_HELP, reply_to=msg.get("message_id"))
+        return
+    if low in ("/welcome", "/公告"):
+        # 手动贴一遍欢迎语，方便随时重新置顶
+        send(chat_id, welcome_text(), reply_to=msg.get("message_id"))
         return
 
     key = "tg:%s:%s" % (chat_id, uid)

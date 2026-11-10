@@ -17,6 +17,9 @@ import re
 # 「网盘名<TAB>https://...」
 _LINK_LINE = re.compile(r"^(?P<name>[^\t]+)\t(?P<url>https?://\S+)$")
 
+# 普通行里出现的裸链接（比如欢迎语里的站点地址），也做成可点
+_URL_RE = re.compile(r"(https?://[^\s<>\u3000（）【】「」]+)")
+
 SITE_TAIL_PREFIX = "更多资源访问："
 
 
@@ -25,6 +28,17 @@ def _a(url, label):
         html.escape(url, quote=True),
         html.escape(label, quote=False),
     )
+
+
+def _linkify(line):
+    """把一行里的裸链接转成 <a>，其余部分照常转义。"""
+    out, pos = [], 0
+    for m in _URL_RE.finditer(line):
+        out.append(html.escape(line[pos:m.start()], quote=False))
+        out.append(_a(m.group(1), m.group(1)))
+        pos = m.end()
+    out.append(html.escape(line[pos:], quote=False))
+    return "".join(out)
 
 
 def to_html(text):
@@ -43,7 +57,7 @@ def to_html(text):
                 out.append(SITE_TAIL_PREFIX + _a(url, label))
                 continue
 
-        out.append(html.escape(line, quote=False))
+        out.append(_linkify(line))
     return "\n".join(out)
 
 
