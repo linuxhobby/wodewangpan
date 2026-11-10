@@ -120,7 +120,7 @@
       Ne Zha (2019) - 2160p UHD BluRay DV HEVC TrueHD Atmos 7.1.nfo
 
 - id: an-007
-  title: "时光代理人"
+  title: "时光代理人 第三季"
   category: 动漫
   tags: ["动漫", "动画", "Sci-Fi & Fantasy", "悬疑"]
   quark_url: "https://pan.quark.cn/s/580431708bac"
@@ -128,26 +128,25 @@
   date: 2021-04-30
   added: 2026-10-12
   image: an-007.jpg
-  updated: 2026-11-07
+  updated: 2026-11-10
   files:
     count: 12
     size: "10.7 GB"
     format: "MP4×9 / MKV×3"
     tree: |
       007-时光代理人/
-      时光代理人（第三季）/
-      01.mp4
-      02.mp4
-      03.mp4
-      04.mp4
-      05.mp4
-      06.mp4
-      07.mp4
-      08.mp4
-      09.mp4
-      10.mkv
-      11.mkv
-      12.mkv
+      时光代理人第三季01.mp4
+      时光代理人第三季02.mp4
+      时光代理人第三季03.mp4
+      时光代理人第三季04.mp4
+      时光代理人第三季05.mp4
+      时光代理人第三季06.mp4
+      时光代理人第三季07.mp4
+      时光代理人第三季08.mp4
+      时光代理人第三季09.mp4
+      时光代理人第三季10.mkv
+      时光代理人第三季11.mkv
+      时光代理人第三季12.mkv
 
 - id: an-009
   title: "极恶老大"
