@@ -1581,6 +1581,15 @@
   date: 2011-11-23
   added: 2026-05-02
   image: dc-007.jpg
+  updated: 2026-11-10
+  files:
+    count: 2
+    size: "2.3 GB"
+    format: "MKV×2"
+    tree: |
+      007-BBC.他们怎样花掉你的钱/
+      他们怎样花掉你的钱.01.mkv
+      他们怎样花掉你的钱.02.mkv
 
 - id: dc-006
   title: "从太空看地球"
@@ -1591,6 +1600,17 @@
   date: 2019-04-17
   added: 2026-05-02
   image: dc-006.jpg
+  updated: 2026-11-10
+  files:
+    count: 4
+    size: "3.8 GB"
+    format: "MP4×4"
+    tree: |
+      006-BBC.从太空看地球/
+      第1集：太空新视角.mp4
+      第2集：地球上的奇特形状.mp4
+      第3集：色彩缤纷的地球.mp4
+      第4集：变化中的地球.mp4
 
 - id: dc-005
   title: "人类宇宙"
@@ -1601,6 +1621,18 @@
   date: 2014-10-07
   added: 2026-05-02
   image: dc-005.jpg
+  updated: 2026-11-10
+  files:
+    count: 5
+    size: "3.8 GB"
+    format: "MKV×5"
+    tree: |
+      005-BBC.人类宇宙/
+      人类宇宙01.mkv
+      人类宇宙02.mkv
+      人类宇宙03.mkv
+      人类宇宙04.mkv
+      人类宇宙05.mkv
 
 - id: dc-004
   title: "人体奥秘"
