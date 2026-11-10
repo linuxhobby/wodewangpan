@@ -74,14 +74,13 @@
   date: 1999-01-10
   added: 2026-09-13
   image: tv-014.jpg
-  updated: 2026-11-10
+  updated: 2026-11-11
   files:
     count: 13
     size: "35.4 GB"
     format: "MKV×13"
     tree: |
       014-黑道家族 6季全 1080P/
-      黑道家族.第一季[全13集][简繁英字幕].The.Sopranos.S01.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV/
       黑道家族.The.Sopranos.S01E01.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
       黑道家族.The.Sopranos.S01E02.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
       黑道家族.The.Sopranos.S01E03.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
@@ -2432,12 +2431,17 @@
   date: 2025-09-22
   added: "2026-11-08 10:00"
   image: tv-092.jpg
-  updated: 2026-11-10
+  updated: 2026-11-11
   files:
-    count: 1
+    count: 3
+    size: "4.4 GB"
+    format: "MKV×3"
     tree: |
       092-塔尔萨之王-第四季 Tulsa King Season 3‎ (2025)/
       塔尔萨之王 第四季 Tulsa King Season 4‎ (2026)/
+      Tulsa.King.S04E01.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S04E02.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S04E03.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
 
 - id: tv-093
   title: "电幻国度"
@@ -2489,11 +2493,11 @@
   date: 2026-11-01
   added: 2026-11-08
   image: tv-094.jpg
-  updated: 2026-11-08
+  updated: 2026-11-11
   files:
-    count: 33
-    size: "63.9 GB"
-    format: "MP4×33"
+    count: 37
+    size: "71.5 GB"
+    format: "MP4×37"
     tree: |
       094-鉴定（2026）/
       S01E01_4K.mp4
@@ -2529,6 +2533,10 @@
       S01E31_4K.mp4
       S01E32_4K.mp4
       S01E33_4K.mp4
+      S01E34_4K.mp4
+      S01E35_4K.mp4
+      S01E36_4K.mp4
+      S01E37_4K.mp4
 
 - id: tv-096
   title: "神探夏洛克 第三季"
@@ -2629,14 +2637,23 @@
   date: 2026-11-05
   added: "2026-11-09 12:19"
   image: tv-101.jpg
-  updated: 2026-11-09
+  updated: 2026-11-11
   files:
-    count: 3
+    count: 11
+    format: "MKV×10"
     tree: |
       101-谷雨（2026）/
-      Season 1（HQ.DV.60fps）/
-      Season 1（HQ.HDR.60fps）/
       Season 1/
+      S01E01.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E02.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E03.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E04.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E05.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E06.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E07.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E08.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E09.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E10.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
 
 - id: tv-102
   title: "异能研究所"

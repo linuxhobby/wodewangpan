@@ -752,13 +752,19 @@
   date: 2025-04-01
   added: "2026-11-09 12:19"
   image: an-047.jpg
-  updated: 2026-11-09
+  updated: 2026-11-11
   files:
-    count: 2
+    count: 5
+    size: "5.4 GB"
+    format: "MKV×5"
     tree: |
       047-青之箱 アオのハコ 第二季/
       青之箱 第二季 アオのハコ Season 2 (2026)/
-      青之箱 アオのハコ‎ (2024)/
+      Blue.Box.S02E01.Deja.Vu.1080p.NF.WEB-DL.DUAL.DDP5.1.H.264.mkv
+      Blue.Box.S02E02.Admiration.1080p.NF.WEB-DL.DUAL.DDP5.1.H.264.mkv
+      Blue.Box.S02E03.Theyre.One.and.the.Same.1080p.NF.WEB-DL.DUAL.DDP5.1.H.264.mkv
+      Blue.Box.S02E04.Love.Is.the.Most.Powerful.Feeling.1080p.NF.WEB-DL.DUAL.DDP5.1.H.264.mkv
+      Blue.Box.S02E05.Its.Back.1080p.NF.WEB-DL.DUAL.DDP5.1.H.264.mkv
 
 - id: an-048
   title: "Re：从零开始的异世界生活 第一季"
