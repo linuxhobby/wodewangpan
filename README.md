@@ -17,7 +17,7 @@ Telegram 群：[**t.me/wodewangpantop**](https://t.me/wodewangpantop)
 
 群名「网盘资源索引站-夸克-百度」，站里的新资源同步在那发，找不到的片也可以直接在群里问。
 
-群里挂了一个查询机器人（[@wodewangpanadmin_bot](https://t.me/wodewangpanadmin_bot)），在群里直接发指令就行，不用 @ 它：
+群里挂了一个查询机器人，在群里直接发指令就行，不用 @ 它：
 
 | 指令 | 作用 |
 |---|---|
