@@ -204,8 +204,8 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 | 指令 | 作用 |
 |---|---|
-| `/搜索 关键词`（`/s` `/搜` `/找` `/查` `/so`） | 回资源名、类型与网盘链接，一次 3 条 |
-| `/更多`（`/more` `/下一页` `/next`） | 接着看下一批 3 条 |
+| `/搜索 关键词`（`/s` `/搜` `/找` `/查` `/so`） | 回资源名、类型与网盘链接，按最新排，一次最多 10 条 |
+| `/更多`（`/more` `/下一页` `/next`） | 接着看下一批 10 条 |
 | `/最新` | 最近上架 8 条 |
 | `/今日` | 今天更新，无则退到最近一次更新日 |
 | `/分类` | 各分类条数 |
@@ -214,11 +214,11 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 回复版式（2026-11-10 二次调整）：资源名单独一行「名称 ｜ 类型」，下面一行一个网盘「网盘名 + 制表符 + 链接」，带提取码的写在网盘名后面（`百度网盘（提取码 fw1j）`）；资源与资源之间**不空行**；末尾固定两行：`更多资源访问：<站点>`、`/帮助 — 查看指令表`。提取码从详情页 `.linkrow__code > b` 读，链接顺序按页面（夸克在前、百度在后）。
 
-**命中太多怎么办**：一次只回 3 条，命中数超过 3 时末尾补一句「命中 N 条，先给 3 条，发 /更多 看下一批」。`/更多` 以「群号 / 私聊用户」为键记住上一次的关键词与偏移量，只翻同一批结果，5 分钟过期，避免群友之间互相串页；翻到底提示「结果已经到底了」。另外限制单条消息 900 字，超了按行拆条，固定尾巴只挂在最后一条上，不会被切散。
+**命中太多怎么办**：一次最多回 10 条，命中按上架日期从新到旧排，先给最新的 10 条；命中数超过 10 时末尾补一句「命中 N 条，先给 10 条，发 /更多 看下一批」。`/更多` 以「群号 / 私聊用户」为键记住上一次的关键词与偏移量，只翻同一批结果，5 分钟过期，避免群友之间互相串页；翻到底提示「结果已经到底了」。另外限制单条消息 900 字，超了按行拆条，固定尾巴只挂在最后一条上，不会被切散。
 
 **富媒体试过但不可用**：OneBot 的 `markdown` 段被 QQ 内核拒绝（`NodeIKernelMsgService/sendMsg` 超时，普通 QQ 号没有签名能力，NapCat 源码里该转换器标注 `// Need signing`）；Ark 卡片（`json` 段）能发出去、retcode 0，但多数客户端提示「发送者版本过低，无法展示内容」。所以最终走纯文本，靠 QQ 自动识别 URL 成可点击。
 
-**Telegram 通道（2026-11-10 加）**：`bot/app/telegram_bot.py` + `bot/app/tg_render.py`，共用 `handlers.py` 与 `site_client.py`，只换了收发层。TG 支持 HTML 富文本，所以那边网盘名直接是可点超链接，正文不出现裸链；命令名因为 TG 只认拉丁字符，改用 `/s` `/more` `/latest` `/today` `/cats` `/random` `/help` `/id`。配置在 `config.json` 的 `telegram` 段（token、allowed_chats、proxy）。本机把它作为 QQ 机器人进程里的后台线程跑，桌面上的启动/重启/结束脚本一并管理；放到海外 VPS 时可 `python app/telegram_bot.py` 独立运行。国内必须配 `telegram.proxy`，否则连不上 `api.telegram.org`。详见 `bot/README.md` 的「Telegram 群」一节。新人入群会自动发 `bot/welcome-tg.txt` 里的欢迎语与指令表（`telegram.welcome_enabled` 可关），群里发 `/welcome` 可随时重发。`telegram.reply_mode` 设成 `private` 时结果改发提问者私聊，群里只回一行「N 条结果已私发」，多人同时查也不刷屏；私聊是一对一，所以不再按群里的 3 条走，一次给 10 条（`telegram.private_max_results` 可调，填 0 为不限），命中更多时提示发 `/more` 继续；没私聊过机器人的人会收到一条 `t.me/<bot>?start=...` 深链，点一次即可开通。
+**Telegram 通道（2026-11-10 加）**：`bot/app/telegram_bot.py` + `bot/app/tg_render.py`，共用 `handlers.py` 与 `site_client.py`，只换了收发层。TG 支持 HTML 富文本，所以那边网盘名直接是可点超链接，正文不出现裸链；命令名因为 TG 只认拉丁字符，改用 `/s` `/more` `/latest` `/today` `/cats` `/random` `/help` `/id`。配置在 `config.json` 的 `telegram` 段（token、allowed_chats、proxy）。本机把它作为 QQ 机器人进程里的后台线程跑，桌面上的启动/重启/结束脚本一并管理；放到海外 VPS 时可 `python app/telegram_bot.py` 独立运行。国内必须配 `telegram.proxy`，否则连不上 `api.telegram.org`。详见 `bot/README.md` 的「Telegram 群」一节。新人入群会自动发 `bot/welcome-tg.txt` 里的欢迎语与指令表（`telegram.welcome_enabled` 可关），群里发 `/welcome` 可随时重发。`telegram.reply_mode` 设成 `private` 时结果改发提问者私聊，群里只回一行「N 条结果已私发」，多人同时查也不刷屏；私聊同样是 10 条一批（`telegram.private_max_results` 可调，填 0 为不限），命中更多时提示发 `/more` 继续；没私聊过机器人的人会收到一条 `t.me/<bot>?start=...` 深链，点一次即可开通。
 
 - 拼音直接命中：索引自带 `py`/`py1`（全拼 + 首字母），`qingzhixiang`、`qzx` 都能搜。
 - 端口全绑 `127.0.0.1`：NapCat WebUI `6099`、OneBot HTTP `3000`、机器人上报 `6700`。

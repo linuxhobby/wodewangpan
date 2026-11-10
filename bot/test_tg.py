@@ -291,7 +291,7 @@ tg._load_cfg_cached = real_cfg
 print("10) 一次给全量（handlers 的 page 参数）")
 m1 = {}
 handlers.handle("/s 电影", CFG, key="page-a", meta=m1)
-check("默认每批 3 条", m1.get("items"), 3)
+check("默认每批 10 条", m1.get("items"), tg.handlers.PAGE_SIZE)
 check("meta 带回命中总数", (m1.get("total") or 0) >= 3, True)
 m2 = {}
 out2 = handlers.handle("/s 电影", CFG, key="page-b", page=10, meta=m2)
@@ -308,6 +308,15 @@ check("page=1 只给 1 条", m4.get("items"), 1)
 m5 = {}
 handlers.handle("/s 青之箱", CFG, key="page-e", page=0, meta=m5)
 check("page=0 给全部命中", m5.get("items"), m5.get("total"))
+
+# 排序：命中按上架日期从新到旧，先给最新的 10 条
+import site_client as sc
+hits, total = sc.search(CFG["site_url"], "电影", 10, 0)
+dates = [it.get("date") or "" for it in hits]
+check("默认 10 条", len(hits), 10)
+check("按日期从新到旧", dates, sorted(dates, reverse=True))
+more, _ = sc.search(CFG["site_url"], "电影", 10, 10)
+check("翻页接在后面", (more[0].get("date") or "") <= dates[-1], True)
 
 print("\n结果：%d 通过，%d 失败" % (ok, bad))
 sys.exit(1 if bad else 0)

@@ -118,13 +118,17 @@ def score(item, kw):
     return s
 
 
-def search(site_url, kw, limit=3, offset=0):
-    """返回 (命中列表, 命中总数)。总数用于告诉用户"还有更多"，offset 供 /更多 翻页。"""
+def search(site_url, kw, limit=10, offset=0):
+    """返回 (命中列表, 命中总数)。总数用于告诉用户"还有更多"，offset 供 /更多 翻页。
+
+    排序：先按上架日期降序（新的在前），同一天再按相关度降序。
+    命中项本身都过了相关度闸门（score>0），所以「最新的 N 条」就是用户想先看到的。
+    """
     items = load_index(site_url)
     scored = [(score(it, kw), it) for it in items]
     scored = [x for x in scored if x[0] > 0]
-    scored.sort(key=lambda x: x[1].get("date") or "", reverse=True)   # 先日期降序
-    scored.sort(key=lambda x: -x[0])                                  # 稳定排序，再按分数降序
+    scored.sort(key=lambda x: -x[0])                                  # 先相关度降序
+    scored.sort(key=lambda x: x[1].get("date") or "", reverse=True)    # 稳定排序，再按日期降序（新的在前）
     page = scored[offset:offset + limit]
     return [it for _, it in page], len(scored)
 

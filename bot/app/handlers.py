@@ -21,7 +21,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import site_client as sc
 
-PAGE_SIZE = 3          # 群里一次回几条资源
+PAGE_SIZE = 10         # 群里一次回几条资源（按最新排，最多 10 条）
 MAX_MSG_LEN = 900      # 单条消息字数上限，超了拆条
 PAGER_TTL = 300        # 「/更多」翻页记忆的有效期（秒）
 
@@ -259,13 +259,13 @@ def handle(text, cfg, key="", page=None, meta=None):
             return _assemble(site_url, _fmt_body(hits, urls), note)
 
         if cmd == "latest":
-            items = sc.recent(site_url, 8)
+            items = sc.recent(site_url, PAGE_SIZE)
             urls = _fetch_many(site_url, items)
             _meta_set(meta, "latest", len(items))
             return _assemble(site_url, _fmt_body(items, urls))
 
         if cmd == "today":
-            items, date = sc.today(site_url, 8)
+            items, date = sc.today(site_url, PAGE_SIZE)
             if not items:
                 return ["今天还没有新增，明天再来看看。"]
             urls = _fetch_many(site_url, items)
