@@ -12,6 +12,25 @@
   date: 2026-05-22
   added: 2026-09-24
   image: tv-008.jpg
+  updated: 2026-11-10
+  files:
+    count: 12
+    size: "17.8 GB"
+    format: "MP4×12"
+    tree: |
+      008-大叔再出招/
+      01.mp4
+      02.mp4
+      03.mp4
+      04.mp4
+      05.mp4
+      06.mp4
+      07.mp4
+      08.mp4
+      09.mp4
+      10.mp4
+      11.mp4
+      12.mp4
 
 - id: tv-002
   title: "菜鸟炊事兵"
@@ -24,6 +43,25 @@
   date: 2026-05-11
   added: 2026-09-24
   image: tv-002.jpg
+  updated: 2026-11-10
+  files:
+    count: 12
+    size: "26.6 GB"
+    format: "MKV×12"
+    tree: |
+      002-菜鸟炊事兵/
+      The.Legend.Of.Kitchen.Soldier.S01E01.Di.1Ji.1080p.HBOMax.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.Of.Kitchen.Soldier.S01E02.Di.2Ji.1080p.HBOMax.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.Of.Kitchen.Soldier.S01E03.Di.3Ji.1080p.HBOMax.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.Of.Kitchen.Soldier.S01E04.Di.4Ji.1080p.HBOMax.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.Of.Kitchen.Soldier.S01E05.Di.4Ji.1080p.HBOMax.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.of.Kitchen.Soldier.S01E06.1080p.HMAX.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.of.Kitchen.Soldier.S01E07.1080p.HMAX.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.of.Kitchen.Soldier.S01E08.1080p.HMAX.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.of.Kitchen.Soldier.S01E09.1080p.HMAX.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.of.Kitchen.Soldier.S01E10.1080p.HMAX.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.Of.Kitchen.Soldier.S01E11.1080p.HBOMax.WEB-DL.DDP2.0.H.264.mkv
+      The.Legend.of.Kitchen.Soldier.S01E12.1080p.HMAX.WEB-DL.DDP2.0.H.264.mkv
 
 - id: tv-014
   title: "黑道家族"
@@ -36,6 +74,27 @@
   date: 1999-01-10
   added: 2026-09-13
   image: tv-014.jpg
+  updated: 2026-11-10
+  files:
+    count: 13
+    size: "35.4 GB"
+    format: "MKV×13"
+    tree: |
+      014-黑道家族 6季全 1080P/
+      黑道家族.第一季[全13集][简繁英字幕].The.Sopranos.S01.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV/
+      黑道家族.The.Sopranos.S01E01.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E02.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E03.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E04.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E05.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E06.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E07.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E08.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E09.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E10.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E11.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E12.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S01E13.1999.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
 
 - id: tv-013
   title: "黑帆"
@@ -48,6 +107,15 @@
   date: 2014-01-25
   added: 2026-09-07
   image: tv-013.jpg
+  updated: 2026-11-10
+  files:
+    count: 4
+    tree: |
+      013-黑帆/
+      黑帆：第1季/
+      黑帆：第2季/
+      黑帆：第3季/
+      黑帆：第4季/
 
 - id: tv-012
   title: "韩国制造"
@@ -60,6 +128,19 @@
   date: 2025-12-24
   added: 2026-09-13
   image: tv-012.jpg
+  updated: 2026-11-10
+  files:
+    count: 7
+    format: "JPG×3 / NFO"
+    tree: |
+      012-韩国制造 (2025)/
+      第 1 季 - 2160p WEB-DL DV H265 DDP 5.1/
+      第 1 季 - 2160p WEB-DL HDR H265 DDP 5.1/
+      第 2 季 - 2160p WEB-DL HDR10 H265 DDP 5.1/
+      backdrop.jpg
+      poster.jpg
+      season01-poster.jpg
+      tvshow.nfo
 - id: tv-010
   title: "金色"
   category: 电视剧
@@ -83,6 +164,49 @@
   date: 2026-07-05
   added: 2026-09-21
   image: tv-011.jpg
+  updated: 2026-11-10
+  files:
+    count: 36
+    size: "12.3 GB"
+    format: "MP4×36"
+    tree: |
+      011-京城奇探/
+      01.mp4
+      02.mp4
+      03.mp4
+      04.mp4
+      05.mp4
+      06.mp4
+      07.mp4
+      08.mp4
+      09.mp4
+      10.mp4
+      11.mp4
+      12.mp4
+      13.mp4
+      14.mp4
+      15.mp4
+      16.mp4
+      17.mp4
+      18.mp4
+      19.mp4
+      20.mp4
+      21.mp4
+      22.mp4
+      23.mp4
+      24.mp4
+      25.mp4
+      26.mp4
+      27.mp4
+      28.mp4
+      29.mp4
+      30.mp4
+      31.mp4
+      32.mp4
+      33.mp4
+      34.mp4
+      35.mp4
+      36.mp4
 
 - id: tv-009
   title: "怪奇退休镇"
@@ -95,6 +219,30 @@
   date: 2026-05-21
   added: 2026-09-24
   image: tv-009.jpg
+  updated: 2026-11-10
+  files:
+    count: 17
+    size: "53.3 GB"
+    format: "MKV×16"
+    tree: |
+      009-奇怪退休镇/
+      The Boroughs S01E01 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      The Boroughs S01E02 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      The Boroughs S01E03 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      The Boroughs S01E04 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      The Boroughs S01E05 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      The Boroughs S01E06 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      The Boroughs S01E07 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      The Boroughs S01E08 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      The.Boroughs.S01E01.2026.2160p.NF.WEB-DL.H265.DV.HDR.DDP5.1.Atmos-BiVerse.mkv
+      The.Boroughs.S01E02.2026.2160p.NF.WEB-DL.H265.DV.HDR.DDP5.1.Atmos-BiVerse.mkv
+      The.Boroughs.S01E03.2026.2160p.NF.WEB-DL.H265.DV.HDR.DDP5.1.Atmos-BiVerse.mkv
+      The.Boroughs.S01E04.2026.2160p.NF.WEB-DL.H265.DV.HDR.DDP5.1.Atmos-BiVerse.mkv
+      The.Boroughs.S01E05.2026.2160p.NF.WEB-DL.H265.DV.HDR.DDP5.1.Atmos-BiVerse.mkv
+      The.Boroughs.S01E06.2026.2160p.NF.WEB-DL.H265.DV.HDR.DDP5.1.Atmos-BiVerse.mkv
+      The.Boroughs.S01E07.2026.2160p.NF.WEB-DL.H265.DV.HDR.DDP5.1.Atmos-BiVerse.mkv
+      The.Boroughs.S01E08.2026.2160p.NF.WEB-DL.H265.DV.HDR.DDP5.1.Atmos-BiVerse.mkv
+      [全8集][简繁英字幕].The.Boroughs.S01.2160p.NF.WEB-DL.DDP.5.1.Atmos.HDR10.H.265.torrent
 
 - id: tv-007
   title: "财阀X刑警"
@@ -160,6 +308,24 @@
   date: 2020-05-29
   added: 2026-09-07
   image: tv-005.jpg
+  updated: 2026-11-10
+  files:
+    count: 10
+    size: "10.1 GB"
+    format: "MKV×10"
+    tree: |
+      005-太空部队/
+      Space.Force.S01.1080p.NF.WEB-DL.DDP5.1.x264-NTG/
+      Space.Force.S01E01.The.Launch.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
+      Space.Force.S01E02.Save.Epsilon.6.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
+      Space.Force.S01E03.Mark.and.Mallory.Go.to.Washington.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
+      Space.Force.S01E04.Lunar.Habitat.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
+      Space.Force.S01E05.Space.Flag.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
+      Space.Force.S01E06.The.Spy.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
+      Space.Force.S01E07.Edison.Jaymes.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
+      Space.Force.S01E08.Conjugal.Visit.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
+      Space.Force.S01E09.Its.Good.to.be.Back.on.the.Moon.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
+      Space.Force.S01E10.Proportionate.Response.1080p.NF.WEB-DL.DDP5.1.x264-NTG.mkv
 - id: tv-004
   title: "挑情丑闻"
   category: 电视剧
@@ -171,6 +337,15 @@
   date: 2026-09-18
   added: 2026-09-20
   image: tv-004.jpg
+  updated: 2026-11-10
+  files:
+    count: 3
+    format: "MKV"
+    tree: |
+      004-挑情丑闻 스캔들 (2026)/
+      [NF][4K][全8集][简繁英字幕]/
+      [NF][内封简繁]/
+      07.mkv
 
 - id: tv-003
   title: "杀手妈咪"
@@ -254,6 +429,15 @@
   date: 2020-04-23
   added: 2026-09-27
   image: tv-018.jpg
+  updated: 2026-11-10
+  files:
+    count: 4
+    tree: |
+      018-伦敦黑帮.Gangs of London.1-3季合集.1080p.英语中字/
+      伦敦黑帮.Gangs of London.S01/
+      伦敦黑帮.Gangs of London.S02/
+      伦敦黑帮.Gangs of London.S03/
+      ._Gangs of London伦敦黑帮S03
 
 - id: tv-019
   title: "哥谭"
@@ -266,6 +450,17 @@
   date: 2014-09-22
   added: 2026-09-27
   image: tv-019.jpg
+  updated: 2026-11-10
+  files:
+    count: 6
+    tree: |
+      019-Gotham.哥谭/
+      Gotham.哥谭.S01/
+      Gotham.哥谭.S02/
+      Gotham.哥谭.S03/
+      Gotham.哥谭.S04/
+      Gotham.哥谭.S05/
+      .DS_Store
 
 - id: tv-020
   title: "海豹六队"
@@ -278,6 +473,14 @@
   date: 2017-01-18
   added: 2026-09-27
   image: tv-020.jpg
+  updated: 2026-11-10
+  files:
+    count: 3
+    tree: |
+      020-six.海豹六队.1-2季合集/
+      six.海豹六队S01/
+      six.海豹六队S02/
+      .DS_Store
 
 - id: tv-021
   title: "浴血黑帮"
@@ -290,6 +493,17 @@
   date: 2013-09-12
   added: 2026-09-27
   image: tv-021.jpg
+  updated: 2026-11-10
+  files:
+    count: 6
+    tree: |
+      021-浴血黑帮.Peaky.Blinders/
+      浴血黑帮.第1季.Peaky.Blinders.2013.1080p/
+      浴血黑帮.第2季.Peaky.Blinders.2014.1080p/
+      浴血黑帮.第3季.Peaky.Blinders.2016.1080p/
+      浴血黑帮.第4季.Peaky.Blinders.2017.1080p/
+      浴血黑帮.第5季.Peaky.Blinders.2019.1080p/
+      浴血黑帮.第6季.Peaky.Blinders.2022.1080p/
 
 - id: tv-022
   title: "和平使者"
@@ -302,6 +516,18 @@
   date: 2022-01-13
   added: 2026-09-27
   image: tv-022.jpg
+  updated: 2026-11-10
+  files:
+    count: 6
+    format: "JPG×4 / PNG"
+    tree: |
+      022-和平使者S1/
+      Season 1/
+      fanart.jpg
+      landscape.jpg
+      poster.jpg
+      season01-poster.jpg
+      clearlogo.png
 
 - id: tv-023
   title: "权力的游戏 第一季"
@@ -326,6 +552,14 @@
   date: 2021-09-17
   added: 2026-09-27
   image: tv-024.jpg
+  updated: 2026-11-10
+  files:
+    count: 3
+    tree: |
+      024-鱿鱼游戏/
+      鱿鱼游戏.Squid.Game.S01.KOREAN.1080p.NF.WEBRip.x265.10bit.HDR.DDP5.1.Atmos-AGLET[rartv]/
+      鱿鱼游戏.Squid.Game.S02.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-LelveTV/
+      鱿鱼游戏.Squid.Game.S03.2025.1080p.NF.WEB-DL.x264.DDP5.1.Atmos-DeePTV/
 
 - id: tv-025
   title: "认罪之罪"
@@ -338,6 +572,13 @@
   date: 2025-12-05
   added: 2026-09-27
   image: tv-025.jpg
+  updated: 2026-11-10
+  files:
+    count: 2
+    tree: |
+      025-认罪之罪/
+      1080P【内封简繁英】/
+      1080P【内嵌中字】/
 
 - id: tv-026
   title: "石油天王"
@@ -350,6 +591,13 @@
   date: 2024-11-17
   added: 2026-09-27
   image: tv-026.jpg
+  updated: 2026-11-10
+  files:
+    count: 2
+    tree: |
+      026-石油天王/
+      S01/
+      .DS_Store
 
 - id: tv-027
   title: "斯巴达克斯：亚述家族"
@@ -386,6 +634,19 @@
   date: 2026-06-26
   added: 2026-09-27
   image: tv-029.jpg
+  updated: 2026-11-10
+  files:
+    count: 7
+    format: "JPG×4 / NFO / PNG"
+    tree: |
+      029-金特务：本色回归 (2026)/
+      第 1 季 - 1080p WEB-DL H264 AAC/
+      backdrop.jpg
+      fanart.jpg
+      poster.jpg
+      season01-poster.jpg
+      tvshow.nfo
+      logo.png
 
 - id: tv-030
   title: "卡特特工"

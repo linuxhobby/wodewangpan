@@ -13,6 +13,22 @@
   date: 2013-01-30
   added: 2026-09-21
   image: mv-010.jpg
+  updated: 2026-11-10
+  files:
+    count: 9
+    size: "27.3 GB"
+    format: "JPG×6 / NFO / PNG / MKV"
+    tree: |
+      010-柏林谍变 (2013)/
+      backdrop.jpg
+      banner.jpg
+      fanart.jpg
+      landscape.jpg
+      poster.jpg
+      thumb.jpg
+      The Berlin File (2013) - 1080p BluRay REMUX AVC DTS-HD MA 5.1.mkv
+      The Berlin File (2013) - 1080p BluRay REMUX AVC DTS-HD MA 5.1.nfo
+      logo.png
 
 - id: mv-009
   title: "俄罗斯方块"
@@ -162,6 +178,14 @@
   date: 2021-09-09
   added: 2026-09-19
   image: mv-002.jpg
+  updated: 2026-11-10
+  files:
+    count: 1
+    size: "11.1 GB"
+    format: "MKV"
+    tree: |
+      002-无限 Infinite (2021)/
+      Infinite.2021.BluRay.2160p.TrueHD.Atmos.7.1.x265.10bit.HDR-ALT.mkv
 
 - id: mv-001
   title: "营救夜莺"
