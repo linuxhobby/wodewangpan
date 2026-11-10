@@ -15,6 +15,7 @@
     "token": "",
     "allowed_chats": [],
     "reply_mode": "group",
+    "display_name": "",
     "private_max_results": 10,
     "proxy": "",
     "poll_timeout": 25,

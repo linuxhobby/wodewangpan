@@ -17,8 +17,17 @@ import re
 # 「网盘名<TAB>https://...」
 _LINK_LINE = re.compile(r"^(?P<name>[^\t]+)\t(?P<url>https?://\S+)$")
 
+# 行内写法的超链接：[机器人](https://t.me/xxx) —— 链接文字可以自定义，不像裸链那样只能显示网址
+_MD_LINK = re.compile(r"\[(?P<label>[^\[\]\n]{1,60})\]\((?P<lurl>https?://[^\s()<>]+)\)")
+
 # 普通行里出现的裸链接（比如欢迎语里的站点地址），也做成可点
 _URL_RE = re.compile(r"(https?://[^\s<>\u3000（）【】「」]+)")
+
+# 一次扫完，行内链接优先，剩下的裸链接也接上
+_INLINE_RE = re.compile(
+    r"\[(?P<label>[^\[\]\n]{1,60})\]\((?P<lurl>https?://[^\s()<>]+)\)"
+    r"|(?P<raw>https?://[^\s<>\u3000（）【】「」]+)"
+)
 
 SITE_TAIL_PREFIX = "更多资源访问："
 
@@ -31,11 +40,14 @@ def _a(url, label):
 
 
 def _linkify(line):
-    """把一行里的裸链接转成 <a>，其余部分照常转义。"""
+    """把一行里的「[文字](网址)」和裸链接都转成 <a>，其余部分照常转义。"""
     out, pos = [], 0
-    for m in _URL_RE.finditer(line):
+    for m in _INLINE_RE.finditer(line):
         out.append(html.escape(line[pos:m.start()], quote=False))
-        out.append(_a(m.group(1), m.group(1)))
+        if m.group("lurl"):
+            out.append(_a(m.group("lurl"), m.group("label")))
+        else:
+            out.append(_a(m.group("raw"), m.group("raw")))
         pos = m.end()
     out.append(html.escape(line[pos:], quote=False))
     return "".join(out)
@@ -62,5 +74,7 @@ def to_html(text):
 
 
 def to_plain(text):
-    """兜底：HTML 被拒时发的原样文本（去掉制表符，改成一个空格，手机上更好读）。"""
-    return (text or "").replace("\t", "  ")
+    """兜底：HTML 被拒时发的原样文本。
+    去掉制表符（改成一个空格，手机上更好读），行内链接还原成「文字（网址）」。"""
+    t = _MD_LINK.sub(lambda m: "%s（%s）" % (m.group("label"), m.group("lurl")), text or "")
+    return t.replace("\t", "  ")

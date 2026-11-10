@@ -166,7 +166,7 @@ real_api = tg._api
 real_handle = tg.handlers.handle
 real_cfg = tg._load_cfg_cached
 tg._api = fake_api
-tg._ME = {"username": BOT}
+tg._ME = {"username": BOT, "first_name": "小艾"}
 # 假 handlers：由 ITEMS 控制「几条结果」，CHUNKS 控制「拆成几条消息」，
 # 用来验证群回执的条数与私发的全量行为。
 STATE = {"items": 1, "chunks": ["神探狄仁杰 第一部 ｜ 电视剧\n夸克网盘\thttps://pan.quark.cn/s/abc"],
@@ -204,7 +204,8 @@ check("私聊内容含链接", "pan.quark.cn" in (to_chat(42)[0].get("text") or 
 check("群里只有一行回执", len(to_chat(-100123)), 1)
 check("群里回执不含结果", "pan.quark.cn" in (to_chat(-100123)[0].get("text") or ""), False)
 receipt = to_chat(-100123)[0].get("text") or ""
-check("回执带条数", "1 条结果已私发" in receipt, True)
+check("回执带条数", "1 条结果已返回" in receipt, True)
+check("「助理小艾」是超链接", '<a href="https://t.me/%s">助理小艾</a>' % BOT in receipt, True)
 check("群里查询一次要全量", STATE["page"], tg.PRIVATE_PAGE_SIZE)
 tg.TG = dict(tg.TG, private_max_results=0)
 check("配 0 表示不限", tg._page_size("supergroup"), 0)
@@ -222,7 +223,7 @@ tg.time = type("T", (), {"sleep": staticmethod(lambda s: None), "time": staticme
 tg.handle_update(mk_query(44, "/s 神探狄仁杰", 9205))
 check("4 段正文全发到私聊", len(to_chat(44)), 4)
 check("群里仍只有一行", len(to_chat(-100123)), 1)
-check("回执写的是结果条数不是消息数", "25 条结果已私发" in (to_chat(-100123)[0].get("text") or ""), True)
+check("回执写的是结果条数不是消息数", "25 条结果已返回" in (to_chat(-100123)[0].get("text") or ""), True)
 
 # 没命中 / 帮助：短消息留在群里，不往私聊塞
 calls.clear()

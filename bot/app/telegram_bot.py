@@ -309,22 +309,36 @@ def _page_size(ctype):
     return None                # 交给 handlers 用默认的 PAGE_SIZE
 
 
+def _bot_label():
+    """回执里显示给用户看的名字，默认「助理 + 机器人 first_name」（现在是「助理小艾」）。
+    改名或想换称呼，在 config 的 telegram.display_name 里写死即可。"""
+    fixed = (TG.get("display_name") or "").strip()
+    if fixed:
+        return fixed
+    name = (_ME.get("first_name") or "").strip()
+    if not name:
+        return "机器人"
+    return name if name.startswith("助理") else "助理" + name
+
+
 def _receipt(chat_id, uid, chunks, reply_to, items):
     """群里只留一行回执，结果全部发到私聊。
     先发第一条探路：私聊没开通就直接回深链，开了就把剩下的一次性发完。"""
     bot = _ME.get("username") or ""
+    link = "https://t.me/%s" % bot
+    label = _bot_label()
     ok, res = _send_raw(uid, chunks[0])
     if not ok:
         log("× 私发第一条失败（uid %s）：%s" % (uid, ((res or {}).get("description") or "")[:60]))
         token = _stash_put(uid, chunks)
         send(chat_id,
-             "%d 条结果已备好，点下面链接开通私聊，我马上发给你：\nhttps://t.me/%s?start=%s"
-             % (items, bot, token),
+             "%d 条结果已备好，请点开[%s](%s?start=%s)开通私聊，我马上发给你。"
+             % (items, label, link, token),
              reply_to=reply_to)
         return
 
     # 回执在发正文前就贴出来：结果多的时候群里不用干等
-    send(chat_id, "%d 条结果已私发，点这里打开私聊：https://t.me/%s" % (items, bot),
+    send(chat_id, "%d 条结果已返回，请点击 [%s](%s) 查看。" % (items, label, link),
          reply_to=reply_to)
 
     rest = chunks[1:]
