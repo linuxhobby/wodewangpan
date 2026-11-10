@@ -389,8 +389,14 @@ def handle_update(update):
     if not chat_id:
         return
 
+    # 白名单管的是群和频道；私聊单独由 allow_private 控制。
+    # 不然群成员点深链进私聊时，他的 user_id 不在白名单就会被丢掉，深链也就白给了。
     wl = [str(x) for x in (TG.get("allowed_chats") or [])]
-    if wl and str(chat_id) not in wl:
+    if ctype == "private":
+        if not TG.get("allow_private", True):
+            log("· 私聊已关闭（allow_private=false），忽略 %s" % (uid,))
+            return
+    elif wl and str(chat_id) not in wl:
         log("· 跳过非白名单会话 %s（%s）" % (chat_id, chat.get("title") or ctype))
         return
 

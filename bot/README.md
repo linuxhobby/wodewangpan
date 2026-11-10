@@ -86,7 +86,8 @@ id - 看当前会话信息
 |---|---|
 | `enabled` | 总开关 |
 | `token` | BotFather 给的 token，留空则整个 TG 通道不启动 |
-| `allowed_chats` | 只在这些会话响应。先用 `/id` 取回后回填，留空表示哪都响应 |
+| `allowed_chats` | 只管群和频道。先用 `/id` 取回后回填，留空表示哪都响应 |
+| `allow_private` | 默认 `true`。私聊是否响应。私聊**不受** `allowed_chats` 约束，否则群成员点深链进来会被丢掉 |
 | `reply_mode` | `group` 结果发在群里；`private` 发到提问者私聊，群里只留一行回执。见 5.1 |
 | `proxy` | 形如 `http://127.0.0.1:7890`。国内必须填，否则连不上 `api.telegram.org`；海外 VPS 留空即可 |
 | `poll_timeout` | 长轮询挂起秒数，默认 25 |

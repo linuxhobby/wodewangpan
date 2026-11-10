@@ -211,6 +211,28 @@ tg.handle_update(mk_query(43, "/s 神探狄仁杰", 9204))
 check("group 模式照旧发群里", len(to_chat(-100123)), 1)
 check("group 模式不碰私聊", len(to_chat(43)), 0)
 
+print("9) 白名单只管群，私聊由 allow_private 控制")
+calls.clear()
+tg.TG = {"reply_mode": "private", "allowed_chats": [-100123], "allow_private": True,
+         "cooldown_seconds": 0, "global_rate_per_minute": 0}
+tg.handle_update({"update_id": 9301, "message": {
+    "message_id": 9301, "chat": {"id": -100999, "type": "supergroup", "title": "别人的群"},
+    "from": {"id": 55, "username": "x"}, "text": "/s 神探狄仁杰"}})
+check("非白名单群不回", len(calls), 0)
+
+calls.clear()
+tg.handle_update({"update_id": 9302, "message": {
+    "message_id": 9302, "chat": {"id": 55, "type": "private"},
+    "from": {"id": 55, "username": "x"}, "text": "/s 神探狄仁杰"}})
+check("白名单外的私聊照常响应", len(calls), 1)
+
+calls.clear()
+tg.TG = dict(tg.TG, allow_private=False)
+tg.handle_update({"update_id": 9303, "message": {
+    "message_id": 9303, "chat": {"id": 56, "type": "private"},
+    "from": {"id": 56, "username": "y"}, "text": "/s 神探狄仁杰"}})
+check("allow_private=false 时私聊不理", len(calls), 0)
+
 tg._api = real_api
 tg.handlers.handle = real_handle
 tg._load_cfg_cached = real_cfg
