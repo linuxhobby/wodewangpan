@@ -1147,6 +1147,23 @@
   date: 2023-03-23
   added: 2026-09-27
   image: tv-045.jpg
+  updated: 2026-11-11
+  files:
+    count: 10
+    size: "18.9 GB"
+    format: "MKV×10"
+    tree: |
+      045-暗夜情报员[全10集][简繁英字幕].The.Night.Agent.S01.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-BlackTV/
+      The.Night.Agent.S01E01.The.Call.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
+      The.Night.Agent.S01E02.Redial.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
+      The.Night.Agent.S01E03.The.Zookeeper.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
+      The.Night.Agent.S01E04.Eyes.Only.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
+      The.Night.Agent.S01E05.The.Marionette.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
+      The.Night.Agent.S01E06.Fathoms.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
+      The.Night.Agent.S01E07.Best.Served.Cold.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
+      The.Night.Agent.S01E08.Redux.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
+      The.Night.Agent.S01E09.The.Devil.We.Know.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
+      The.Night.Agent.S01E10.Fathers.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-BlackTV.mkv
 
 - id: tv-046
   title: "恶人传记"
@@ -1159,6 +1176,23 @@
   date: 2023-10-14
   added: 2026-09-27
   image: tv-046.jpg
+  updated: 2026-11-11
+  files:
+    count: 10
+    size: "6.8 GB"
+    format: "MKV×10"
+    tree: |
+      046-恶人传记[全10集][中文字幕].Evilive.S01.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV/
+      Evilive.S01E01.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
+      Evilive.S01E02.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
+      Evilive.S01E03.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
+      Evilive.S01E04.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
+      Evilive.S01E05.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
+      Evilive.S01E06.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
+      Evilive.S01E07.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
+      Evilive.S01E08.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
+      Evilive.S01E09.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
+      Evilive.S01E10.2023.1080p.IQ.WEB-DL.H264.DDP-BlackTV.mkv
 
 - id: tv-047
   title: "地狱担保人"
@@ -1171,6 +1205,21 @@
   date: 2025-04-03
   added: 2026-09-27
   image: tv-047.jpg
+  updated: 2026-11-11
+  files:
+    count: 8
+    size: "15.5 GB"
+    format: "MKV×8"
+    tree: |
+      047-地狱担保人The.Bondsman/
+      The.Bondsman.S01E01.1080p.AMZN.WEB-DL.H.264.DDP5.1-ZeroTV.mkv
+      The.Bondsman.S01E02.1080p.AMZN.WEB-DL.H.264.DDP5.1-ZeroTV.mkv
+      The.Bondsman.S01E03.1080p.AMZN.WEB-DL.H.264.DDP5.1-ZeroTV.mkv
+      The.Bondsman.S01E04.1080p.AMZN.WEB-DL.H.264.DDP5.1-ZeroTV.mkv
+      The.Bondsman.S01E05.1080p.AMZN.WEB-DL.H.264.DDP5.1-ZeroTV.mkv
+      The.Bondsman.S01E06.1080p.AMZN.WEB-DL.H.264.DDP5.1-ZeroTV.mkv
+      The.Bondsman.S01E07.1080p.AMZN.WEB-DL.H.264.DDP5.1-ZeroTV.mkv
+      The.Bondsman.S01E08.1080p.AMZN.WEB-DL.H.264.DDP5.1-ZeroTV.mkv
 
 - id: tv-048
   title: "卧底高中"
