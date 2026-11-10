@@ -129,6 +129,14 @@
   date: 2026-09-06
   added: 2026-09-10
   image: mv-005.jpg
+  updated: 2026-11-11
+  files:
+    count: 1
+    size: "9.1 GB"
+    format: "MKV"
+    tree: |
+      005-山竹刀 (2026) 4K 高码 60帧/
+      2026.2160p.HQ.60FPS.WEB-DL.H265.DDP2.0&AAC2.0&FLAC2.0.mkv
 
 - id: mv-004
   title: "生死时限"
