@@ -144,6 +144,8 @@ cp config.example.json config.json
 按 `Win + R` 输入 `shell:startup` 回车，把 `后台启动.vbs` 的快捷方式丢进去。
 注意 NapCat 也要随机器启动，在 NapCat 设置里勾选开机自启。
 
+**改了代码怎么生效**：双击 `后台启动.vbs` 即可。它会先结束旧的 `bot.py` 进程，再静默拉起新的，不用去任务管理器手动杀进程（Python 没有热加载）。
+
 ## 不用 NapCat 时如何验证
 
 ```bash
