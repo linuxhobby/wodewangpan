@@ -46,6 +46,7 @@
 
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sortTree } from './lib/tree-sort.mjs';
@@ -113,6 +114,55 @@ const airingN = Math.max(0, Number(getArg('airing', 1)) || 0);
 // 每写入 1 条允许尝试的候选数上限（占位/失败顺延的兜底，避免空转打爆接口）
 const triesPerWrite = Math.max(1, Number(getArg('tries', 20)) || 20);
 
+/**
+ * 取数口径（2026-11-11 起可切换）。
+ *   · share（默认）：夸克分享详情接口，客态访问、无需网盘授权，反映**访客实际能拿到什么**。
+ *   · drive：登录态网盘目录（CLI browse --all），反映**盘端真实内容**。
+ * 切换原因：夸克会对分享链接里的文件做**文件级屏蔽**——同一个目录，登录态看到 9 集、访客只看到 2 份
+ * 说明文件（实测 tv-016 / tv-058 / tv-078 / tv-123 / dc-086）。这类条目按 share 口径写出来的清单
+ * 不是「资源不完整」，而是「平台不给访客看」，所以允许对指定条目改读盘端真实目录。
+ * ⚠ 只换「取一个目录的直接子项」这一层：下钻、剔占位、聚合、排序、签名比对仍只有
+ *   locateContent + aggregate + lib/tree-sort 一份实现。两套源写出来的 files 块必须同构，
+ *   否则连载轮询会因口径差误判「盘端变了」，每轮重写并伪造 updated（AGENTS.md §5 第一红线）。
+ * ⚠ 默认值不改：例行轮（--limit 3）仍走 share，只有 --source drive
+ *   或 id 在 config/drive-source-ids.json 里的条目才走盘端。
+ */
+const SOURCE = String(getArg('source', 'share')).toLowerCase();
+const DRIVE_MAP_FILE = path.join(root, 'config', 'drive-fids.json');
+const DRIVE_IDS_FILE = path.join(root, 'config', 'drive-source-ids.json');
+let driveMap = null;
+let driveIds = null;
+/** id → 盘端编号目录的 { fid, name }；映射由 tools/scan-drive-fids.mjs 生成 */
+function loadDriveMap() {
+  if (driveMap !== null) return driveMap;
+  try {
+    driveMap = JSON.parse(fs.readFileSync(DRIVE_MAP_FILE, 'utf8'));
+  } catch {
+    driveMap = {};
+  }
+  return driveMap;
+}
+/** 固定走盘端口径的条目清单（被屏蔽台账）；缺文件视为空表 */
+function loadDriveIds() {
+  if (driveIds !== null) return driveIds;
+  try {
+    driveIds = new Set(JSON.parse(fs.readFileSync(DRIVE_IDS_FILE, 'utf8')));
+  } catch {
+    driveIds = new Set();
+  }
+  return driveIds;
+}
+/** 本条是否走登录态盘端口径 */
+function useDrive(id) {
+  if (SOURCE !== 'drive' && !loadDriveIds().has(id)) return false;
+  const hit = loadDriveMap()[id];
+  if (!hit || !hit.fid) {
+    console.log(`  ${id} 指定了 drive 口径但 config/drive-fids.json 里没有它的盘端目录 fid，回落 share`);
+    return false;
+  }
+  return true;
+}
+
 // 北京时间今天，写进条目的 updated 字段（sitemap lastmod 依此真实更新）
 const today = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
 // 夸克 skill 要求的追踪参数
@@ -166,9 +216,68 @@ function fetchDetail(url, pdirFid = '', page = 1) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 /** 单目录最多翻几页（50 条/页）：绝大多数目录一页就够，超大目录封顶 150 条 */
 const MAX_PAGES = 3;
+/** drive 口径的中间产物目录（browse 的 JSONL 落这里，绝不落在仓库里，免得污染 git status） */
+const DRIVE_TMP = path.join(os.tmpdir(), 'wdwp-fill-files', SESSION_ID);
 
-/** 翻页取全一个目录的文件列表；成功返回 { files }，失败返回 { error } */
-async function fetchAll(url, pdirFid = '') {
+/**
+ * drive 口径：登录态读某个网盘目录的直接子项。
+ * 返回条目的字段（filename / file_type / size / fid）与 share-detail 一致，
+ * 所以下游 locateContent、aggregate、tree-sort 一行都不用改。
+ */
+function fetchDriveDir(fid) {
+  let out;
+  try {
+    fs.mkdirSync(DRIVE_TMP, { recursive: true });
+    out = execFileSync(
+      process.execPath,
+      [
+        CLI,
+        'browse',
+        '--parent-fid', fid,
+        '--all',
+        '--task-dir', DRIVE_TMP,
+        '--session-input', SESSION_INPUT,
+        '--session-id', SESSION_ID,
+      ],
+      { encoding: 'utf8', timeout: 180_000 }
+    );
+  } catch (e) {
+    return { error: `调用失败：${String(e.message).split('\n')[0]}` };
+  }
+  for (const line of out.split('\n')) {
+    const t = line.trim();
+    if (!t.startsWith('{')) continue;
+    let obj;
+    try {
+      obj = JSON.parse(t);
+    } catch {
+      continue;
+    }
+    if (obj.type !== 'result' || obj.action !== 'browse') continue;
+    if (obj.code !== 0) return { error: obj.msg || `code=${obj.code}` };
+    const file = obj.data?.file_path;
+    if (!file || !fs.existsSync(file)) return { error: 'browse 未落盘子项清单' };
+    const raw = fs.readFileSync(file, 'utf8').trim();
+    const files = raw ? raw.split('\n').map((l) => JSON.parse(l)) : [];
+    return { data: { files } };
+  }
+  return { error: 'CLI 无 result 输出' };
+}
+
+/**
+ * 翻页取全一个目录的文件列表；成功返回 { files }，失败返回 { error }
+ * target = { url, id }：id 命中 drive 口径时走登录态，否则走分享客态。
+ * drive 的第一层（pdirFid 为空）合成成「根目录里只有那个编号目录」，
+ * 这样下钻与 prefix 的行为和 share 完全同构。
+ */
+async function fetchAll(target, pdirFid = '') {
+  const { url, id } = target;
+  if (useDrive(id)) {
+    const hit = loadDriveMap()[id];
+    if (!pdirFid) return { files: [{ fid: hit.fid, filename: hit.name, file_type: '0', size: 0 }] };
+    const r = fetchDriveDir(pdirFid);
+    return r.data ? { files: r.data.files } : r;
+  }
   const files = [];
   for (let page = 1; page <= MAX_PAGES; page++) {
     const r = fetchDetail(url, pdirFid, page);
@@ -195,12 +304,12 @@ async function fetchAll(url, pdirFid = '') {
  *   · 下钻中途抓取失败一律返回 { error }：调用方按失败处理，绝不写残缺清单。
  * 返回 { files, prefix }：files 为最终定位层（已剔占位），prefix 为沿途目录名。
  */
-async function locateContent(url, rootFiles) {
+async function locateContent(target, rootFiles) {
   let files = rootFiles.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
   const prefix = [];
   let depth = 0;
   while (files.length === 1 && files[0].file_type === '0' && depth < 2) {
-    const sub = await fetchAll(url, files[0].fid);
+    const sub = await fetchAll(target, files[0].fid);
     if (!sub.files) return { error: sub.error || '下钻抓取失败' };
     prefix.push(`${String(files[0].filename || '').trim()}/`);
     files = sub.files.filter((f) => !PLACEHOLDER_FILE_RE.test(String(f.filename || '')));
@@ -388,7 +497,7 @@ for (const item of pending.slice(0, maxTries)) {
   tried++;
   process.stdout.write(`${item.id} … `);
   // 根目录往往只装一个总文件夹：按 locateContent 的口径下钻（最多 2 级）拿真实内容清单
-  let root = await fetchAll(item.url);
+  let root = await fetchAll({ url: item.url, id: item.id });
   if (!root.files) {
     const msg = root.error || '分享内容为空';
     console.log(`失败（${msg}）`);
@@ -404,7 +513,7 @@ for (const item of pending.slice(0, maxTries)) {
     // ⚠ 新增/改名占位文件时必须同步改这里，否则占位 md 会被当成真实资源写进 files: 假清单。
     //   权威定义在 C:/Users/marco/.qwenworkcn/skills/quark-resource-sync/scripts/lib/placeholder.mjs（跨仓库，无法 import）。
     // 下钻（最多 2 级）与剔占位的口径只在 locateContent 一份，连载轮询共用（2026-11-10 定稿）。
-    const loc = await locateContent(item.url, root.files);
+    const loc = await locateContent({ url: item.url, id: item.id }, root.files);
     if (loc.error) {
       console.log(`失败（${loc.error}）`);
       fail++;
@@ -482,7 +591,7 @@ async function runSerialRefresh() {
   let unchanged = 0;
   for (const item of picked) {
     process.stdout.write(`  ${item.id} … `);
-    const rootRes = await fetchAll(item.quarkUrl);
+    const rootRes = await fetchAll({ url: item.quarkUrl, id: item.id });
     if (!rootRes.files) {
       const msg = rootRes.error || '分享内容为空';
       console.log(`失败（${msg}）`);
@@ -490,7 +599,7 @@ async function runSerialRefresh() {
     } else {
       // 下钻（最多 2 级）与剔占位与补齐流程共用同一份 locateContent（2026-11-10 定稿）。
       // 下钻中途抓取失败一律按失败上报：残缺的目录级快照不是「盘端变了」，绝不能整体重写清单。
-      const loc = await locateContent(item.quarkUrl, rootRes.files);
+      const loc = await locateContent({ url: item.quarkUrl, id: item.id }, rootRes.files);
       let agg = null;
       if (loc.error) {
         console.log(`失败（${loc.error}）`);
@@ -573,14 +682,14 @@ async function runTodoScan() {
   const errors = [];
   for (const item of recent) {
     process.stdout.write(`  ${item.id} … `);
-    const r = await fetchAll(item.url);
+    const r = await fetchAll({ url: item.url, id: item.id });
     if (!r.files) {
       console.log(`抓取失败（${r.error || '分享内容为空'}）`);
       errors.push(`${item.id}: ${r.error || '分享内容为空'}`);
     } else {
       // 与补齐 / 连载轮询共用同一份 locateContent：先剔占位再判断下钻，最多 2 级。
       // 这里只读盘点，不回填 prefix、不写盘；下钻失败只算抓取失败，不进「待加资源」清单。
-      const loc = await locateContent(item.url, r.files);
+      const loc = await locateContent({ url: item.url, id: item.id }, r.files);
       if (loc.error) {
         console.log(`抓取失败（${loc.error}）`);
         errors.push(`${item.id}: ${loc.error}`);

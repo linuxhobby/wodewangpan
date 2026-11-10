@@ -36,6 +36,9 @@ node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
 | `scripts/lib/assets.js` | 配图/二维码等静态资产处理 |
 | `tools/fill-files.mjs` | 补「文件清单」`files:` 块（§4 例行任务的主角） |
 | `tools/sort-trees.mjs` | 回填已有 `files.tree` 的行序（只重排，不动内容与日期） |
+| `tools/scan-drive-fids.mjs` | 扫夸克 SHARE 目录，生成 `config/drive-fids.json`（id → 盘端目录 fid），`--source drive` 口径依赖它 |
+| `config/drive-fids.json` | 站内 id → 盘端编号目录 fid/目录名映射（只读缓存，盘端改名后重跑扫描脚本即可，不是内容源） |
+| `config/drive-source-ids.json` | 被屏蔽台账：这些条目取数走盘端真实目录而非分享客态（§4） |
 | `tools/lib/tree-sort.mjs` | 目录树排序的唯一实现，fill-files 与 sort-trees 共用，勿另写一份 |
 | `tools/lib/serials.mjs` | 连载轮询的唯一口径（候选、无状态轮换、快照签名、保留行尾写盘），fill-files 与 list-ongoing 共用 |
 | `tools/lib/tmdb.mjs` | TMDB 只读查询（凭据跨机探测、剧名年份校验、播出事件、季号识别），只供追更提醒 |
@@ -90,6 +93,24 @@ node tools/fill-files.mjs --limit 3 --delay 3000
   占位 md 不参与判断（它们自 2026-11-08 起铺满各级目录，按原始条数判断会让下钻提前停一层，
   把「目录级残缺快照」当成清单写盘——实测 an-007 的 12 集被写成 `count: 1`、size/format 全丢）。
   下钻中途抓取失败一律按**失败**处理：宁可这一条不写，也绝不写残缺清单。
+- `--source <share|drive>` 取数口径开关（2026-11-11 起，**默认 `share`，例行轮一个字都不用改**）。
+  `share` = 夸克分享详情接口、客态访问，反映**访客实际能拿到什么**；`drive` = 登录态网盘目录
+  （CLI `browse --all`），反映**盘端真实内容**。切换的原因：夸克会对分享链接里的文件做**文件级屏蔽**——
+  同一个目录登录态有 9 集、访客只看到 2 份说明文件（实测 `tv-016` 9 集全屏蔽、`tv-078` 访客端 0 项、
+  `tv-058` 13 集只放出 2 集、`tv-123` / `dc-086` 部分屏蔽），这类条目的清单按 `share` 写出来不是「资源不完整」
+  而是「平台不给访客看」，所以允许逐条改读盘端。
+  - **哪些条目走 `drive` 由 `config/drive-source-ids.json` 决定**（被屏蔽台账，id 数组）。
+    补齐、连载轮询、待办扫描三处都读它，**命中即走盘端**——这一步是硬要求：如果只把清单按 `drive` 写进去、
+    轮询还按 `share` 抓，下一轮就会把 9 集缩回 2 集并再盖一次 `updated`（§5 红线）。
+  - `drive` 口径需要 id → 盘端目录 fid 的映射，即 `config/drive-fids.json`，由
+    `node tools/scan-drive-fids.mjs` 扫 SHARE 生成（`--dry-run` 只看统计）；盘端改名/换号后重跑。
+    映射里查不到该 id 时自动回落 `share` 并打印一行提示，不会静默降级成假清单。
+  - 两套源**只换「取一个目录的直接子项」这一层**：下钻、剔占位、聚合、排序、签名比对仍然只有
+    `locateContent` + `aggregate` + `tools/lib/tree-sort.mjs` 一份实现，`drive` 的第一层会合成成
+    「根目录里只有那个编号目录」，保证两边写出的 `files:` 块同构。绝不许为 `drive` 另写一份口径。
+  - 已知代价：`drive` 清单包含访客拿不到的文件，属于对用户的过度承诺。暂不改详情页文案，
+    被屏蔽条目以 `config/drive-source-ids.json` 为准可查。存量条目**不做一次性回填**（会批量盖 `updated`），
+    靠补齐队列与轮询自然消化。
 
 **占位说明文件一律排除在文件清单之外**（2026-11-08 定稿为硬性规则）。下列都是建目录时预置的工作流产物，
 **不是资源内容**，`count` / `size` / `format` / `tree` 全部不计入、不单列成一行：
