@@ -78,3 +78,10 @@ promo:
   text: 【衡天云】海外云服务器12元/月起，开年限量抢购，超高性价比！
   # 落地页优先级：activity 用活动页，register 用注册页；改这里即可整体切换
   defaultHref: activity
+# 全站顶部公告条（静态，紧跟顶栏之后、分类栏之前）。enabled: false 可一键关闭。
+# 换公告只改这里的文案与链接，不用动代码；href 支持站内锚点，#qq-bot 是「关于本站」页的 QQ 群指令章节。
+notice:
+  enabled: true
+  text: QQ群已经增加资源搜索功能
+  href: /about/#qq-bot
+  more: 查看指令 →

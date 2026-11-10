@@ -292,6 +292,8 @@ export function loadSite(configDir) {
     homeCatOrder: cfg.homeCatOrder === 'recent' ? 'recent' : 'fixed',
     // 衡天云联盟推广：enabled 为 false 时渲染层不输出任何推广位
     promo: cfg.promo && typeof cfg.promo === 'object' ? cfg.promo : null,
+    // 顶部公告条：enabled 为 false 时渲染层不输出，文案/链接由 site.yaml 维护
+    notice: cfg.notice && typeof cfg.notice === 'object' ? cfg.notice : null,
   };
 }
 

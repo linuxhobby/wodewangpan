@@ -72,6 +72,22 @@ const footNav = (current = '', baseUrl = '') =>
       )}"${i.href === current ? ' aria-current="page"' : ''}>${esc(i.label)}</a>`
   ).join('')}</nav>`;
 
+/** 全站顶部公告条：紧跟 sticky 顶栏、不常驻滚动；整条即一个站内链接。
+ *  文案与链接来自 site.yaml 的 notice，enabled: false 或内容不全时不输出 */
+function noticeBar(site) {
+  const n = site.notice;
+  if (!n || n.enabled === false || !n.text || !n.href) return '';
+  return `<div class="notice-bar">
+  <div class="wrap notice-bar__inner">
+    <a class="notice-bar__link" href="${esc(n.href)}">
+      <span class="notice-bar__badge">公告</span>
+      <span class="notice-bar__text">${esc(n.text)}</span>
+      <span class="notice-bar__more">${esc(n.more || '查看详情 →')}</span>
+    </a>
+  </div>
+</div>`;
+}
+
 // 衡天云联盟推广位：图片 + 赞助链接。rel=sponsored 是 Google 对联盟/赞助链接的硬性要求
 function promoLinkOf(site) {
   const p = site.promo;
@@ -373,6 +389,7 @@ ${jsonLd ? jsonLdBlock(jsonLd) : ''}
     </form>
   </div>
 </header>
+${noticeBar(site)}
 ${catNav(categories, counts, activeCat, total, hotOn)}
 <main class="wrap">
 ${body}
@@ -1408,10 +1425,32 @@ export function aboutPage(ctx) {
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>关于本站</span></nav>
 <h1 class="page__title page__title--doc">关于本站</h1>
 <div class="card-page">
-  <p><strong>${esc(site.title)}</strong> 是一个纯静态的网盘资源索引站：把散落在各处的夸克 / 百度 / 阿里云盘资源整理成条目，
-  统一给出海报、简介、标签和转存链接，打开网页即可直接使用，无需注册登录。</p>
+  <h2 id="qq-group">加入${qqName ? `「${esc(qqName)}」` : ''}QQ群</h2>
+  <p>有问题、想交流资源，或者发现链接失效？欢迎扫码加入${qqName ? `QQ群<strong>${esc(qqName)}</strong>` : '本站QQ群'}交流反馈。</p>
+  <div class="qq-qr">
+    ${qqLink ? `<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">` : ''}
+    <img src="/qq-group.png" alt="${qqName ? `${esc(qqName)} ` : ''}QQ群二维码" width="260" height="260" loading="lazy">
+    ${qqLink ? '</a>' : ''}
+    <p class="muted">扫码加入${qqName ? `QQ群「${esc(qqName)}」` : 'QQ群'}</p>
+  </div>
+  ${qqLink ? `<p>也可直接 <a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>。</p>` : ''}
+  ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}
+
+  <h2 id="qq-bot">QQ群机器人指令</h2>
+  <p>加入 QQ 群后，在群里直接发送以下指令，机器人会自动回复结果：</p>
+  <ul>
+    <li><code>/搜索 关键词</code> 或 <code>/s 关键词</code> —— 查询资源并返回网盘共享链接</li>
+    <li><code>/最新</code> —— 最近上架的资源</li>
+    <li><code>/今日</code> —— 今天更新的资源</li>
+    <li><code>/分类</code> —— 各分类数量</li>
+    <li><code>/随机</code> —— 随便抽一条</li>
+    <li><code>/帮助</code> —— 查看指令说明</li>
+  </ul>
+  ${qqLink ? `<p>还没入群？<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>，或扫上方二维码。</p>` : ''}
 
   <h2>站点概况</h2>
+  <p><strong>${esc(site.title)}</strong> 是一个纯静态的网盘资源索引站：把散落在各处的夸克 / 百度 / 阿里云盘资源整理成条目，
+  统一给出海报、简介、标签和转存链接，打开网页即可直接使用，无需注册登录。</p>
   <ul>
     <li>已收录资源：<strong>${total}</strong> 个</li>
     <li>资源分类：<strong>${(categories || []).length}</strong> 类（${(categories || []).join('、')}）</li>
@@ -1436,18 +1475,7 @@ ${catRows}
 
   <h2>内容来源与版权</h2>
   <p>${esc(site.disclaimer)}。本站不存储任何影片、软件或电子书本体，所有文件均存放在第三方网盘上；
-  若你是版权方或发现链接失效，欢迎通过下方方式联系，我们会在核实后第一时间处理。</p>
-
-  <h2 id="qq-group">加入${qqName ? `「${esc(qqName)}」` : ''}QQ群</h2>
-  <p>有问题、想交流资源，或者发现链接失效？欢迎扫码加入${qqName ? `QQ群<strong>${esc(qqName)}</strong>` : '本站QQ群'}交流反馈。</p>
-  <div class="qq-qr">
-    ${qqLink ? `<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">` : ''}
-    <img src="/qq-group.png" alt="${qqName ? `${esc(qqName)} ` : ''}QQ群二维码" width="260" height="260" loading="lazy">
-    ${qqLink ? '</a>' : ''}
-    <p class="muted">扫码加入${qqName ? `QQ群「${esc(qqName)}」` : 'QQ群'}</p>
-  </div>
-  ${qqLink ? `<p>也可直接 <a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>。</p>` : ''}
-  ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}
+  若你是版权方或发现链接失效，欢迎<a href="#qq-group">加入 QQ 群</a>反馈，我们会在核实后第一时间处理。</p>
 
   <h2>订阅与推荐</h2>
   <p>新资源入库后可以 RSS 订阅，不必每天来刷页面：<a href="/rss/">查看 RSS 订阅方式与地址</a>。
