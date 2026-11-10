@@ -816,6 +816,21 @@
   date: 2023-05-25
   added: 2026-09-27
   image: tv-034.jpg
+  updated: 2026-11-11
+  files:
+    count: 8
+    size: "18.4 GB"
+    format: "MKV×8"
+    tree: |
+      034-面目全非.第一季FUBAR.S01.2023.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-SeeWEB/
+      面目全非.FUBAR.S01E01.2023.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-SeeWEB.mkv
+      面目全非.FUBAR.S01E02.2023.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-SeeWEB.mkv
+      面目全非.FUBAR.S01E03.2023.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-SeeWEB.mkv
+      面目全非.FUBAR.S01E04.2023.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-SeeWEB.mkv
+      面目全非.FUBAR.S01E05.2023.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-SeeWEB.mkv
+      面目全非.FUBAR.S01E06.2023.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-SeeWEB.mkv
+      面目全非.FUBAR.S01E07.2023.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-SeeWEB.mkv
+      面目全非.FUBAR.S01E08.2023.1080p.NF.WEB-DL.H264.DDP5.1.Atmos-SeeWEB.mkv
 
 - id: tv-035
   title: "血谜拼图"
@@ -828,6 +843,24 @@
   date: 2025-05-21
   added: 2026-09-27
   image: tv-035.jpg
+  updated: 2026-11-11
+  files:
+    count: 11
+    size: "22.1 GB"
+    format: "MKV×11"
+    tree: |
+      035-血谜拼图[全11集][简繁英字幕].Nine.Puzzles.S01.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV/
+      Nine.Puzzles.S01E01.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E02.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E03.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E04.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E05.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E06.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E07.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E08.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E09.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E10.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
+      Nine.Puzzles.S01E11.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H264-ColorTV.mkv
 
 - id: tv-036
   title: "苏里南"
@@ -840,6 +873,19 @@
   date: 2022-09-09
   added: 2026-09-27
   image: tv-036.jpg
+  updated: 2026-11-11
+  files:
+    count: 6
+    size: "17.2 GB"
+    format: "MKV×6"
+    tree: |
+      036-苏里南[全6集][简繁英字幕].Narco-Saints.S01.2022.NF.WEB-DL.1080p.HEVC.HDR.DDP-Xiaomi/
+      Narco-Saints.S01E01.2022.NF.WEB-DL.1080p.HEVC.HDR.DDP-Xiaomi.mkv
+      Narco-Saints.S01E02.2022.NF.WEB-DL.1080p.HEVC.HDR.DDP-Xiaomi.mkv
+      Narco-Saints.S01E03.2022.NF.WEB-DL.1080p.HEVC.HDR.DDP-Xiaomi.mkv
+      Narco-Saints.S01E04.2022.NF.WEB-DL.1080p.HEVC.HDR.DDP-Xiaomi.mkv
+      Narco-Saints.S01E05.2022.NF.WEB-DL.1080p.HEVC.HDR.DDP-Xiaomi.mkv
+      Narco-Saints.S01E06.2022.NF.WEB-DL.1080p.HEVC.HDR.DDP-Xiaomi.mkv
 
 - id: tv-037
   title: "联结"
