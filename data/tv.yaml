@@ -107,6 +107,12 @@
   date: 2024-01-26
   added: 2026-08-24
   image: tv-007.jpg
+  updated: 2026-11-10
+  files:
+    count: 1
+    tree: |
+      007-财阀刑警/
+      财阀刑警-第一季/
 
 - id: tv-006
   title: "浪客行"
@@ -119,6 +125,29 @@
   date: 2019-09-20
   added: 2026-08-24
   image: tv-006.jpg
+  updated: 2026-11-10
+  files:
+    count: 16
+    size: "25.1 GB"
+    format: "MP4×16"
+    tree: |
+      006-浪客行全16集（2019）/
+      01.mp4
+      02.mp4
+      03.mp4
+      04.mp4
+      05.mp4
+      06.mp4
+      07.mp4
+      08.mp4
+      09.mp4
+      10.mp4
+      11.mp4
+      12.mp4
+      13.mp4
+      14.mp4
+      15.mp4
+      16.mp4
 
 - id: tv-005
   title: "太空部队"
@@ -1924,17 +1953,12 @@
   date: 2025-09-22
   added: "2026-11-08 10:00"
   image: tv-092.jpg
-  updated: 2026-11-08
+  updated: 2026-11-10
   files:
-    count: 3
-    size: "4.4 GB"
-    format: "MKV×3"
+    count: 1
     tree: |
       092-塔尔萨之王-第四季 Tulsa King Season 3‎ (2025)/
       塔尔萨之王 第四季 Tulsa King Season 4‎ (2026)/
-      Tulsa.King.S04E01.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
-      Tulsa.King.S04E02.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
-      Tulsa.King.S04E03.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
 
 - id: tv-093
   title: "电幻国度"

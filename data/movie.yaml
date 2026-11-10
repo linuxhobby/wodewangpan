@@ -61,6 +61,17 @@
   date: 2026-08-19
   added: 2026-08-24
   image: mv-006.jpg
+  updated: 2026-11-10
+  files:
+    count: 4
+    format: "SRT×2 / ZIP"
+    packed: true
+    tree: |
+      006-怒之杀/
+      M.utiny (2026)/
+      Mutiny.2026.1080p.10bit.WEBRip.6CH.x265.HEVC-PSA.zh-en.srt
+      Mutiny.2026.WEB-DL-ppkhoa.1080p【ChatGPT 台灣用語】.srt
+      【4K高码+1080p多版本[秒离线]】相关全部4K高码磁.力.链.接，和.谐缺.集自行复制离.线 (2).zip
 
 - id: mv-005
   title: "山竹刀"
