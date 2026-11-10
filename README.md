@@ -9,6 +9,27 @@
 | 网站 | https://www.wodewangpan.top [衡天云VPS](https://www.htstack.com/activity/act_openyear.shtml?aff=31743) | 
 | 仓库 | `git@github.com:linuxhobby/wodewangpan.git` |
 | 更新方式 | 推到 `main`，VPS 定时自动拉取并重建（急发用 `FORCE=1 wdwp-autoupdate`） |
+| Telegram 群 | [t.me/wodewangpantop](https://t.me/wodewangpantop) ，群里有查询机器人 |
+
+## 交流群
+
+Telegram 群：[**t.me/wodewangpantop**](https://t.me/wodewangpantop)
+
+群名「网盘资源索引站-夸克-百度」，站里的新资源同步在那发，找不到的片也可以直接在群里问。
+
+群里挂了一个查询机器人（[@wodewangpanadmin_bot](https://t.me/wodewangpanadmin_bot)），在群里直接发指令就行，不用 @ 它：
+
+| 指令 | 作用 |
+|---|---|
+| `/s 关键词` | 查资源，回网盘链接（网盘名可点） |
+| `/more` | 上一批没看完，接着翻 |
+| `/latest` | 最近上架的资源 |
+| `/today` | 今天更新的 |
+| `/cats` | 各分类有多少条 |
+| `/random` | 随便抽一条 |
+| `/help` | 指令说明 |
+
+机器人查的就是本站索引，数据与网站同源，命中结果直接给夸克、百度网盘的分享链接与提取码。
 
 ## 网站特性
 
