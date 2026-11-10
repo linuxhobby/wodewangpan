@@ -319,5 +319,12 @@ check("按日期从新到旧", dates, sorted(dates, reverse=True))
 more, _ = sc.search(CFG["site_url"], "电影", 10, 10)
 check("翻页接在后面", (more[0].get("date") or "") <= dates[-1], True)
 
+# 单实例：同一进程里重复拿锁要幂等，不会自己把自己挡住
+check("单实例锁重复获取幂等", (tg._acquire_single_instance(), tg._acquire_single_instance()), (True, True))
+check("锁文件已落地", os.path.exists(tg.LOCK_FILE), True)
+
+# 内嵌开关：默认关（TG 由独立进程跑），配置里必须能读到这个键
+check("telegram.embedded 默认关", bool((CFG.get("telegram") or {}).get("embedded", False)), False)
+
 print("\n结果：%d 通过，%d 失败" % (ok, bad))
 sys.exit(1 if bad else 0)

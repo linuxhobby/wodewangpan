@@ -29,7 +29,7 @@ Set svc = GetObject("winmgmts:\\.\root\cimv2")
 Set list = svc.ExecQuery("SELECT Name, CommandLine FROM Win32_Process")
 For Each p In list
   If InStr(1, p.Name & "", "python", 1) > 0 Then
-    If InStr(1, p.CommandLine & "", "bot.py", 1) > 0 Then running = True
+    If (InStr(1, p.CommandLine & "", "bot.py", 1) > 0 And InStr(1, p.CommandLine & "", "telegram_bot.py", 1) = 0) Then running = True
   End If
   If InStr(1, p.Name & "", "napcat", 1) > 0 Then napcat = True
   If LCase(p.Name & "") = "qq.exe" And InStr(1, p.CommandLine & "", "NapCat", 1) > 0 Then napcat = True

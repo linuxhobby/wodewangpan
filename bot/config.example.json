@@ -12,6 +12,7 @@
   "reply_at_sender": false,
   "telegram": {
     "enabled": true,
+    "embedded": false,
     "token": "",
     "allowed_chats": [],
     "reply_mode": "group",

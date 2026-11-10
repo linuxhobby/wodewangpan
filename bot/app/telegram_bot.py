@@ -46,6 +46,7 @@ LOG_DIR = os.path.join(ROOT, "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE = os.path.join(LOG_DIR, time.strftime("tg-%Y-%m-%d.log"))
 STATE_FILE = os.path.join(LOG_DIR, "tg-state.json")
+LOCK_FILE = os.path.join(LOG_DIR, "tg.lock")
 
 TAG = "[TG]"
 MAX_TG_LEN = 3900        # Telegram 上限 4096，留出 HTML 标签的余量
@@ -125,6 +126,47 @@ def log(msg):
                 f.write(line + "\n")
         except Exception:
             pass
+
+
+# ---------- 单实例 ----------
+
+_lock_handle = None      # 持有锁的文件对象，进程活着就一直拿着
+
+
+def _acquire_single_instance():
+    """同一个 token 只能有一个进程在 getUpdates：两个实例会互相抢消息，各收一半。
+
+    用文件排他锁而不是 pid 文件：进程被 kill / 崩溃时系统自动释放，不会留下死锁。
+    返回 True 表示拿到锁（或本来就在本进程里已拿到）。
+    """
+    global _lock_handle
+    if _lock_handle is not None:
+        return True
+    try:
+        f = open(LOCK_FILE, "a+")
+    except Exception as e:
+        log("× 建不了锁文件 %s（%s），继续运行" % (LOCK_FILE, e))
+        return True
+    try:
+        f.seek(0)
+        if os.name == "nt":
+            import msvcrt
+            msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except Exception:
+        f.close()
+        return False
+    try:
+        f.seek(0)
+        f.truncate()
+        f.write(str(os.getpid()))
+        f.flush()
+    except Exception:
+        pass
+    _lock_handle = f
+    return True
 
 
 # ---------- 配置与网络 ----------
@@ -563,6 +605,11 @@ def run_forever(cfg=None, stop_event=None):
         log("· 未启用或未配 token，停止")
         return
     _CFG = cfg
+
+    if not _acquire_single_instance():
+        log("· 已经有另一个 Telegram 进程在跑了，本进程退出（不退出会互相抢消息，各收一半）")
+        log("  想换进程：先用「结束TG机器人」停掉旧的，再启动新的。")
+        return
 
     me = _api("getMe", timeout=20)
     if me is None:

@@ -45,7 +45,7 @@ For Each p In list
   nm = p.Name & ""
   cmdline = p.CommandLine & ""
   If InStr(1, nm, "python", 1) > 0 Then
-    If InStr(1, cmdline, "bot.py", 1) > 0 Then
+    If InStr(1, cmdline, "bot.py", 1) > 0 And InStr(1, cmdline, "telegram_bot.py", 1) = 0 Then
       p.Terminate
       killed = killed + 1
     End If
@@ -91,6 +91,7 @@ Loop
 If PortReady() Then
   msg = "已就绪（等 " & i & " 秒）。" & vbCrLf & vbCrLf & _
         "机器人已重启（结束旧进程 " & killed & " 个）。" & vbCrLf & _
+        "TG 是独立进程，这次没动它，不用管。" & vbCrLf & _
         "去群里发 /帮助 试试。"
   MsgBox msg, 64, "重启 QQ 机器人"
 Else
@@ -101,7 +102,7 @@ Else
         "   会开一个黑窗口，里面显示二维码和登录日志" & vbCrLf & _
         "2）用手机 QQ 扫码登录，等窗口里出现登录成功的日志" & vbCrLf & _
         "3）再双击一次本脚本，看到「已就绪」就成了" & vbCrLf & vbCrLf & _
-        "注：TG 那边不受影响，它跑在同一个进程里，刚才一直是正常的。"
+        "注：TG 跑在独立进程里，这次重启没有影响它。"
   MsgBox msg, 48, "重启 QQ 机器人 · QQ 未登录"
 End If
 
@@ -130,7 +131,7 @@ Function BotBusy()
   Set q = GetObject("winmgmts:\\.\root\cimv2").ExecQuery("SELECT Name, CommandLine FROM Win32_Process")
   For Each c In q
     If InStr(1, c.Name & "", "python", 1) > 0 Then
-      If InStr(1, c.CommandLine & "", "bot.py", 1) > 0 Then busy = True
+      If (InStr(1, c.CommandLine & "", "bot.py", 1) > 0 And InStr(1, c.CommandLine & "", "telegram_bot.py", 1) = 0) Then busy = True
     End If
   Next
   Err.Clear

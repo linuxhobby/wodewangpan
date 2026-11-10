@@ -361,13 +361,19 @@ def main():
     _check_napcat()
     threading.Thread(target=_warm, daemon=True).start()
 
-    # Telegram 作为同进程的后台线程跑，共享 handlers 与站点缓存。
-    # 没配 telegram.token 就自动跳过，不影响 QQ 这边。
-    try:
-        import telegram_bot
-        telegram_bot.start(CFG)
-    except Exception:
-        log("× Telegram 适配器启动失败\n" + traceback.format_exc())
+    # Telegram 默认由独立进程跑（app/telegram_bot.py，桌面「启动TG机器人」/ 开机自启），
+    # 这样 QQ 这边重启、NapCat 掉线、QQ 掉登录，都不会把 TG 一起拖下水。
+    # 想回到「同一个进程里顺带跑 TG」的老模式，把 config.json 的 telegram.embedded 设成 true。
+    tg_cfg = CFG.get("telegram") or {}
+    if tg_cfg.get("embedded", False):
+        try:
+            import telegram_bot
+            telegram_bot.start(CFG)
+            log("Telegram：内嵌模式（telegram.embedded=true），跑在后台线程")
+        except Exception:
+            log("× Telegram 适配器启动失败\n" + traceback.format_exc())
+    else:
+        log("Telegram：独立进程模式（telegram.embedded=false），本进程不管 TG")
 
     srv = ThreadingHTTPServer((host, port), Handler)
     srv.daemon_threads = True
