@@ -194,6 +194,43 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ## 八、功能模块
 
+### QQ 群查询机器人（2026-11-10 上线）
+
+- 独立仓库 `C:\Users\marco\Github\wodewangpan-bot`，**不在本站仓库内**，本站数据与构建完全不受影响。
+- 链路：群消息 → NapCat（真 QQ 号 909008620「艾特我」）→ OneBot HTTP 上报 `127.0.0.1:6700` → 查 `www.wodewangpan.top` → 回群。
+- **只读线上站**：数据源只有 `/search-index.json` 与 `/resource/<id>/` 两个 HTTP GET，不读 `data/*.yaml`，不依赖仓库，也不写任何本地资源。
+- 群里以 `/` 开头**免 @** 直接执行；裸关键词仍需 @（否则正常群聊会被当搜索，刷屏且招风控）。开关 `config.json` 的 `group_no_at_slash`。
+
+| 指令 | 作用 |
+|---|---|
+| `/搜索 关键词`（`/s` `/搜` `/找` `/查` `/so`） | 回资源名 + 夸克链接，最多 3 条 |
+| `/最新` | 最近上架 8 条 |
+| `/今日` | 今天更新，无则退到最近一次更新日 |
+| `/分类` | 各分类条数 |
+| `/随机` | 随机一条 |
+| `/帮助` | 指令表 |
+
+- 拼音直接命中：索引自带 `py`/`py1`（全拼 + 首字母），`qingzhixiang`、`qzx` 都能搜。
+- 端口全绑 `127.0.0.1`：NapCat WebUI `6099`、OneBot HTTP `3000`、机器人上报 `6700`。
+
+**踩过的坑（都很难查，别再踩）**
+
+1. **HTTP 上报回 204 不能带响应体**。回 204 又写 `{}` 会让 Node 端按规范忽略这 2 字节、残留在 keep-alive 连接里，之后每个事件都报 `Parse Error: Expected HTTP/, RTSP/ or ICE/`；curl 却能容忍，本地测试全绿。正确做法是回 200 且 `Content-Length` 与响应体严格一致。
+2. **上报请求体可能是 chunked**。只读 `Content-Length` 会把请求体当 0 字节，事件被静默丢弃，表现为「NapCat 上报成功、机器人毫无反应」。两种传输都要支持。
+3. **改 `config/onebot11_<uin>.json` 不热加载**，必须重启 NapCat（杀 `NapCatWinBootMain` 与全部 `QQ` 进程后再启动）。
+4. **重启后不会自动登录**。`config/webui.json` 的 `autoLoginAccount` 填小号 QQ 号（或用环境变量 `NAPCAT_QUICK_ACCOUNT`），启动即快速登录，不用重新扫码。
+5. **NapCat 4.18.42 有 bug**：注入成功但核心静默不启动，无端口无日志，报 `error code v2:-8`。**锁 4.18.41**，别升级。
+6. **不能拿机器人自己的号发指令**。号主自己发的消息是 self message，默认不上报，看起来就像「群里没反应」，其实是指令根本没送到。
+7. WebUI 的 `/api/auth/login` 从外部 curl 调不通（返回 `token is empty` 或 `Unauthorized`），**直接改配置文件比调 API 快**。
+8. NapCat 的 `logs/` 默认是空的（`fileLog:false`），日志只在启动器控制台；排查先看那个黑窗口。
+
+**运维**
+
+- `一键启动.bat`：先拉起 NapCat，轮询 `3000` 端口就绪后再起 bot，避免竞态。
+- 群白名单在 `config.json` 的 `group_whitelist`（当前只放行 `1045824859` 我的网盘资源站）。
+- 限频兜底：同一人 15 秒、全局每分钟 20 条；回复拆条间隔 0.6 秒。
+- 风险：协议端是真实 QQ 号，高频发外链是主要封号触发点，别用主号挂。
+
 ### 热门榜 `/hot/`
 
 - 入口：首页/分类页 H1 行右侧「热榜 TOP 30 →」+ 详情页面包屑（同组 `.page__invite/.page__hot`，面包屑里用 `:not()` 排除防褪色），已进 sitemap。
@@ -245,6 +282,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 变更记录（压缩）
 
+- 2026-11-10 新增 QQ 群查询机器人（独立仓库 `wodewangpan-bot`，NapCat + OneBot，群里 `/` 开头免 @ 查资源回夸克链接）；详见第八节。
 - 2026-11-06 加 `static/ads.txt`（AdSense 发布商 `pub-5363695594162175`），构建复制到根目录供 AdSense「ads.txt 片段」验证。
 - 2026-11-02 robots 放开 `/stats.json`（前端 fetch 取数 + Googlebot 渲染需要；`/hit`/`/*/search-index.json`/`/*?q=` 保留）；取消全站阿里云联盟链接。
 - 2026-10-30 复制改富文本 + 复制海报按钮；2026-10-28 清空 623 条百度链接、反馈条扩到许愿。
@@ -261,6 +299,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 | 项 | 路径 |
 |---|---|
 | 仓库 | macOS `/Users/marco.chan/Documents/GitHub/wodewangpan`；Windows `C:\Users\marco\Github\wodewangpan` |
+| QQ 机器人仓库 | `C:\Users\marco\Github\wodewangpan-bot`（独立；NapCat 在 `C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell`） |
 | 远端 | `git@github.com:linuxhobby/wodewangpan.git` |
 | 线上 | https://www.wodewangpan.top |
 | 技能真身 | `~/.workbuddy/skills/`（`quark-resource-sync` v1.11 / `quarkclouddrive` / `quark-upload-share`）；`~/.codebuddy/skills/` 为符号链接 |
