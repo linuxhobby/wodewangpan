@@ -1403,6 +1403,20 @@ ${cards}
   });
 }
 
+/** 加入 QQ 群区块：关于本站与联系我们两页共用，改群名 / 群链接 / 邮箱只需动这一处 */
+function qqGroupBlock({ qqName, qqLink, contactEmail }) {
+  return `<h2 id="qq-group">加入${qqName ? `「${esc(qqName)}」` : ''}QQ群</h2>
+  <p>有问题、想交流资源，或者发现链接失效？欢迎扫码加入${qqName ? `QQ群<strong>${esc(qqName)}</strong>` : '本站QQ群'}交流反馈。</p>
+  <div class="qq-qr">
+    ${qqLink ? `<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">` : ''}
+    <img src="/qq-group.png" alt="${qqName ? `${esc(qqName)} ` : ''}QQ群二维码" width="260" height="260" loading="lazy">
+    ${qqLink ? '</a>' : ''}
+    <p class="muted">扫码加入${qqName ? `QQ群「${esc(qqName)}」` : 'QQ群'}</p>
+  </div>
+  ${qqLink ? `<p>也可直接 <a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>。</p>` : ''}
+  ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}`;
+}
+
 export function aboutPage(ctx) {
   const { site, categories, counts, total, items, baseUrl } = ctx;
   const updated = lastmodOfList(items);
@@ -1425,16 +1439,7 @@ export function aboutPage(ctx) {
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>关于本站</span></nav>
 <h1 class="page__title page__title--doc">关于本站</h1>
 <div class="card-page">
-  <h2 id="qq-group">加入${qqName ? `「${esc(qqName)}」` : ''}QQ群</h2>
-  <p>有问题、想交流资源，或者发现链接失效？欢迎扫码加入${qqName ? `QQ群<strong>${esc(qqName)}</strong>` : '本站QQ群'}交流反馈。</p>
-  <div class="qq-qr">
-    ${qqLink ? `<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">` : ''}
-    <img src="/qq-group.png" alt="${qqName ? `${esc(qqName)} ` : ''}QQ群二维码" width="260" height="260" loading="lazy">
-    ${qqLink ? '</a>' : ''}
-    <p class="muted">扫码加入${qqName ? `QQ群「${esc(qqName)}」` : 'QQ群'}</p>
-  </div>
-  ${qqLink ? `<p>也可直接 <a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>。</p>` : ''}
-  ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}
+  ${qqGroupBlock({ qqName, qqLink, contactEmail })}
 
   <h2 id="qq-bot">QQ群机器人指令</h2>
   <p>在群里发送以下指令，机器人会自动回复结果。<strong><code>/</code> 开头的指令免 @ 直接执行</strong>；直接发裸关键词则需要 @ 机器人。关键词支持中文、全拼与拼音首字母（如 <code>qzx</code>）。</p>
@@ -1474,8 +1479,7 @@ ${catRows}
   </table>
 
   <h2>内容来源与版权</h2>
-  <p>${esc(site.disclaimer)}。本站不存储任何影片、软件或电子书本体，所有文件均存放在第三方网盘上；
-  若你是版权方或发现链接失效，欢迎<a href="#qq-group">加入 QQ 群</a>反馈，我们会在核实后第一时间处理。</p>
+  <p>${esc(site.disclaimer)}。发现链接失效、资源信息有误或需要下架，请到 <a href="/contact/">联系我们</a> 反馈，我们核实后第一时间处理。</p>
 
   <h2>订阅与推荐</h2>
   <p>新资源入库后可以 RSS 订阅，不必每天来刷页面：<a href="/rss/">查看 RSS 订阅方式与地址</a>。
@@ -1498,7 +1502,7 @@ ${newest
   return layout({
     ...ctx,
     title: '关于本站',
-    description: `关于${site.title}：收录 ${total} 个网盘资源，介绍站点定位、使用方式与版权声明`,
+    description: `关于${site.title}：站点概况、分类浏览与转存方法、QQ 群机器人指令及最新入库`,
     activeCat: '',
     body,
     canonicalPath: '/about/',
@@ -1572,8 +1576,7 @@ export function privacyPage(ctx) {
 }
 
 export function contactPage(ctx) {
-  const { site, categories, total, items, baseUrl } = ctx;
-  const updated = lastmodOfList(items);
+  const { site } = ctx;
   /** QQ 群名（site.yaml 的 qqGroup），留空则回退为通用「QQ群」 */
   const qqName = String(site.qqGroup || '').trim();
   /** QQ 群链接（site.yaml 的 contact.qq / contact.qq群） */
@@ -1585,43 +1588,30 @@ export function contactPage(ctx) {
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>联系我们</span></nav>
 <h1 class="page__title page__title--doc">联系我们</h1>
 <div class="card-page">
-  <h2>站点定位</h2>
-  <p><strong>${esc(site.title)}</strong>（${esc(baseUrl)}）是一个纯静态的网盘资源索引站：把散落在各处的夸克 / 百度 / 阿里云盘资源整理成条目，
-  统一给出海报、简介、标签和转存链接，打开网页即可直接使用，无需注册登录。</p>
+  <h2>哪些事可以找我们</h2>
   <ul>
-    <li>已收录资源：<strong>${total}</strong> 个</li>
-    <li>资源分类：<strong>${(categories || []).length}</strong> 类（${(categories || []).join('、')}）</li>
-    <li>整站纯静态：页面预先生成，加载快、不追踪个人信息</li>
+    <li>链接失效、转存失败或提取码不对 —— 核实后补源或更正。</li>
+    <li>资源信息有误（片名、简介、分类配错）—— 核实后更正。</li>
+    <li>你是版权方要求下架，或发现内容不当 —— 核实后第一时间下架。</li>
   </ul>
+  <p>资源条目由人工整理与索引，版权归原作者或相应权利人所有。本站只提供索引，不托管文件；
+  站点说明见 <a href="/about/">关于本站</a>，数据处理见 <a href="/privacy/">隐私政策</a>。</p>
 
-  <h2>数据来源与版权</h2>
-  <p>${esc(site.disclaimer)}。本站不存储任何影片、软件或电子书本体，所有文件均存放在第三方网盘上；
-  资源条目由人工整理与索引，版权归原作者或相应权利人所有。</p>
-  <p>若你是版权方，或发现链接失效、内容不当，欢迎通过下方方式联系，我们会在核实后第一时间处理（下架、补源或更正）。</p>
+  ${qqGroupBlock({ qqName, qqLink, contactEmail })}
 
-  <h2 id="qq-group">加入${qqName ? `「${esc(qqName)}」` : ''}QQ群</h2>
-  <p>有问题、想交流资源，或者发现链接失效？欢迎扫码加入${qqName ? `QQ群<strong>${esc(qqName)}</strong>` : '本站QQ群'}交流反馈。</p>
-  <div class="qq-qr">
-    ${qqLink ? `<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">` : ''}
-    <img src="/qq-group.png" alt="${qqName ? `${esc(qqName)} ` : ''}QQ群二维码" width="260" height="260" loading="lazy">
-    ${qqLink ? '</a>' : ''}
-    <p class="muted">扫码加入${qqName ? `QQ群「${esc(qqName)}」` : 'QQ群'}</p>
-  </div>
-  ${qqLink ? `<p>也可直接 <a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>。</p>` : ''}
-  ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}
+  <p>群里还有查询机器人，发 <code>/帮助</code> 可看指令表；完整说明见 <a href="/about/#qq-bot">关于本站 · QQ群机器人指令</a>。</p>
   ${maintainer ? `<p class="muted">本站点由 ${esc(maintainer)} 维护</p>` : ''}
-  <p class="muted">最近更新：${updated ? esc(updated) : '暂无记录'}</p>
 </div>`;
 
   return layout({
     ...ctx,
     title: '联系我们',
-    description: `关于${site.title}的站点定位、数据来源与版权说明，以及 QQ 群、邮箱等联系方式`,
+    description: `${site.title}反馈通道：链接失效、内容纠错与版权下架的处理方式，附 QQ 群与邮箱`,
     activeCat: '',
     body,
     canonicalPath: '/contact/',
     footNavCurrent: '/contact/',
-    keywords: `联系我们,${site.title},网盘资源,数据来源,版权`,
+    keywords: `联系我们,${site.title},链接失效反馈,版权下架`,
   });
 }
 
