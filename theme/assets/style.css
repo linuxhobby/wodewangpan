@@ -24,6 +24,8 @@
   --warn: #b3261e;                /* 告警文本（失效资源横幅） */
   --warn-soft: #fff4f0;           /* 告警弱底 */
   --warn-border: #f3c2b6;         /* 告警描边 */
+  --pan: #0b7d66;                 /* /all/ 页网盘入口链接（区别于资源详情链接的品牌紫） */
+  --pan-hover: #075f4d;           /* 同上，悬浮加深 */
 
   /* ── 字号阶梯：全站只用这 10 档 ── */
   --fs-xs: 12px;    /* 角标、迷你按钮、页脚分隔符 */
@@ -344,6 +346,9 @@ a.tag:hover { background: var(--brand-soft); }
 .card-page tbody tr:last-child th, .card-page tbody tr:last-child td { border-bottom: 0; }
 .card-page td:last-child, .card-page thead th:last-child { text-align: right; }
 .card-page code { word-break: break-all; }
+/* /all/ 页标题后的网盘入口：换成另一档颜色，不与紫色的资源详情链接抢主次 */
+.card-page a.pan-link { color: var(--pan); }
+.card-page a.pan-link:hover { color: var(--pan-hover); }
 /* 内容页主标题与资源页标题共用同一档 */
 .page__title--doc { font-size: var(--fs-h1); }
 

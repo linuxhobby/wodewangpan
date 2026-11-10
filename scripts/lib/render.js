@@ -986,10 +986,11 @@ export function notFoundPage(ctx) {
 export const ALL_PAGE_SIZE = 50;
 
 /** /all/ 每行标题后直接给出的网盘入口：只列夸克 / 百度两类，用同行分隔符隔开。
-    没有对应链接的条目不显示该项；提取码放进 title，其它网盘与复制入口仍走详情页 */
+    没有对应链接的条目不显示该项；提取码放进 title，其它网盘与复制入口仍走详情页。
+    .pan-link 用另一种颜色，避免和紫色资源详情链接混在一起分不清主次 */
 const ALL_PAN_LINKS = [
-  { kind: 'quark', label: '夸克链接' },
-  { kind: 'baidu', label: '百度链接' },
+  { kind: 'quark', label: '夸克网盘' },
+  { kind: 'baidu', label: '百度网盘' },
 ];
 
 function allPanLinks(item) {
@@ -997,7 +998,7 @@ function allPanLinks(item) {
     const link = (item.links || []).find((l) => l.kind === kind && l.url);
     if (!link) return '';
     const code = link.code ? ` title="提取码 ${esc(link.code)}"` : '';
-    return `<span class="muted"> · </span><a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer"${code}>${label}</a>`;
+    return `<span class="muted"> · </span><a class="pan-link" href="${esc(link.url)}" target="_blank" rel="noopener noreferrer"${code}>${label}</a>`;
   }).join('');
 }
 
@@ -1042,7 +1043,7 @@ ${p < pages ? `<a class="pager__item pager__item--next" href="${pageHref(p + 1)}
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>全部资源</span></nav>
 <h1 class="page__title page__title--doc">${esc(title)}<span class="page__n">${total} 个资源</span></h1>
 <div class="card-page">
-  <p>这一页列出本站全部 <strong>${total}</strong> 个资源，按分类分页排列，点标题进入详情页，也可直接用标题后的夸克 / 百度链接转存。</p>
+  <p>这一页列出本站全部 <strong>${total}</strong> 个资源，按分类分页排列，点标题进入详情页，也可直接用标题后的夸克 / 百度网盘入口转存。</p>
 ${groups
   .map(
     (g) => `<h2>${esc(g.cat)}<span class="muted"> · ${g.list.length} 个</span></h2>
