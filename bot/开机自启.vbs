@@ -1,5 +1,5 @@
-' å¼€æœºè‡ªå¯ï¼šç­‰ç³»ç»Ÿä¸ NapCat å°±ç»ªåï¼Œé™é»˜æ‹‰èµ· QQ æœºå™¨äººï¼ˆæ— å¼¹çª—ï¼‰
-' æ”¾åœ¨ã€Œå¯åŠ¨ã€æ–‡ä»¶å¤¹é‡Œç”±ç³»ç»Ÿè°ƒç”¨ï¼›ä¹Ÿå¯æ‰‹åŠ¨åŒå‡»ï¼Œæ•ˆæœç­‰åŒé™é»˜å¯åŠ¨
+' ¿ª»ú×ÔÆô£ºµÈÏµÍ³Óë NapCat ¾ÍĞ÷ºó£¬¾²Ä¬À­Æğ QQ »úÆ÷ÈË£¨ÎŞµ¯´°£©
+' ·ÅÔÚ¡¸Æô¶¯¡¹ÎÄ¼ş¼ĞÀïÓÉÏµÍ³µ÷ÓÃ£»Ò²¿ÉÊÖ¶¯Ë«»÷£¬Ğ§¹ûµÈÍ¬¾²Ä¬Æô¶¯
 Option Explicit
 
 Dim BOT_DIR, PYW, LOG, fso, ws, svc, list, p, running, napcat
@@ -11,12 +11,12 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 Set ws = CreateObject("WScript.Shell")
 
 If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
-  LogLine "æ‰¾ä¸åˆ° bot.pyï¼Œè·³è¿‡ï¼š" & BOT_DIR
+  LogLine "ÕÒ²»µ½ bot.py£¬Ìø¹ı£º" & BOT_DIR
   WScript.Quit 1
 End If
 If Not fso.FileExists(PYW) Then PYW = "pythonw"
 
-' å¼€æœºåç­‰ 25 ç§’ï¼šé¿å¼€é€šå¼€æœºé«˜å³°ï¼Œè®© NapCatï¼ˆQQï¼‰å…ˆä¸Šçº¿
+' ¿ª»úºóµÈ 25 Ãë£º±Ü¿ªÍ¨¿ª»ú¸ß·å£¬ÈÃ NapCat£¨QQ£©ÏÈÉÏÏß
 WScript.Sleep 25000
 
 running = False
@@ -32,7 +32,7 @@ For Each p In list
 Next
 
 If running Then
-  LogLine "å·²åœ¨è¿è¡Œï¼Œè·³è¿‡"
+  LogLine "ÒÑÔÚÔËĞĞ£¬Ìø¹ı"
   WScript.Quit 0
 End If
 
@@ -40,9 +40,9 @@ ws.CurrentDirectory = BOT_DIR
 ws.Run """" & PYW & """ ""app\bot.py""", 0, False
 
 If napcat Then
-  LogLine "å·²å¯åŠ¨ï¼ˆNapCat åœ¨çº¿ï¼‰"
+  LogLine "ÒÑÆô¶¯£¨NapCat ÔÚÏß£©"
 Else
-  LogLine "å·²å¯åŠ¨ï¼ˆæœªæ£€æµ‹åˆ° NapCatï¼Œè¯·ç¡®è®¤ QQ ç«¯ä¼šè‡ªå¯ï¼‰"
+  LogLine "ÒÑÆô¶¯£¨Î´¼ì²âµ½ NapCat£¬ÇëÈ·ÈÏ QQ ¶Ë»á×ÔÆô£©"
 End If
 
 Sub LogLine(msg)
