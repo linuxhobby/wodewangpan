@@ -140,9 +140,9 @@ body.page--wide { --page-max: var(--page-wide); }
 .top__search input:focus { border-color: var(--brand); background: var(--surface); }
 
 /* ── 标题栏公告链接 ──────────────────
-   与「热榜 TOP 30」同组跟在 H1 的「N 个资源」之后；窄屏随 .page__aside 一起换行，
+   与「热榜 TOP 30」同组跟在 H1 标题之后；窄屏随 .page__aside 一起换行，
    不占通栏、不增加顶栏高度。 */
-.page__notice { font-size: var(--fs-sm); color: var(--brand); text-decoration: none; }
+.page__notice { font-size: var(--fs-base); color: var(--brand); text-decoration: none; }
 .page__notice:hover { text-decoration: underline; }
 .page__notice-badge {
   display: inline-block;
@@ -151,7 +151,7 @@ body.page--wide { --page-max: var(--page-wide); }
   border-radius: var(--r-chip);
   background: var(--brand);
   color: var(--surface);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
 }
 /* 锚点跳转时给 sticky 顶栏让位（顶栏 68px + 余量），#qq-group 同样受益 */
 .card-page h2[id] { scroll-margin-top: 80px; }
@@ -663,6 +663,9 @@ p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align
   .top__search input { font-size: var(--fs-input); }
   /* 标题栏邀请组：窄屏独占一行、左对齐，避免胶囊右飘、热榜错行导致的参差 */
   .page__aside { flex-basis: 100%; margin-left: 0; }
+  /* 公告升到 14px 后文案变长：窄屏让它独占一行、热榜另起一行，避免互相挤行；
+     字号变量不在此断点重定义，移动端同样是 14px / 13px，不会被打回 */
+  .page__notice { flex-basis: 100%; }
 }
 
 /* ============================================================================

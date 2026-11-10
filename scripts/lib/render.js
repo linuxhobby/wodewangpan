@@ -479,7 +479,7 @@ function homePage(ctx) {
   const shown = groups.flatMap((g) => g.shown);
   const firstImg = (images.get(shown[0] && shown[0].id) || {}).card || '';
 
-  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span>${titleAsideLinks(ctx)}</h1>
+  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}${titleAsideLinks(ctx)}</h1>
 <div id="results" class="results" hidden></div>
 <div id="home">
 ${groups
@@ -537,7 +537,7 @@ function catPage(ctx) {
       .join('')}</ul>
 </noscript>`
     : '';
-  const body = `<h1 class="page__title">${esc(activeCat)}<span class="page__n">${items.length} 个资源</span>${titleAsideLinks(ctx)}</h1>
+  const body = `<h1 class="page__title">${esc(activeCat)}${titleAsideLinks(ctx)}</h1>
 <div id="results" class="results" hidden></div>
 <ul id="list" class="grid">
 ${items.slice(0, pageSize).map((it, i) => cardHtml(it, images, newestIds.has(it.id), i < 5)).join('\n')}
