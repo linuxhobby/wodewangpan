@@ -21,7 +21,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import site_client as sc
 
-PAGE_SIZE = 3          # 一次回几条资源
+PAGE_SIZE = 3          # 群里一次回几条资源
 MAX_MSG_LEN = 900      # 单条消息字数上限，超了拆条
 PAGER_TTL = 300        # 「/更多」翻页记忆的有效期（秒）
 
@@ -182,10 +182,34 @@ def _safe_links(site_url, it):
 
 # ---------- 主入口 ----------
 
-def handle(text, cfg, key=""):
-    """主入口：返回要依次发出的消息文本列表。key 用来区分群/私聊，供 /更多 翻页。"""
+def _meta_set(meta, cmd, items, total=None):
+    """回填本次结果的信息，供上层拼回执（例如「25 条结果已私发」）。
+    只记条数，不记内容。meta 为 None 时什么都不做，老调用方无感。"""
+    if meta is None:
+        return
+    meta.clear()
+    meta["cmd"] = cmd
+    meta["items"] = items
+    meta["total"] = items if total is None else total
+
+
+def handle(text, cfg, key="", page=None, meta=None):
+    """主入口：返回要依次发出的消息文本列表。
+
+    key  ：区分群/私聊，供 /更多 翻页。
+    page ：本次最多返回几条资源；None 用 PAGE_SIZE，传 0 表示不限（私发全量时用）。
+    meta ：可选 dict，回填 items（结果条数）/ total（命中总数）/ cmd，供上层写回执。
+    """
     site_url = cfg["site_url"]
     cmd, arg = parse(text)
+    if page is None:
+        size = PAGE_SIZE
+    else:
+        size = int(page)
+        if size <= 0:
+            size = 10 ** 6      # 0 = 不限，给个足够大的数让切片自然取全
+    if meta is not None:
+        meta.clear()
 
     if cmd == "empty":
         return ["在的。发 /搜索 关键词 就能查资源，发 /帮助 看全部指令。"]
@@ -200,7 +224,7 @@ def handle(text, cfg, key=""):
         if cmd == "search":
             if not arg:
                 return ["要查什么？这样发：/搜索 青之箱"]
-            hits, total = sc.search(site_url, arg, PAGE_SIZE, 0)
+            hits, total = sc.search(site_url, arg, size, 0)
             if not hits:
                 return [
                     f"没找到「{arg}」，换个关键词试试。\n"
@@ -212,13 +236,14 @@ def handle(text, cfg, key=""):
             if total > len(hits):
                 note = f"命中 {total} 条，先给 {len(hits)} 条，发 /更多 看下一批"
             urls = _fetch_many(site_url, hits)
+            _meta_set(meta, "search", len(hits), total)
             return _assemble(site_url, _fmt_body(hits, urls), note)
 
         if cmd == "more":
             st = _pager_get(key)
             if not st:
                 return ["还没搜过东西。先发 /搜索 关键词，出结果后再发 /更多 翻下一批。"]
-            hits, total = sc.search(site_url, st["kw"], PAGE_SIZE, st["offset"])
+            hits, total = sc.search(site_url, st["kw"], size, st["offset"])
             if not hits:
                 return [
                     f"「{st['kw']}」的结果已经到底了。\n"
@@ -230,11 +255,13 @@ def handle(text, cfg, key=""):
             st["ts"] = time.time()
             note = f"「{st['kw']}」第 {start}-{st['offset']} 条，共 {total} 条"
             urls = _fetch_many(site_url, hits)
+            _meta_set(meta, "more", len(hits), total)
             return _assemble(site_url, _fmt_body(hits, urls), note)
 
         if cmd == "latest":
             items = sc.recent(site_url, 8)
             urls = _fetch_many(site_url, items)
+            _meta_set(meta, "latest", len(items))
             return _assemble(site_url, _fmt_body(items, urls))
 
         if cmd == "today":
@@ -246,6 +273,7 @@ def handle(text, cfg, key=""):
             if date != time.strftime("%Y-%m-%d"):
                 # 只有退回到更早的更新日时才加一句说明，正常情况第一行就是资源名
                 note = f"今天暂无新增，以下 {len(items)} 条是 {date} 更新的"
+            _meta_set(meta, "today", len(items))
             return _assemble(site_url, _fmt_body(items, urls), note)
 
         if cmd == "category":
@@ -261,6 +289,7 @@ def handle(text, cfg, key=""):
             if not it:
                 return ["暂时抽不出来，稍后再试。"]
             u = _safe_links(site_url, it)
+            _meta_set(meta, "random", 1)
             return _assemble(site_url, _fmt_body([it], [u]))
 
         return [HELP_TEXT + "\n\n没看懂这条指令，发 /帮助 看用法。"]

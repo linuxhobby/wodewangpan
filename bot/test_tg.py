@@ -16,7 +16,10 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(BASE, "app"))
 
 import json
+import os
 import re
+import sys
+import time
 import handlers
 import tg_render
 import telegram_bot as tg
@@ -164,8 +167,20 @@ real_handle = tg.handlers.handle
 real_cfg = tg._load_cfg_cached
 tg._api = fake_api
 tg._ME = {"username": BOT}
-tg.handlers.handle = lambda text, cfg, key: [
-    "神探狄仁杰 第一部 ｜ 电视剧\n夸克网盘\thttps://pan.quark.cn/s/abc"]
+# 假 handlers：由 ITEMS 控制「几条结果」，CHUNKS 控制「拆成几条消息」，
+# 用来验证群回执的条数与私发的全量行为。
+STATE = {"items": 1, "chunks": ["神探狄仁杰 第一部 ｜ 电视剧\n夸克网盘\thttps://pan.quark.cn/s/abc"],
+         "page": None}
+
+
+def fake_handle(text, cfg, key, page=None, meta=None):
+    STATE["page"] = page
+    if meta is not None:
+        meta.update({"cmd": "search", "items": STATE["items"], "total": STATE["items"]})
+    return list(STATE["chunks"])
+
+
+tg.handlers.handle = fake_handle
 tg._load_cfg_cached = lambda: {}
 tg.TG = {"reply_mode": "private", "allowed_chats": [], "cooldown_seconds": 0,
          "global_rate_per_minute": 0, "allow_private": True}
@@ -188,6 +203,42 @@ check("结果进了私聊", len(to_chat(42)), 1)
 check("私聊内容含链接", "pan.quark.cn" in (to_chat(42)[0].get("text") or ""), True)
 check("群里只有一行回执", len(to_chat(-100123)), 1)
 check("群里回执不含结果", "pan.quark.cn" in (to_chat(-100123)[0].get("text") or ""), False)
+receipt = to_chat(-100123)[0].get("text") or ""
+check("回执带条数", "1 条结果已私发" in receipt, True)
+check("群里查询一次要全量", STATE["page"], tg.PRIVATE_PAGE_SIZE)
+tg.TG = dict(tg.TG, private_max_results=0)
+check("配 0 表示不限", tg._page_size("supergroup"), 0)
+tg.TG = dict(tg.TG, private_max_results=8)
+check("配数字就按数字给", tg._page_size("supergroup"), 8)
+tg.TG = dict(tg.TG)
+tg.TG.pop("private_max_results", None)
+
+# 多条结果：私聊要全量发完，群里仍只有一行
+calls.clear()
+STATE["items"] = 25
+STATE["chunks"] = ["第 %d 条\n夸克网盘\thttps://pan.quark.cn/s/%d" % (i, i) for i in range(1, 5)]
+tg.time = type("T", (), {"sleep": staticmethod(lambda s: None), "time": staticmethod(time.time),
+                         "strftime": staticmethod(time.strftime)})()
+tg.handle_update(mk_query(44, "/s 神探狄仁杰", 9205))
+check("4 段正文全发到私聊", len(to_chat(44)), 4)
+check("群里仍只有一行", len(to_chat(-100123)), 1)
+check("回执写的是结果条数不是消息数", "25 条结果已私发" in (to_chat(-100123)[0].get("text") or ""), True)
+
+# 没命中 / 帮助：短消息留在群里，不往私聊塞
+calls.clear()
+STATE["items"] = 0
+STATE["chunks"] = ["没找到「不存在的东西」，换个关键词试试。"]
+tg.handle_update(mk_query(45, "/s 不存在的东西", 9206))
+check("没命中的提示发在群里", "没找到" in (to_chat(-100123)[0].get("text") or ""), True)
+check("没命中不打扰私聊", len(to_chat(45)), 0)
+
+calls.clear()
+tg.handle_update(mk_query(46, "/help", 9207))
+check("/help 在群里回", "指令" in (to_chat(-100123)[0].get("text") or ""), True)
+check("/help 不进私聊", len(to_chat(46)), 0)
+STATE["items"] = 1
+STATE["chunks"] = ["神探狄仁杰 第一部 ｜ 电视剧\n夸克网盘\thttps://pan.quark.cn/s/abc"]
+tg.time = time
 
 calls.clear()
 tg.handle_update(mk_query(BLOCKED, "/s 神探狄仁杰", 9202))
@@ -236,6 +287,27 @@ check("allow_private=false 时私聊不理", len(calls), 0)
 tg._api = real_api
 tg.handlers.handle = real_handle
 tg._load_cfg_cached = real_cfg
+
+print("10) 一次给全量（handlers 的 page 参数）")
+m1 = {}
+handlers.handle("/s 电影", CFG, key="page-a", meta=m1)
+check("默认每批 3 条", m1.get("items"), 3)
+check("meta 带回命中总数", (m1.get("total") or 0) >= 3, True)
+m2 = {}
+out2 = handlers.handle("/s 电影", CFG, key="page-b", page=10, meta=m2)
+check("page=10 就给 10 条", m2.get("items"), 10)
+check("条数多了自动拆多条消息", len(out2) >= 1, True)
+check("拆条后首条仍是资源名", "｜" in out2[0], True)
+check("尾巴只挂最后一条", "更多资源访问" in out2[-1], True)
+m3 = {}
+handlers.handle("/cats", CFG, key="page-c", page=10, meta=m3)
+check("分类不写条数（留在群里）", m3.get("items"), None)
+m4 = {}
+handlers.handle("/s 青之箱", CFG, key="page-d", page=1, meta=m4)
+check("page=1 只给 1 条", m4.get("items"), 1)
+m5 = {}
+handlers.handle("/s 青之箱", CFG, key="page-e", page=0, meta=m5)
+check("page=0 给全部命中", m5.get("items"), m5.get("total"))
 
 print("\n结果：%d 通过，%d 失败" % (ok, bad))
 sys.exit(1 if bad else 0)

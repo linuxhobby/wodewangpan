@@ -49,6 +49,7 @@ STATE_FILE = os.path.join(LOG_DIR, "tg-state.json")
 
 TAG = "[TG]"
 MAX_TG_LEN = 3900        # Telegram 上限 4096，留出 HTML 标签的余量
+PRIVATE_PAGE_SIZE = 50   # 私发一次最多给几条；私聊不刷屏，默认一次给一大批（config 可改）
 
 _log_lock = threading.Lock()
 
@@ -215,7 +216,8 @@ def _dup(mid):
 # ---------- 发送 ----------
 
 def _send_raw(chat_id, text, reply_to=None):
-    """发一条，返回 (是否成功, 原始响应)。优先 HTML，被拒（400）退回纯文本。"""
+    """发一条，返回 (是否成功, 原始响应)。优先 HTML，被拒（400）退回纯文本。
+    私发全量时容易撞上 429，按 Telegram 给的 retry_after 等一次再重试。"""
     body = (text or "")[:MAX_TG_LEN]
     html = tg_render.to_html(body)
     if len(html) > 4090:
@@ -231,6 +233,12 @@ def _send_raw(chat_id, text, reply_to=None):
         params["allow_sending_without_reply"] = True
 
     res = _api("sendMessage", params)
+    if res and res.get("error_code") == 429:
+        wait = int(((res.get("parameters") or {}).get("retry_after")) or 3)
+        wait = max(1, min(wait, 30))
+        log("· 触发限频，等 %ds 重试（chat %s）" % (wait, chat_id))
+        time.sleep(wait)
+        res = _api("sendMessage", params)
     if res and res.get("ok"):
         return True, res
     if res and res.get("error_code") == 400:
@@ -287,26 +295,51 @@ def _dm(uid, chunks):
             break
         n += 1
         if len(chunks) > 1:
-            time.sleep(0.5)
+            time.sleep(0.6)
     return n
 
 
-def _deliver(chat_id, uid, ctype, chunks, reply_to):
-    """群里的查询走私聊投递，发不出去就回深链；其它情况照旧发当前会话。"""
-    if ctype in ("group", "supergroup") and _private_mode():
-        bot = _ME.get("username") or ""
-        done = _dm(uid, chunks)
-        if done == len(chunks):
-            send(chat_id, "结果已私发，点这里打开私聊：https://t.me/%s" % bot, reply_to=reply_to)
-            return
-        if done:
-            send(chat_id, "已私发 %d 条，还有 %d 条没发出去，请先把私聊打开（@%s）"
-                 % (done, len(chunks) - done, bot), reply_to=reply_to)
-            return
+def _page_size(ctype):
+    """一次给几条：私聊投递（群里查、结果进私聊）不刷屏，一次给一大批；群里照旧一批 3 条。"""
+    if ctype == "private" or _private_mode():
+        v = TG.get("private_max_results")
+        if v is None:
+            return PRIVATE_PAGE_SIZE
+        return int(v)          # 0 = 不限，全量发
+    return None                # 交给 handlers 用默认的 PAGE_SIZE
+
+
+def _receipt(chat_id, uid, chunks, reply_to, items):
+    """群里只留一行回执，结果全部发到私聊。
+    先发第一条探路：私聊没开通就直接回深链，开了就把剩下的一次性发完。"""
+    bot = _ME.get("username") or ""
+    ok, res = _send_raw(uid, chunks[0])
+    if not ok:
+        log("× 私发第一条失败（uid %s）：%s" % (uid, ((res or {}).get("description") or "")[:60]))
         token = _stash_put(uid, chunks)
         send(chat_id,
-             "结果已备好，点下面链接开通私聊，我马上发给你：\nhttps://t.me/%s?start=%s" % (bot, token),
+             "%d 条结果已备好，点下面链接开通私聊，我马上发给你：\nhttps://t.me/%s?start=%s"
+             % (items, bot, token),
              reply_to=reply_to)
+        return
+
+    # 回执在发正文前就贴出来：结果多的时候群里不用干等
+    send(chat_id, "%d 条结果已私发，点这里打开私聊：https://t.me/%s" % (items, bot),
+         reply_to=reply_to)
+
+    rest = chunks[1:]
+    if rest:
+        done = _dm(uid, rest)
+        if done < len(rest):
+            log("× 私发中断：%d/%d 条已发（uid %s）" % (done + 1, len(chunks), uid))
+
+
+def _deliver(chat_id, uid, ctype, chunks, reply_to, meta=None):
+    """群里的资源查询走私聊投递，发不出去就回深链；
+    帮助、分类、报错这类短消息（meta 里没有条数）照旧发在群里。"""
+    items = int((meta or {}).get("items") or 0)
+    if ctype in ("group", "supergroup") and _private_mode() and items and chunks:
+        _receipt(chat_id, uid, chunks, reply_to, items)
         return
 
     for i, chunk in enumerate(chunks):
@@ -474,9 +507,11 @@ def handle_update(update):
         return
 
     log("→ [%s %s] %s：%s" % (ctype, chat_id, name, text[:60]))
-    replies = handlers.handle(_canonical(text), _load_cfg_cached(), key)
+    meta = {}
+    replies = handlers.handle(_canonical(text), _load_cfg_cached(), key,
+                              page=_page_size(ctype), meta=meta)
     if replies:
-        _deliver(chat_id, uid, ctype, replies, msg.get("message_id"))
+        _deliver(chat_id, uid, ctype, replies, msg.get("message_id"), meta)
 
 
 _CFG = {}
