@@ -1,14 +1,17 @@
-' 开机自启：等系统与 NapCat 就绪后，静默拉起 QQ 机器人（无弹窗）
-' 放在「启动」文件夹里由系统调用；也可手动双击，效果等同静默启动
+' 开机自启：等系统就绪后，先拉起 NapCat（QQ 端），再拉起机器人，全程无弹窗
+' 放在「启动」文件夹里由系统调用；也可手动双击
 Option Explicit
 
-Dim BOT_DIR, PYW, LOG, fso, ws, svc, list, p, running, napcat
-BOT_DIR = "C:\Users\marco\Github\wodewangpan\bot"
-PYW = "C:\Users\marco\AppData\Local\Programs\Python\Python312\pythonw.exe"
-LOG = BOT_DIR & "\logs\auto-start.log"
-
+Dim BOT_DIR, PYW, NAPCAT_EXE, NAPCAT_DIR, LOG, fso, ws, svc, list, p
+Dim running, napcat, started, msg
 Set fso = CreateObject("Scripting.FileSystemObject")
 Set ws = CreateObject("WScript.Shell")
+
+BOT_DIR = "C:\Users\marco\Github\wodewangpan\bot"
+PYW = "C:\Users\marco\AppData\Local\Programs\Python\Python312\pythonw.exe"
+NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell\NapCatWinBootMain.exe"
+NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell"
+LOG = BOT_DIR & "\logs\auto-start.log"
 
 If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
   LogLine "找不到 bot.py，跳过：" & BOT_DIR
@@ -16,34 +19,42 @@ If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
 End If
 If Not fso.FileExists(PYW) Then PYW = "pythonw"
 
-' 开机后等 25 秒：避开通开机高峰，让 NapCat（QQ）先上线
+' 开机后等 25 秒：避开通开机高峰，让网络和磁盘先就绪
 WScript.Sleep 25000
 
 running = False
 napcat = False
 Set svc = GetObject("winmgmts:\\.\root\cimv2")
-Set list = svc.ExecQuery("SELECT Name, CommandLine FROM Win32_Process WHERE Name='pythonw.exe' OR Name='python.exe'")
+Set list = svc.ExecQuery("SELECT Name, CommandLine FROM Win32_Process")
 For Each p In list
-  If InStr(1, p.CommandLine & "", "bot.py", 1) > 0 Then running = True
+  If InStr(1, p.Name & "", "python", 1) > 0 Then
+    If InStr(1, p.CommandLine & "", "bot.py", 1) > 0 Then running = True
+  End If
+  If InStr(1, p.Name & "", "napcat", 1) > 0 Then napcat = True
+  If LCase(p.Name & "") = "qq.exe" Then napcat = True
 Next
-Set list = svc.ExecQuery("SELECT Name FROM Win32_Process WHERE Name='NapCatWinBootMain.exe' OR Name='QQ.exe'")
-For Each p In list
-  napcat = True
-Next
+
+started = ""
+If napcat Then
+  started = started & "NapCat 已在运行；"
+ElseIf fso.FileExists(NAPCAT_EXE) Then
+  ws.CurrentDirectory = NAPCAT_DIR
+  ws.Run """" & NAPCAT_EXE & """", 0, False
+  started = started & "已拉起 NapCat；"
+  WScript.Sleep 3000
+Else
+  started = started & "找不到 NapCat（" & NAPCAT_EXE & "）；"
+End If
 
 If running Then
-  LogLine "已在运行，跳过"
-  WScript.Quit 0
-End If
-
-ws.CurrentDirectory = BOT_DIR
-ws.Run """" & PYW & """ ""app\bot.py""", 0, False
-
-If napcat Then
-  LogLine "已启动（NapCat 在线）"
+  started = started & "机器人已在运行，跳过"
 Else
-  LogLine "已启动（未检测到 NapCat，请确认 QQ 端会自启）"
+  ws.CurrentDirectory = BOT_DIR
+  ws.Run """" & PYW & """ ""app\bot.py""", 0, False
+  started = started & "已启动机器人"
 End If
+
+LogLine started
 
 Sub LogLine(msg)
   On Error Resume Next

@@ -1,7 +1,9 @@
 ' 启动 QQ 机器人（静默后台运行，不弹黑窗口）
+' NapCat 没在跑时会顺带把它拉起来
 Option Explicit
 
-Dim BOT_DIR, PYW, fso, ws, svc, list, p, running, napcat
+Dim BOT_DIR, PYW, NAPCAT_EXE, NAPCAT_DIR, fso, ws, svc, list, p
+Dim running, napcat, napcatNote
 Set fso = CreateObject("Scripting.FileSystemObject")
 Set ws = CreateObject("WScript.Shell")
 
@@ -13,6 +15,8 @@ End If
 
 ' 写死解释器路径，避免 PATH 里有多份 Python 时起错、或者同时起两个
 PYW = "C:\Users\marco\AppData\Local\Programs\Python\Python312\pythonw.exe"
+NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell\NapCatWinBootMain.exe"
+NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell"
 
 If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
   MsgBox "找不到机器人代码：" & vbCrLf & BOT_DIR & "\app\bot.py" & vbCrLf & vbCrLf & _
@@ -44,9 +48,16 @@ ws.CurrentDirectory = BOT_DIR
 ws.Run """" & PYW & """ ""app\bot.py""", 0, False
 
 If napcat Then
-  MsgBox "QQ 机器人已启动。" & vbCrLf & vbCrLf & _
-         "等 3 秒左右，在群里发 /帮助 试试。", 64, "启动 QQ 机器人"
+  napcatNote = "QQ 机器人已启动。" & vbCrLf & vbCrLf & _
+               "等 3 秒左右，在群里发 /帮助 试试。"
+ElseIf fso.FileExists(NAPCAT_EXE) Then
+  ws.CurrentDirectory = NAPCAT_DIR
+  ws.Run """" & NAPCAT_EXE & """", 0, False
+  napcatNote = "机器人已启动；NapCat（QQ 端）原本没在跑，已顺带拉起。" & vbCrLf & vbCrLf & _
+               "等小号自动登录后，在群里发 /帮助 试试。"
 Else
-  MsgBox "机器人已启动，但没有检测到 NapCat（QQ 端）。" & vbCrLf & vbCrLf & _
-         "请先启动 NapCat、让小号上线，否则机器人收不到群消息。", 48, "启动 QQ 机器人"
+  napcatNote = "机器人已启动，但找不到 NapCat 程序：" & vbCrLf & NAPCAT_EXE & vbCrLf & vbCrLf & _
+               "请手动启动 NapCat，否则收不到群消息。"
 End If
+
+MsgBox napcatNote, 64, "启动 QQ 机器人"
