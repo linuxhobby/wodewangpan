@@ -3,7 +3,7 @@
 ' NapCat 没在跑时会顺带把它拉起来
 Option Explicit
 
-Dim BOT_DIR, PYW, NAPCAT_EXE, NAPCAT_DIR, fso, ws, svc, list, p
+Dim BOT_DIR, PYW, NAPCAT_EXE, NAPCAT_DIR, QQUIN, fso, ws, svc, list, p
 Dim killed, napcat, napcatNote
 Set fso = CreateObject("Scripting.FileSystemObject")
 Set ws = CreateObject("WScript.Shell")
@@ -17,6 +17,7 @@ End If
 ' 写死解释器路径，避免 PATH 里有多份 Python 时起错、或者同时起两个
 PYW = "C:\Users\marco\AppData\Local\Programs\Python\Python312\pythonw.exe"
 NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell\NapCatWinBootMain.exe"
+QQUIN = "909008620"
 NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell"
 
 If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
@@ -51,7 +52,7 @@ If napcat Then
                "等 3 秒左右，在群里发 /帮助 试试。"
 ElseIf fso.FileExists(NAPCAT_EXE) Then
   ws.CurrentDirectory = NAPCAT_DIR
-  ws.Run """" & NAPCAT_EXE & """", 0, False
+  ws.Run """" & NAPCAT_EXE & """ " & QQUIN, 0, False
   napcatNote = "机器人已重启（结束旧进程 " & killed & " 个）；NapCat 原本没在跑，已顺带拉起。" & vbCrLf & vbCrLf & _
                "等小号自动登录后，在群里发 /帮助 试试。"
 Else

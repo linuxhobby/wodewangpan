@@ -2,7 +2,7 @@
 ' 放在「启动」文件夹里由系统调用；也可手动双击
 Option Explicit
 
-Dim BOT_DIR, PYW, NAPCAT_EXE, NAPCAT_DIR, LOG, fso, ws, svc, list, p
+Dim BOT_DIR, PYW, NAPCAT_EXE, NAPCAT_DIR, QQUIN, LOG, fso, ws, svc, list, p
 Dim running, napcat, started, msg
 Set fso = CreateObject("Scripting.FileSystemObject")
 Set ws = CreateObject("WScript.Shell")
@@ -10,6 +10,7 @@ Set ws = CreateObject("WScript.Shell")
 BOT_DIR = "C:\Users\marco\Github\wodewangpan\bot"
 PYW = "C:\Users\marco\AppData\Local\Programs\Python\Python312\pythonw.exe"
 NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell\NapCatWinBootMain.exe"
+QQUIN = "909008620"
 NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell"
 LOG = BOT_DIR & "\logs\auto-start.log"
 
@@ -39,7 +40,7 @@ If napcat Then
   started = started & "NapCat 已在运行；"
 ElseIf fso.FileExists(NAPCAT_EXE) Then
   ws.CurrentDirectory = NAPCAT_DIR
-  ws.Run """" & NAPCAT_EXE & """", 0, False
+  ws.Run """" & NAPCAT_EXE & """ " & QQUIN, 0, False
   started = started & "已拉起 NapCat；"
   WScript.Sleep 3000
 Else

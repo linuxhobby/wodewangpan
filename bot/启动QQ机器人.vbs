@@ -2,7 +2,7 @@
 ' 顺序：先保 NapCat（QQ 端）在跑，再保机器人本体在跑
 Option Explicit
 
-Dim BOT_DIR, PYW, NAPCAT_EXE, NAPCAT_DIR, fso, ws, svc, list, p
+Dim BOT_DIR, PYW, NAPCAT_EXE, NAPCAT_DIR, QQUIN, fso, ws, svc, list, p
 Dim running, napcat, napcatStarted, msg
 
 Set fso = CreateObject("Scripting.FileSystemObject")
@@ -17,6 +17,7 @@ End If
 ' 写死解释器路径，避免 PATH 里有多份 Python 时起错、或者同时起两个
 PYW = "C:\Users\marco\AppData\Local\Programs\Python\Python312\pythonw.exe"
 NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell\NapCatWinBootMain.exe"
+QQUIN = "909008620"
 NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell"
 
 If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
@@ -44,7 +45,7 @@ Next
 If Not napcat Then
   If fso.FileExists(NAPCAT_EXE) Then
     ws.CurrentDirectory = NAPCAT_DIR
-    ws.Run """" & NAPCAT_EXE & """", 0, False
+    ws.Run """" & NAPCAT_EXE & """ " & QQUIN, 0, False
     napcatStarted = True
     WScript.Sleep 3000
   End If
