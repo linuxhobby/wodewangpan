@@ -985,6 +985,22 @@ export function notFoundPage(ctx) {
 /** /all/ 每页多少条：单页扛近千条链接权重摊薄，拆成分页后每页 50 条 */
 export const ALL_PAGE_SIZE = 50;
 
+/** /all/ 每行标题后直接给出的网盘入口：只列夸克 / 百度两类，用同行分隔符隔开。
+    没有对应链接的条目不显示该项；提取码放进 title，其它网盘与复制入口仍走详情页 */
+const ALL_PAN_LINKS = [
+  { kind: 'quark', label: '夸克链接' },
+  { kind: 'baidu', label: '百度链接' },
+];
+
+function allPanLinks(item) {
+  return ALL_PAN_LINKS.map(({ kind, label }) => {
+    const link = (item.links || []).find((l) => l.kind === kind && l.url);
+    if (!link) return '';
+    const code = link.code ? ` title="提取码 ${esc(link.code)}"` : '';
+    return `<span class="muted"> · </span><a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer"${code}>${label}</a>`;
+  }).join('');
+}
+
 /** 存在理由：列表页卡片是 JS 补齐的，不执行 JS 的蜘蛛到列表页就没有下一条路（见 docs/README.md）。
     分页版：/all/ 是第 1 页，/all/page/2..N/ 依次往后，每页按分类分区排列 */
 export function allPage(ctx) {
@@ -1008,7 +1024,7 @@ export function allPage(ctx) {
 
   const row = (it) => {
     const tags = (it.tags || []).filter((t) => t && t !== it.category);
-    return `<li><a href="${itemHref(it.id)}">${esc(it.title)}</a>${
+    return `<li><a href="${itemHref(it.id)}">${esc(it.title)}</a>${allPanLinks(it)}${
       it.date ? `<span class="muted"> · ${esc(it.date)}</span>` : ''
     }${tags.length ? `<span class="muted"> · ${tags.map(esc).join(' · ')}</span>` : ''}</li>`;
   };
@@ -1026,7 +1042,7 @@ ${p < pages ? `<a class="pager__item pager__item--next" href="${pageHref(p + 1)}
   const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>全部资源</span></nav>
 <h1 class="page__title page__title--doc">${esc(title)}<span class="page__n">${total} 个资源</span></h1>
 <div class="card-page">
-  <p>这一页列出本站全部 <strong>${total}</strong> 个资源，按分类分页排列，点标题直接进入详情页。</p>
+  <p>这一页列出本站全部 <strong>${total}</strong> 个资源，按分类分页排列，点标题进入详情页，也可直接用标题后的夸克 / 百度链接转存。</p>
 ${groups
   .map(
     (g) => `<h2>${esc(g.cat)}<span class="muted"> · ${g.list.length} 个</span></h2>
