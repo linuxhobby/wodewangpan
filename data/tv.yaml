@@ -417,6 +417,21 @@
   date: 2026-03-04
   added: 2026-09-27
   image: tv-017.jpg
+  updated: 2026-11-10
+  files:
+    count: 8
+    size: "52.5 GB"
+    format: "MKV×8"
+    tree: |
+      017-青年夏洛克/
+      Young.Sherlock.S01E01.2160p.AMZN.WEB-DL.DDP5.1.HDR10P.H.265-HiveWeb.mkv
+      Young.Sherlock.S01E02.2160p.AMZN.WEB-DL.DDP5.1.HDR10P.H.265-HiveWeb.mkv
+      Young.Sherlock.S01E03.2160p.AMZN.WEB-DL.DDP5.1.HDR10P.H.265-HiveWeb.mkv
+      Young.Sherlock.S01E04.2160p.AMZN.WEB-DL.DDP5.1.HDR10P.H.265-HiveWeb.mkv
+      Young.Sherlock.S01E05.2160p.AMZN.WEB-DL.DDP5.1.HDR10P.H.265-HiveWeb.mkv
+      Young.Sherlock.S01E06.2160p.AMZN.WEB-DL.DDP5.1.HDR10P.H.265-HiveWeb.mkv
+      Young.Sherlock.S01E07.2160p.AMZN.WEB-DL.DDP5.1.HDR10P.H.265-HiveWeb.mkv
+      Young.Sherlock.S01E08.2160p.AMZN.WEB-DL.DDP5.1.HDR10P.H.265-HiveWeb.mkv
 
 - id: tv-018
   title: "伦敦黑帮"
@@ -622,6 +637,22 @@
   date: 2020-06-22
   added: 2026-09-27
   image: tv-028.jpg
+  updated: 2026-11-10
+  files:
+    count: 8
+    size: "7.1 GB"
+    format: "MP4×8"
+    tree: |
+      028-德黑兰 美剧/
+      德黑兰S01/
+      德黑兰S01E01.mp4
+      德黑兰S01E02.mp4
+      德黑兰S01E03.mp4
+      德黑兰S01E04.mp4
+      德黑兰S01E05.mp4
+      德黑兰S01E06.mp4
+      德黑兰S01E07.mp4
+      德黑兰S01E08.mp4
 
 - id: tv-029
   title: "金特务：本色回归"
@@ -659,6 +690,43 @@
   date: 2015-01-06
   added: 2026-09-27
   image: tv-030.jpg
+  updated: 2026-11-10
+  files:
+    count: 29
+    size: "26.2 GB"
+    format: "MKV×16 / ASS×13"
+    tree: |
+      030-特工卡特/
+      漫威·特工卡特【S01】【1080P】2015/
+      ._marvels.agent.carter.s01e01.Now.Is.Not.the.End.1080p.bluray.x264-rovers.mkv
+      ._marvels.agent.carter.s01e02.Bridge.and.Tunnel.1080p.bluray.x264-rovers.mkv
+      ._marvels.agent.carter.s01e03.Time.and.Tide.1080p.bluray.x264-rovers.mkv
+      ._marvels.agent.carter.s01e04.The.Blitzkrieg.Button.1080p.bluray.x264-rovers.mkv
+      ._marvels.agent.carter.s01e05.The.Iron.Ceiling.1080p.bluray.x264-rovers.mkv
+      ._marvels.agent.carter.s01e06.A.Sin.to.Err.1080p.bluray.x264-rovers.mkv
+      ._marvels.agent.carter.s01e07.SNAFU.1080p.bluray.x264-rovers.mkv
+      ._marvels.agent.carter.s01e08.Valediction.1080p.bluray.x264-rovers.mkv
+      marvels.agent.carter.s01e01.Now.Is.Not.the.End.1080p.bluray.x264-rovers.mkv
+      marvels.agent.carter.s01e02.Bridge.and.Tunnel.1080p.bluray.x264-rovers.mkv
+      marvels.agent.carter.s01e03.Time.and.Tide.1080p.bluray.x264-rovers.mkv
+      marvels.agent.carter.s01e04.The.Blitzkrieg.Button.1080p.bluray.x264-rovers.mkv
+      marvels.agent.carter.s01e05.The.Iron.Ceiling.1080p.bluray.x264-rovers.mkv
+      marvels.agent.carter.s01e06.A.Sin.to.Err.1080p.bluray.x264-rovers.mkv
+      marvels.agent.carter.s01e07.SNAFU.1080p.bluray.x264-rovers.mkv
+      marvels.agent.carter.s01e08.Valediction.1080p.bluray.x264-rovers.mkv
+      ._marvels.agent.carter.s01e01.Now.Is.Not.the.End.1080p.bluray.x264-rovers.ass
+      ._marvels.agent.carter.s01e04.The.Blitzkrieg.Button.1080p.bluray.x264-rovers.ass
+      ._marvels.agent.carter.s01e05.The.Iron.Ceiling.1080p.bluray.x264-rovers.ass
+      ._marvels.agent.carter.s01e07.SNAFU.1080p.bluray.x264-rovers.ass
+      ._marvels.agent.carter.s01e08.Valediction.1080p.bluray.x264-rovers.ass
+      marvels.agent.carter.s01e01.Now.Is.Not.the.End.1080p.bluray.x264-rovers.ass
+      marvels.agent.carter.s01e02.Bridge.and.Tunnel.1080p.bluray.x264-rovers.ass
+      marvels.agent.carter.s01e03.Time.and.Tide.1080p.bluray.x264-rovers.ass
+      marvels.agent.carter.s01e04.The.Blitzkrieg.Button.1080p.bluray.x264-rovers.ass
+      marvels.agent.carter.s01e05.The.Iron.Ceiling.1080p.bluray.x264-rovers.ass
+      marvels.agent.carter.s01e06.A.Sin.to.Err.1080p.bluray.x264-rovers.ass
+      marvels.agent.carter.s01e07.SNAFU.1080p.bluray.x264-rovers.ass
+      marvels.agent.carter.s01e08.Valediction.1080p.bluray.x264-rovers.ass
 
 - id: tv-031
   title: "黑鸽"
