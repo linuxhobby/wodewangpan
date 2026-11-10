@@ -116,10 +116,30 @@ export function pickSerials(items, now, n, today) {
 
 const SIG_KEYS = ['count', 'size', 'format', 'packed', 'tree'];
 
+/**
+ * tree 参与签名时必须**与行序无关**（2026-11-11 修）。
+ * 盘端接口返回子项的顺序本身不稳定（按内部 fid / 更新时间给），而 tree-sort 排的是
+ * 「目录优先 → 扩展名分组 → 组内集数自然序」，同级两个目录这类并列情况下它不会给出唯一先后，
+ * 于是同一份内容抓两次有可能只是行的先后不同。
+ * 直接比整串就会把这种纯换序判成「盘端变了」，进而整体重写 files 块并盖 updated ——
+ * 行序变化不是内容变化，盖日期等于伪造 lastmod（AGENTS.md §5 第一红线；
+ * tools/sort-trees.mjs 回填行序时刻意不写 updated，就是同一个道理）。
+ * 实测 2026-11-11 一轮里 an-009 / an-011 / an-013 三条同时中招，count / size / format 一字未动。
+ * 做法：按行拆开 → 去空白 → 排序 → 再拼。集合与重数相同即签名相同；
+ * 文件增减、改名、目录层级变化照样会判成有变化，不会因此漏掉真实更新。
+ */
+const treeKey = (s) =>
+  String(s ?? '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .sort()
+    .join('\n');
+
 /** 新抓到的聚合结果 → 可比签名 */
 export function signatureOf(agg) {
   const o = {};
-  for (const k of SIG_KEYS) o[k] = norm(agg[k]);
+  for (const k of SIG_KEYS) o[k] = k === 'tree' ? treeKey(agg[k]) : norm(agg[k]);
   return JSON.stringify(o);
 }
 
@@ -137,7 +157,7 @@ export function signatureFromLines(lines, from, to) {
     const m = /^    ([a-z]+):\s*(.*)$/.exec(line);
     if (m && Object.prototype.hasOwnProperty.call(o, m[1])) o[m[1]] = norm(unquote(m[2]));
   }
-  o.tree = tree.join('\n').trim();
+  o.tree = treeKey(tree.join('\n'));
   return JSON.stringify(o);
 }
 
