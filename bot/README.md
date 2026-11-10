@@ -108,7 +108,7 @@ cp config.example.json config.json
   "access_token": "",
   "group_whitelist": [],
   "allow_private": true,
-  "cooldown_seconds": 15,
+  "cooldown_seconds": 3,
   "global_rate_per_minute": 20,
   "reply_at_sender": false
 }
@@ -118,7 +118,7 @@ cp config.example.json config.json
 |---|---|
 | `group_whitelist` | 只响应这些群号。留空表示所有群都响应，**首次跑通后建议填上群号** |
 | `group_no_at_slash` | 群里以 `/` 开头的消息免 @ 直接执行，默认 `true`。设为 `false` 就恢复「必须 @」 |
-| `cooldown_seconds` | 同一个人在同一个群，多少秒内只能查一次，防刷屏 |
+| `cooldown_seconds` | 同一个人在同一个群，多少秒内只能查一次，防刷屏。默认 3 秒；设太大会出现「发完 /帮助 接着查词没反应」，日志里写着 `限频忽略` |
 | `global_rate_per_minute` | 全机器人每分钟最多回多少条，防炸群 |
 | `reply_at_sender` | 回复时是否 @ 提问的人，默认关闭 |
 | `access_token` | 与 NapCat HTTP 服务器的 Token 保持一致，都空也可以 |
