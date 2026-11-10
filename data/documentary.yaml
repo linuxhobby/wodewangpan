@@ -1643,6 +1643,21 @@
   date: 2011-05-05
   added: 2026-05-02
   image: dc-004.jpg
+  updated: 2026-11-10
+  files:
+    count: 8
+    size: "8.7 GB"
+    format: "SRT×4 / MKV×4"
+    tree: |
+      004-BBC.人体奥秘（外挂字幕）/
+      人体奥秘.E01.mkv
+      人体奥秘.E02.mkv
+      人体奥秘.E03.mkv
+      人体奥秘.E04.mkv
+      人体奥秘.E01.srt
+      人体奥秘.E02.srt
+      人体奥秘.E03.srt
+      人体奥秘.E04.srt
 
 - id: dc-003
   title: "二战坦克王牌"
@@ -1653,6 +1668,19 @@
   date: 2013-01-06
   added: 2026-05-02
   image: dc-003.jpg
+  updated: 2026-11-10
+  files:
+    count: 6
+    size: "3.2 GB"
+    format: "SRT×2 / MKV×2 / ASS×2"
+    tree: |
+      003-BBC.二战英军坦克英雄/
+      二战英军坦克英雄2.CHS.ass
+      二战英军坦克英雄2.ENG.ass
+      二战英军坦克英雄1.mkv
+      二战英军坦克英雄2.mkv
+      二战英军坦克英雄1.CHS.srt
+      二战英军坦克英雄1.ENG.srt
 
 - id: dc-002
   title: "七个世界，一个星球"
@@ -1663,6 +1691,27 @@
   date: 2019-10-27
   added: 2026-05-02
   image: dc-002.jpg
+  updated: 2026-11-10
+  files:
+    count: 14
+    size: "30.6 GB"
+    format: "MKV×7 / IDX×7"
+    tree: |
+      002-BBC.七个世界 一个星球/
+      七个世界.一个地球.E01.idx
+      七个世界.一个地球.E02.idx
+      七个世界.一个地球.E03.idx
+      七个世界.一个地球.E04.idx
+      七个世界.一个地球.E05.idx
+      七个世界.一个地球.E06.idx
+      七个世界.一个地球.E07.idx
+      七个世界.一个地球.E01.mkv
+      七个世界.一个地球.E02.mkv
+      七个世界.一个地球.E03.mkv
+      七个世界.一个地球.E04.mkv
+      七个世界.一个地球.E05.mkv
+      七个世界.一个地球.E06.mkv
+      七个世界.一个地球.E07.mkv
 
 - id: dc-001
   title: "一千零一夜的秘密"
