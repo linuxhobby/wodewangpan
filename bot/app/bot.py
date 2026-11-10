@@ -326,6 +326,27 @@ def _warm():
         log(f"× 索引预热失败：{e}（首次查询时会自动重试）")
 
 
+def _check_napcat():
+    """启动时先探一下 NapCat。
+
+    NapCat 只有 QQ 登录成功之后才会把 OneBot 的 HTTP 服务（默认 :3000）开起来；
+    它没起来时本进程照样活着、TG 也照常回，但 QQ 群一条消息都收不到，
+    表现就是「QQ 群挂了」。所以这里明确记一条，省得下次还要猜。
+    只提醒不强退：NapCat 稍后登录成功，不用重启本进程也能自动恢复。
+    """
+    res = _api("get_status", {})
+    if res is None:
+        log("× NapCat 没就绪（%s 连不上）：QQ 群消息暂时收不到。" % CFG["napcat_api"])
+        log("  多半是 QQ 还没登录完（NapCat 登录后才会开 OneBot 端口）。")
+        log("  NapCat 登录成功后会自动恢复，不用重启本进程；TG 那边不受影响。")
+        return False
+    online = bool((res.get("data") or {}).get("online"))
+    log("NapCat 就绪：online=%s" % online)
+    if not online:
+        log("  注意：NapCat 在线状态为 false，QQ 可能还没登录完。")
+    return True
+
+
 def main():
     host = CFG.get("listen_host", "127.0.0.1")
     port = int(CFG.get("listen_port", 6700))
@@ -337,6 +358,7 @@ def main():
     wl = CFG.get("group_whitelist") or []
     log(f"群白名单：{wl if wl else '未设置（所有群都响应，建议首次运行后回填群号）'}")
     log("=" * 52)
+    _check_napcat()
     threading.Thread(target=_warm, daemon=True).start()
 
     # Telegram 作为同进程的后台线程跑，共享 handlers 与站点缓存。
