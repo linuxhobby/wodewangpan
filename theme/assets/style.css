@@ -139,32 +139,20 @@ body.page--wide { --page-max: var(--page-wide); }
 }
 .top__search input:focus { border-color: var(--brand); background: var(--surface); }
 
-/* ── 全站顶部公告条 ──────────────────
-   放在 sticky 顶栏之后、分类栏之前：不常驻滚动、不增加顶栏高度。
-   整条是一个站内链接，窄屏由 flex-wrap 折行，不必另配断点。 */
-.notice-bar { background: var(--brand-soft); border-bottom: 1px solid var(--border); }
-.notice-bar__inner { display: flex; align-items: center; }
-.notice-bar__link {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 0;
-  font-size: var(--fs-base);
-  line-height: var(--lh-tight);
-  color: var(--text);
-  text-decoration: none;
-}
-.notice-bar__link:hover .notice-bar__text { text-decoration: underline; }
-.notice-bar__badge {
-  flex: 0 0 auto;
-  padding: 1px 7px;
+/* ── 标题栏公告链接 ──────────────────
+   与「热榜 TOP 30」同组跟在 H1 的「N 个资源」之后；窄屏随 .page__aside 一起换行，
+   不占通栏、不增加顶栏高度。 */
+.page__notice { font-size: var(--fs-sm); color: var(--brand); text-decoration: none; }
+.page__notice:hover { text-decoration: underline; }
+.page__notice-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  margin-right: 4px;
   border-radius: var(--r-chip);
   background: var(--brand);
   color: var(--surface);
   font-size: var(--fs-xs);
 }
-.notice-bar__more { color: var(--brand); font-size: var(--fs-sm); }
 /* 锚点跳转时给 sticky 顶栏让位（顶栏 68px + 余量），#qq-group 同样受益 */
 .card-page h2[id] { scroll-margin-top: 80px; }
 

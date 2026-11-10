@@ -42,16 +42,26 @@ const iconSvg = (key, cls = 'foot__icon') =>
 
 // 页面 H1 同一行右侧的邀请链接（首页与各分类页共用）。外部站，统一 nofollow + noopener
 const PAGE_INVITES = [];
-/** 标题栏右侧整组链接：「热榜 TOP 30」。整组包在 .page__aside 里，
- *  桌面端由它 margin-left:auto 顶到行尾；窄屏整组独占一行、左对齐（见 style.css 移动端） */
-const titleAsideLinks = () =>
-  '<span class="page__aside">' +
-  PAGE_INVITES.map(
-    (i) =>
-      `<a class="page__invite" href="${esc(i.href)}" title="${esc(i.title)}" target="_blank" rel="noopener noreferrer nofollow">${esc(i.label)}</a>`
-  ).join('') +
-  '<a class="page__hot" href="/hot/">热榜 TOP 30 →</a>' +
-  '</span>';
+/** 标题栏右侧整组链接：公告 + 邀请 + 「热榜 TOP 30」。整组包在 .page__aside 里，
+ *  桌面端由它 margin-left:auto 顶到行尾；窄屏整组独占一行、左对齐（见 style.css 移动端）。
+ *  公告跟在 H1 的「N 个资源」之后，不再占顶部通栏；文案与链接来自 site.yaml 的 notice。 */
+const titleAsideLinks = (ctx = {}) => {
+  const n = ctx.site && ctx.site.notice;
+  const notice =
+    n && n.enabled !== false && n.text && n.href
+      ? `<a class="page__notice" href="${esc(n.href)}"><span class="page__notice-badge">公告</span>${esc(n.text)} · ${esc(n.more || '查看详情 →')}</a>`
+      : '';
+  return (
+    '<span class="page__aside">' +
+    notice +
+    PAGE_INVITES.map(
+      (i) =>
+        `<a class="page__invite" href="${esc(i.href)}" title="${esc(i.title)}" target="_blank" rel="noopener noreferrer nofollow">${esc(i.label)}</a>`
+    ).join('') +
+    '<a class="page__hot" href="/hot/">热榜 TOP 30 →</a>' +
+    '</span>'
+  );
+};
 
 // 全站每页底部的固定入口。abs: true 的输出时拼上站点域名
 const FOOT_NAV = [
@@ -71,22 +81,6 @@ const footNav = (current = '', baseUrl = '') =>
         i.abs && baseUrl ? `${baseUrl}${i.href}` : i.href
       )}"${i.href === current ? ' aria-current="page"' : ''}>${esc(i.label)}</a>`
   ).join('')}</nav>`;
-
-/** 全站顶部公告条：紧跟 sticky 顶栏、不常驻滚动；整条即一个站内链接。
- *  文案与链接来自 site.yaml 的 notice，enabled: false 或内容不全时不输出 */
-function noticeBar(site) {
-  const n = site.notice;
-  if (!n || n.enabled === false || !n.text || !n.href) return '';
-  return `<div class="notice-bar">
-  <div class="wrap notice-bar__inner">
-    <a class="notice-bar__link" href="${esc(n.href)}">
-      <span class="notice-bar__badge">公告</span>
-      <span class="notice-bar__text">${esc(n.text)}</span>
-      <span class="notice-bar__more">${esc(n.more || '查看详情 →')}</span>
-    </a>
-  </div>
-</div>`;
-}
 
 // 衡天云联盟推广位：图片 + 赞助链接。rel=sponsored 是 Google 对联盟/赞助链接的硬性要求
 function promoLinkOf(site) {
@@ -389,7 +383,6 @@ ${jsonLd ? jsonLdBlock(jsonLd) : ''}
     </form>
   </div>
 </header>
-${noticeBar(site)}
 ${catNav(categories, counts, activeCat, total, hotOn)}
 <main class="wrap">
 ${body}
@@ -486,7 +479,7 @@ function homePage(ctx) {
   const shown = groups.flatMap((g) => g.shown);
   const firstImg = (images.get(shown[0] && shown[0].id) || {}).card || '';
 
-  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span>${titleAsideLinks()}</h1>
+  const body = `<h1 class="page__title page__title--home">${esc(homeH1)}<span class="page__n">${total} 个资源</span>${titleAsideLinks(ctx)}</h1>
 <div id="results" class="results" hidden></div>
 <div id="home">
 ${groups
@@ -544,7 +537,7 @@ function catPage(ctx) {
       .join('')}</ul>
 </noscript>`
     : '';
-  const body = `<h1 class="page__title">${esc(activeCat)}<span class="page__n">${items.length} 个资源</span>${titleAsideLinks()}</h1>
+  const body = `<h1 class="page__title">${esc(activeCat)}<span class="page__n">${items.length} 个资源</span>${titleAsideLinks(ctx)}</h1>
 <div id="results" class="results" hidden></div>
 <ul id="list" class="grid">
 ${items.slice(0, pageSize).map((it, i) => cardHtml(it, images, newestIds.has(it.id), i < 5)).join('\n')}
@@ -820,7 +813,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
 
   // 面包屑同一行右侧：两个邀请 + 热榜入口，与首页/分类页共用同一组（靠右侧由 .page__aside 的 margin-left:auto 顶过去）
   // 搜索结果容器：顶部搜索框是共享布局，详情页也得有 #results，否则 app.js 拿到 null 直接抛错，搜索静默失效
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="${catHref(item.category)}">${esc(item.category)}</a>${titleAsideLinks()}</nav>
+  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="${catHref(item.category)}">${esc(item.category)}</a>${titleAsideLinks(ctx)}</nav>
 <div id="results" class="results" hidden></div>
 <article class="detail${isDead ? ' detail--dead' : ''}">
   ${isDead ? '<div class="dead-banner">⚠ 该资源分享可能已失效（链接被取消）。可在页面底部留言许愿，或浏览右侧同类资源。</div>' : ''}
