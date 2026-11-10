@@ -1,9 +1,10 @@
 ' 启动 QQ 机器人（静默后台运行，不弹黑窗口）
-' NapCat 没在跑时会顺带把它拉起来
+' 顺序：先保 NapCat（QQ 端）在跑，再保机器人本体在跑
 Option Explicit
 
 Dim BOT_DIR, PYW, NAPCAT_EXE, NAPCAT_DIR, fso, ws, svc, list, p
-Dim running, napcat, napcatNote
+Dim running, napcat, napcatStarted, msg
+
 Set fso = CreateObject("Scripting.FileSystemObject")
 Set ws = CreateObject("WScript.Shell")
 
@@ -28,6 +29,7 @@ If Not fso.FileExists(PYW) Then PYW = "pythonw"
 
 running = False
 napcat = False
+napcatStarted = False
 Set svc = GetObject("winmgmts:\\.\root\cimv2")
 Set list = svc.ExecQuery("SELECT Name, CommandLine FROM Win32_Process")
 For Each p In list
@@ -38,26 +40,37 @@ For Each p In list
   If LCase(p.Name & "") = "qq.exe" Then napcat = True
 Next
 
-If running Then
-  MsgBox "QQ 机器人已经在运行了。" & vbCrLf & vbCrLf & _
-         "要让改过的代码生效，请双击「重启QQ机器人」。", 64, "启动 QQ 机器人"
-  WScript.Quit 0
+' 第一步：NapCat 不在就先拉起来，不管机器人本体在不在跑
+If Not napcat Then
+  If fso.FileExists(NAPCAT_EXE) Then
+    ws.CurrentDirectory = NAPCAT_DIR
+    ws.Run """" & NAPCAT_EXE & """", 0, False
+    napcatStarted = True
+    WScript.Sleep 3000
+  End If
 End If
 
-ws.CurrentDirectory = BOT_DIR
-ws.Run """" & PYW & """ ""app\bot.py""", 0, False
+' 第二步：机器人本体不在才启动
+If Not running Then
+  ws.CurrentDirectory = BOT_DIR
+  ws.Run """" & PYW & """ ""app\bot.py""", 0, False
+End If
 
-If napcat Then
-  napcatNote = "QQ 机器人已启动。" & vbCrLf & vbCrLf & _
-               "等 3 秒左右，在群里发 /帮助 试试。"
-ElseIf fso.FileExists(NAPCAT_EXE) Then
-  ws.CurrentDirectory = NAPCAT_DIR
-  ws.Run """" & NAPCAT_EXE & """", 0, False
-  napcatNote = "机器人已启动；NapCat（QQ 端）原本没在跑，已顺带拉起。" & vbCrLf & vbCrLf & _
-               "等小号自动登录后，在群里发 /帮助 试试。"
+' 第三步：汇总提示
+If napcatStarted Then
+  msg = "NapCat（QQ 端）原本没在跑，已拉起。小号登录需要十几秒，之后群里才有反应。"
+ElseIf napcat Then
+  msg = "NapCat 已在运行。"
 Else
-  napcatNote = "机器人已启动，但找不到 NapCat 程序：" & vbCrLf & NAPCAT_EXE & vbCrLf & vbCrLf & _
-               "请手动启动 NapCat，否则收不到群消息。"
+  msg = "找不到 NapCat 程序，没能拉起：" & vbCrLf & NAPCAT_EXE
 End If
 
-MsgBox napcatNote, 64, "启动 QQ 机器人"
+msg = msg & vbCrLf & vbCrLf
+
+If running Then
+  msg = msg & "QQ 机器人已经在运行，没有重复启动。改过代码请用「重启QQ机器人」。"
+Else
+  msg = msg & "QQ 机器人已启动，等 3 秒左右在群里发 /帮助 试试。"
+End If
+
+MsgBox msg, 64, "启动 QQ 机器人"
