@@ -1396,18 +1396,25 @@ ${cards}
   });
 }
 
-/** 加入 QQ 群区块：关于本站与联系我们两页共用，改群名 / 群链接 / 邮箱只需动这一处 */
-function qqGroupBlock({ qqName, qqLink, contactEmail }) {
+/** 加入 QQ 群区块：关于本站与联系我们两页共用，改群名 / 群链接 / 邮箱只需动这一处。
+ *  aside 可选：关于本站页把机器人指令传进来排在二维码右侧；联系我们页不传，保持单栏。
+ *  footer 控制两栏下方的两行联系方式；关于本站页把它们并入右栏，传 false 关掉。 */
+function qqGroupBlock({ qqName, qqLink, contactEmail, aside = '', footer = true }) {
   return `<h2 id="qq-group">加入${qqName ? `「${esc(qqName)}」` : ''}QQ群</h2>
   <p>有问题、想交流资源，或者发现链接失效？欢迎扫码加入${qqName ? `QQ群<strong>${esc(qqName)}</strong>` : '本站QQ群'}交流反馈。</p>
-  <div class="qq-qr">
-    ${qqLink ? `<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">` : ''}
-    <img src="/qq-group.png" alt="${qqName ? `${esc(qqName)} ` : ''}QQ群二维码" width="260" height="260" loading="lazy">
-    ${qqLink ? '</a>' : ''}
-    <p class="muted">扫码加入${qqName ? `QQ群「${esc(qqName)}」` : 'QQ群'}</p>
+  <div class="qq-layout">
+    <div class="qq-layout__main">
+      <div class="qq-qr">
+        ${qqLink ? `<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">` : ''}
+        <img src="/qq-group.png" alt="${qqName ? `${esc(qqName)} ` : ''}QQ群二维码" width="260" height="260" loading="lazy">
+        ${qqLink ? '</a>' : ''}
+        <p class="muted">扫码加入${qqName ? `QQ群「${esc(qqName)}」` : 'QQ群'}</p>
+      </div>
+    </div>
+    ${aside ? `<div class="qq-layout__aside">${aside}</div>` : ''}
   </div>
-  ${qqLink ? `<p>也可直接 <a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>。</p>` : ''}
-  ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}`;
+  ${footer && qqLink ? `<p>也可直接 <a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>。</p>` : ''}
+  ${footer && contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}`;
 }
 
 export function aboutPage(ctx) {
@@ -1429,12 +1436,8 @@ export function aboutPage(ctx) {
     )
     .join('\n');
 
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>关于本站</span></nav>
-<h1 class="page__title page__title--doc">关于本站</h1>
-<div class="card-page">
-  ${qqGroupBlock({ qqName, qqLink, contactEmail })}
-
-  <div class="cmd-box">
+  /** 二维码右侧：机器人指令卡片 + 入群 CTA，由 qqGroupBlock 的 aside 排到右边 */
+  const qqAside = `<div class="cmd-box">
   <h2 id="qq-bot">QQ群机器人指令</h2>
   <p>在群里发送以下指令，机器人会自动回复结果。<strong><code>/</code> 开头的指令免 @ 直接执行</strong>；直接发裸关键词则需要 @ 机器人。关键词支持中文、全拼与拼音首字母（如 <code>qzx</code>）。</p>
   <ul>
@@ -1447,6 +1450,12 @@ export function aboutPage(ctx) {
   </ul>
   </div>
   ${qqLink ? `<p>还没入群？<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>，或扫上方二维码。</p>` : ''}
+  ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}`;
+
+  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>关于本站</span></nav>
+<h1 class="page__title page__title--doc">关于本站</h1>
+<div class="card-page">
+  ${qqGroupBlock({ qqName, qqLink, contactEmail, aside: qqAside, footer: false })}
 
   <h2>站点概况</h2>
   <p><strong>${esc(site.title)}</strong> 是一个纯静态的网盘资源索引站：把散落在各处的夸克 / 百度 / 阿里云盘资源整理成条目，

@@ -407,6 +407,13 @@ a.tag:hover { background: var(--brand-soft); }
 }
 .qq-qr .muted { margin: 0; font-size: var(--fs-sm); text-align: center; max-width: 260px; }
 
+/* QQ 群区块：二维码与右侧内容（关于本站页的机器人指令）并排；
+   窄屏由 flex-wrap 自动堆叠，二维码保持完整宽度。联系我们页没有右栏，视觉不变。 */
+.qq-layout { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px; }
+.qq-layout__main { flex: 0 0 auto; }
+.qq-layout__aside { flex: 1 1 320px; min-width: 0; }
+.qq-layout__aside > .cmd-box { margin-top: 0; }
+
 /* RSS 订阅地址行：地址 + 复制按钮 */
 .feed-url {
   display: flex;
