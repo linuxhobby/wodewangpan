@@ -183,6 +183,23 @@
   date: 2026-07-31
   added: 2026-08-24
   image: tv-003.jpg
+  updated: 2026-11-10
+  files:
+    count: 10
+    size: "44.2 GB"
+    format: "MKV×10"
+    tree: |
+      003-杀手妈咪/
+      A.Bona.Fide.Killer.2026.S01E01.Ke.Hu.Hui.Yi.Kai.Shi.1080p.FRIDAY.WEB-DL.AAC2.0.H.264.mkv
+      A.Bona.Fide.Killer.2026.S01E02.Zhen.De.Shi.KingfisherMa.1080p.FRIDAY.WEB-DL.AAC2.0.H.264.mkv
+      A.Bona.Fide.Killer.2026.S01E06.1080p.FRIDAY.WEB-DL.AAC2.0.H.264.mkv
+      A.Bona.Fide.Killer.S01E03.2026.1080p.FRIDAY.WEB-DL.AAC2.0.H.264.mkv
+      A.Bona.Fide.Killer.S01E04.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
+      A.Bona.Fide.Killer.S01E05.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
+      A.Bona.Fide.Killer.S01E07.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
+      A.Bona.Fide.Killer.S01E08.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
+      A.Bona.Fide.Killer.S01E09.1080p.friDay.WEB-DL.AAC.2.0.H.264.mkv
+      A.Bona.Fide.Killer.S01E09.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
 
 - id: tv-001
   title: "现金英雄"

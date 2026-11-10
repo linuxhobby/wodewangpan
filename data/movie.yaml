@@ -37,6 +37,14 @@
   date: 2026-04-15
   added: 2026-08-25
   image: mv-008.jpg
+  updated: 2026-11-10
+  files:
+    count: 1
+    size: "1.2 GB"
+    format: "MP4"
+    tree: |
+      008-火线兄弟 Brothers Under Fire (2026)/
+      火线兄弟 1080P.mp4
 
 - id: mv-007
   title: "核战边缘"
@@ -49,6 +57,19 @@
   date: 2026-08-13
   added: 2026-09-03
   image: mv-007.jpg
+  updated: 2026-11-10
+  files:
+    count: 6
+    size: "16.8 GB"
+    format: "JPG×3 / MKV / NFO / PNG"
+    tree: |
+      007-核战边缘 (2026)/
+      backdrop.jpg
+      fanart.jpg
+      poster.jpg
+      The Brink of War (2026) - 2160p WEB-DL HDR10 H265 DDP 5.1.mkv
+      The Brink of War (2026) - 2160p WEB-DL HDR10 H265 DDP 5.1.nfo
+      logo.png
 
 - id: mv-006
   title: "怒之杀"
