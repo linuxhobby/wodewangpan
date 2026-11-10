@@ -79,9 +79,14 @@ const CLI = path.join(
 // 站点导流当天改过名，铺下去的旧名「我的网盘网址www.wodewangpan.top.md」已在 643 个夸克目录里
 // 且网盘 CLI 无删除命令 → 新旧两名都必须识别，漏任一个就等于把几百份说明文件当真实资源写进 files:。
 // 另有历史/人工放过的一份「资源正在陆续更新上传中…」（实测全盘仅 1 处，在 04电影/005-山竹刀）。
-// 权威定义在 quark-resource-sync skill 的 scripts/lib/placeholder.mjs（PLACEHOLDER_PREFIXES）；
+// 权威定义在 quark-resource-sync skill 的 scripts/lib/placeholder.mjs（PLACEHOLDER_PREFIXES + PLACEHOLDER_SUFFIXES）；
 // 跨仓库无法 import，改那边必须同步改这里。
-const PLACEHOLDER_FILE_RE = /^(资源在24小时内更新|资源缺失反馈请加QQ群|关于我的网盘索引站|我的网盘网址|资源正在陆续更新上传中)/;
+// 2026-11-10 追加第二类：`.正片名.mkv.fg.op` 隐藏上传桩（网盘客户端离线/待传时预生成，每个约 100 KB）。
+//   它不是说明文件、按行首前缀永远匹配不上（名字以 `.` 开头），只能按后缀认；
+//   漏掉它就等于把桩当内容：实测 10 条电视剧清单被虚增 count 并统计成假的 `OP×N` 格式。
+//   ⚠ 前缀那一段仍然必须带 `^` 锚子，只有桩这一支是后缀规则。
+const PLACEHOLDER_FILE_RE =
+  /^(资源在24小时内更新|资源缺失反馈请加QQ群|关于我的网盘索引站|我的网盘网址|资源正在陆续更新上传中)|\.fg\.op$/i;
 
 const args = process.argv.slice(2);
 const getArg = (name, def) => {
