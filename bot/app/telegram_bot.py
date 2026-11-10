@@ -47,6 +47,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE = os.path.join(LOG_DIR, time.strftime("tg-%Y-%m-%d.log"))
 STATE_FILE = os.path.join(LOG_DIR, "tg-state.json")
 LOCK_FILE = os.path.join(LOG_DIR, "tg.lock")
+PID_FILE = os.path.join(LOG_DIR, "tg.pid")
 
 TAG = "[TG]"
 MAX_TG_LEN = 3900        # Telegram 上限 4096，留出 HTML 标签的余量
@@ -161,8 +162,12 @@ def _acquire_single_instance():
     try:
         f.seek(0)
         f.truncate()
-        f.write(str(os.getpid()))
-        f.flush()
+    except Exception:
+        pass
+    # pid 另存一份：锁文件被独占锁住后别的进程连读都读不了，排查时看这个
+    try:
+        with open(PID_FILE, "w", encoding="utf-8") as pf:
+            pf.write(str(os.getpid()))
     except Exception:
         pass
     _lock_handle = f
@@ -626,6 +631,7 @@ def run_forever(cfg=None, stop_event=None):
     log("站点：%s" % cfg.get("site_url"))
     log("群白名单：%s" % (chats if chats else "未设置（任何群都响应，建议用 /id 取回后回填）"))
     log("代理：%s" % (TG.get("proxy") or "未设置（直连）"))
+    log("进程：pid %d（独立进程守着 %s）" % (os.getpid(), os.path.basename(LOCK_FILE)))
     log("=" * 52)
 
     offset = _load_offset()

@@ -319,9 +319,22 @@ check("按日期从新到旧", dates, sorted(dates, reverse=True))
 more, _ = sc.search(CFG["site_url"], "电影", 10, 10)
 check("翻页接在后面", (more[0].get("date") or "") <= dates[-1], True)
 
-# 单实例：同一进程里重复拿锁要幂等，不会自己把自己挡住
+# 单实例：用临时锁文件测，别去抢正在跑的那份真锁
+import tempfile
+import subprocess
+_tmp = tempfile.mkdtemp(prefix="tgtest-")
+tg.LOCK_FILE = os.path.join(_tmp, "tg.lock")
+tg.PID_FILE = os.path.join(_tmp, "tg.pid")
+tg._lock_handle = None
 check("单实例锁重复获取幂等", (tg._acquire_single_instance(), tg._acquire_single_instance()), (True, True))
 check("锁文件已落地", os.path.exists(tg.LOCK_FILE), True)
+check("pid 单独记了一份（锁文件被锁住读不了）", os.path.getsize(tg.PID_FILE) > 0, True)
+
+_child = ("import sys,os;sys.path.insert(0,'app');import telegram_bot as t;"
+          "t.LOCK_FILE=%r;t.PID_FILE=%r;"
+          "print(t._acquire_single_instance())" % (tg.LOCK_FILE, tg.PID_FILE))
+_r = subprocess.run([sys.executable, "-c", _child], capture_output=True, text=True)
+check("另一个进程抢不到锁（会自己退出）", (_r.stdout or _r.stderr).strip()[:5], "False")
 
 # 内嵌开关：默认关（TG 由独立进程跑），配置里必须能读到这个键
 check("telegram.embedded 默认关", bool((CFG.get("telegram") or {}).get("embedded", False)), False)
