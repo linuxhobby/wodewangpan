@@ -204,6 +204,19 @@ NapCat 的 HTTP 服务器没启动，或端口不是 3000。打开 NapCat WebUI 
 **机器人掉线**
 NapCat 依赖它自己那份 QQ 客户端，QQ 一退出就掉。检查那份 QQ 是否还在线。
 
+**NapCat WebUI 输 token 提示「token is invalid」**
+`config/webui.json` 带了 UTF-8 BOM，NapCat 的 `JSON.parse` 直接抛 `Unexpected token '﻿'`，于是整份配置被丢弃，token 和 `autoLoginAccount` 全部失效，它改用一个随机 token。启动日志里能看到两行证据：
+
+```
+读取配置文件失败 SyntaxError: Unexpected token '﻿'
+[WebUi] WebUi Token: 063fb2f2fd3f     ← 不是配置文件里那个
+```
+
+修法是把 BOM 去掉（存成无 BOM 的 UTF-8）。用 PowerShell 的 `Out-File`、部分编辑器「另存为 UTF-8」都会加 BOM，改完务必确认前三个字节不是 `EF BB BF`。当前 token 是 `wodewangpan2026`。
+
+**每次启动都要扫码**
+`NapCatWinBootMain.exe` 支持带账号参数走快速登录：`NapCatWinBootMain.exe 909008620`。三个 vbs 里的 `QQUIN` 常量就是干这个的，改账号只改那一行。前提是那份 QQ 数据目录里还留着登录凭证（`Documents\Tencent Files\<QQ号>` 没被清）。走二维码登录时启动日志会有「没有 -q 指令指定快速登录」这句。
+
 **会不会封号**
 会，协议端是真实 QQ 号，高频发外链是主要风险。所以用小号、控频率、别在多个群同时炸。真被限制了换号即可，代码不用改。
 
