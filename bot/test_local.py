@@ -27,6 +27,7 @@ CASES = [
     "权力的游戏",
     "qingzhixiang",
     "/s 夏洛克",
+    "/更多",               # 翻页：接着上面那次搜索看下一批
     "/最新",
     "/今日",
     "/分类",
@@ -34,6 +35,7 @@ CASES = [
     "/帮助",
     "三体",
     "/搜索",
+    "/更多",
     "/不认识的指令 xyz",
 ]
 
@@ -48,7 +50,7 @@ def main():
         print("-" * 60)
         t0 = __import__("time").time()
         try:
-            out = handlers.handle(q, CFG)
+            out = handlers.handle(q, CFG, "local-test")
         except Exception as e:
             print(f"!! 异常：{e.__class__.__name__}: {e}")
             continue

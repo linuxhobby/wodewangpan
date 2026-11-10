@@ -209,7 +209,7 @@ def process(event):
         return
 
     log(f"→ [{mtype}:{group_id or ''}] {nickname}：{text[:60]}")
-    replies = handlers.handle(text, CFG)
+    replies = handlers.handle(text, CFG, key)
     log(f"← 准备回复 {len(replies)} 条")
 
     for i, chunk in enumerate(replies):

@@ -118,14 +118,15 @@ def score(item, kw):
     return s
 
 
-def search(site_url, kw, limit=3):
-    """返回 (命中列表, 命中总数)。总数用于告诉用户"还有更多"。"""
+def search(site_url, kw, limit=3, offset=0):
+    """返回 (命中列表, 命中总数)。总数用于告诉用户"还有更多"，offset 供 /更多 翻页。"""
     items = load_index(site_url)
     scored = [(score(it, kw), it) for it in items]
     scored = [x for x in scored if x[0] > 0]
     scored.sort(key=lambda x: x[1].get("date") or "", reverse=True)   # 先日期降序
     scored.sort(key=lambda x: -x[0])                                  # 稳定排序，再按分数降序
-    return [it for _, it in scored[:limit]], len(scored)
+    page = scored[offset:offset + limit]
+    return [it for _, it in page], len(scored)
 
 
 def recent(site_url, n=8):
