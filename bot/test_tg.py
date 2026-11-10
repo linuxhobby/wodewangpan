@@ -16,6 +16,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(BASE, "app"))
 
 import json
+import re
 import handlers
 import tg_render
 import telegram_bot as tg
@@ -140,6 +141,79 @@ tg.TG = {"welcome_enabled": False, "allowed_chats": []}
 tg.handle_update(mk_update([{"id": 42, "first_name": "新人", "is_bot": False}]))
 check("welcome_enabled=false 时不发", len(sent), 0)
 tg.send = real_send
+
+print("8) 私聊投递（群里只留回执，结果走私聊；发不出就给深链）")
+calls = []
+BLOCKED = 777          # 这个用户从没点过 Start，私聊必 403
+started = set()        # 点过 Start 的人才会被放行
+
+
+def fake_api(method, params=None, timeout=None):
+    p = dict(params or {})
+    calls.append((method, p))
+    if method != "sendMessage":
+        return {"ok": True, "result": {}}
+    if p.get("chat_id") == BLOCKED and BLOCKED not in started:
+        return {"ok": False, "error_code": 403,
+                "description": "Forbidden: bot can't initiate conversation with a user"}
+    return {"ok": True, "result": {"message_id": 1}}
+
+
+real_api = tg._api
+real_handle = tg.handlers.handle
+real_cfg = tg._load_cfg_cached
+tg._api = fake_api
+tg._ME = {"username": BOT}
+tg.handlers.handle = lambda text, cfg, key: [
+    "神探狄仁杰 第一部 ｜ 电视剧\n夸克网盘\thttps://pan.quark.cn/s/abc"]
+tg._load_cfg_cached = lambda: {}
+tg.TG = {"reply_mode": "private", "allowed_chats": [], "cooldown_seconds": 0,
+         "global_rate_per_minute": 0, "allow_private": True}
+
+
+def mk_query(uid, text, mid):
+    return {"update_id": mid, "message": {
+        "message_id": mid,
+        "chat": {"id": -100123, "type": "supergroup", "title": "测试群"},
+        "from": {"id": uid, "username": "tester"}, "text": text}}
+
+
+def to_chat(chat_id):
+    return [p for m, p in calls if p.get("chat_id") == chat_id]
+
+
+calls.clear()
+tg.handle_update(mk_query(42, "/s 神探狄仁杰", 9201))
+check("结果进了私聊", len(to_chat(42)), 1)
+check("私聊内容含链接", "pan.quark.cn" in (to_chat(42)[0].get("text") or ""), True)
+check("群里只有一行回执", len(to_chat(-100123)), 1)
+check("群里回执不含结果", "pan.quark.cn" in (to_chat(-100123)[0].get("text") or ""), False)
+
+calls.clear()
+tg.handle_update(mk_query(BLOCKED, "/s 神探狄仁杰", 9202))
+check("私聊发不出时不丢消息", len(to_chat(-100123)), 1)
+hint = to_chat(-100123)[0].get("text") or ""
+check("回了深链", "?start=q" in hint, True)
+
+token = (re.search(r"start=(q[0-9a-f]+)", hint) or [None, ""])[1]
+started.add(BLOCKED)   # 用户点了深链，等于给机器人开了私聊
+calls.clear()
+tg.handle_update({"update_id": 9203, "message": {
+    "message_id": 9203, "chat": {"id": BLOCKED, "type": "private"},
+    "from": {"id": BLOCKED, "username": "tester"}, "text": "/start " + token}})
+check("点深链后补发到私聊", len(to_chat(BLOCKED)), 1)
+check("补发的内容是对的", "pan.quark.cn" in (to_chat(BLOCKED)[0].get("text") or ""), True)
+check("token 用完即废", tg._stash_take(token), None)
+
+calls.clear()
+tg.TG = dict(tg.TG, reply_mode="group")
+tg.handle_update(mk_query(43, "/s 神探狄仁杰", 9204))
+check("group 模式照旧发群里", len(to_chat(-100123)), 1)
+check("group 模式不碰私聊", len(to_chat(43)), 0)
+
+tg._api = real_api
+tg.handlers.handle = real_handle
+tg._load_cfg_cached = real_cfg
 
 print("\n结果：%d 通过，%d 失败" % (ok, bad))
 sys.exit(1 if bad else 0)

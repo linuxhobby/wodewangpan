@@ -23,6 +23,7 @@ import re
 import sys
 import json
 import time
+import uuid
 import threading
 import traceback
 import urllib.request
@@ -58,6 +59,8 @@ _seen = {}
 _cd = {}
 _rate = []
 _rate_lock = threading.Lock()
+_STASH = {}              # 深链补发用：token -> (uid, chunks, 时间)
+_STASH_TTL = 1800        # 备好的结果留 30 分钟，过期作废
 
 TG_HELP = (
     "我的网盘索引站 · 指令\n"
@@ -211,8 +214,8 @@ def _dup(mid):
 
 # ---------- 发送 ----------
 
-def send(chat_id, text, reply_to=None):
-    """优先发 HTML（网盘名可点），被拒就退回纯文本，绝不让用户收不到。"""
+def _send_raw(chat_id, text, reply_to=None):
+    """发一条，返回 (是否成功, 原始响应)。优先 HTML，被拒（400）退回纯文本。"""
     body = (text or "")[:MAX_TG_LEN]
     html = tg_render.to_html(body)
     if len(html) > 4090:
@@ -229,14 +232,90 @@ def send(chat_id, text, reply_to=None):
 
     res = _api("sendMessage", params)
     if res and res.get("ok"):
-        return True
+        return True, res
     if res and res.get("error_code") == 400:
         log("· HTML 被拒（%s），改发纯文本" % (res.get("description") or "")[:60])
         params.pop("parse_mode", None)
         params["text"] = tg_render.to_plain(body)
         res = _api("sendMessage", params)
-        return bool(res and res.get("ok"))
-    return False
+        return bool(res and res.get("ok")), res
+    return False, res
+
+
+def send(chat_id, text, reply_to=None):
+    """优先发 HTML（网盘名可点），被拒就退回纯文本，绝不让用户收不到。"""
+    ok, _ = _send_raw(chat_id, text, reply_to)
+    return ok
+
+
+# ---------- 私聊投递 ----------
+#
+# 群里只回一行回执，结果发到私聊，几十人同时查也不刷屏。
+# 但 TG 有一条硬规则：机器人不能主动私聊从没点过 Start 的人，
+# 此时 sendMessage 返回 403 not enough rights / bot can't initiate conversation。
+# 兜底做法是回一条 t.me/<bot>?start=<token> 深链，用户点一下进私聊，
+# 机器人从 /start 的参数里认出这是谁，把当时备好的结果补发过去。
+
+def _private_mode():
+    return (TG.get("reply_mode") or "group").lower() == "private"
+
+
+def _stash_put(uid, chunks):
+    """把结果暂存起来，返回深链 token。"""
+    now = time.time()
+    for k in [k for k, v in _STASH.items() if now - v[2] > _STASH_TTL]:
+        _STASH.pop(k, None)
+    token = "q" + uuid.uuid4().hex[:12]
+    _STASH[token] = (uid, list(chunks), now)
+    return token
+
+
+def _stash_take(token):
+    v = _STASH.pop(token, None)
+    if not v or time.time() - v[2] > _STASH_TTL:
+        return None
+    return v[0], v[1]
+
+
+def _dm(uid, chunks):
+    """往私聊发，返回成功发出的条数。"""
+    n = 0
+    for chunk in chunks:
+        ok, res = _send_raw(uid, chunk)
+        if not ok:
+            log("× 私发失败（uid %s）：%s" % (uid, ((res or {}).get("description") or "")[:60]))
+            break
+        n += 1
+        if len(chunks) > 1:
+            time.sleep(0.5)
+    return n
+
+
+def _deliver(chat_id, uid, ctype, chunks, reply_to):
+    """群里的查询走私聊投递，发不出去就回深链；其它情况照旧发当前会话。"""
+    if ctype in ("group", "supergroup") and _private_mode():
+        bot = _ME.get("username") or ""
+        done = _dm(uid, chunks)
+        if done == len(chunks):
+            send(chat_id, "结果已私发，点这里打开私聊：https://t.me/%s" % bot, reply_to=reply_to)
+            return
+        if done:
+            send(chat_id, "已私发 %d 条，还有 %d 条没发出去，请先把私聊打开（@%s）"
+                 % (done, len(chunks) - done, bot), reply_to=reply_to)
+            return
+        token = _stash_put(uid, chunks)
+        send(chat_id,
+             "结果已备好，点下面链接开通私聊，我马上发给你：\nhttps://t.me/%s?start=%s" % (bot, token),
+             reply_to=reply_to)
+        return
+
+    for i, chunk in enumerate(chunks):
+        ok = send(chat_id, chunk, reply_to=reply_to if i == 0 else None)
+        if not ok:
+            log("× 发送失败（第 %d/%d 条）" % (i + 1, len(chunks)))
+            break
+        if len(chunks) > 1:
+            time.sleep(0.8)   # 单群约 20 条/分钟，留点间隔
 
 
 # ---------- 解析 ----------
@@ -356,6 +435,12 @@ def handle_update(update):
 
     # 本地指令，不走站点
     low = text.lower()
+    if ctype == "private" and low.startswith("/start ") and _STASH:
+        got = _stash_take(text[7:].strip())
+        if got:
+            log("→ 深链补发 %d 条给 uid %s" % (len(got[1]), got[0]))
+            _dm(got[0], got[1])
+            return
     if low in ("/id", "/chatid"):
         send(chat_id,
              "会话 type：%s\nchat_id：%s\n你的 user_id：%s\n\n"
@@ -370,7 +455,11 @@ def handle_update(update):
         send(chat_id, welcome_text(), reply_to=msg.get("message_id"))
         return
 
-    key = "tg:%s:%s" % (chat_id, uid)
+    # 私聊投递时翻页状态跟着人走：群里的 /more 和私聊里的 /more 接着的是同一批结果
+    if _private_mode() and ctype in ("group", "supergroup"):
+        key = "tg:u:%s" % uid
+    else:
+        key = "tg:%s:%s" % (chat_id, uid)
     if _too_fast(key):
         log("· 限频忽略 %s「%s」" % (key, text[:20]))
         return
@@ -380,13 +469,8 @@ def handle_update(update):
 
     log("→ [%s %s] %s：%s" % (ctype, chat_id, name, text[:60]))
     replies = handlers.handle(_canonical(text), _load_cfg_cached(), key)
-    for i, chunk in enumerate(replies):
-        ok = send(chat_id, chunk, reply_to=msg.get("message_id") if i == 0 else None)
-        if not ok:
-            log("× 发送失败（第 %d/%d 条）" % (i + 1, len(replies)))
-            break
-        if len(replies) > 1:
-            time.sleep(0.8)   # 单群约 20 条/分钟，留点间隔
+    if replies:
+        _deliver(chat_id, uid, ctype, replies, msg.get("message_id"))
 
 
 _CFG = {}
