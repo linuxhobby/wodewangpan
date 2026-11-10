@@ -1437,14 +1437,14 @@ export function aboutPage(ctx) {
   ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}
 
   <h2 id="qq-bot">QQ群机器人指令</h2>
-  <p>加入 QQ 群后，在群里直接发送以下指令，机器人会自动回复结果：</p>
+  <p>在群里发送以下指令，机器人会自动回复结果。<strong><code>/</code> 开头的指令免 @ 直接执行</strong>；直接发裸关键词则需要 @ 机器人。关键词支持中文、全拼与拼音首字母（如 <code>qzx</code>）。</p>
   <ul>
-    <li><code>/搜索 关键词</code> 或 <code>/s 关键词</code> —— 查询资源并返回网盘共享链接</li>
-    <li><code>/最新</code> —— 最近上架的资源</li>
-    <li><code>/今日</code> —— 今天更新的资源</li>
-    <li><code>/分类</code> —— 各分类数量</li>
-    <li><code>/随机</code> —— 随便抽一条</li>
-    <li><code>/帮助</code> —— 查看指令说明</li>
+    <li><code>/搜索 关键词</code> —— 回资源名 + 夸克链接，最多 3 条（别名 <code>/s</code> <code>/搜</code> <code>/找</code> <code>/查</code> <code>/so</code> <code>/search</code>）</li>
+    <li><code>/最新</code> —— 最近上架 8 条</li>
+    <li><code>/今日</code> —— 今天新增的资源；今天没有新增就显示最近一次更新日的资源</li>
+    <li><code>/分类</code> —— 各分类条数</li>
+    <li><code>/随机</code> —— 随机一条</li>
+    <li><code>/帮助</code> —— 查看指令表</li>
   </ul>
   ${qqLink ? `<p>还没入群？<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>，或扫上方二维码。</p>` : ''}
 
