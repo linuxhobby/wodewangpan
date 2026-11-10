@@ -25,6 +25,14 @@
   date: 2023-03-15
   added: 2026-09-07
   image: mv-009.jpg
+  updated: 2026-11-10
+  files:
+    count: 1
+    size: "20.7 GB"
+    format: "MKV"
+    tree: |
+      009-俄罗斯方块(2023) 4K HDR 杜比视界/
+      Tetris.2023.2160p.ATVP.WEB-DL.DDP5.1.Atmos.H265.HDR.DV.mkv
 
 - id: mv-008
   title: "孤峰追击"
@@ -117,6 +125,14 @@
   date: 2026-09-03
   added: 2026-09-07
   image: mv-004.jpg
+  updated: 2026-11-10
+  files:
+    count: 1
+    size: "8.8 GB"
+    format: "MKV"
+    tree: |
+      004-逃亡者 The Runner (2026)/
+      The.Runner.2026.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265.mkv
 
 - id: mv-003
   title: "突袭系列"
@@ -158,6 +174,14 @@
   date: 2026-07-03
   added: 2026-09-07
   image: mv-001.jpg
+  updated: 2026-11-10
+  files:
+    count: 1
+    size: "6.8 GB"
+    format: "MKV"
+    tree: |
+      001-营救夜莺/
+      1080.mkv
 
 - id: mv-011
   title: "特立独行"
