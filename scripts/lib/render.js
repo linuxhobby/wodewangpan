@@ -1434,6 +1434,7 @@ export function aboutPage(ctx) {
 <div class="card-page">
   ${qqGroupBlock({ qqName, qqLink, contactEmail })}
 
+  <div class="cmd-box">
   <h2 id="qq-bot">QQ群机器人指令</h2>
   <p>在群里发送以下指令，机器人会自动回复结果。<strong><code>/</code> 开头的指令免 @ 直接执行</strong>；直接发裸关键词则需要 @ 机器人。关键词支持中文、全拼与拼音首字母（如 <code>qzx</code>）。</p>
   <ul>
@@ -1444,6 +1445,7 @@ export function aboutPage(ctx) {
     <li><code>/随机</code> —— 随机一条</li>
     <li><code>/帮助</code> —— 查看指令表</li>
   </ul>
+  </div>
   ${qqLink ? `<p>还没入群？<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>，或扫上方二维码。</p>` : ''}
 
   <h2>站点概况</h2>
