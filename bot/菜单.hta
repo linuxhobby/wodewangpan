@@ -62,11 +62,6 @@
   </div>
 
 <script language="JavaScript">
-var scripts = [
-  '启动QQ机器人.vbs', '重启QQ机器人.vbs', '结束QQ机器人.vbs', 'QQ扫码登录.vbs',
-  '启动TG机器人.vbs', '重启TG机器人.vbs', '结束TG机器人.vbs'
-];
-
 function botDir(sh) {
   var d = sh.ExpandEnvironmentStrings('%WODEWANGPAN_BOT_DIR%');
   if (d && d.charAt(0) !== '%' && d.indexOf('\\') >= 0) return d.replace(/\\+$/, '');
@@ -76,7 +71,7 @@ function botDir(sh) {
 
 function run(i) {
   var sh = new ActiveXObject('WScript.Shell');
-  sh.Run('wscript.exe "' + botDir(sh) + '\\' + scripts[i] + '"', 1, false);
+  sh.Run('wscript.exe "' + botDir(sh) + '\\菜单.vbs" ' + (i + 1), 1, false);
   window.close();
 }
 

@@ -106,7 +106,7 @@ id - 看当前会话信息
 
 | 方式 | 命令 | 适用 |
 |---|---|---|
-| 独立进程（默认） | 双击桌面「启动TG机器人」，或 `python app/telegram_bot.py` | 本机常开。TG 单独一个进程，QQ 重启、NapCat 掉线、QQ 掉登录都不影响它 |
+| 独立进程（默认） | 桌面控制台序号 5，或 `python app/telegram_bot.py` | 本机常开。TG 单独一个进程，QQ 重启、NapCat 掉线、QQ 掉登录都不影响它 |
 | 内嵌进 QQ 进程 | `config.json` 里 `telegram.embedded` 设成 `true` | 想省一个进程时用。代价是 QQ 那边重启/崩溃会连带 TG 一起停 |
 | 放到海外 VPS | `python app/telegram_bot.py` | 本机不开机也要 TG 在跑 |
 
@@ -304,12 +304,12 @@ QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的�
 - **一直掉着**：每隔 `realert_minutes`（默认 30 分钟）再催一次，不刷屏
 - **恢复**：自动报平安，附掉线时长
 - **卡片样式**：markdown 首行作卡片标题，掉线告警橙色头（`--level warn`）、恢复报平安绿色头（`--level ok`）
-- 提醒内容带恢复办法（双击桌面「QQ扫码登录.vbs」扫码）；推送失败只记日志，不影响机器人本体
+- 提醒内容带恢复办法（桌面控制台序号 4 扫码）；推送失败只记日志，不影响机器人本体
 - 自检：`python test_watchdog.py`（含一条真实测试推送）
 
 ### 5. 启动
 
-双击 `启动.bat`，能看到日志窗口。启动时会预热索引，日志有这行就说明通了：
+日常起停用桌面「机器人控制台」。要看实时日志做调试时，双击 `启动.bat`，能看到日志窗口。启动时会预热索引，日志有这行就说明通了：
 
 ```
 索引预热完成：963 条，963 条有网盘链接，用时 2.2s
@@ -325,50 +325,47 @@ QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的�
 
 ### 7. 开机自启
 
-两个自启脚本，互不依赖，各管一半：
+启动文件夹里两个快捷方式，各自指向 `bot/` 里的一个薄垫片，互不依赖，各管一半：
 
-| 脚本 | 管什么 | 行为 |
+| 快捷方式 | 指向 | 实际动作 |
 |---|---|---|
-| `开机自启.vbs` | QQ | 等 25 秒，先拉 NapCat、再拉 `bot.py`，已在跑就跳过 |
-| `TG机器人开机自启.vbs` | Telegram | 等 25 秒，拉起 `app\telegram_bot.py` 独立进程，已在跑就跳过 |
+| `QQ机器人开机自启.lnk` | `bot/开机自启.vbs` | 转发到 `菜单.vbs autostart-qq`，等 25 秒，先拉 NapCat、再拉 `bot.py`，已在跑就跳过 |
+| `TG机器人开机自启.lnk` | `bot/TG机器人开机自启.vbs` | 转发到 `菜单.vbs autostart-tg`，等 25 秒，拉起 `app\telegram_bot.py` 独立进程，已在跑就跳过 |
 
-按 `Win + R` 输入 `shell:startup` 回车，把两个都复制进那个文件夹（本机已放成 `QQ机器人开机自启.vbs` 和 `TG机器人开机自启.vbs`）。
+真正的实现只有一份，在 `菜单.vbs` 的 `AutoStart` 里。两个垫片各只有几行，只负责把参数传过去，所以快捷方式不用跟着改。按 `Win + R` 输入 `shell:startup` 回车能看到那两个快捷方式。
 
-- 每次启动动作都记在 `logs/auto-start.log`（TG 那行带 `[TG]` 前缀），两个脚本写同一个文件，看时间就能对上
-- **NapCat 不用再单独设自启**，QQ 那个脚本会一起拉起。若 NapCat 自己的设置里也开了开机自启，两边可能同时起两份，建议只留脚本这一条
-- NapCat 路径写死在 `NAPCAT_EXE`，挪了目录要改；找不到就只启动机器人并在日志里记一笔
-- 启动文件夹里那两份是 GBK 编码的独立副本，改了 `bot/` 里的记得同步一份过去
+- 每次启动动作都记在 `logs/auto-start.log`（TG 那行带 `[TG]` 前缀），看时间就能对上
+- **NapCat 不用再单独设自启**，QQ 那条会一起拉起。若 NapCat 自己的设置里也开了开机自启，两边可能同时起两份，建议只留脚本这一条
+- NapCat 路径写死在 `菜单.vbs` 的 `NAPCAT_DIR`，挪了目录要改；找不到就只启动机器人并在日志里记一笔
+- 垫片必须留在 `bot/` 目录里，启动文件夹只放快捷方式，不要再复制一份 vbs 过去
 
-**改了代码怎么生效**：QQ 侧双击 `重启QQ机器人.vbs`，TG 侧双击 `重启TG机器人.vbs`。各自只结束自己那个进程，不会互相牵连（判断进程时会刻意排除 `telegram_bot.py`，否则 `bot.py` 这个子串会误杀 TG）。Python 没有热加载，只能重启。脚本里 `PYW` 写死了 `Python312\pythonw.exe` 的绝对路径，避免 PATH 里有多份 Python 时起错或同时起两个实例；换 Python 版本记得改这一行（找不到就自动回落到 `pythonw`）。
+**改了代码怎么生效**：QQ 用控制台序号 2，TG 用序号 6。各自只结束自己那个进程，不会互相牵连（判断进程时会刻意排除 `telegram_bot.py`，否则 `bot.py` 这个子串会误杀 TG）。Python 没有热加载，只能重启。`菜单.vbs` 里 `PYW` 写死了 `Python312\pythonw.exe` 的绝对路径，避免 PATH 里有多份 Python 时起错或同时起两个实例；换 Python 版本记得改这一行（找不到就自动回落到 `pythonw`）。
 
 ### 8. 桌面快捷操作
 
-脚本都在 `bot/` 目录里，复制一份到桌面就能双击用（本机已放）：
+桌面只需要一个入口：**机器人控制台**（`机器人控制台.lnk`，指向 `bot/菜单.vbs`）。双击弹出大字号菜单，QQ 与 TG 分组列出 7 个动作，点按钮或输入 1-7 后回车执行，Esc 退出。
 
-| 脚本 | 作用 |
-|---|---|
-| `启动QQ机器人.vbs` | 没在跑就静默拉起；**NapCat 没在跑也一起拉起** |
-| `重启QQ机器人.vbs` | 结束旧进程再拉起，改完代码用这个；同样会补拉 NapCat；等 `:3000` 就绪才报成功 |
-| `结束QQ机器人.vbs` | 只结束命令行含 `bot.py` 的进程（排除 `telegram_bot.py`），不动其它 Python，也不动 NapCat |
-| `开机自启.vbs` | 开机延迟 25 秒，先拉 NapCat 再拉机器人，放「启动」文件夹，见上一节 |
-| `启动TG机器人.vbs` | 拉起 TG 独立进程，已在跑就提示不要重复启动 |
-| `重启TG机器人.vbs` | 只重启 TG：结束旧进程 → 等锁释放 → 启动 → 读日志确认成功 |
-| `结束TG机器人.vbs` | 只结束 `telegram_bot.py`，QQ 那边一点不动 |
-| `TG机器人开机自启.vbs` | TG 侧的开机自启，与 QQ 那条互不依赖 |
+| 序号 | 动作 | 说明 |
+|---|---|---|
+| 1 | 启动QQ机器人 | 没在跑就静默拉起，NapCat 没在跑也一起拉起 |
+| 2 | 重启QQ机器人 | 结束旧进程再拉起，改完代码用这个，等 `:3000` 就绪才报成功 |
+| 3 | 结束QQ机器人 | 只结束命令行含 `bot.py` 的进程（排除 `telegram_bot.py`），不动其它 Python，也不动 NapCat |
+| 4 | QQ扫码登录 | 快速登录失效时弹控制台二维码，并把放大版落到桌面 |
+| 5 | 启动TG机器人 | 拉起 TG 独立进程，已在跑就提示不要重复启动 |
+| 6 | 重启TG机器人 | 只重启 TG：结束旧进程，等锁释放，启动，读日志确认成功 |
+| 7 | 结束TG机器人 | 只结束 `telegram_bot.py`，QQ 那边一点不动 |
 
-**机器人控制台（推荐入口）**：桌面快捷方式指向仓库里的 `bot/菜单.vbs`，双击弹出大字号菜单——QQ / TG 分组列出 7 个动作，点按钮或输入 1-7 执行，Esc 退出。界面在同目录的 `菜单.hta`（系统自带 `mshta.exe`，不用装东西），`菜单.vbs` 只负责启动它和命令行直连（`菜单.vbs 3` = 结束QQ机器人，不弹窗）。原来的系统 `InputBox` 菜单留作兜底：找不到 `mshta.exe` 或 `菜单.hta` 时自动回落；想回到旧界面，把 `菜单.hta` 改名即可。两个文件必须放同一目录。
+界面在同目录的 `菜单.hta`（系统自带 `mshta.exe`，不用装东西），`菜单.vbs` 同时是界面启动器和全部动作的唯一实现。命令行也能直连：`wscript 菜单.vbs 3` 等于序号 3，`wscript 菜单.vbs --check` 只做语法自检，`wscript 菜单.vbs 5` 直接起 TG。原来的系统 `InputBox` 菜单留作兜底：找不到 `mshta.exe` 或 `菜单.hta` 时自动回落；想回到旧界面，把 `菜单.hta` 改名即可。`菜单.vbs` 与 `菜单.hta` 必须放同一目录。
 
-脚本会先按自己所在目录找 `app\bot.py`，找不到才回落到写死的仓库路径，所以同一份文件「在仓库里双击」和「复制到桌面双击」都能用。
-
-判断 NapCat 在不在，看进程名里有没有 `napcat` 或 `QQ.exe`。缺失时弹窗会明确写「已顺带拉起」，不再只是提醒你去手动开。
+`菜单.vbs` 会先按自己所在目录找 `app\bot.py`，找不到才回落到写死的仓库路径，所以经桌面快捷方式启动也正确。判断 NapCat 在不在，看进程名里有没有 `napcat` 或 `QQ.exe`。缺失时弹窗会明确写「已顺带拉起」，不再只是提醒你去手动开。
 
 **编码**：三类文件三套口径，别混：
 
-- `.vbs`：GBK + CRLF。`wscript.exe` 按系统 ANSI 代码页读脚本，存成 UTF-8 中文弹窗就花；代价是 GitHub 网页上看是乱码。用记事本改完请存成 ANSI。
-- `.bat`（`启动.bat`、`一键启动.bat`）：UTF-8 + CRLF + 文件内 `chcp 65001`。`app/bot.py` 把 stdout 强制设成 UTF-8，控制台必须留在 65001，把 bat 改成 GBK 会让机器人日志乱码。用记事本改完请存成 UTF-8，别存成 ANSI；行尾必须是 CRLF（尤其 `一键启动.bat` 里有 `:wait` 标签和 `goto`，LF 会让 CMD 跳转错位）。CMD 窗口里中文若显示成方块，把窗口属性里的字体从「点阵字体」改成「新宋体 / Consolas」。
-- `菜单.hta`：UTF-8（HTML 里声明了 `charset=utf-8`），macOS / Windows / GitHub 网页看都正常，别存成 ANSI 或 UTF-16。
+- `.vbs`（`菜单.vbs`、两个自启垫片）：GBK + CRLF。`wscript.exe` 按系统 ANSI 代码页读脚本，存成 UTF-8 中文弹窗就花；代价是 GitHub 网页上看是乱码。用记事本改完请存成 ANSI。
+- `.bat`（只剩 `启动.bat`）：UTF-8 + CRLF + 文件内 `chcp 65001`。`app/bot.py` 把 stdout 强制设成 UTF-8，控制台必须留在 65001，把 bat 改成 GBK 会让机器人日志乱码。用记事本改完请存成 UTF-8，别存成 ANSI；行尾必须是 CRLF。
+- `菜单.hta`：UTF-8（HTML 里声明了 `charset=utf-8`），macOS、Windows、GitHub 网页看都正常，别存成 ANSI 或 UTF-16。
 
-两端 VS Code 的按语言编码设置见仓库根 `.vscode/settings.json`：`.vbs` → `gbk`，`.bat` → `utf8`。
+两端 VS Code 的按语言编码设置见仓库根 `.vscode/settings.json`：`.vbs` 对应 `gbk`，`.bat` 对应 `utf8`。
 
 ## 不用 NapCat 时如何验证
 
@@ -416,7 +413,7 @@ NapCat 依赖它自己那份 QQ 客户端，QQ 一退出就掉。检查那份 QQ
 修法是把 BOM 去掉（存成无 BOM 的 UTF-8）。用 PowerShell 的 `Out-File`、部分编辑器「另存为 UTF-8」都会加 BOM，改完务必确认前三个字节不是 `EF BB BF`。当前 token 是 `wodewangpan2026`。
 
 **每次启动都要扫码**
-NapCat 现用 **Shell v4 独立版**（`C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4`，NapCat 4.18.42，2026-11-11 起替代旧 OneKey 包：旧版取码域名 `ssl.qq.com` 被腾讯停用导致无法登录）。`napcat.bat -q 909008620` 走快速登录；登录态失效时控制台直接画二维码，同时存到 `napcat\cache\qrcode.png`。OneBot 网络配置在 `NapCat.Shell.v4\napcat\config\onebot11_<uin>.json`（HTTP 服务 :3000、上报 127.0.0.1:6700）。三个 vbs 里的 `QQUIN` 常量就是干这个的，改账号只改那一行。前提是那份 QQ 数据目录里还留着登录凭证（`Documents\Tencent Files\<QQ号>` 没被清）。走二维码登录时启动日志会有「没有 -q 指令指定快速登录」这句。
+NapCat 现用 **Shell v4 独立版**（`C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4`，NapCat 4.18.42，2026-11-11 起替代旧 OneKey 包：旧版取码域名 `ssl.qq.com` 被腾讯停用导致无法登录）。`napcat.bat -q 909008620` 走快速登录；登录态失效时控制台直接画二维码，同时存到 `napcat\cache\qrcode.png`。OneBot 网络配置在 `NapCat.Shell.v4\napcat\config\onebot11_<uin>.json`（HTTP 服务 :3000、上报 127.0.0.1:6700）。`菜单.vbs` 里的 `QQUIN` 常量就是干这个的，改账号只改那一行。前提是那份 QQ 数据目录里还留着登录凭证（`Documents\Tencent Files\<QQ号>` 没被清）。走二维码登录时启动日志会有「没有 -q 指令指定快速登录」这句。
 
 **会不会封号**
 会，协议端是真实 QQ 号，高频发外链是主要风险。所以用小号、控频率、别在多个群同时炸。真被限制了换号即可，代码不用改。
