@@ -3,22 +3,25 @@ chcp 65001 >nul
 title wodewangpan 群机器人（含 NapCat）
 cd /d "%~dp0"
 
-set "NAPCAT_DIR=C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell"
+set "NAPCAT_DIR=C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4"
+set "QQUIN=909008620"
 
 echo ================================================
 echo   wodewangpan 群机器人 一键启动
 echo ================================================
 echo.
 
-if not exist "%NAPCAT_DIR%\NapCatWinBootMain.exe" (
-  echo [错误] 找不到 NapCat：%NAPCAT_DIR%
+if not exist "%NAPCAT_DIR%\napcat.bat" (
+  echo [错误] 找不到 NapCat：%NAPCAT_DIR%\napcat.bat
   echo 请修改变量 NAPCAT_DIR 指向实际安装目录。
   pause
   exit /b 1
 )
 
 echo [1/2] 启动 NapCat ...
-start "NapCat" /min "%NAPCAT_DIR%\NapCatWinBootMain.exe"
+pushd "%NAPCAT_DIR%"
+start "NapCat" /min cmd /c "chcp 936 >nul && napcat.bat -q %QQUIN%"
+popd
 
 echo 等待 OneBot 接口就绪（端口 3000，最多 60 秒）...
 set /a tries=0

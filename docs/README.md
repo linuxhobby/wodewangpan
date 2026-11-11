@@ -236,7 +236,7 @@ node ~/.qwenworkcn/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-c
 
 **运维**
 
-- `一键启动.bat`：先拉起 NapCat，轮询 `3000` 端口就绪后再起 bot，避免竞态。
+- `一键启动.bat`：按现行 `NapCat.Shell.v4` 口径拉起 NapCat（`napcat.bat -q 909008620`），轮询 `3000` 端口就绪后再起 bot，保留控制台日志窗口。`NAPCAT_DIR` / `QQUIN` 写死在文件顶部，与三个 `.vbs` 保持一致。
 - 群白名单在 `config.json` 的 `group_whitelist`（当前只放行 `1045824859` 我的网盘资源站）。
 - 限频兜底：同一人 15 秒、全局每分钟 20 条；回复拆条间隔 0.6 秒。
 - 风险：协议端是真实 QQ 号，高频发外链是主要封号触发点，别用主号挂。
