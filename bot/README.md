@@ -362,7 +362,13 @@ QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的�
 
 判断 NapCat 在不在，看进程名里有没有 `napcat` 或 `QQ.exe`。缺失时弹窗会明确写「已顺带拉起」，不再只是提醒你去手动开。
 
-**编码**：这几个 `.vbs` / `.bat` 按 GBK 保存，双击时中文弹窗才不乱码，代价是在 GitHub 网页上看中文是乱码，属正常现象。用记事本改完请存成 ANSI，别存成 UTF-8，否则弹窗会花。`菜单.hta` 反过来是 UTF-8（HTML 里声明了 `charset=utf-8`），macOS / Windows / GitHub 网页看都正常，别存成 ANSI 或 UTF-16。两端 VS Code 的按语言编码设置见仓库根 `.vscode/settings.json`。
+**编码**：三类文件三套口径，别混：
+
+- `.vbs`：GBK + CRLF。`wscript.exe` 按系统 ANSI 代码页读脚本，存成 UTF-8 中文弹窗就花；代价是 GitHub 网页上看是乱码。用记事本改完请存成 ANSI。
+- `.bat`（`启动.bat`、`一键启动.bat`）：UTF-8 + 文件内 `chcp 65001`。`app/bot.py` 把 stdout 强制设成 UTF-8，控制台必须留在 65001，把 bat 改成 GBK 会让机器人日志乱码。用记事本改完请存成 UTF-8，别存成 ANSI。
+- `菜单.hta`：UTF-8（HTML 里声明了 `charset=utf-8`），macOS / Windows / GitHub 网页看都正常，别存成 ANSI 或 UTF-16。
+
+两端 VS Code 的按语言编码设置见仓库根 `.vscode/settings.json`：`.vbs` → `gbk`，`.bat` → `utf8`。
 
 ## 不用 NapCat 时如何验证
 

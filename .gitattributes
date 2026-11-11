@@ -2,7 +2,9 @@
 # 显式属性优先于各机 core.autocrlf；仓库里现有 blob 已是 LF，加这行不产生任何内容 diff。
 data/*.yaml text eol=lf
 
-# Windows 脚本按 GBK + CRLF 保存（双击时中文弹窗才不乱码），别让 git 转编码或改行尾
+# bot/*.vbs：GBK + CRLF。wscript.exe 按系统 ANSI 代码页读脚本，存成 UTF-8 弹窗会花
+# bot/*.bat：UTF-8 + 文件内 chcp 65001。bot.py 把 stdout 强制设成 UTF-8，控制台必须留在 65001，别改成 GBK
+# 两者都用 -text：别让 git 转编码或改行尾
 bot/*.vbs -text
 bot/*.bat -text
 

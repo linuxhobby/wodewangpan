@@ -8,6 +8,6 @@
         "files.encoding": "gbk"
     },
     "[bat]": {
-        "files.encoding": "gbk"
+        "files.encoding": "utf8"
     }
 }
