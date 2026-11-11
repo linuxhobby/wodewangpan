@@ -1795,6 +1795,22 @@
   date: 2026-03-26
   added: 2026-09-27
   image: tv-067.jpg
+  updated: 2026-11-11
+  files:
+    count: 10
+    format: "MKV×9"
+    tree: |
+      067-哈利警探/
+      1080P【内嵌中英】/
+      Detective Hole S01E01 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Detective Hole S01E02 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Detective Hole S01E03 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Detective Hole S01E04 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Detective Hole S01E05 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Detective Hole S01E06 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Detective Hole S01E07 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Detective Hole S01E08 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Detective Hole S01E09 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
 
 - id: tv-068
   title: "猎犬 第二季"
@@ -1807,6 +1823,20 @@
   date: 2023-06-09
   added: 2026-09-27
   image: tv-068.jpg
+  updated: 2026-11-11
+  files:
+    count: 8
+    format: "MKV×7"
+    tree: |
+      068-猎犬第二季/
+      S2 4K DV 【内封简繁英】/
+      Bloodhounds S02E01 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Bloodhounds S02E02 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Bloodhounds S02E03 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Bloodhounds S02E04 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Bloodhounds S02E05 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Bloodhounds S02E06 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
+      Bloodhounds S02E07 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
 
 - id: tv-069
   title: "圣皮埃尔罪案"
@@ -1819,6 +1849,23 @@
   date: 2025-01-06
   added: 2026-09-27
   image: tv-069.jpg
+  updated: 2026-11-11
+  files:
+    count: 10
+    size: "12.7 GB"
+    format: "MP4×6 / MKV×4"
+    tree: |
+      069-圣皮埃尔罪案  (2025加拿大) Saint-Pierre/
+      Saint-Pierre 2025 S01E01.mp4
+      Saint-Pierre 2025 S01E02.mp4
+      Saint-Pierre 2025 S01E03.mp4
+      Saint-Pierre 2025 S01E04.mp4
+      Saint-Pierre 2025 S01E05.mp4
+      Saint-Pierre 2025 S01E06.mp4
+      Saint-Pierre 2025 S01E07.mkv
+      Saint-Pierre 2025 S01E08.mkv
+      Saint-Pierre 2025 S01E09.mkv
+      Saint-Pierre 2025 S01E10 END .mkv
 
 - id: tv-070
   title: "真相捕捉"
