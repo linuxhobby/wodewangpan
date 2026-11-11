@@ -326,6 +326,16 @@
   date: 2024-11-20
   added: 2026-09-30
   image: mv-016.jpg
+  updated: 2026-11-12
+  files:
+    count: 3
+    size: "10.4 KB"
+    format: "MP4"
+    tree: |
+      016-隐藏的面孔.Hidden/
+      ._Hidden隐藏的面孔.mp4
+      ._.DS_Store
+      .DS_Store
 
 - id: mv-017
   title: "暗影力量"
@@ -381,6 +391,14 @@
   date: 2025-06-25
   added: 2026-09-30
   image: mv-019.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "27.1 GB"
+    format: "MKV"
+    tree: |
+      019-F1：狂飙飞车.F1.The.Movie.2025.2160p.WEB-DL.DDP5.1.Atmos.H265.HDR.DV-DIY@HDSWEB/
+      F1：狂飙飞车.F1.The.Movie.2025.2160p.WEB-DL.DDP5.1.Atmos.H265.HDR.DV-DIY@HDSWEB.mkv
 
 - id: mv-020
   title: "侏罗纪世界：重生"
@@ -393,6 +411,16 @@
   date: 2025-06-23
   added: 2026-09-30
   image: mv-020.jpg
+  updated: 2026-11-12
+  files:
+    count: 3
+    size: "268 KB"
+    format: "SRT×3"
+    tree: |
+      020-Jurassic World Rebirth (2025) English TRUE WEB-DL - 4K SDR - HEVC - (DD+5.1 ATMOS - 768Kbps & AAC) - 12GB - ESub/
+      Jurassic World Rebirth (2025) English TRUE WEB-DL - 4K SDR - HEVC - (DD+5.1 ATMOS - 768Kbps & AAC)_CHS_11454039.srt
+      Jurassic World Rebirth (2025) English TRUE WEB-DL - 4K SDR - HEVC - (DD+5.1 ATMOS - 768Kbps & AAC)简中.srt
+      Jurassic World Rebirth (2025) English TRUE WEB-DL - 4K SDR - HEVC - (DD+5.1 ATMOS - 768Kbps & AAC)中英.srt
 
 - id: mv-021
   title: "不汗党"
