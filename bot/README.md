@@ -365,7 +365,7 @@ QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的�
 **编码**：三类文件三套口径，别混：
 
 - `.vbs`：GBK + CRLF。`wscript.exe` 按系统 ANSI 代码页读脚本，存成 UTF-8 中文弹窗就花；代价是 GitHub 网页上看是乱码。用记事本改完请存成 ANSI。
-- `.bat`（`启动.bat`、`一键启动.bat`）：UTF-8 + 文件内 `chcp 65001`。`app/bot.py` 把 stdout 强制设成 UTF-8，控制台必须留在 65001，把 bat 改成 GBK 会让机器人日志乱码。用记事本改完请存成 UTF-8，别存成 ANSI。
+- `.bat`（`启动.bat`、`一键启动.bat`）：UTF-8 + CRLF + 文件内 `chcp 65001`。`app/bot.py` 把 stdout 强制设成 UTF-8，控制台必须留在 65001，把 bat 改成 GBK 会让机器人日志乱码。用记事本改完请存成 UTF-8，别存成 ANSI；行尾必须是 CRLF（尤其 `一键启动.bat` 里有 `:wait` 标签和 `goto`，LF 会让 CMD 跳转错位）。CMD 窗口里中文若显示成方块，把窗口属性里的字体从「点阵字体」改成「新宋体 / Consolas」。
 - `菜单.hta`：UTF-8（HTML 里声明了 `charset=utf-8`），macOS / Windows / GitHub 网页看都正常，别存成 ANSI 或 UTF-16。
 
 两端 VS Code 的按语言编码设置见仓库根 `.vscode/settings.json`：`.vbs` → `gbk`，`.bat` → `utf8`。

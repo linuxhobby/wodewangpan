@@ -3,7 +3,7 @@
 data/*.yaml text eol=lf
 
 # bot/*.vbs：GBK + CRLF。wscript.exe 按系统 ANSI 代码页读脚本，存成 UTF-8 弹窗会花
-# bot/*.bat：UTF-8 + 文件内 chcp 65001。bot.py 把 stdout 强制设成 UTF-8，控制台必须留在 65001，别改成 GBK
+# bot/*.bat：UTF-8 + CRLF + 文件内 chcp 65001。bot.py 把 stdout 强制设成 UTF-8，控制台必须留在 65001，别改成 GBK
 # 两者都用 -text：别让 git 转编码或改行尾
 bot/*.vbs -text
 bot/*.bat -text
