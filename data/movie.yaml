@@ -226,6 +226,14 @@
   date: 2026-07-03
   added: 2026-09-29
   image: mv-011.jpg
+  updated: 2026-11-11
+  files:
+    count: 1
+    size: "3.8 GB"
+    format: "MP4"
+    tree: |
+      011-特立独行/
+      4K WEB-DL HDR AAC2.0 .mp4
   
 - id: mv-012
   title: "明日之战"
@@ -238,6 +246,14 @@
   date: 2021-09-03
   added: 2026-09-30
   image: mv-012.jpg
+  updated: 2026-11-11
+  files:
+    count: 1
+    size: "14.8 GB"
+    format: "MKV"
+    tree: |
+      012-明日之战 (2021) 4K HDR/
+      The.Tomorrow.War.2021.2160p.AMZN.WEB-DL.DDP5.1.HDR10+.H265-MOMOWEB.mkv
 
 - id: mv-013
   title: "特工绍特"

@@ -1878,6 +1878,19 @@
   date: 2019-09-03
   added: 2026-09-29
   image: tv-070.jpg
+  updated: 2026-11-11
+  files:
+    count: 5
+    size: "5.1 GB"
+    format: "MP4×5"
+    tree: |
+      070-真相捕捉 1-2季全集 中英双字 剧情 悬疑 犯罪/
+      真相捕捉-第一季/
+      真相捕捉.S01E01.mp4
+      真相捕捉.S01E03.mp4
+      真相捕捉.S01E04.mp4
+      真相捕捉.S01E05.mp4
+      真相捕捉.S01E06.mp4
 
 - id: tv-071
   title: "罪恶黑名单"
