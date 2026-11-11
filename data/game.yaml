@@ -634,7 +634,7 @@
   image: game-031.jpg
   updated: 2026-11-11
   files:
-    count: 4
+    count: 3
     format: "NSP"
     packed: false
     tree: |
@@ -642,7 +642,6 @@
       [本体v0.1][0100E1C0252F8000][22.1.0][中文].nsp
       [升级档v1.0.4][0100E1C0252F8800][22.5.0][中文].nsp
       [DLC][0100E1C0252F9007][2.2.0].nsp
-      NS游戏仓库首发【转载请注明】.txt
 
 - id: game-032
   title: "GBA官方模拟器整合版 含189款游戏"
