@@ -1614,6 +1614,25 @@
   date: 2025-11-05
   added: 2026-09-27
   image: tv-061.jpg
+  updated: 2026-11-11
+  files:
+    count: 12
+    size: "57.9 GB"
+    format: "MKV×12"
+    tree: |
+      061-操控游戏/
+      The.Manipulated.S01E01.2025.2160p.DSNP.WEB-DL.DDP5.1.HDR.H.265-HHWEB.mkv
+      The.Manipulated.S01E02.2025.2160p.DSNP.WEB-DL.DDP5.1.HDR.H.265-HHWEB.mkv
+      The.Manipulated.S01E03.2025.2160p.DSNP.WEB-DL.DDP5.1.HDR.H.265-HHWEB.mkv
+      The.Manipulated.S01E04.2025.2160p.DSNP.WEB-DL.DDP5.1.HDR.H.265-HHWEB.mkv
+      The.Manipulated.S01E05.2025.2160p.DSNP.WEB-DL.DDP5.1.HDR.H.265-HHWEB.mkv
+      The.Manipulated.S01E06.2025.2160p.DSNP.WEB-DL.DDP5.1.HDR.H.265-HHWEB.mkv
+      The.Manipulated.S01E07.Episode.7.2160p.Disney+.WEB-DL.DDP.5.1.HDR10.H.265-CHDWEB.mkv
+      The.Manipulated.S01E08.Episode.8.2160p.Disney+.WEB-DL.DDP.5.1.HDR10.H.265-CHDWEB.mkv
+      The.Manipulated.S01E09.2025.2160p.DSNP.WEB-DL.HDR.H.265.DDP5.1.Atmos.mkv
+      The.Manipulated.S01E10.2025.2160p.DSNP.WEB-DL.HDR.H.265.DDP5.1.Atmos.mkv
+      The.Manipulated.S01E11.2025.2160p.Disney+.WEB-DL.H265.DV.HDR.DDP.5.1.2Audio.mkv
+      The.Manipulated.S01E12.2025.2160p.Disney+.WEB-DL.H265.DV.HDR.DDP.5.1.2Audio.mkv
 
 - id: tv-062
   title: "秃鹰"
@@ -1626,6 +1645,26 @@
   date: 2018-06-06
   added: 2026-09-27
   image: tv-062.jpg
+  updated: 2026-11-11
+  files:
+    count: 13
+    size: "4.5 GB"
+    format: "MP4×10 / JPG×2 / LNK"
+    tree: |
+      062-秃鹰.Condor.第一季全10集/
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E01.mp4
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E02.mp4
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E03.mp4
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E04.mp4
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E05.mp4
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E06.mp4
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E07.mp4
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E08.mp4
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E09.mp4
+      【关注微信公众号：美剧叔】秃鹰.Condor.S01E10.mp4
+      关注公众号：美剧叔  获取更多英美剧资源.jpg
+      扫码进500人美剧库资源分享群2.jpg
+      美剧库官方资源分享站（www.meijuku.cn）.lnk
 
 - id: tv-063
   title: "无赦之仇"
@@ -1638,6 +1677,20 @@
   date: 2025-06-06
   added: 2026-09-27
   image: tv-063.jpg
+  updated: 2026-11-11
+  files:
+    count: 7
+    size: "15.2 GB"
+    format: "MKV×7"
+    tree: |
+      063-无赦之仇.Mercy For None/
+      Mercy.for.None.S01E01.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H264.mkv
+      Mercy.for.None.S01E02.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H264-HHWEB.mkv
+      Mercy.for.None.S01E03.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H264.mkv
+      Mercy.for.None.S01E04.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H264.mkv
+      Mercy.for.None.S01E05.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H264.mkv
+      Mercy.for.None.S01E06.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H264.mkv
+      Mercy.for.None.S01E07.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H264.mkv
 
 - id: tv-064
   title: "终极名单：黑狼"
