@@ -1,3 +1,13 @@
 {
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "files.autoGuessEncoding": false,
+    "files.associations": {
+        "*.vbs": "vb"
+    },
+    "[vb]": {
+        "files.encoding": "gbk"
+    },
+    "[bat]": {
+        "files.encoding": "gbk"
+    }
 }
