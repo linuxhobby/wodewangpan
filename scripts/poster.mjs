@@ -160,7 +160,7 @@ async function posterIcon() {
   const icon = arg('icon');
   const out = arg('out');
   if (!icon || !out) {
-    console.error('用法：node scripts/poster.mjs icon --icon <文件|URL> --out <输出.jpg> [--title ..] [--sub ..] [--c1 ..] [--c2 ..] [--icon-size ..] [--radius ..]');
+    console.error('用法：node scripts/poster.mjs icon --icon <文件|URL> --out <输出.jpg> [--title ..] [--sub ..] [--c1 ..] [--c2 ..] [--icon-size ..] [--radius ..] [--disc ..] [--disc-r ..]');
     return 1;
   }
   const title = arg('title', '');
@@ -170,6 +170,14 @@ async function posterIcon() {
   const ICON = Math.max(80, Number(arg('icon-size', '300')) || 300);
   // 图标圆角占边长的百分比（0 = 不裁；App Store 的 iOS 图标是直角方形，一般给 22）
   const radiusPct = Math.max(0, Math.min(50, Number(arg('radius', '0')) || 0));
+  // --disc 给图标垫一个实心圆盘（如白色徽章盘）；留空则沿用原来的淡圆 + 描边。
+  // 白色圆盘还能吃掉方形 logo 自带的白色四角，不必再靠 --radius 裁边。
+  const discFill = String(arg('disc', '')).replace(/"/g, '');
+  const discR = Math.max(40, Math.min(240, Number(arg('disc-r', '196')) || 196));
+  const discSvg = discFill
+    ? `<circle cx="${W / 2}" cy="286" r="${discR}" fill="${discFill}"/>`
+    : `<circle cx="${W / 2}" cy="286" r="${discR}" fill="#fff" fill-opacity=".1"/>
+  <circle cx="${W / 2}" cy="286" r="${discR}" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>`;
 
   // 图标来源：软件用 iTunes Search API 的 artworkUrl512；技术品牌用 simple-icons 的 CDN SVG；
   // 其余可用 GitHub 组织头像 https://github.com/<org>.png?size=460，或自绘 512×512 白色线性图标
@@ -198,8 +206,7 @@ async function posterIcon() {
     </radialGradient>
   </defs>
   <rect width="${W}" height="${H}" fill="url(#g)"/>
-  <circle cx="${W / 2}" cy="286" r="196" fill="#fff" fill-opacity=".1"/>
-  <circle cx="${W / 2}" cy="286" r="196" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
+  ${discSvg}
   <rect width="${W}" height="${H}" fill="url(#glow)"/>
 </svg>`;
 
