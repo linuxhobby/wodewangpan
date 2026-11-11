@@ -297,6 +297,11 @@ function layout({
   ogImageSize = null,
   shareImage = '',
   ogType = 'website',
+  // 分享卡片专用标题/描述：不传时沿用 title / description。
+  // 详情页用它去掉与 og:site_name 重复的站名后缀、与标题重复的片名前缀；
+  // SEO 的 <title> 与 <meta name="description"> 不受影响
+  ogTitle = '',
+  ogDescription = '',
   jsonLd = null,
   keywords = '',
   noindex = false,
@@ -348,13 +353,13 @@ ${verificationMeta(site)}<link rel="canonical" href="${esc(canonical)}">
 <meta name="theme-color" content="#4B3FE3">
 <meta property="og:type" content="${esc(ogType)}">
 <meta property="og:site_name" content="${esc(site.title)}">
-<meta property="og:title" content="${esc(fullTitle)}">
-<meta property="og:description" content="${esc(description || site.description)}">
+<meta property="og:title" content="${esc(ogTitle || fullTitle)}">
+<meta property="og:description" content="${esc(ogDescription || description || site.description)}">
 <meta property="og:url" content="${esc(canonical)}">
 <meta property="og:locale" content="zh_CN">
 ${ogImg ? `<meta property="og:image" content="${esc(ogImg)}">\n` : ''}${ogImg && ogImageSize ? `<meta property="og:image:width" content="${ogImageSize.w}">\n<meta property="og:image:height" content="${ogImageSize.h}">\n` : ''}<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(fullTitle)}">
-<meta name="twitter:description" content="${esc(description || site.description)}">
+<meta name="twitter:title" content="${esc(ogTitle || fullTitle)}">
+<meta name="twitter:description" content="${esc(ogDescription || description || site.description)}">
 ${ogImg ? `<meta name="twitter:image" content="${esc(ogImg)}">\n` : ''}<link rel="stylesheet" href="/assets/style.css${v}">
 <meta name="search-index-url" content="${esc(searchIndexUrl)}">
 <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
@@ -861,6 +866,8 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   const descLong = item.description.slice(0, 200) || item.title;
   // year 在上面资源信息块里已算好（没有 date 就是空串，不硬凑年份）
   const titleSuffix = TITLE_SUFFIX[item.category] || `${item.category}网盘资源`;
+  // 分享标题 = 页面标题去掉站名后缀：TG 卡片顶部已单独显示 og:site_name
+  const pageTitle = `${item.title}${year ? `（${year}）` : ''}${titleSuffix}`;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -885,8 +892,11 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   return layout({
     ...ctx,
     // 资源名 + 年份 + 需求词：既区别于同名作品，也接住「片名 网盘」的长尾搜索
-    title: `${item.title}${year ? `（${year}）` : ''}${titleSuffix}`,
+    title: pageTitle,
     description: `${item.title}${year ? `（${year}）` : ''} · ${titleSuffix} · ${descLong.slice(0, 110)}`,
+    // 分享描述只留简介正文：片名与需求词已在 og:title，卡片顶部还有站名
+    ogTitle: pageTitle,
+    ogDescription: descLong.slice(0, 110),
     activeCat: item.category,
     body,
     canonicalPath,
