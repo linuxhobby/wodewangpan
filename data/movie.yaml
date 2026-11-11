@@ -338,6 +338,17 @@
   date: 2025-05-01
   added: 2026-09-30
   image: mv-017.jpg
+  updated: 2026-11-12
+  files:
+    count: 4
+    size: "18.2 GB"
+    format: "SRT×2 / MKV×2"
+    tree: |
+      017-幽冥部队.Shadow Force.2160p WEB-DL HDR10+ DV H265 DDP Atmos 5.1/
+      ._Shadow Force (2025) - 2160p WEB-DL HDR10+ DV H265 DDP Atmos 5.1.mkv
+      幽冥部队.Shadow Force (2025) - 2160p WEB-DL HDR10+ DV H265 DDP Atmos 5.1.mkv
+      幽冥部队.Shadow Force (2025) - 2160p WEB-DL HDR10+ DV H265 DDP Atmos 5.1_CHS_11166276.srt
+      Shadow Force (2025) - 2160p WEB-DL HDR10+ DV H265 DDP Atmos 5.1.chs.srt
 
 - id: mv-018
   title: "瞄准"
@@ -350,6 +361,14 @@
   date: 2024-01-05
   added: 2026-09-30
   image: mv-018.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "5.0 GB"
+    format: "MKV"
+    tree: |
+      018-描准.The.Painter.2024.1080p.WEB.h264-EDITH/
+      描准.The.Painter.2024.1080p.WEB.h264-EDITH.mkv
 
 - id: mv-019
   title: "F1：狂飙飞车"
