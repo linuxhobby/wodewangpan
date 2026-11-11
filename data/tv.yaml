@@ -1321,6 +1321,21 @@
   date: 2024-09-19
   added: 2026-09-27
   image: tv-051.jpg
+  updated: 2026-11-11
+  files:
+    count: 8
+    size: "11.8 GB"
+    format: "MKV×8"
+    tree: |
+      051-企鹅人.The.Penguin.S01/
+      The.Penguin.S01E01.2024.1080p.MAX.WEB-DL.x264.DDP5.1.Atmos-ZeroTV.mkv
+      The.Penguin.S01E02.2024.1080p.MAX.WEB-DL.x264.DDP5.1.Atmos-ZeroTV.mkv
+      The.Penguin.S01E03.2024.1080p.MAX.WEB-DL.x264.DDP5.1.Atmos-ZeroTV.mkv
+      The.Penguin.S01E04.2024.1080p.MAX.WEB-DL.x264.DDP5.1.Atmos-ZeroTV.mkv
+      The.Penguin.S01E05.2024.1080p.MAX.WEB-DL.x264.DDP5.1.Atmos-ZeroTV.mkv
+      The.Penguin.S01E06.2024.1080p.MAX.WEB-DL.x264.DDP5.1.Atmos-ZeroTV.mkv
+      The.Penguin.S01E07.2024.1080p.MAX.WEB-DL.x264.DDP5.1.Atmos-ZeroTV.mkv
+      The.Penguin.S01E08.2024.1080p.MAX.WEB-DL.x264.DDP5.1.Atmos-ZeroTV.mkv
 
 - id: tv-052
   title: "揭密最前线"
@@ -1333,6 +1348,25 @@
   date: 2025-01-15
   added: 2026-09-27
   image: tv-052.jpg
+  updated: 2026-11-11
+  files:
+    count: 12
+    size: "25.8 GB"
+    format: "MKV×12"
+    tree: |
+      052-Unmasked.揭密最前线/
+      揭密最前线.Unmasked.S01E01.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E02.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E03.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E04.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E05.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E06.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E07.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E08.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E09.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E10.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E11.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      揭密最前线.Unmasked.S01E12.2025.1080p.DSNP.WEB-DL.DDP5.1.H264-ZeroTV.mkv
 
 - id: tv-053
   title: "Stealer：七个朝鲜通宝"
@@ -1345,6 +1379,24 @@
   date: 2023-04-12
   added: 2026-09-27
   image: tv-053.jpg
+  updated: 2026-11-11
+  files:
+    count: 12
+    format: "MKV×11"
+    tree: |
+      053-Stealer.The.Treasure.Keeper.S01.KOREAN.1080p.VIU.WEBRip.AAC2.0.x264-iTsOK[rartv]/
+      sub/
+      Stealer.The.Treasure.Keeper.S01E01.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E02.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E04.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E05.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E06.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E07.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E08.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E09.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E10.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E11.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
+      Stealer.The.Treasure.Keeper.S01E12.1080p.VIU.WEB-DL.AAC.H.264-iTsOK.mkv
 
 - id: tv-054
   title: "安多 第二季"
