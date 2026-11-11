@@ -1,6 +1,8 @@
 import { categorySlug, tagSlug, tagKey } from './data.js';
 // 卡片模板与浏览器端（theme/assets/app.js）共用同一份：改结构两边同步生效
 import { esc, tileHtml } from '../../theme/assets/card.js';
+// 页脚导航、面包屑规则、可见层与结构化数据的唯一来源
+import { footNav, pageTypeOf, crumbTrail, crumbHtml, breadcrumbJsonLd, withBreadcrumb } from './nav.js';
 
 // 「最新」角标的判定不在渲染层：build.js 用 newestIdsOf() 算好后通过 ctx.newestIds 传进来，
 // 保证首页 / 分类页 / 搜索索引标的是同一批
@@ -63,24 +65,7 @@ const titleAsideLinks = (ctx = {}) => {
   );
 };
 
-// 全站每页底部的固定入口。abs: true 的输出时拼上站点域名
-const FOOT_NAV = [
-  { href: '/', label: '网站首页', abs: true },
-  { href: '/about/', label: '关于本站' },
-  { href: '/all/', label: '全部资源' },
-  { href: '/tags/', label: '标签索引' },
-  { href: '/sitemap.xml', label: '网站地图', abs: true },
-  { href: '/rss/', label: 'RSS订阅' },
-  { href: '/privacy/', label: '隐私政策' },
-  { href: '/contact/', label: '联系我们' },
-];
-const footNav = (current = '', baseUrl = '') =>
-  `<nav class="foot__nav" aria-label="站点导航">${FOOT_NAV.map(
-    (i, n) =>
-      `${n ? '<span class="foot__sep" aria-hidden="true">|</span>' : ''}<a href="${esc(
-        i.abs && baseUrl ? `${baseUrl}${i.href}` : i.href
-      )}"${i.href === current ? ' aria-current="page"' : ''}>${esc(i.label)}</a>`
-  ).join('')}</nav>`;
+// 页脚导航入口与面包屑规则已收敛到 scripts/lib/nav.js，别在本文件另写一份
 
 // 衡天云联盟推广位：图片 + 赞助链接。rel=sponsored 是 Google 对联盟/赞助链接的硬性要求
 function promoLinkOf(site) {
@@ -320,6 +305,7 @@ function layout({
   footNavCurrent = '',
   rssHref = '/feed.xml',
   iconVersion = '',
+  crumbData = {},
 }) {
   // 静态资源带版本号：nginx 对 css/js/图片设了 30 天缓存，改了必须换 URL 才会被重新拉取
   const v = assetVersion ? `?v=${assetVersion}` : '';
@@ -333,6 +319,16 @@ function layout({
   const ogImg = ogSrc && ogSrc.startsWith('/') ? `${baseUrl}${ogSrc}` : ogSrc;
   // 访问统计：页脚占位数字 + 取数脚本成对出现，判断一次就够
   const localStats = site.stats === 'local';
+  // 面包屑：页面类型、层级、可见层与 BreadcrumbList 全部由 nav.js 一处决定，页面函数不再手写
+  const trail = crumbTrail(pageTypeOf({ canonicalPath, footNavCurrent }), {
+    siteTitle: site.title,
+    category: activeCat,
+    categoryHref: activeCat ? catHref(activeCat) : '',
+    ...crumbData,
+  });
+  const crumbAside = trail && trail.aside ? titleAsideLinks({ site }) : '';
+  const crumb = crumbHtml(trail, crumbAside);
+  const finalJsonLd = withBreadcrumb(jsonLd, breadcrumbJsonLd(trail, baseUrl), trail ? trail.at : -1);
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -372,7 +368,7 @@ ${ogImg ? `<meta name="twitter:image" content="${esc(ogImg)}">\n` : ''}<link rel
     })(window, document, "clarity", "script", "z8v06ndwwd");
 </script>
 ${head}
-${jsonLd ? jsonLdBlock(jsonLd) : ''}
+${finalJsonLd ? jsonLdBlock(finalJsonLd) : ''}
 </head>
 <body${wide ? ' class="page--wide"' : ''}>
 <header class="top">
@@ -385,7 +381,7 @@ ${jsonLd ? jsonLdBlock(jsonLd) : ''}
 </header>
 ${catNav(categories, counts, activeCat, total, hotOn)}
 <main class="wrap">
-${body}
+${crumb}${body}
 </main>
 ${promoFooter(site)}
 <footer class="foot wrap">
@@ -564,13 +560,6 @@ ${listDataScript({ indexAll, activeCat, pageSize })}`;
       '@context': 'https://schema.org',
       '@graph': [
         websiteJsonLd(baseUrl, site),
-        {
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            { '@type': 'ListItem', position: 1, name: site.title, item: `${baseUrl}/` },
-            { '@type': 'ListItem', position: 2, name: activeCat, item: `${baseUrl}${catHref(activeCat)}` },
-          ],
-        },
         collectionPageJsonLd({
           baseUrl,
           path: catHref(activeCat),
@@ -811,10 +800,9 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
 
   const related = relatedOf(item, items || []);
 
-  // 面包屑同一行右侧：两个邀请 + 热榜入口，与首页/分类页共用同一组（靠右侧由 .page__aside 的 margin-left:auto 顶过去）
+  // 面包屑与同一行右侧的公告 / 热榜链接组由 layout 按 nav.js 规则统一注入，这里不再写
   // 搜索结果容器：顶部搜索框是共享布局，详情页也得有 #results，否则 app.js 拿到 null 直接抛错，搜索静默失效
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="${catHref(item.category)}">${esc(item.category)}</a>${titleAsideLinks(ctx)}</nav>
-<div id="results" class="results" hidden></div>
+  const body = `<div id="results" class="results" hidden></div>
 <article class="detail${isDead ? ' detail--dead' : ''}">
   ${isDead ? '<div class="dead-banner">⚠ 该资源分享可能已失效（链接被取消）。可在页面底部留言许愿，或浏览右侧同类资源。</div>' : ''}
   <div class="detail__media">
@@ -891,19 +879,6 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
           : {}),
         inLanguage: 'zh-CN',
       },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: site.title, item: `${baseUrl}/` },
-          {
-            '@type': 'ListItem',
-            position: 2,
-            name: item.category,
-            item: `${baseUrl}${catHref(item.category)}`,
-          },
-          { '@type': 'ListItem', position: 3, name: item.title },
-        ],
-      },
     ],
   };
 
@@ -915,6 +890,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     activeCat: item.category,
     body,
     canonicalPath,
+    crumbData: { title: item.title },
     noindex: isDead,
     ogType: 'article',
     ogImage: img.og && img.og.includes('/og/') ? img.og : img.detail,
