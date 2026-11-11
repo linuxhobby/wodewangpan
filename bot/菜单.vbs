@@ -1,10 +1,10 @@
 ' 机器人控制台（桌面唯一入口，2026-11-11）
-' 双击弹出菜单，输入序号执行；也支持命令行参数直连动作（菜单.vbs 3 = 结束QQ机器人）
-' 本文件是唯一维护副本（仓库 Github/wodewangpan/bot），桌面快捷方式指向这里。
+' 双击打开大字号菜单 菜单.hta；命令行参数直连动作（菜单.vbs 3 = 结束QQ机器人）
+' 本文件是桌面快捷方式的指向对象；界面在同目录 菜单.hta，两个文件要放一起。
 Option Explicit
 
-Dim fso, ws, BOT_DIR
-Dim labels, scripts, i, n, pick, m
+Dim fso, ws, BOT_DIR, env
+Dim labels, scripts, i, n, pick, m, hta, mshta
 
 Set fso = CreateObject("Scripting.FileSystemObject")
 Set ws = CreateObject("WScript.Shell")
@@ -30,13 +30,6 @@ scripts = Array( _
   "重启TG机器人.vbs", _
   "结束TG机器人.vbs")
 
-' ---------- 菜单文本 ----------
-m = "机器人控制台" & vbCrLf & String(30, "-") & vbCrLf
-For i = 0 To UBound(labels)
-  m = m & "  " & (i + 1) & ". " & labels(i) & vbCrLf
-Next
-m = m & String(30, "-") & vbCrLf & "输入序号执行，空/取消退出："
-
 ' ---------- 带参数直连（供测试/高级用法） ----------
 If WScript.Arguments.Count > 0 Then
   pick = WScript.Arguments(0)
@@ -49,7 +42,23 @@ If WScript.Arguments.Count > 0 Then
   WScript.Quit
 End If
 
-' ---------- 交互菜单 ----------
+' ---------- 打开大字号菜单（HTA 界面，字体/间距可控） ----------
+hta = BOT_DIR & "\菜单.hta"
+mshta = ws.ExpandEnvironmentStrings("%WINDIR%") & "\System32\mshta.exe"
+If fso.FileExists(hta) And fso.FileExists(mshta) Then
+  Set env = ws.Environment("Process")
+  env("WODEWANGPAN_BOT_DIR") = BOT_DIR
+  ws.Run "mshta.exe """ & hta & """", 1, False
+  WScript.Quit
+End If
+
+' ---------- 兜底：系统 InputBox（HTA 缺失/被禁时才用） ----------
+m = "机器人控制台" & vbCrLf & String(30, "-") & vbCrLf
+For i = 0 To UBound(labels)
+  m = m & "  " & (i + 1) & ". " & labels(i) & vbCrLf
+Next
+m = m & String(30, "-") & vbCrLf & "输入序号执行，空/取消退出："
+
 Do
   pick = InputBox(m, "机器人控制台")
   If pick = "" Then WScript.Quit          ' 取消或空 = 退出

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>机器人控制台</title>
+<HTA:APPLICATION
+  ID="app"
+  APPLICATIONNAME="机器人控制台"
+  BORDER="thin"
+  CAPTION="yes"
+  CONTEXTMENU="no"
+  INNERBORDER="no"
+  MAXIMIZEBUTTON="no"
+  MINIMIZEBUTTON="no"
+  NAVIGABLE="no"
+  SCROLL="no"
+  SELECTION="no"
+  SHOWINTASKBAR="yes"
+  SINGLEINSTANCE="yes"
+  SYSMENU="yes"
+  WINDOWSTATE="normal">
+<style>
+  body { margin:0; padding:18px 22px 20px; background:#f4f6fa; color:#1f2937;
+         font-family:"Microsoft YaHei UI","Microsoft YaHei",sans-serif; }
+  h1 { margin:0; font-size:23px; font-weight:600; }
+  .sub { margin:6px 0 14px; font-size:13px; color:#6b7280; }
+  .group { margin:14px 0 9px; font-size:14px; font-weight:600; color:#2563eb; }
+  .item { display:block; width:100%; margin:0 0 9px; padding:11px 14px;
+          font-family:inherit; font-size:17px; text-align:left; color:#1f2937;
+          background:#fff; border:1px solid #d5dce5; border-radius:8px; cursor:pointer; }
+  .item:hover { background:#eaf2ff; border-color:#2563eb; color:#1d4ed8; }
+  .num { display:inline-block; width:34px; font-weight:700; color:#2563eb; }
+  .foot { margin-top:16px; padding-top:14px; border-top:1px solid #d5dce5; font-size:14px; color:#4b5563; }
+  #pick { width:72px; padding:6px 9px; font-family:inherit; font-size:17px;
+          border:1px solid #d5dce5; border-radius:6px; }
+  #go { margin-left:8px; padding:7px 18px; font-family:inherit; font-size:15px; color:#fff;
+        background:#2563eb; border:0; border-radius:6px; cursor:pointer; }
+  #msg { height:20px; margin-top:8px; font-size:14px; color:#dc2626; }
+</style>
+</head>
+<body onload="init()">
+  <h1>机器人控制台</h1>
+  <div class="sub">点击按钮，或输入序号 1-7 后回车 · Esc 退出</div>
+
+  <div class="group">QQ 机器人</div>
+  <button class="item" onclick="run(0)"><span class="num">1</span>启动QQ机器人</button>
+  <button class="item" onclick="run(1)"><span class="num">2</span>重启QQ机器人</button>
+  <button class="item" onclick="run(2)"><span class="num">3</span>结束QQ机器人</button>
+  <button class="item" onclick="run(3)"><span class="num">4</span>QQ扫码登录</button>
+
+  <div class="group">TG 机器人</div>
+  <button class="item" onclick="run(4)"><span class="num">5</span>启动TG机器人</button>
+  <button class="item" onclick="run(5)"><span class="num">6</span>重启TG机器人</button>
+  <button class="item" onclick="run(6)"><span class="num">7</span>结束TG机器人</button>
+
+  <div class="foot">
+    输入序号：<input id="pick" type="text" maxlength="2" autocomplete="off">
+    <button id="go" onclick="goPick()">执行</button>
+    <div id="msg"></div>
+  </div>
+
+<script language="JavaScript">
+var scripts = [
+  '启动QQ机器人.vbs', '重启QQ机器人.vbs', '结束QQ机器人.vbs', 'QQ扫码登录.vbs',
+  '启动TG机器人.vbs', '重启TG机器人.vbs', '结束TG机器人.vbs'
+];
+
+function botDir(sh) {
+  var d = sh.ExpandEnvironmentStrings('%WODEWANGPAN_BOT_DIR%');
+  if (d && d.charAt(0) !== '%' && d.indexOf('\\') >= 0) return d.replace(/\\+$/, '');
+  var p = decodeURIComponent(location.pathname.replace(/^\//, '').replace(/\//g, '\\'));
+  return p.substring(0, p.lastIndexOf('\\'));
+}
+
+function run(i) {
+  var sh = new ActiveXObject('WScript.Shell');
+  sh.Run('wscript.exe "' + botDir(sh) + '\\' + scripts[i] + '"', 1, false);
+  window.close();
+}
+
+function goPick() {
+  var v = document.getElementById('pick').value.replace(/^\s+|\s+$/g, '');
+  if (/^[1-7]$/.test(v)) run(parseInt(v, 10) - 1);
+  else document.getElementById('msg').innerText = '请输入 1-7 的序号';
+}
+
+function init() {
+  try {
+    window.resizeTo(560, 680);
+    window.moveTo(Math.max(0, (screen.width - 560) / 2), Math.max(0, (screen.height - 680) / 2));
+  } catch (e) {}
+  document.getElementById('pick').focus();
+  document.onkeydown = onKey;
+}
+
+function onKey() {
+  var e = window.event, k = e.keyCode;
+  if (k === 27) { window.close(); return; }
+  if (k === 13) { goPick(); return; }
+  if (e.srcElement && e.srcElement.id === 'pick') return;
+  if (k >= 49 && k <= 55) run(k - 49);
+  else if (k >= 97 && k <= 103) run(k - 97);
+}
+</script>
+</body>
+</html>
