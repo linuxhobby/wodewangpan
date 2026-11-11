@@ -272,7 +272,13 @@ cp config.example.json config.json
   "allow_private": true,
   "cooldown_seconds": 3,
   "global_rate_per_minute": 20,
-  "reply_at_sender": false
+  "reply_at_sender": false,
+  "napcat_watchdog": {
+    "enabled": true,
+    "interval_seconds": 300,
+    "down_strikes": 2,
+    "realert_minutes": 30
+  }
 }
 ```
 
@@ -284,6 +290,21 @@ cp config.example.json config.json
 | `global_rate_per_minute` | 全机器人每分钟最多回多少条，防炸群 |
 | `reply_at_sender` | 回复时是否 @ 提问的人，默认关闭 |
 | `access_token` | 与 NapCat HTTP 服务器的 Token 保持一致，都空也可以 |
+| `napcat_watchdog.enabled` | NapCat 看门狗开关，默认开。掉线走飞书提醒（见下方「NapCat 看门狗」） |
+| `napcat_watchdog.interval_seconds` | 探活间隔，默认 300 秒（5 分钟） |
+| `napcat_watchdog.down_strikes` | 连挂几次算掉线，默认 2（5 分钟一探即约 10 分钟确认） |
+| `napcat_watchdog.realert_minutes` | 一直掉线时每隔几分钟再催一次，默认 30 |
+
+#### NapCat 看门狗（掉线飞书提醒）
+
+QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的时候群里没反应，但往往要等发现「群里怎么不理人」才知道。看门狗后台线程定期探活，掉线第一时间走飞书推送（复用院采雷达的 `notify-feishu.mjs`，发给本人 P2P）：
+
+- **判定掉线**：连挂 `down_strikes` 次（默认 2 次，5 分钟一探即约 10 分钟确认），避免重启窗口期误报
+- **启动就一直连不上**：放宽到 10 次（约 50 分钟）才报，QQ 正常登录只要几十秒
+- **一直掉着**：每隔 `realert_minutes`（默认 30 分钟）再催一次，不刷屏
+- **恢复**：自动报平安，附掉线时长
+- 提醒内容带恢复办法（双击桌面「QQ扫码登录.vbs」扫码）；推送失败只记日志，不影响机器人本体
+- 自检：`python test_watchdog.py`（含一条真实测试推送）
 
 ### 5. 启动
 

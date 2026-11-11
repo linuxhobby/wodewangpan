@@ -25,5 +25,11 @@
     "global_rate_per_minute": 20,
     "reply_to_any_text": false,
     "welcome_enabled": true
+  },
+  "napcat_watchdog": {
+    "enabled": true,
+    "interval_seconds": 300,
+    "down_strikes": 2,
+    "realert_minutes": 30
   }
 }

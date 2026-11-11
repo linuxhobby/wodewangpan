@@ -347,6 +347,121 @@ def _check_napcat():
     return True
 
 
+# ---------- NapCat 看门狗：掉线走飞书提醒 ----------
+#
+# QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的时候群里没反应，
+# 但用户往往要等发现「群里怎么不理人」才知道。看门狗定期探活，掉线走飞书
+# 标准推送（notify-feishu.mjs）第一时间告知，恢复时报平安。
+# 推送失败只记日志，绝不影响机器人本体。
+
+FEISHU_SCRIPT = r"C:\Users\marco\Github\yuancaileida\scripts\notify-feishu.mjs"
+
+
+def _feishu(md_text):
+    """飞书推送：写 markdown 临时文件 -> node notify-feishu.mjs（首行作卡片标题）。"""
+    try:
+        import subprocess
+        import tempfile
+        fd, path = tempfile.mkstemp(suffix=".md")
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(md_text)
+        try:
+            r = subprocess.run(["node", FEISHU_SCRIPT, path],
+                               capture_output=True, timeout=60)
+            ok = r.returncode == 0
+            if ok:
+                log("√ 飞书提醒已发出")
+            else:
+                err = (r.stderr or b"").decode("utf-8", "ignore")[:120]
+                log(f"× 飞书提醒失败：exit={r.returncode} {err}")
+            return ok
+        finally:
+            try:
+                os.remove(path)
+            except OSError:
+                pass
+    except Exception as e:
+        log(f"× 飞书提醒异常：{e.__class__.__name__}: {e}")
+        return False
+
+
+def _napcat_online():
+    """NapCat 是否就绪（= QQ 已登录，OneBot 端口已开）。"""
+    res = _api("get_status", {})
+    return bool(res and ((res.get("data") or {}).get("online")))
+
+
+def _napcat_watchdog(max_loops=None):
+    """探活循环。
+
+    - 判定掉线要连挂 down_strikes 次（默认 2，即约 2 分钟），避免重启窗口期误报
+    - 启动后从没在线过，则放宽到 10 次才报（QQ 登录通常几十秒，超 10 分钟才是异常）
+    - 一直掉着每 realert_minutes（默认 30 分钟）再催一次
+    - 恢复时报平安
+    max_loops 供测试限制循环次数；正式运行不传。
+    """
+    wd = CFG.get("napcat_watchdog") or {}
+    if wd.get("enabled") is False:
+        log("NapCat 看门狗：已关闭（napcat_watchdog.enabled=false）")
+        return
+    iv = wd.get("interval_seconds")
+    interval = max(5, int(iv)) if iv else 60   # 5 分钟一探（指挥官定的）；0/缺省回落 60
+    strikes_needed = max(1, int(wd.get("down_strikes") or 2))
+    realert_every = max(1, int(wd.get("realert_minutes") or 30)) * 60
+
+    strikes = 0
+    down_since = None
+    last_alert = None
+    ever_online = False
+    loops = 0
+    log(f"NapCat 看门狗：每 {interval}s 探一次，连挂 {strikes_needed} 次判定掉线，"
+        f"掉线期间每 {realert_every // 60} 分钟催一次")
+    while True:
+        time.sleep(interval)
+        loops += 1
+        online = _napcat_online()
+        now = time.time()
+
+        if online:
+            if down_since:
+                mins = max(1, round((now - down_since) / 60))
+                log(f"√ NapCat 已恢复（掉了约 {mins} 分钟）")
+                _feishu(f"QQ 机器人已恢复 ✅\n\n掉了约 {mins} 分钟，现在在线。\n群里的 /搜索 可以正常用了。")
+            strikes = 0
+            down_since = None
+            last_alert = None
+            ever_online = True
+            if max_loops is not None and loops >= max_loops:
+                return
+            continue
+
+        strikes += 1
+        if down_since is None:
+            down_since = now
+        need = strikes_needed if ever_online else strikes_needed + 8
+        if strikes < need:
+            if max_loops is not None and loops >= max_loops:
+                return
+            continue
+        if last_alert and now - last_alert < realert_every:
+            if max_loops is not None and loops >= max_loops:
+                return
+            continue
+
+        mins = max(1, round((now - down_since) / 60))
+        log(f"⚠ NapCat 掉线约 {mins} 分钟，发飞书提醒")
+        _feishu(
+            "QQ 机器人掉线 ⚠️\n\n"
+            f"已连不上 NapCat（{CFG['napcat_api']}）约 {mins} 分钟。\n"
+            "QQ 群现在收不到消息，TG 不受影响。\n\n"
+            "恢复办法：双击桌面「QQ扫码登录.vbs」扫码登录；\n"
+            "若提示 NapCat 没在跑，先双击 NapCat 目录里的 napcat.bat。\n"
+            "登录成功后机器人自动恢复，不用重启。")
+        last_alert = now
+        if max_loops is not None and loops >= max_loops:
+            return
+
+
 def main():
     host = CFG.get("listen_host", "127.0.0.1")
     port = int(CFG.get("listen_port", 6700))
@@ -360,6 +475,7 @@ def main():
     log("=" * 52)
     _check_napcat()
     threading.Thread(target=_warm, daemon=True).start()
+    threading.Thread(target=_napcat_watchdog, daemon=True).start()
 
     # Telegram 默认由独立进程跑（app/telegram_bot.py，桌面「启动TG机器人」/ 开机自启），
     # 这样 QQ 这边重启、NapCat 掉线、QQ 掉登录，都不会把 TG 一起拖下水。
