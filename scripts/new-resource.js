@@ -32,13 +32,28 @@ const DATA_FILE = {
   其他: 'misc',
 };
 
+// 标题口径：工具/资料类写「原名 - 客观功能描述」，影视类保持纯片名。
+// 影视片名会被 scripts/lib/tmdb.mjs 用于剧名检索与季号识别，加副标会打断追更提醒；
+// 与 scripts/fill-title.mjs 的 SUBTITLE_CATS 保持同一口径，改这里要同步改那边。
+const SUBTITLE_CATS = new Set(['游戏', '软件', '电子书', '课程', '其他']);
+
 const category = await get('分类', '影视');
 // 反查：输入的是文件名或英文缩写时也能落到已存在的文件
 const known = Object.entries(DATA_FILE).find(
   ([cn, en]) => category === cn || String(category).toLowerCase() === en
 );
+const categoryCn = known ? known[0] : category;
 const base = known ? known[1] : category.replace(/[\\/]/g, '-');
 const file = path.join(root, 'data', `${base}.yaml`);
+
+// 副标从简介/标签里提炼，脚本不替人编造；直接回车留空就保持原名
+let fullTitle = title;
+if (SUBTITLE_CATS.has(categoryCn) && !/\s-\s/.test(title)) {
+  const subtitle = await get('副标（客观功能描述，留空则保持原名）');
+  if (subtitle) fullTitle = `${title} - ${subtitle}`;
+  else console.log('提示：工具/资料类建议写「原名 - 客观功能描述」，别用「最好/第一/必备」等主观词。');
+}
+
 const tags = await get('标签（逗号分隔）');
 const quark = await get('夸克链接');
 const baidu = await get('百度链接');
@@ -47,7 +62,7 @@ const description = await get('一句话介绍');
 const date = await get('日期', new Date().toISOString().slice(0, 10));
 const id = await get('ID（对应配图文件名，留空自动生成）');
 
-const entry = [`- title: "${title.replace(/"/g, '\\"')}"`];
+const entry = [`- title: "${fullTitle.replace(/"/g, '\\"')}"`];
 if (id) entry.push(`  id: ${id}`);
 entry.push(`  category: "${category}"`);
 if (tags) entry.push(`  tags: [${tags.split(/[,，]/).map((t) => t.trim()).join(', ')}]`);
