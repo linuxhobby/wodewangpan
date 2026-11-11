@@ -1,6 +1,6 @@
 # 游戏资源（32 条）
 - id: game-001
-  title: "文明6"
+  title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
   tags: ["游戏", "策略", "macOS", "文明6 Civilization VI"]
   quark_url: "https://pan.quark.cn/s/fa1bb1c2d462"
@@ -19,7 +19,7 @@
       文明6安装教程.docx
 
 - id: game-002
-  title: "文明7"
+  title: "文明7 - 时代推进制 4X 策略游戏"
   category: 游戏
   tags: ["游戏", "策略", "模拟", "macOS", "文明7 Civilization VII"]
   quark_url: "https://pan.quark.cn/s/03deff44f4c2"
@@ -37,7 +37,7 @@
       文明7.Sid.Meiers.Civilization.VII.v1.2.3.Incl.DLC.MacOS-ARM.dmg
 
 - id: game-003
-  title: "龙神模拟器"
+  title: "龙神模拟器 - Switch 模拟器 Ryujinx 安装包"
   category: 游戏
   tags: ["游戏", "模拟器", "Switch", "龙神模拟器 Ryujinx"]
   quark_url: "https://pan.quark.cn/s/5ab948cd04b7"
@@ -80,7 +80,7 @@
 
 
 - id: game-005
-  title: "红色警戒"
+  title: "红色警戒 - 系列多版本安装合集"
   category: 游戏
   tags: ["游戏", "即时战略", "红色警戒 Red Alert"]
   quark_url: "https://pan.quark.cn/s/8b63c4ccd71a"
@@ -125,7 +125,7 @@
 
 
 - id: game-007
-  title: "YUZU 模拟器"
+  title: "YUZU 模拟器 - Switch 模拟器汉化整合包"
   category: 游戏
   tags: ["游戏", "模拟器", "Switch", "YUZU模拟器 YUZU Emulator"]
   quark_url: "https://pan.quark.cn/s/e9a382d55d8c"
@@ -146,7 +146,7 @@
 
 
 - id: game-008
-  title: "暴雪游戏客户端"
+  title: "暴雪游戏客户端 - 战网官方启动器"
   category: 游戏
   tags: ["游戏", "启动器", "战网", "暴雪游戏客户端 Battle.net"]
   quark_url: "https://pan.quark.cn/s/0e6be78b8ff2"
@@ -164,7 +164,7 @@
       Battle.net-Setup-widnwos.exe
 
 - id: game-009
-  title: "命运重生"
+  title: "命运重生 - FATE 重制版地牢刷宝"
   category: 游戏
   tags: ["游戏", "动作冒险", "角色扮演", "地牢", "命运重生 FATE: Reawakened"]
   quark_url: "https://pan.quark.cn/s/daa94856c17d"
@@ -182,7 +182,7 @@
       命运：重生【内置菜单】.apk
 
 - id: game-010
-  title: "口袋妖怪"
+  title: "口袋妖怪 - Game Boy 早期世代合集"
   category: 游戏
   tags: ["游戏", "角色扮演", "宝可梦", "Game Boy", "口袋妖怪 Pokémon"]
   quark_url: "https://pan.quark.cn/s/b468f8b7105a"
@@ -288,7 +288,7 @@
       金手指 [港版][游戏v1.0.1][BuildID B7F965B9D7227DB8].rar
       金手指使用说明.txt
 - id: game-015
-  title: "超级马里奥 奥德赛"
+  title: "超级马里奥 奥德赛 - Switch 3D 平台动作"
   category: 游戏
   tags: ["游戏", "动作冒险", "平台跳跃", "Switch", "超级马里奥 奥德赛 Super Mario Odyssey"]
   quark_url: "https://pan.quark.cn/s/d249f890acf0"
@@ -372,7 +372,7 @@
 
 
 - id: game-019
-  title: "静谧田园"
+  title: "静谧田园 - 农场经营加夜间恐怖"
   category: 游戏
   tags: ["游戏", "模拟经营", "恐怖", "Switch", "静谧田园 Village in the Shade"]
   quark_url: "https://pan.quark.cn/s/5e40fb6e9bd3"
@@ -397,7 +397,7 @@
 
 
 - id: game-020
-  title: "宝可梦 盾"
+  title: "宝可梦 盾 - Switch 第八世代 RPG"
   category: 游戏
   tags: ["游戏", "角色扮演", "Switch", "宝可梦 盾 Pokemon Shield"]
   quark_url: "https://pan.quark.cn/s/5ce84da11985"
@@ -435,7 +435,7 @@
       [本体v1.0.0][01007820196A6000][16.0.3][中文][US].nsp
       [升级档v1.0.7][01007820196A6800][21.2.0][中文][US].nsp
 - id: game-022
-  title: "宝可梦 朱"
+  title: "宝可梦 朱 - Switch 开放世界 RPG"
   category: 游戏
   tags: ["游戏", "宝可梦 朱 Pokémon Scarlet"]
   quark_url: "https://pan.quark.cn/s/3addd466a975"
@@ -453,7 +453,7 @@
       [本体v1.0.0][0100A3D008C5C000][14.1.2][中文][US].nsp
       [升级档v4.0.0][0100A3D008C5C800][20.0.1][中文][US].nsp
 - id: game-023
-  title: "星之卡比 探索发现"
+  title: "星之卡比 探索发现 - Switch 3D 平台动作"
   category: 游戏
   tags: ["游戏", "星之卡比 探索发现 Kirby and the Forgotten Land"]
   quark_url: "https://pan.quark.cn/s/6160bdba0f31"
@@ -473,7 +473,7 @@
       [升级档v1.1.0][01004D300C5AE800][19.0.1][中文][US].nsp
       1.1.0金手指.zip
 - id: game-024
-  title: "银松镇"
+  title: "银松镇 - 护林员题材叙事冒险"
   category: 游戏
   tags: ["游戏", "银松镇 Silver Pines"]
   quark_url: "https://pan.quark.cn/s/c805f67eb573"
@@ -492,7 +492,7 @@
       [升级档v1.0.1][0100D5B026844800][23.0.0][中文].nsp
 
 - id: game-025
-  title: "EA SPORTS FC 27"
+  title: "EA SPORTS FC 27 - 2026 年度足球模拟"
   category: 游戏
   tags: ["游戏", "体育", "足球", "EA体育FC足球27 EA SPORTS FC 27"]
   quark_url: "https://pan.quark.cn/s/f7cd626c8571"
@@ -538,7 +538,7 @@
       移植游戏安装说明.txt
 
 - id: game-027
-  title: "1-2-Switch"
+  title: "1-2-Switch - Joy-Con 双人体感派对游戏"
   category: 游戏
   tags: ["游戏", "体感", "派对", "Nintendo Switch", "1-2-Switch"]
   quark_url: "https://pan.quark.cn/s/20ab2e7cdb55"

@@ -50,7 +50,7 @@
   image: app-005.jpg
 
 - id: app-006
-  title: "Adobe 大师版"
+  title: "Adobe 大师版 - 设计剪辑主力工具合集"
   category: 软件
   tags: ["软件", "Adobe", "设计", "全家桶", "macOS", "Adobe 大师版"]
   quark_url: "https://pan.quark.cn/s/bb38eda73d00"
@@ -1303,7 +1303,7 @@
   image: app-135.jpg
 
 - id: app-130
-  title: "Fedora 44 Workstation"
+  title: "Fedora 44 Workstation - Linux 桌面 Live 镜像"
   category: 软件
   tags: ["操作系统", "Linux", "Fedora", "Workstation", "x86_64", "Fedora 44 Workstation Fedora 44 Workstation"]
   quark_url: "https://pan.quark.cn/s/a6ccbc66d059"
@@ -1314,7 +1314,7 @@
   image: app-130.jpg
 
 - id: app-131
-  title: "Debian 13.7"
+  title: "Debian 13.7 - DVD 安装盘的 torrent 种子"
   category: 软件
   tags: ["操作系统", "Linux", "Debian", "trixie", "amd64", "Debian 13.7 Debian 13.7"]
   quark_url: "https://pan.quark.cn/s/62c7fb6ec445"
@@ -1325,7 +1325,7 @@
   image: app-131.jpg
 
 - id: app-132
-  title: "Ubuntu"
+  title: "Ubuntu - 26.04.1 桌面版安装镜像"
   category: 软件
   tags: ["操作系统", "Linux", "Ubuntu", "x86_64", "Ubuntu"]
   quark_url: "https://pan.quark.cn/s/79c0f3c4f5ff"
@@ -1345,7 +1345,7 @@
 
 
 - id: app-133
-  title: "openSUSE Tumbleweed"
+  title: "openSUSE Tumbleweed - 滚动发行版 DVD 镜像"
   category: 软件
   tags: ["操作系统", "Linux", "openSUSE", "Tumbleweed", "x86_64", "openSUSE Tumbleweed openSUSE"]
   quark_url: "https://pan.quark.cn/s/6042b4c943b1"
@@ -1460,7 +1460,7 @@
       Qwen-Image-2.1-Turbo整合包V1.1.rar
 
 - id: app-034
-  title: "Ai提示词大师"
+  title: "Ai提示词大师 - 安卓 AI 提示词工具 App"
   category: 软件
   tags: ["软件", "AI", "提示词", "安卓", "Ai提示词大师"]
   quark_url: "https://pan.quark.cn/s/a4898c3fb339"

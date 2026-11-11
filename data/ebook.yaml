@@ -4,7 +4,7 @@
 # 封面：豆瓣图书正版封面，用 `node scripts/poster.mjs douban` 抓取（约 500×750，2:3）；豆瓣查无此书时才退回 `node scripts/poster.mjs book` 生成
 
 - id: bk-001
-  title: "飞越疯人院"
+  title: "飞越疯人院 - 肯·凯西反体制文学代表作"
   category: 电子书
   tags: ["电子书", "文学", "小说", "美国文学", "飞越疯人院 One Flew Over the Cuckoo's Nest"]
   quark_url: "https://pan.quark.cn/s/d9986b7fd0bc"
@@ -14,7 +14,7 @@
   image: bk-001.jpg
 
 - id: bk-002
-  title: "牧羊少年奇幻之旅"
+  title: "牧羊少年奇幻之旅 - 保罗·柯艾略寓言小说"
   category: 电子书
   tags: ["电子书", "文学", "寓言", "外国文学", "牧羊少年奇幻之旅 The Alchemist"]
   quark_url: "https://pan.quark.cn/s/66e6399dcf88"
@@ -24,7 +24,7 @@
   image: bk-002.jpg
 
 - id: bk-003
-  title: "你当像鸟飞往你的山"
+  title: "你当像鸟飞往你的山 - 塔拉·韦斯特弗回忆录"
   category: 电子书
   tags: ["电子书", "传记", "回忆录", "外国文学", "你当像鸟飞往你的山 Educated"]
   quark_url: "https://pan.quark.cn/s/04afe66367b4"
@@ -34,7 +34,7 @@
   image: bk-003.jpg
 
 - id: bk-004
-  title: "强风吹拂"
+  title: "强风吹拂 - 三浦紫苑箱根驿传群像小说"
   category: 电子书
   tags: ["电子书", "文学", "青春", "日本小说", "强风吹拂 風が強く吹いている"]
   quark_url: "https://pan.quark.cn/s/a57852225df1"
@@ -44,7 +44,7 @@
   image: bk-004.jpg
 
 - id: bk-005
-  title: "肖申克的救赎"
+  title: "肖申克的救赎 - 斯蒂芬·金中篇小说"
   category: 电子书
   tags: ["电子书", "文学", "悬疑", "外国文学", "肖申克的救赎 Rita Hayworth and Shawshank Redemption"]
   quark_url: "https://pan.quark.cn/s/c6e82ef20087"
@@ -75,7 +75,7 @@
 
 
 - id: bk-008
-  title: "高性价比人生指南"
+  title: "高性价比人生指南 - 开源循证生活决策手册"
   category: 电子书
   tags: ["电子书", "生活", "决策参考", "高性价比人生指南 HowToLiveBetter"]
   quark_url: "https://pan.quark.cn/s/91f6cbecbee0"
@@ -86,7 +86,7 @@
 
 
 - id: bk-009
-  title: "摆脱内耗行动指南"
+  title: "摆脱内耗行动指南 - 职场沟通视频课 31 讲"
   category: 电子书
   tags: ["电子书", "视频课程", "自我成长", "沟通", "职场"]
   quark_url: "https://pan.quark.cn/s/2f4f761c830e"
@@ -96,7 +96,7 @@
   image: bk-009.jpg
 
 - id: bk-010
-  title: "家庭身心保健师课程"
+  title: "家庭身心保健师课程 - 肖然家庭健康视频课"
   category: 电子书
   tags: ["电子书", "视频课程", "身心健康", "家庭健康", "正念", "肖然"]
   quark_url: "https://pan.quark.cn/s/4ccb5202cc0a"
@@ -106,7 +106,7 @@
   image: bk-010.jpg
 
 - id: bk-011
-  title: "朗文图解词典"
+  title: "朗文图解词典 - 场景式英语启蒙词典"
   category: 电子书
   tags: ["电子书", "英语学习", "词典", "儿童英语", "朗文图解词典 The Longman Picture Dictionary"]
   quark_url: "https://pan.quark.cn/s/bc8914cc9a60"
@@ -126,7 +126,7 @@
   image: bk-012.jpg
 
 - id: bk-013
-  title: "金刚经说什么"
+  title: "金刚经说什么 - 南怀瑾逐品讲金刚经"
   category: "电子书"
   tags: [电子书, 佛学, 金刚经说什么]
   quark_url: "https://pan.quark.cn/s/9388a82d484b"
@@ -196,7 +196,7 @@
       别再说都是为我好：摆脱原生家庭负面影响自助手册.pdf
 
 - id: bk-016
-  title: "大宋攻镌"
+  title: "大宋攻镌 - 宋代金石碑刻题材小说"
   category: "电子书"
   tags: [电子书, 历史, 大宋攻镌]
   quark_url: "https://pan.quark.cn/s/eb18993b173f"
@@ -220,7 +220,7 @@
       大宋攻镌.pdf
 
 - id: bk-017
-  title: "经营者养成笔记"
+  title: "经营者养成笔记 - 优衣库柳井正经营手记"
   category: 电子书
   tags: ["电子书", "经营", "商业", "优衣库", "经营者养成笔记"]
   quark_url: "https://pan.quark.cn/s/316368692e10"
@@ -238,7 +238,7 @@
       经营者养成笔记.pdf
 
 - id: bk-018
-  title: "有钱花"
+  title: "有钱花 - 李筱懿谈金钱观与理财"
   category: 电子书
   tags: ["电子书", "理财", "女性成长", "金钱观", "有钱花"]
   quark_url: "https://pan.quark.cn/s/d7541d559ded"
