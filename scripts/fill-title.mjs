@@ -21,7 +21,8 @@
  *
  * map 格式：{ "game-031": "Tailscale - WireGuard 零配置组网", ... }
  *
- * 写盘方式：按 `- id:` 定位块、只替换 `  title:` 一行，逐行保留原行尾（LF），
+ * 写盘方式：按 `- id:` 定位块、只替换 `  title:` 一行，**逐行沿用该行原来的行尾**
+ * （CRLF 文件里这一行的 `\r` 会跟着走，纯 LF 文件保持 LF），
  * 不整块重写、不写 `updated`、不动 id / URL / canonical（§5 铁律）。
  */
 import fs from 'node:fs';
@@ -153,14 +154,17 @@ function apply(map, byId) {
       if (!cur || !ids.includes(cur) || !/^  title: /.test(lines[i])) continue;
       if (seen.has(cur)) throw new Error(`${file} 里 ${cur} 出现多条 title 行`);
       seen.add(cur);
-      const old = lines[i].slice(9).trim().replace(/^"|"$/g, '');
+      const raw = lines[i];
+      const old = raw.slice(9).trim().replace(/^"|"$/g, '');
       const next = map[cur];
       if (old === next) {
         same++;
         continue;
       }
       preview.push(`  ${cur}  ${old}  →  ${next}`);
-      lines[i] = `  title: "${next}"`;
+      // 整行替换会把行尾的 \r 一起丢掉：CRLF 为主的数据文件（如 misc.yaml）会因此变成
+      // 「CRLF 夹一行裸 LF」的混排，正是 §5 要防的行尾抖动，所以逐行沿用该行原来的行尾。
+      lines[i] = `  title: "${next}"${/\r$/.test(raw) ? '\r' : ''}`;
       changed++;
     }
     const miss = ids.filter((id) => !seen.has(id));
