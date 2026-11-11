@@ -354,11 +354,15 @@ def _check_napcat():
 # 标准推送（notify-feishu.mjs）第一时间告知，恢复时报平安。
 # 推送失败只记日志，绝不影响机器人本体。
 
-FEISHU_SCRIPT = r"C:\Users\marco\Github\yuancaileida\scripts\notify-feishu.mjs"
+FEISHU_SCRIPT = r"C:\Users\marco\Github\wodewangpan\bot\scripts\notify-feishu.mjs"
 
 
-def _feishu(md_text):
-    """飞书推送：写 markdown 临时文件 -> node notify-feishu.mjs（首行作卡片标题）。"""
+def _feishu(md_text, level="info"):
+    """飞书推送：写 markdown 临时文件 -> node bot/scripts/notify-feishu.mjs。
+
+    本机器人专用脚本（与院采雷达的采集简报脚本互不混用）：
+    md_text 首行作卡片标题，其余为正文；level 决定卡片头部颜色
+    （info=蓝 / warn=橙 / ok=绿 / alert=红）。"""
     try:
         import subprocess
         import tempfile
@@ -366,7 +370,7 @@ def _feishu(md_text):
         with os.fdopen(fd, "w", encoding="utf-8") as f:
             f.write(md_text)
         try:
-            r = subprocess.run(["node", FEISHU_SCRIPT, path],
+            r = subprocess.run(["node", FEISHU_SCRIPT, "--level", level, path],
                                capture_output=True, timeout=60)
             ok = r.returncode == 0
             if ok:
@@ -426,7 +430,7 @@ def _napcat_watchdog(max_loops=None):
             if down_since:
                 mins = max(1, round((now - down_since) / 60))
                 log(f"√ NapCat 已恢复（掉了约 {mins} 分钟）")
-                _feishu(f"QQ 机器人已恢复 ✅\n\n掉了约 {mins} 分钟，现在在线。\n群里的 /搜索 可以正常用了。")
+                _feishu(f"QQ 机器人已恢复 ✅\n\n掉了约 {mins} 分钟，现在在线。\n群里的 /搜索 可以正常用了。", level="ok")
             strikes = 0
             down_since = None
             last_alert = None
@@ -456,7 +460,7 @@ def _napcat_watchdog(max_loops=None):
             "QQ 群现在收不到消息，TG 不受影响。\n\n"
             "恢复办法：双击桌面「QQ扫码登录.vbs」扫码登录；\n"
             "若提示 NapCat 没在跑，先双击 NapCat 目录里的 napcat.bat。\n"
-            "登录成功后机器人自动恢复，不用重启。")
+            "登录成功后机器人自动恢复，不用重启。", level="warn")
         last_alert = now
         if max_loops is not None and loops >= max_loops:
             return

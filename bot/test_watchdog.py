@@ -28,8 +28,9 @@ bot.CFG["napcat_watchdog"] = {"enabled": True, "interval_seconds": 5,
                               "down_strikes": 2, "realert_minutes": 30}
 
 alerts = []
+alert_levels = []
 _real_feishu = bot._feishu          # 留住真函数，最后做真实推送
-bot._feishu = lambda md: alerts.append(md) or True
+bot._feishu = lambda md, level="info": (alerts.append(md), alert_levels.append(level)) or True
 
 
 def run(sequence):
@@ -53,6 +54,8 @@ check("掉线提醒有恢复办法", "QQ扫码登录.vbs" in a[0], True)
 check("掉线提醒说明 TG 不受影响", "TG 不受影响" in a[0], True)
 check("持续掉线被节流（没有重复催）", len(a), 2)
 check("第 2 条是恢复报平安", "已恢复" in a[1], True)
+check("掉线提醒是橙色告警级", alert_levels[-2], "warn")
+check("恢复提醒是绿色正常级", alert_levels[-1], "ok")
 
 # 3. 恢复后再掉线：仍按 2 次判定
 a = run([True, False, False])
@@ -77,7 +80,7 @@ bot.CFG["napcat_watchdog"] = {"enabled": True, "interval_seconds": 5,
 
 # 6. 真实飞书推送一次，验证 notify-feishu.mjs 链路（会发到飞书）
 t0 = time.time()
-real_ok = _real_feishu("QQ 机器人看门狗自检 ✅\n\n这是掉线提醒功能的测试推送，收到说明链路通了。")
+real_ok = _real_feishu("QQ 机器人看门狗自检 ✅\n\n这是掉线提醒功能的测试推送，已改用机器人专用飞书脚本（bot/scripts/notify-feishu.mjs），收到说明链路通了。")
 check("真实飞书推送成功", real_ok, True)
 print(f"（真实推送用时 {time.time() - t0:.1f}s）", flush=True)
 
