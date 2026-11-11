@@ -971,8 +971,7 @@ export function notFoundPage(ctx) {
     title: '页面不存在',
     activeCat: '',
     canonicalPath: '/404.html',
-    body: `<nav class="crumb"><a href="/">首页</a><span>/</span><span>页面不存在</span></nav>
-<div class="card-page">
+    body: `<div class="card-page">
   <div class="nf">
     ${NF_ART}
     <h1 class="nf__code">404</h1>
@@ -1050,8 +1049,7 @@ ${p < pages ? `<a class="pager__item pager__item--next" href="${pageHref(p + 1)}
 </nav>`
       : '';
 
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>全部资源</span></nav>
-<h1 class="page__title page__title--doc">${esc(title)}<span class="page__n">${total} 个资源</span></h1>
+  const body = `<h1 class="page__title page__title--doc">${esc(title)}<span class="page__n">${total} 个资源</span></h1>
 <div class="card-page">
   <p>这一页列出本站全部 <strong>${total}</strong> 个资源，按分类分页排列，点标题进入详情页，也可直接用标题后的夸克 / 百度网盘入口转存。</p>
 ${groups
@@ -1452,8 +1450,7 @@ export function aboutPage(ctx) {
   ${qqLink ? `<p>还没入群？<a href="${esc(qqLink)}" target="_blank" rel="noopener noreferrer">点击加入 QQ 群</a>，或扫上方二维码。</p>` : ''}
   ${contactEmail ? `<p>不方便加群也可以发邮件到 <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>，我们同样会处理。</p>` : ''}`;
 
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>关于本站</span></nav>
-<h1 class="page__title page__title--doc">关于本站</h1>
+  const body = `<h1 class="page__title page__title--doc">关于本站</h1>
 <div class="card-page">
   ${qqGroupBlock({ qqName, qqLink, contactEmail, aside: qqAside, footer: false })}
 
@@ -1519,8 +1516,7 @@ export function privacyPage(ctx) {
   const { site, baseUrl } = ctx;
   /** 备用邮箱（site.yaml 的 contact.邮箱），用于「联系我们」兜底 */
   const contactEmail = emailOf(site.contact);
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>隐私政策</span></nav>
-<h1 class="page__title page__title--doc">隐私政策</h1>
+  const body = `<h1 class="page__title page__title--doc">隐私政策</h1>
 <div class="card-page">
   <p class="muted">最后更新：2026 年 11 月 5 日</p>
 
@@ -1589,8 +1585,7 @@ export function contactPage(ctx) {
   const contactEmail = emailOf(site.contact);
   /** 维护者署名（site.yaml 的 maintainer），留空则不输出这一行 */
   const maintainer = String(site.maintainer || '').trim();
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>联系我们</span></nav>
-<h1 class="page__title page__title--doc">联系我们</h1>
+  const body = `<h1 class="page__title page__title--doc">联系我们</h1>
 <div class="card-page">
   <h2>哪些事可以找我们</h2>
   <ul>
@@ -1628,8 +1623,7 @@ export function rssPage(ctx) {
     )
     .join('\n');
 
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><span>RSS 订阅</span></nav>
-<h1 class="page__title page__title--doc">RSS 订阅</h1>
+  const body = `<h1 class="page__title page__title--doc">RSS 订阅</h1>
 <div class="card-page">
   <p>本站所有新资源都会实时写入 RSS 源，用任意 RSS 阅读器订阅后，更新会自动推送到你面前，不必再来站点手动刷首页。</p>
 
