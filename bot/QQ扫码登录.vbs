@@ -8,12 +8,14 @@
 '   4. 扫码成功后机器人自动恢复，不用重启任何东西
 Option Explicit
 
-Dim BOT_DIR, NAPCAT_DIR, NAPCAT_BAT, QQUIN, QR_IMG, WS, FSO, i
+Dim BOT_DIR, NAPCAT_DIR, NAPCAT_BAT, QQUIN, QR_IMG, DESKTOP_QR, PY, Q, WS, FSO, i
 BOT_DIR = "C:\Users\marco\Github\wodewangpan\bot"
 NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4"
 NAPCAT_BAT = NAPCAT_DIR & "\napcat.bat"
 QQUIN = "909008620"
 QR_IMG = NAPCAT_DIR & "\napcat\cache\qrcode.png"
+DESKTOP_QR = WS.SpecialFolders("Desktop") & "\QQ登录二维码.png"
+PY = "C:\Users\marco\.workbuddy\tools\venv\Scripts\python.exe"
 
 Set WS = CreateObject("WScript.Shell")
 Set FSO = CreateObject("Scripting.FileSystemObject")
@@ -51,12 +53,19 @@ End If
 
 ' ---------- 4. 快速登录失效：等用户扫控制台里的二维码 ----------
 If FSO.FileExists(QR_IMG) Then
-  WS.Run """" & QR_IMG & """", 1, False
+  ' 原图只有 147px 扫不清：放大加白边落到桌面再打开（2026-11-11）
+  Q = Chr(34)
+  WS.Run Q & PY & Q & " " & Q & BOT_DIR & "\scripts\qr_desktop.py" & Q & " " & Q & QR_IMG & Q, 0, True
+  If FSO.FileExists(DESKTOP_QR) Then
+    WS.Run Q & DESKTOP_QR & Q, 1, False
+  Else
+    WS.Run Q & QR_IMG & Q, 1, False   ' 兜底：放大失败开原图
+  End If
 End If
 
 MsgBox "登录态已失效，需要扫码（较少发生）。" & vbCrLf & vbCrLf & _
        "刚弹出的黑色控制台窗口里已经画好二维码，" & vbCrLf & _
-       "用手机 QQ 扫它即可；二维码图片也已打开。" & vbCrLf & vbCrLf & _
+       "用手机 QQ 扫桌面刚打开的「QQ登录二维码.png」即可（放大版，比控制台里的清楚）。" & vbCrLf & vbCrLf & _
        "注意：二维码几分钟就过期，过期后关掉控制台窗口重新双击本脚本。" & vbCrLf & _
        "扫码成功后本窗口不用管，机器人自动恢复。", 48, "QQ 扫码登录 · 需要扫码"
 
