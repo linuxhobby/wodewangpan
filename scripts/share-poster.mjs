@@ -3,8 +3,8 @@
 // 产物提交进仓库（static/share.jpg），构建时直接拷到站点根目录，不依赖服务器上的中文字体。
 //
 // 用法：
-//   node tools/share-poster.mjs --out static/share.jpg
-//   node tools/share-poster.mjs --title "我的网盘资源站" --tag "夸克 / 百度网盘资源索引" \
+//   node scripts/share-poster.mjs --out static/share.jpg
+//   node scripts/share-poster.mjs --title "我的网盘资源站" --tag "夸克 / 百度网盘资源索引" \
 //        --slogan "打开即用 · 扫码即存" --cats "电影 · 电视剧 · 纪录片 · 软件 · 电子书" \
 //        --domain wodewangpan.top
 import fs from 'node:fs';

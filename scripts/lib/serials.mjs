@@ -123,7 +123,7 @@ const SIG_KEYS = ['count', 'size', 'format', 'packed', 'tree'];
  * 于是同一份内容抓两次有可能只是行的先后不同。
  * 直接比整串就会把这种纯换序判成「盘端变了」，进而整体重写 files 块并盖 updated ——
  * 行序变化不是内容变化，盖日期等于伪造 lastmod（AGENTS.md §5 第一红线；
- * tools/sort-trees.mjs 回填行序时刻意不写 updated，就是同一个道理）。
+ * scripts/sort-trees.mjs 回填行序时刻意不写 updated，就是同一个道理）。
  * 实测 2026-11-11 一轮里 an-009 / an-011 / an-013 三条同时中招，count / size / format 一字未动。
  * 做法：按行拆开 → 去空白 → 排序 → 再拼。集合与重数相同即签名相同；
  * 文件增减、改名、目录层级变化照样会判成有变化，不会因此漏掉真实更新。

@@ -2,7 +2,7 @@
 /**
  * 导出「全部资源」Markdown 清单：按站点分类顺序分组，逐条列出资源名称与网盘分享链接。
  * 复用 scripts/lib/data.js 的解析、链接提取与排序口径，保证与站点 /all/ 是同一份数据、同一顺序。
- * 用法：node tools/export-all-resources.mjs [--out <路径>]
+ * 用法：node scripts/export-all-resources.mjs [--out <路径>]
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -13,7 +13,7 @@ import {
   normalizeResources,
   orderCategories,
   todayShanghai,
-} from '../scripts/lib/data.js';
+} from './lib/data.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -101,7 +101,7 @@ for (const [name, group] of groups) {
   });
 }
 
-lines.push('', '---', '', `本清单由 \`tools/export-all-resources.mjs\` 生成，请勿手工编辑；最新数据以 ${SITE_URL} 为准。`, '');
+lines.push('', '---', '', `本清单由 \`scripts/export-all-resources.mjs\` 生成，请勿手工编辑；最新数据以 ${SITE_URL} 为准。`, '');
 
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, lines.join('\n'), 'utf8');

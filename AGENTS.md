@@ -4,7 +4,7 @@
 人在场时可随意发挥；机器执行时**严格按本手册来**。
 
 站点：我的网盘索引站（wodewangpan）· www.wodewangpan.top · 静态站 · Node.js 构建 · VPS + nginx
-数据规模、待补条数这类**会随每轮同步变动的数字不写进本手册**（手册只记规则、要求与流程）；需要时以 `data/*.yaml` 的实际条目数、`tools/fill-files.mjs` 输出的「待补条目 N 个」和构建日志的「N 个资源」为准。分类口径见 §2 与 `config/site.yaml` 的 `categories`。
+数据规模、待补条数这类**会随每轮同步变动的数字不写进本手册**（手册只记规则、要求与流程）；需要时以 `data/*.yaml` 的实际条目数、`scripts/fill-files.mjs` 输出的「待补条目 N 个」和构建日志的「N 个资源」为准。分类口径见 §2 与 `config/site.yaml` 的 `categories`。
 
 ---
 
@@ -13,11 +13,11 @@
 ```bash
 npm run build              # 构建到 public/（本地）
 npm run serve              # 本地预览 http://localhost:4321
-npx eslint scripts/ tools/ # lint，提交前必须 0 错误
+npx eslint scripts/        # lint，提交前必须 0 错误
 node scripts/new-resource.js        # 交互式新增资源条目
-node tools/fill-files.mjs --limit 3 # 补文件清单（见 §4）
-node tools/sort-trees.mjs --dry-run # 预览/回填目录树排序（见 §4）
-node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
+node scripts/fill-files.mjs --limit 3 # 补文件清单（见 §4）
+node scripts/sort-trees.mjs --dry-run # 预览/回填目录树排序（见 §4）
+node scripts/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
 ```
 
 一次完整构建约 45~130 秒（首次全量偏慢，增量约 40 秒），第二次跑应「重新生成 0 个」。
@@ -34,17 +34,17 @@ node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
 | `scripts/lib/data.js` | 数据解析与规范化（YAML 字段语义看这里） |
 | `scripts/lib/render.js` | 全部页面模板与 SEO 输出（meta/JSON-LD/sitemap） |
 | `scripts/lib/assets.js` | 配图/二维码等静态资产处理 |
-| `tools/fill-files.mjs` | 补「文件清单」`files:` 块（§4 例行任务的主角） |
-| `tools/sort-trees.mjs` | 回填已有 `files.tree` 的行序（只重排，不动内容与日期） |
-| `tools/scan-drive-fids.mjs` | 扫夸克 SHARE 目录，生成 `config/drive-fids.json`（id → 盘端目录 fid），`--source drive` 口径依赖它 |
+| `scripts/fill-files.mjs` | 补「文件清单」`files:` 块（§4 例行任务的主角） |
+| `scripts/sort-trees.mjs` | 回填已有 `files.tree` 的行序（只重排，不动内容与日期） |
+| `scripts/scan-drive-fids.mjs` | 扫夸克 SHARE 目录，生成 `config/drive-fids.json`（id → 盘端目录 fid），`--source drive` 口径依赖它 |
 | `config/drive-fids.json` | 站内 id → 盘端编号目录 fid/目录名映射（只读缓存，盘端改名后重跑扫描脚本即可，不是内容源） |
 | `config/drive-source-ids.json` | 被屏蔽台账：这些条目取数走盘端真实目录而非分享客态（§4） |
-| `tools/lib/tree-sort.mjs` | 目录树排序的唯一实现，fill-files 与 sort-trees 共用，勿另写一份 |
-| `tools/lib/serials.mjs` | 连载轮询的唯一口径（候选、无状态轮换、快照签名、保留行尾写盘），fill-files 与 list-ongoing 共用 |
-| `tools/lib/tmdb.mjs` | TMDB 只读查询（凭据跨机探测、剧名年份校验、播出事件、季号识别），只供追更提醒 |
-| `tools/list-ongoing.mjs` | 只读盘点「活跃 / 已定格 / 死链」的连载条目（§4） |
+| `scripts/lib/tree-sort.mjs` | 目录树排序的唯一实现，fill-files 与 sort-trees 共用，勿另写一份 |
+| `scripts/lib/serials.mjs` | 连载轮询的唯一口径（候选、无状态轮换、快照签名、保留行尾写盘），fill-files 与 list-ongoing 共用 |
+| `scripts/lib/tmdb.mjs` | TMDB 只读查询（凭据跨机探测、剧名年份校验、播出事件、季号识别），只供追更提醒 |
+| `scripts/list-ongoing.mjs` | 只读盘点「活跃 / 已定格 / 死链」的连载条目（§4） |
 | `.gitattributes` | 锁 `data/*.yaml` 为 LF，跨平台不产生 CRLF 混排（§5） |
-| `tools/fill-desc.mjs`、`poster.mjs`、`share-poster.mjs`、`list-short-desc.mjs` | 批量补描述 / 配图 / 短描述盘点 |
+| `scripts/fill-desc.mjs`、`poster.mjs`、`share-poster.mjs`、`list-short-desc.mjs` | 批量补描述 / 配图 / 短描述盘点 |
 | `theme/assets/style.css` | 全站样式（CSS 变量制，改动要克制；CI 有 `npm run audit:css`） |
 | `deploy/wdwp-autoupdate.sh` | VPS 发布脚本（cron `30 */2 * * *`，见 §6） |
 | `deploy/setup-vps.sh` | 方案 A 一键部署脚本（换新 VPS / 别人复制本站时用；参数与流程见 README 方案 A） |
@@ -71,7 +71,7 @@ node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
 原则是**宁可少不可断**。
 
 ```bash
-node tools/fill-files.mjs --limit 3 --delay 3000
+node scripts/fill-files.mjs --limit 3 --delay 3000
 ```
 
 工具行为（补齐）：遍历 `data/*.yaml` 中「有 `quark_url` 且还没有 `files:` 块」的条目，按 `added`
@@ -103,10 +103,10 @@ node tools/fill-files.mjs --limit 3 --delay 3000
     补齐、连载轮询、待办扫描三处都读它，**命中即走盘端**——这一步是硬要求：如果只把清单按 `drive` 写进去、
     轮询还按 `share` 抓，下一轮就会把 9 集缩回 2 集并再盖一次 `updated`（§5 红线）。
   - `drive` 口径需要 id → 盘端目录 fid 的映射，即 `config/drive-fids.json`，由
-    `node tools/scan-drive-fids.mjs` 扫 SHARE 生成（`--dry-run` 只看统计）；盘端改名/换号后重跑。
+    `node scripts/scan-drive-fids.mjs` 扫 SHARE 生成（`--dry-run` 只看统计）；盘端改名/换号后重跑。
     映射里查不到该 id 时自动回落 `share` 并打印一行提示，不会静默降级成假清单。
   - 两套源**只换「取一个目录的直接子项」这一层**：下钻、剔占位、聚合、排序、签名比对仍然只有
-    `locateContent` + `aggregate` + `tools/lib/tree-sort.mjs` 一份实现，`drive` 的第一层会合成成
+    `locateContent` + `aggregate` + `scripts/lib/tree-sort.mjs` 一份实现，`drive` 的第一层会合成成
     「根目录里只有那个编号目录」，保证两边写出的 `files:` 块同构。绝不许为 `drive` 另写一份口径。
   - 已知代价：`drive` 清单包含访客拿不到的文件，属于对用户的过度承诺。暂不改详情页文案，
     被屏蔽条目以 `config/drive-source-ids.json` 为准可查。存量条目**不做一次性回填**（会批量盖 `updated`），
@@ -140,7 +140,7 @@ node tools/fill-files.mjs --limit 3 --delay 3000
 
 实现与同步要求：
 
-- 剔除靠 `tools/fill-files.mjs` 顶部的 `PLACEHOLDER_FILE_RE`，它是**行首前缀匹配**（`^`）。
+- 剔除靠 `scripts/fill-files.mjs` 顶部的 `PLACEHOLDER_FILE_RE`，它是**行首前缀匹配**（`^`）。
   不要退化成无锚子的串匹配——那会把片名里带「请先转存」之类的真实文件也误剔出清单。
 - 同一份前缀表的权威定义在 `C:/Users/marco/.qwenworkcn/skills/quark-resource-sync/scripts/lib/placeholder.mjs`
   的 `PLACEHOLDER_PREFIXES`（夸克/百度两侧写入与 `baidu-share-links.mjs` 都从它取）。两个仓库无法互相 import，
@@ -149,7 +149,7 @@ node tools/fill-files.mjs --limit 3 --delay 3000
 
 **目录树排序**（2026-11-08 起）：工具写盘前把 `tree` 排成「目录优先 → 扩展名分组
 （组序与 `format` 同口径：数量多的在前，相同按字母序）→ 组内集数自然序」，实现只在
-`tools/lib/tree-sort.mjs`。历史存量用 `node tools/sort-trees.mjs` 回填——它只重排行序，
+`scripts/lib/tree-sort.mjs`。历史存量用 `node scripts/sort-trees.mjs` 回填——它只重排行序，
 不动 `count`/`size`/`format`，也**不写 `updated`**（行序变化不是内容变化，盖日期等于伪造
 lastmod），且幂等（复跑打印「重排 0 条」）。
 
@@ -161,21 +161,21 @@ lastmod），且幂等（复跑打印「重排 0 条」）。
   无变化打印「无变化」，**一个字都不写**。
 - **签名里的 `tree` 与行序无关**（2026-11-11 修）。盘端接口返回子项的顺序本身不稳定，`tree-sort` 在
   「同级两个目录」这种并列情况下也不给出唯一先后，所以同一份内容两次抓取可能只是行序不同。
-  签名按「拆行 → 去空白 → 排序 → 再拼」比对（`tools/lib/serials.mjs` 的 `treeKey`），纯换序判**无变化**；
+  签名按「拆行 → 去空白 → 排序 → 再拼」比对（`scripts/lib/serials.mjs` 的 `treeKey`），纯换序判**无变化**；
   文件增减、改名、层级变化照样判有变化，重数也保留（同名两行不等于一行）。
   修前实测一轮里 `an-009`、`an-011`、`an-013` 三条同时被误判，`count`/`size`/`format` 一字未动却整体重写、
   盖上当天 `updated`——行序变化不是内容变化，盖日期等于伪造 lastmod（§5 第一红线）。
-  同理：`tools/sort-trees.mjs` 回填行序时也刻意不写 `updated`。
+  同理：`scripts/sort-trees.mjs` 回填行序时也刻意不写 `updated`。
 - 不需要状态字段，也不需要人工标记「完结」：判定信号就是盘端目录还在不在变。静止满 60 天降入
   低频复查池（每 10 轮抽查 1 条），永不宣称完结，老剧后来补内容也能被发现。
 - 每 2 小时 1 条、按时间片无状态轮换，同一轮重复执行幂等；不会与并行任务抢状态文件。
-- 候选口径、轮换、签名比对、保留行尾的写盘**只在** `tools/lib/serials.mjs`；
-  `node tools/list-ongoing.mjs` 随时只读盘点「活跃 / 已定格 / 死链」清单。
-- 抓取口径（下钻最多 2 级、先剔占位再判断、前缀回填）**只在** `tools/fill-files.mjs` 的 `locateContent` 一份实现，
+- 候选口径、轮换、签名比对、保留行尾的写盘**只在** `scripts/lib/serials.mjs`；
+  `node scripts/list-ongoing.mjs` 随时只读盘点「活跃 / 已定格 / 死链」清单。
+- 抓取口径（下钻最多 2 级、先剔占位再判断、前缀回填）**只在** `scripts/fill-files.mjs` 的 `locateContent` 一份实现，
   补齐、连载轮询、待办扫描三处共用——不要再另写一份，否则签名会误判「有变化」，导致每轮重写并伪造 updated。
 
 **这套轮询随仓库工具更新生效，Windows 自动化机、定时任务提示词、飞书简报脚本、VPS 都不用改**：
-任务启动按 §3 先 `git pull --rebase` 拿到最新 `tools/` 即可。轮询失败（链接失效）只打印清单，
+任务启动按 §3 先 `git pull --rebase` 拿到最新 `scripts/` 即可。轮询失败（链接失效）只打印清单，
 仍按下面第 1 条人工核验后才标 `dead: true`；盘端只剩占位说明文件属正常现象，不写盘、不上报异常。
 飞书简报的「本轮补齐 N 条」只统计补齐写入，连载刷新不计入进度对账（刷新条目本来就有 `files:` 块）；
 有刷新或失败时在 `--follow` 里带一句即可，正常刷新不单独发卡片。
@@ -192,7 +192,7 @@ lastmod），且幂等（复跑打印「重排 0 条」）。
 - 任务 agent 把 `[待加资源]` 里的 **id 照抄进飞书 `--follow`**（脚本按 id 回查 `data/*.yaml` 拼标题、
   站点详情页与夸克链接，不要自己写链接或排版）；清单为空时省略这一段。空目录**不是失败**：
   不标 `dead`、不进失败清单、不影响本轮提交。
-- 想一次看全量：`node tools/fill-files.mjs --limit 0 --serials 0 --todo 40 --dry-run`（只读、不写盘）。
+- 想一次看全量：`node scripts/fill-files.mjs --limit 0 --serials 0 --todo 40 --dry-run`（只读、不写盘）。
 
 **追更提醒：本周播了新一集、盘端可能还没追**（2026-11-10 起）：连载轮询抓到盘端快照后，
 顺带查 TMDB 的 `status` 与 `last_episode_to_air`（播出日期是精确事实），命中就打印
@@ -203,7 +203,7 @@ lastmod），且幂等（复跑打印「重排 0 条」）。
   `.xltd.cfg`、有纯目录条目，动漫分类里还混电影与合辑单文件，集数不是可靠事实。
   误判最多多一条卡片，绝不污染 `data/`。
 - 凭据从环境变量 `TMDB_TOKEN` 或本机 quark-resource-sync skill 的 `config.env` 读
-  （`tools/lib/tmdb.mjs`，Mac / Windows 路径都探测），**不写进仓库、不落缓存**；查不到就打印
+  （`scripts/lib/tmdb.mjs`，Mac / Windows 路径都探测），**不写进仓库、不落缓存**；查不到就打印
   一行跳过提示，不影响补齐 / 轮询 / 待办。
 - 防误报三道闸：标题剥季号后按剧名搜 TMDB + 首播年宽松校验（季播剧 `date` 常是某一季日期，
   硬按年份过滤会把整部剧搜没）；`status` 必须是 Returning Series / In Production / Planned；
@@ -231,7 +231,7 @@ lastmod），且幂等（复跑打印「重排 0 条」）。
    本轮提交通常赶不上同一时刻的那次 pull，要等下一班（约 2 小时后）才上线，这是预期行为。
 6. 飞书汇报：每轮结束发一张**蓝色 interactive 卡片**（脚本 `C:/Users/marco/Scripts/wodewangpan-fillfiles-feishu.mjs`，接收人内置；版式与「夸克资源同步任务简报」「院采雷达 · 采集简报」一致：标题固定蓝色头部一次 → 补齐时间 → 按分类的补齐清单 → 补齐进度对账 → 未入库·需人工跟进放最后 → 底部 note 状态行）。一轮 3 条用 `--name` 把「id 标题（分类）」拼成一行（`--id` 只接受单个 id，`--name` 按 `（分类）` 自动分组加 emoji，**条目行的站点详情页与夸克链接也由脚本按 id 回查 `data/*.yaml` 拼好，`--name` 里不要自己写链接、不要自己排版**）；进度段（按分类的已完成 / 待补 + 合计 + 预计天数）由脚本自己扫 `data/*.yaml` 算、不要手工传数字，天数只是量级估算（`--per-day` 默认 36）。卡片标题固定「我的网盘.资源文件清单补齐简报」。本轮的死链候选 / 可疑数据 / 停手原因、`[待加资源]` 里的 id、以及 `[追更提醒]` 那一行用 `--follow` 传（追更提醒自带播出信息与夸克链接，照抄原文即可，**不要**自己改写或补「还差几集」的结论）；**异常、待加资源、追更提醒三者都没有时才省略 `--follow`**（省略 = 卡片不渲染「未入库·需人工跟进」段）。
 
-剩余量与节奏：**待补条数会随每轮变动，以 `tools/fill-files.mjs` 当轮输出的「待补条目：N 个」为准，本手册不写死**。规则不变——每轮 3 条、约 36 条/天就是上限，**不要**因为缺口大就自己加量，一次性大规模变更反而触发「批量内容」判定，比慢慢补更糟。
+剩余量与节奏：**待补条数会随每轮变动，以 `scripts/fill-files.mjs` 当轮输出的「待补条目：N 个」为准，本手册不写死**。规则不变——每轮 3 条、约 36 条/天就是上限，**不要**因为缺口大就自己加量，一次性大规模变更反而触发「批量内容」判定，比慢慢补更糟。
 
 ## 5. 数据规范（data/*.yaml 字段语义）
 
@@ -308,7 +308,7 @@ ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
 - 手动触发**必须套 `flock`**：脚本内部无并发锁，撞上 cron 会同时写 `public.new` 并互相破坏构建产物。
 - 单次约 42 秒。构建失败时脚本保留线上旧版本不切换，此时查日志找报错，**不要**手动去 VPS
   改 `public/` 或重启 nginx。
-- VPS 上另有 `*/10 * * * * tools/sitestats.py`（站点统计）、每天 3:00 `submit-indexnow`、
+- VPS 上另有 `*/10 * * * * scripts/sitestats.py`（站点统计）、每天 3:00 `submit-indexnow`、
   3:10 `submit-baidu`，都与本仓库的发布互不干扰。
 
 ## 7. SEO 现状与禁区（改代码前必读）
@@ -349,7 +349,7 @@ node $T detail --type movie --id 49046 --poster static/images/mv-212.jpg        
 ### 图书（bk-）：豆瓣书封
 
 ```bash
-node tools/poster.mjs douban --title "书名" --author "作者名" --out static/images/bk-xxx.jpg
+node scripts/poster.mjs douban --title "书名" --author "作者名" --out static/images/bk-xxx.jpg
 ```
 
 - 豆瓣模式**只按标题关键词模糊匹配，误抓高发**（「丝绸之路」抓到过黄自乐谱和大村一朗的
@@ -361,7 +361,7 @@ node tools/poster.mjs douban --title "书名" --author "作者名" --out static/
 ```bash
 curl -s "https://itunes.apple.com/search?term=tailscale&entity=software&limit=3&country=us"
 # 取 results[].artworkUrl512 下载后：
-node tools/poster.mjs icon --icon <图> --out static/images/app-xxx.jpg --title "名称" --sub "一句话副题"
+node scripts/poster.mjs icon --icon <图> --out static/images/app-xxx.jpg --title "名称" --sub "一句话副题"
 ```
 
 - GitHub 头像接口（`github.com/<org>.png`）可能返回 HTML 而非图片，下载后必须 `file` 验证；
@@ -379,7 +379,7 @@ node tools/poster.mjs icon --icon <图> --out static/images/app-xxx.jpg --title 
 ### 无封面资源（音乐合辑、特辑等）：自绘，不硬凑
 
 ```bash
-node tools/poster.mjs set --title "丝绸之路" --badge "马友友 · 20 周年纪念特辑" --out static/images/ot-xxx.jpg
+node scripts/poster.mjs set --title "丝绸之路" --badge "马友友 · 20 周年纪念特辑" --out static/images/ot-xxx.jpg
 ```
 
 搜到的图对不上内容就删掉重来，**宁可自绘也不放错图**。
@@ -392,7 +392,7 @@ node tools/poster.mjs set --title "丝绸之路" --badge "马友友 · 20 周年
 ## 9. 验证清单（每次改完跑一遍）
 
 ```bash
-npx eslint scripts/ tools/     # 0 错误（tools/lib/ 也在覆盖范围内）
+npx eslint scripts/            # 0 错误（lib/ 也在覆盖范围内）
 npm run build                  # 构建通过，注意「重新生成 N 个」是否合理
 npm run build                  # 第二次构建应「重新生成 0 个」（304 机制未破坏）
 ```

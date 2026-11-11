@@ -7,9 +7,9 @@
  * （2026-11-11 实测 tv-016 / tv-058 / tv-078 / tv-123 / dc-086）。这类条目要改读盘端真实目录，
  * 但 data/*.yaml 里只有分享链，没有盘端 fid，所以 fid 必须靠扫一遍 SHARE 目录拿到。
  *
- *   node tools/scan-drive-fids.mjs              # 重建映射（写 config/drive-fids.json）
- *   node tools/scan-drive-fids.mjs --dry-run    # 只打印统计，不写文件
- *   node tools/scan-drive-fids.mjs --share 我的分享目录   # 换 SHARE 根目录名
+ *   node scripts/scan-drive-fids.mjs              # 重建映射（写 config/drive-fids.json）
+ *   node scripts/scan-drive-fids.mjs --dry-run    # 只打印统计，不写文件
+ *   node scripts/scan-drive-fids.mjs --share 我的分享目录   # 换 SHARE 根目录名
  *
  * 只读网盘、只写这一个映射文件，不动 data/、不动站点其它文件。
  * 盘端改了目录名或换了编号，重跑一次即可；映射缺失的条目 fill-files 会自动回落 share 口径。

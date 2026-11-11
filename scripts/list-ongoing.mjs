@@ -5,8 +5,8 @@
 // （updated，没有则退回 added）。满 60 天没变化自动降为低频复查，不算完结。
 // 本工具只读，不写 data/、不写任何状态文件。
 //
-//   node tools/list-ongoing.mjs          # 只看活跃（会被每轮轮询的）条目
-//   node tools/list-ongoing.mjs --all    # 连同已定格、死链条目一起列出
+//   node scripts/list-ongoing.mjs          # 只看活跃（会被每轮轮询的）条目
+//   node scripts/list-ongoing.mjs --all    # 连同已定格、死链条目一起列出
 
 import fs from 'node:fs';
 import path from 'node:path';

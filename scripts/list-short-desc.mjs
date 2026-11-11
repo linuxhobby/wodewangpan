@@ -14,13 +14,13 @@
  *   npm run list:short -- --cat=电影    # 只看某个分类
  *
  * 结果同时写入 .tmp/short-desc.md（已 gitignore）。补写走 fill-desc.mjs：
- * 把新正文放进 .tmp/desc-draft.json（{ "id": "正文" }），node tools/fill-desc.mjs --apply，
+ * 把新正文放进 .tmp/desc-draft.json（{ "id": "正文" }），node scripts/fill-desc.mjs --apply，
  * 脚本会自动接回【…】标签与 ｜… 后缀，并检查新正文是否达到 300 字。
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadResources, normalizeResources, bodyLength, MIN_DESC } from '../scripts/lib/data.js';
+import { loadResources, normalizeResources, bodyLength, MIN_DESC } from './lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const argv = process.argv.slice(2);
@@ -70,4 +70,4 @@ fs.writeFileSync(path.join(root, '.tmp/short-desc.md'), md);
 
 console.log(md);
 console.log(`已写入 .tmp/short-desc.md（${short.length} 条，共 ${items.length} 条资源）`);
-console.log('补写：新正文放进 .tmp/desc-draft.json → node tools/fill-desc.mjs 空跑 → --apply 落盘');
+console.log('补写：新正文放进 .tmp/desc-draft.json → node scripts/fill-desc.mjs 空跑 → --apply 落盘');

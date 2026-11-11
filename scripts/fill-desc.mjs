@@ -2,9 +2,9 @@
  * 把草稿里的简介写回 YAML（第三项 SEO 待办：补厚过短简介）。
  *
  * 用法：
- *   node tools/fill-desc.mjs                                  # 空跑，只打印将要改成什么
- *   node tools/fill-desc.mjs --apply                          # 真正写入 data/*.yaml
- *   node tools/fill-desc.mjs --draft=.tmp/desc-draft-tv.json  # 指定别的草稿文件
+ *   node scripts/fill-desc.mjs                                  # 空跑，只打印将要改成什么
+ *   node scripts/fill-desc.mjs --apply                          # 真正写入 data/*.yaml
+ *   node scripts/fill-desc.mjs --draft=.tmp/desc-draft-tv.json  # 指定别的草稿文件
  *
  * 输入：.tmp/desc-draft.json，形如 { "mv-212": "新简介正文", ... }
  * 行为：
@@ -15,7 +15,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadResources, bodyLength, MIN_DESC } from '../scripts/lib/data.js';
+import { loadResources, bodyLength, MIN_DESC } from './lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const apply = process.argv.includes('--apply');

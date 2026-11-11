@@ -13,8 +13,8 @@
     "dev": "node scripts/build.js && node scripts/serve.js",
     "new": "node scripts/new-resource.js",
     "audit:css": "node scripts/audit-css.js",
-    "lint": "eslint scripts theme/assets tools",
-    "list:short": "node tools/list-short-desc.mjs"
+    "lint": "eslint scripts theme/assets",
+    "list:short": "node scripts/list-short-desc.mjs"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",

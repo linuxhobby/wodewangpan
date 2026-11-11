@@ -2,10 +2,10 @@
 /**
  * 配图 / 封面生成器（2:3 竖版，480×720），四个模式共用一个入口：
  *
- *   node tools/poster.mjs book   --title "牧羊少年奇幻之旅" --author "[巴西] 保罗·柯艾略" --year 1988 --out static/images/bk-002.jpg
- *   node tools/poster.mjs icon   --icon <本地文件|图片URL> --out static/images/app-005.jpg --title "AdGuard" --sub "广告拦截 · 隐私保护"
- *   node tools/poster.mjs set    --title "王牌惊悚套装" --badge "共 17 册" --out static/images/bk-006.jpg
- *   node tools/poster.mjs douban --title "飞越疯人院" --author "肯·克西" --out static/images/bk-001.jpg
+ *   node scripts/poster.mjs book   --title "牧羊少年奇幻之旅" --author "[巴西] 保罗·柯艾略" --year 1988 --out static/images/bk-002.jpg
+ *   node scripts/poster.mjs icon   --icon <本地文件|图片URL> --out static/images/app-005.jpg --title "AdGuard" --sub "广告拦截 · 隐私保护"
+ *   node scripts/poster.mjs set    --title "王牌惊悚套装" --badge "共 17 册" --out static/images/bk-006.jpg
+ *   node scripts/poster.mjs douban --title "飞越疯人院" --author "肯·克西" --out static/images/bk-001.jpg
  *
  * book / set 是「没封面时自己画一张」，icon 是把现成图标合成竖版，douban 是抓正版封面（优先）。
  * icon 模式的标题按估算宽度自适应：放得下用 50px，超了先缩到 34px，仍超则折两行 —— 不要再手改字号（旧 bug：cs-016 被裁掉首尾）。
@@ -86,7 +86,7 @@ async function posterBook() {
   const c1 = arg('c1', '#2f6f5e');
   const c2 = arg('c2', '#8fd3b6');
   if (!title || !out) {
-    console.error('用法：node tools/poster.mjs book --title <书名> --out <输出.jpg> [--author ..] [--year ..] [--c1 ..] [--c2 ..]');
+    console.error('用法：node scripts/poster.mjs book --title <书名> --out <输出.jpg> [--author ..] [--year ..] [--c1 ..] [--c2 ..]');
     return 1;
   }
 
@@ -160,7 +160,7 @@ async function posterIcon() {
   const icon = arg('icon');
   const out = arg('out');
   if (!icon || !out) {
-    console.error('用法：node tools/poster.mjs icon --icon <文件|URL> --out <输出.jpg> [--title ..] [--sub ..] [--c1 ..] [--c2 ..] [--icon-size ..] [--radius ..]');
+    console.error('用法：node scripts/poster.mjs icon --icon <文件|URL> --out <输出.jpg> [--title ..] [--sub ..] [--c1 ..] [--c2 ..] [--icon-size ..] [--radius ..]');
     return 1;
   }
   const title = arg('title', '');
@@ -258,7 +258,7 @@ async function posterSet() {
   const accent = arg('accent', '#c02222');
   const out = arg('out');
   if (!title || !out) {
-    console.error('用法：node tools/poster.mjs set --title <主标题> --out <输出.jpg> \\');
+    console.error('用法：node scripts/poster.mjs set --title <主标题> --out <输出.jpg> \\');
     console.error('       [--kicker <顶部拉丁字母>] [--prefix <小字前缀行>] [--badge <徽标，如 共 17 册>] \\');
     console.error('       [--label <徽标下方拉丁字母>] [--formats <格式串>] [--author <作者>] [--accent <主色>]');
     return 1;
@@ -390,7 +390,7 @@ async function posterDouban() {
   const listOnly = process.argv.includes('--list');
   if (!title || (!out && !listOnly)) {
     console.error(
-      '用法：node tools/poster.mjs douban --title "书名" --out static/images/bk-001.jpg [--author 关键字] [--pick 豆瓣id] [--list]'
+      '用法：node scripts/poster.mjs douban --title "书名" --out static/images/bk-001.jpg [--author 关键字] [--pick 豆瓣id] [--list]'
     );
     return 1;
   }
@@ -401,7 +401,7 @@ async function posterDouban() {
   const candidates = exact.length ? exact : items;
 
   if (!candidates.length) {
-    console.error(`✗ 豆瓣未找到《${title}》（可能是已下架书目，改用 node tools/poster.mjs book 生成封面）`);
+    console.error(`✗ 豆瓣未找到《${title}》（可能是已下架书目，改用 node scripts/poster.mjs book 生成封面）`);
     return 2;
   }
 
@@ -447,7 +447,7 @@ const MODES = {
 try {
   const run = MODES[mode];
   if (!run) {
-    console.error(`用法：node tools/poster.mjs <${Object.keys(MODES).join('|')}> [选项]`);
+    console.error(`用法：node scripts/poster.mjs <${Object.keys(MODES).join('|')}> [选项]`);
     process.exitCode = 1;
   } else {
     process.exitCode = await run();

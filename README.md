@@ -520,10 +520,10 @@ install_stats() {
   fi
   local py
   py=$(command -v python3)
-  (cd "$SITE_DIR" && "$py" tools/sitestats.py --reset --backfill) >> "$SETUP_LOG" 2>&1 \
+  (cd "$SITE_DIR" && "$py" scripts/sitestats.py --reset --backfill) >> "$SETUP_LOG" 2>&1 \
     || warn "统计初始化失败（不影响站点），日志：$SETUP_LOG"
-  add_cron 'tools/sitestats.py' \
-    "*/5 * * * * cd $SITE_DIR && $py tools/sitestats.py >> /var/log/sitestats.log 2>&1"
+  add_cron 'scripts/sitestats.py' \
+    "*/5 * * * * cd $SITE_DIR && $py scripts/sitestats.py >> /var/log/sitestats.log 2>&1"
   log "已装本地访问统计（每 5 分钟）；页脚数字会在有访问后逐步累积"
 }
 
@@ -722,7 +722,7 @@ sudo crontab -e
 **9）访问统计（可选）**
 
 ```bash
-sudo install -m755 tools/sitestats.py /usr/local/bin/sitestats.py
+sudo install -m755 scripts/sitestats.py /usr/local/bin/sitestats.py
 sudo install -m644 deploy/00-sitestats.conf /etc/nginx/conf.d/00-sitestats.conf
 sudo mkdir -p /var/lib/sitestats
 sudo crontab -e
@@ -817,8 +817,7 @@ static/
   share.jpg          # 首页品牌分享卡（1200×630），构建时拷到站点根目录供 og:image 用
   images/            # 配图，文件名与资源 id 对应：<id>.jpg / .png / .webp / .svg；全部平铺在一个目录，不按分类分桶）
 theme/assets/        # 前端样式与脚本，构建时拷到 public/assets/
-scripts/             # 构建 / 预览脚本（lib/ 是构建核心：读数据、出图片、渲染页面）
-tools/
+scripts/             # 站点脚本单目录：构建 / 预览 / 内容运维工具（lib/ 是构建核心：读数据、出图片、渲染页面）
   sitestats.py           # 访问统计脚本（VPS 方案用到）
   share-poster.mjs       # 生成首页品牌分享卡 static/share.jpg（改站点配置后重跑）
   fill-desc.mjs          # 把 .tmp/desc-draft.json 里的简介写回 YAML（自动接回【季/集】前缀与 ｜TMDB 后缀，--strict 拦不合格稿）

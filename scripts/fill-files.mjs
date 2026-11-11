@@ -11,7 +11,7 @@
 // 连载轮询（2026-11-10 起）：电视剧 / 动漫的夸克目录会持续追加资源，首份清单写完就过期。
 // 每轮例行顺带抽查 1 条「已有 files: 块」的剧集，重抓盘端目录；只有内容真变了才整体
 // 重写 files 块并写当天 updated，没变一个字都不写。静止满 60 天降为低频复查，永不宣称完结。
-// 判定口径只在 tools/lib/serials.mjs，list-ongoing 与本工具共用，不要另写一份。
+// 判定口径只在 scripts/lib/serials.mjs，list-ongoing 与本工具共用，不要另写一份。
 //
 // 待办扫描（2026-11-10 起）：trending-sync 建的是空编号目录，正片由人工转存。补齐队列按
 // added 升序先补老资源，新空目录排在最末发现太慢。每轮另抽查 3 条「最近入库且无清单」的
@@ -22,7 +22,7 @@
 // last_episode_to_air（播出日期是精确事实）。最近 7 天播了新集且在播的剧，打印 [追更提醒]
 // 推给飞书，让人确认盘端要不要追。只提醒、不解析也不写入「还差几集」的结论——
 // tree 会截断 40 行、混 .xltd.cfg、动漫分类里还有电影和合辑，集数不是可靠事实。
-// 凭据只读环境变量或本机 skill 的 config.env（tools/lib/tmdb.mjs），匹配不确定就静默跳过。
+// 凭据只读环境变量或本机 skill 的 config.env（scripts/lib/tmdb.mjs），匹配不确定就静默跳过。
 //
 // 队列顺序：待补条目按 added（入库时间）升序扫描，最老的资源先补；缺 added 的排最后。
 // 写入额度：--limit 是「本次要写几条」，不是「本次看几条」。占位目录 / 抓取失败不占额度，
@@ -30,17 +30,17 @@
 // 最多尝试条数由 --tries 兜底（默认每条额度试 20 个，防止全库空目录时空转打接口）。
 //
 // 用法：
-//   node tools/fill-files.mjs --limit 30            # 本次最多补 30 条（默认）
-//   node tools/fill-files.mjs --limit 1             # 每日例行：只补 1 条，队首是空目录就顺延
-//   node tools/fill-files.mjs --limit 3 --only misc # 只处理 data/misc.yaml，小批试跑
-//   node tools/fill-files.mjs --ids mv-427,tv-086   # 只补指定 id（同步任务入库后当场补；已有 files: 的自动跳过）
-//   node tools/fill-files.mjs --dry-run             # 只抓取打印，不写文件
-//   node tools/fill-files.mjs --limit 50 --delay 4000  # 请求更慢更稳
-//   node tools/fill-files.mjs --limit 5 --tries 30  # 每条额度最多试 30 个候选
-//   node tools/fill-files.mjs --serials 1 --limit 0 # 只跑连载轮询（调试）
-//   node tools/fill-files.mjs --serials 0           # 临时关掉连载轮询
-//   node tools/fill-files.mjs --airing 0            # 临时关掉追更提醒
-//   node tools/fill-files.mjs --limit 0 --serials 0 --todo 40 --dry-run  # 一次看待加资源清单
+//   node scripts/fill-files.mjs --limit 30            # 本次最多补 30 条（默认）
+//   node scripts/fill-files.mjs --limit 1             # 每日例行：只补 1 条，队首是空目录就顺延
+//   node scripts/fill-files.mjs --limit 3 --only misc # 只处理 data/misc.yaml，小批试跑
+//   node scripts/fill-files.mjs --ids mv-427,tv-086   # 只补指定 id（同步任务入库后当场补；已有 files: 的自动跳过）
+//   node scripts/fill-files.mjs --dry-run             # 只抓取打印，不写文件
+//   node scripts/fill-files.mjs --limit 50 --delay 4000  # 请求更慢更稳
+//   node scripts/fill-files.mjs --limit 5 --tries 30  # 每条额度最多试 30 个候选
+//   node scripts/fill-files.mjs --serials 1 --limit 0 # 只跑连载轮询（调试）
+//   node scripts/fill-files.mjs --serials 0           # 临时关掉连载轮询
+//   node scripts/fill-files.mjs --airing 0            # 临时关掉追更提醒
+//   node scripts/fill-files.mjs --limit 0 --serials 0 --todo 40 --dry-run  # 一次看待加资源清单
 //
 // 建议节奏：每天跑一批（--limit 20~30），配合站点「updated 逐日分散」的策略。
 
@@ -132,7 +132,7 @@ const DRIVE_MAP_FILE = path.join(root, 'config', 'drive-fids.json');
 const DRIVE_IDS_FILE = path.join(root, 'config', 'drive-source-ids.json');
 let driveMap = null;
 let driveIds = null;
-/** id → 盘端编号目录的 { fid, name }；映射由 tools/scan-drive-fids.mjs 生成 */
+/** id → 盘端编号目录的 { fid, name }；映射由 scripts/scan-drive-fids.mjs 生成 */
 function loadDriveMap() {
   if (driveMap !== null) return driveMap;
   try {

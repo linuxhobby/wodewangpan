@@ -5,7 +5,7 @@
 // 排序放在写入侧而不是渲染侧，data/*.yaml 里的 tree 本身就是有序的，
 // 构建逻辑（scripts/lib/render.js）不用动，也不影响 sitemap lastmod。
 //
-// 唯一实现：tools/fill-files.mjs 抓取新清单时用，tools/sort-trees.mjs 回填历史条目时也用，
+// 唯一实现：scripts/fill-files.mjs 抓取新清单时用，scripts/sort-trees.mjs 回填历史条目时也用，
 // 避免两条路径排出两种顺序。
 //
 // 分组顺序与 files.format 同口径（数量多的扩展名在前，数量相同按扩展名字母序），

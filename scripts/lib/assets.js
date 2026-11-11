@@ -371,7 +371,7 @@ function catColors(name) {
  * 生成 1200×630 的 OG 分享图（栅格 jpg）：渐变品牌底 + 左侧真实海报（contain，不裁切）
  * + 右侧站点 favicon + 域名（ASCII，不依赖服务器中文字体）。
  * 刻意不放中文：构建机（含 VPS）未必有 CJK 字体，避免中文渲染成方块
- * （参考 tools/share-poster.mjs 注释「不依赖服务器上的中文字体」）。
+ * （参考 scripts/share-poster.mjs 注释「不依赖服务器上的中文字体」）。
  */
 async function writeOg(sharp, { id, category, srcPoster, faviconPath, outDir, prevDir, reused, siteDomain = 'wodewangpan.top' }) {
   const { c1, c2 } = catColors(category);
