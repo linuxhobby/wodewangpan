@@ -20,7 +20,7 @@
   image: app-002.jpg
 
 - id: app-003
-  title: "Raycast"
+  title: "Raycast - macOS排第二好用的软件"
   category: 软件
   tags: ["软件", "启动器", "效率工具", "macOS", "Raycast"]
   quark_url: "https://pan.quark.cn/s/75eb7fb3f303"
@@ -30,7 +30,7 @@
   image: app-003.jpg
 
 - id: app-004
-  title: "Alfred"
+  title: "Alfred - macOS排第一好用的软件"
   category: 软件
   tags: ["软件", "启动器", "效率工具", "macOS", "Alfred"]
   quark_url: "https://pan.quark.cn/s/f206383617c1"
@@ -40,7 +40,7 @@
   image: app-004.jpg
 
 - id: app-005
-  title: "AdGuard"
+  title: "AdGuard - 全平台广告过滤器"
   category: 软件
   tags: ["软件", "广告拦截", "隐私保护", "macOS", "Windows", "AdGuard"]
   quark_url: "https://pan.quark.cn/s/166c0e8f2f68"
@@ -83,7 +83,7 @@
 
 
 - id: app-009
-  title: "Obsidian"
+  title: "Obsidian - 最好用的知识管理-笔记软件"
   category: 软件
   tags: ["软件", "笔记", "知识管理", "Markdown", "Obsidian"]
   quark_url: "https://pan.quark.cn/s/bf87d215f3a7"
@@ -94,7 +94,7 @@
 
 
 - id: app-010
-  title: "OpenShot"
+  title: "OpenShot - 免费但是很专业的剪辑软件"
   category: 软件
   tags: ["软件", "macOS", "OpenShot"]
   quark_url: "https://pan.quark.cn/s/2a7a6ceaf2e0"
@@ -105,7 +105,7 @@
 
 
 - id: app-011
-  title: "Zettlr"
+  title: "Zettlr - 写论文必备"
   category: 软件
   tags: ["软件", "macOS", "Zettlr"]
   quark_url: "https://pan.quark.cn/s/13f0687c73ca"
@@ -138,7 +138,7 @@
 
 
 - id: app-014
-  title: "ueli"
+  title: "ueli - 跨平台的键盘启动器"
   category: 软件
   tags: ["软件", "macOS", "ueli"]
   quark_url: "https://pan.quark.cn/s/9bf8e4b94001"
