@@ -297,6 +297,9 @@ function layout({
   ogImageSize = null,
   shareImage = '',
   ogType = 'website',
+  // 仅给 og/twitter 用的分享描述；不传时沿用 description。
+  // 详情页靠它把「有哪些网盘」放进 Telegram / 微信预览，SEO 的 meta description 不受影响
+  ogDescription = '',
   jsonLd = null,
   keywords = '',
   noindex = false,
@@ -349,12 +352,12 @@ ${verificationMeta(site)}<link rel="canonical" href="${esc(canonical)}">
 <meta property="og:type" content="${esc(ogType)}">
 <meta property="og:site_name" content="${esc(site.title)}">
 <meta property="og:title" content="${esc(fullTitle)}">
-<meta property="og:description" content="${esc(description || site.description)}">
+<meta property="og:description" content="${esc(ogDescription || description || site.description)}">
 <meta property="og:url" content="${esc(canonical)}">
 <meta property="og:locale" content="zh_CN">
 ${ogImg ? `<meta property="og:image" content="${esc(ogImg)}">\n` : ''}${ogImg && ogImageSize ? `<meta property="og:image:width" content="${ogImageSize.w}">\n<meta property="og:image:height" content="${ogImageSize.h}">\n` : ''}<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(fullTitle)}">
-<meta name="twitter:description" content="${esc(description || site.description)}">
+<meta name="twitter:description" content="${esc(ogDescription || description || site.description)}">
 ${ogImg ? `<meta name="twitter:image" content="${esc(ogImg)}">\n` : ''}<link rel="stylesheet" href="/assets/style.css${v}">
 <meta name="search-index-url" content="${esc(searchIndexUrl)}">
 <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
@@ -769,6 +772,10 @@ export function detailPage(ctx) {
   // 数据全部来自 YAML 已有字段，不必为它额外维护数据
   const year = item.date ? String(item.date).slice(0, 4) : '';
   const panNames = [...new Set(item.links.map((l) => l.name))].join(' / ');
+  // 分享预览里的来源文案：只写数据里真实存在的链接，不凭空补「百度网盘」
+  const panSummary = item.links.length
+    ? `${panNames}${item.links.some((l) => l.code) ? '（部分需提取码）' : ''}`
+    : '暂无可用链接';
   const source = item.links.length
     ? `${panNames}（${item.links.length} 个链接${item.links.some((l) => l.code) ? ' · 部分需提取码' : ''}）`
     : '暂无可用链接';
@@ -887,6 +894,8 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     // 资源名 + 年份 + 需求词：既区别于同名作品，也接住「片名 网盘」的长尾搜索
     title: `${item.title}${year ? `（${year}）` : ''}${titleSuffix}`,
     description: `${item.title}${year ? `（${year}）` : ''} · ${titleSuffix} · ${descLong.slice(0, 110)}`,
+    // Telegram 等客户端会截断预览描述，所以把网盘来源放最前、剧情只留第一句
+    ogDescription: `转存：${panSummary}｜${item.title}${year ? `（${year}）` : ''} · ${summaryOf(item)}`,
     activeCat: item.category,
     body,
     canonicalPath,
