@@ -357,6 +357,9 @@ async function renderVariants(sharp, src, destBase, { outDir, prevDir, reused })
 /** 处理全部配图：生成 240×360 海报（列表页与详情页共用）与 60×90 缩略图两份 WebP，
     返回 id -> { detail, card, thumb }（detail 与 card 指向同一个文件） */
 const OG = { w: 1200, h: 630 };
+// 改 OG 版式时换这个目录名：新路径下没有旧产物，能让全站 og 图重生成，
+// 同时换掉图片 URL，破掉 Telegram / CDN 对旧图的缓存（复用逻辑见 reuseImage）
+const OG_VERSION = 'v2';
 
 /** 取分类配色（与 categorySvg 同源），供 OG 图渐变底使用 */
 function catColors(name) {
@@ -368,12 +371,11 @@ function catColors(name) {
 }
 
 /**
- * 生成 1200×630 的 OG 分享图（栅格 jpg）：渐变品牌底 + 左侧真实海报（contain，不裁切）
- * + 右侧站点 favicon + 域名（ASCII，不依赖服务器中文字体）。
- * 刻意不放中文：构建机（含 VPS）未必有 CJK 字体，避免中文渲染成方块
- * （参考 scripts/share-poster.mjs 注释「不依赖服务器上的中文字体」）。
+ * 生成 1200×630 的 OG 分享图（栅格 jpg）：渐变品牌底 + 居中的真实海报（contain，不裁切）。
+ * 不放文字与 logo：构建机（含 VPS）没有 CJK 字体，中文会渲染成方块；
+ * 预览卡片下方的 og:description 已承担介绍，图里只留海报更干净。
  */
-async function writeOg(sharp, { id, category, srcPoster, faviconPath, outDir, prevDir, reused, siteDomain = 'wodewangpan.top' }) {
+async function writeOg(sharp, { id, category, srcPoster, faviconPath, outDir, prevDir, reused }) {
   const { c1, c2 } = catColors(category);
   const W = OG.w;
   const H = OG.h;
@@ -391,37 +393,29 @@ async function writeOg(sharp, { id, category, srcPoster, faviconPath, outDir, pr
   if (srcPoster && sharp) {
     try {
       const poster = await sharp(srcPoster)
-        .resize({ height: 540, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .resize({ height: 580, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
         .png()
         .toBuffer();
       const meta = await sharp(poster).metadata();
-      composites.push({ input: poster, left: 70, top: Math.round((H - meta.height) / 2) });
+      composites.push({
+        input: poster,
+        left: Math.round((W - meta.width) / 2),
+        top: Math.round((H - meta.height) / 2),
+      });
     } catch {
       /* 海报渲染失败则不贴图，仅留品牌底 */
     }
   }
-  if (faviconPath && fs.existsSync(faviconPath) && sharp) {
-    try {
-      const logo = await sharp(faviconPath).resize(200, 200).png().toBuffer();
-      composites.push({ input: logo, left: Math.round(W * 0.62), top: 168 });
-    } catch {
-      /* 无 favicon 则不贴 */
-    }
-  }
-  const cx = Math.round(W * 0.62) + 100;
-  const domainSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-  <text x="${cx}" y="486" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="40" fill="#fff" fill-opacity=".82">${esc(siteDomain)}</text>
-</svg>`;
-  composites.push({ input: Buffer.from(domainSvg), left: 0, top: 0 });
-  const dir = path.join(outDir, 'og');
+  const dir = path.join(outDir, 'og', OG_VERSION);
   ensureDir(dir);
   const outPath = path.join(dir, `${id}.jpg`);
-  if (reuseImage(outPath, prevDir ? [path.join(prevDir, 'og', `${id}.jpg`)] : [], freshenMtime([srcPoster, faviconPath]))) {
+  const prevOg = path.join('og', OG_VERSION, `${id}.jpg`);
+  if (reuseImage(outPath, prevDir ? [path.join(prevDir, prevOg)] : [], freshenMtime([srcPoster, faviconPath]))) {
     reused.value++;
-    return `/og/${encodeURIComponent(id)}.jpg`;
+    return `/og/${OG_VERSION}/${encodeURIComponent(id)}.jpg`;
   }
   await sharp(Buffer.from(bg)).composite(composites).jpeg({ quality: 86 }).toFile(outPath);
-  return `/og/${encodeURIComponent(id)}.jpg`;
+  return `/og/${OG_VERSION}/${encodeURIComponent(id)}.jpg`;
 }
 
 export async function prepareImages(items, { staticDir, rootDir, outDir, prevDir }) {
@@ -436,7 +430,6 @@ export async function prepareImages(items, { staticDir, rootDir, outDir, prevDir
     ...new Set(items.map((i) => i.category)),
   ]);
   const faviconPath = path.join(staticDir, 'favicon.svg');
-  const ogDomain = 'wodewangpan.top';
   const imgDir = path.join(outDir, 'img');
   ensureDir(imgDir);
 
@@ -450,7 +443,7 @@ export async function prepareImages(items, { staticDir, rootDir, outDir, prevDir
       // 缺图时用该资源所属分类的占位海报，一眼能看出是哪一类
       const ph = catPlaceholders.get(item.category) || placeholder;
       const og = sharp
-        ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: null, faviconPath, outDir, prevDir, reused, siteDomain: ogDomain })
+        ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: null, faviconPath, outDir, prevDir, reused })
         : ph;
       map.set(item.id, { detail: ph, card: ph, thumb: ph, og });
       missing++;
@@ -460,7 +453,7 @@ export async function prepareImages(items, { staticDir, rootDir, outDir, prevDir
     const { cardExt, thumbExt } = await renderVariants(sharp, src, destBase, { outDir, prevDir, reused });
     const card = `/img/${encodeURIComponent(item.id)}-${CARD.w}.${cardExt}`;
     const og = sharp
-      ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: src, faviconPath, outDir, prevDir, reused, siteDomain: ogDomain })
+      ? await writeOg(sharp, { id: item.id, category: item.category, srcPoster: src, faviconPath, outDir, prevDir, reused })
       : card;
     map.set(item.id, {
       detail: card,
