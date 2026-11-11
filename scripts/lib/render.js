@@ -1198,8 +1198,7 @@ export function tagPage(ctx) {
   const fill = (s) => String(s || '').replace(/\{count\}/g, count);
   const pageName = fill(meta?.title) || `${label}相关资源`;
 
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="/all/">全部资源</a><span>/</span><span>${esc(label)}</span></nav>
-<h1 class="page__title">${esc(fill(meta?.h1) || label)}<span class="page__n">${count} 个资源</span></h1>
+  const body = `<h1 class="page__title">${esc(fill(meta?.h1) || label)}<span class="page__n">${count} 个资源</span></h1>
 <ul class="grid">
 ${items.map((it, i) => cardHtml(it, images, false, i < 5)).join('\n')}
 </ul>
@@ -1228,14 +1227,6 @@ ${tagCloudHtml(tags, key)}`;
           name: `${pageName} - ${site.title}`,
           items,
         }),
-        {
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            { '@type': 'ListItem', position: 1, name: site.title, item: `${baseUrl}/` },
-            { '@type': 'ListItem', position: 2, name: '全部资源', item: `${baseUrl}/all/` },
-            { '@type': 'ListItem', position: 3, name: label },
-          ],
-        },
       ],
     },
   });
@@ -1338,8 +1329,7 @@ ${cats ? `    <span class="tagcard__cats">${cats}</span>\n` : ''}  </a></li>`;
     })
     .join('\n');
 
-  const body = `<nav class="crumb"><a href="/">首页</a><span>/</span><a href="/all/">全部资源</a><span>/</span><span>标签索引</span></nav>
-<h1 class="page__title page__title--doc">标签索引<span class="page__n">${tags.length} 个标签</span></h1>
+  const body = `<h1 class="page__title page__title--doc">标签索引<span class="page__n">${tags.length} 个标签</span></h1>
 <div class="card-page">
   <p>本站按题材、平台、工具类型给资源打标签，共 <strong>${tags.length}</strong> 个标签，覆盖 ${total} 个资源。
   标签比分类更细：想找「科幻」电影或者「Mac」软件，直接点下面的标签，比在分类里翻快得多。</p>
@@ -1380,14 +1370,6 @@ ${cards}
               url: `${baseUrl}${tagHref(t.label)}`,
             })),
           },
-        },
-        {
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            { '@type': 'ListItem', position: 1, name: site.title, item: `${baseUrl}/` },
-            { '@type': 'ListItem', position: 2, name: '全部资源', item: `${baseUrl}/all/` },
-            { '@type': 'ListItem', position: 3, name: '标签索引' },
-          ],
         },
       ],
     },
