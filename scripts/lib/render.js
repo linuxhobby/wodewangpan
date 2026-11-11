@@ -116,6 +116,17 @@ const QQ_KEY = /^(qq|qq群|qq group)$/;
 const HTTP_RE = /^https?:/;
 const PATH_RE = /^\//;
 
+/** 顶栏 Telegram 群入口：开关、文案、链接都在 site.yaml 的 telegram 段；没配或链接不是 http(s) 就不渲染 */
+function topTgLink(cfg) {
+  const url = cfg && cfg.enabled !== false ? String(cfg.url || '').trim() : '';
+  if (!HTTP_RE.test(url)) return '';
+  const text = String(cfg.text || 'TG 群').trim();
+  const title = String(cfg.title || '').trim();
+  return `<a class="top__tg" href="${esc(url)}" target="_blank" rel="noopener noreferrer nofollow"${
+    title ? ` title="${esc(title)}"` : ''
+  }>${esc(text)}</a>`;
+}
+
 /** 在 site.contact 里按 key 取第一个非空值；accept 可再加一道值校验（如必须是链接） */
 function contactValue(contact, keyRe, accept = () => true) {
   if (!contact || typeof contact !== 'object') return '';
@@ -381,6 +392,7 @@ ${jsonLd ? jsonLdBlock(jsonLd) : ''}
     <form class="top__search" role="search" onsubmit="return false">
       <input id="q" type="search" placeholder="搜索资源…" autocomplete="off" aria-label="搜索资源">
     </form>
+    ${topTgLink(site.telegram)}
   </div>
 </header>
 ${catNav(categories, counts, activeCat, total, hotOn)}

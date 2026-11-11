@@ -138,6 +138,9 @@ body.page--wide { --page-max: var(--page-wide); }
   outline: none;
 }
 .top__search input:focus { border-color: var(--brand); background: var(--surface); }
+/* 顶栏 TG 群入口：不参与收缩，空间不够时由 flex:1 的搜索框让位，窄屏也不会挤掉站名 */
+.top__tg { flex: 0 0 auto; font-size: var(--fs-sm); font-weight: 600; color: var(--brand); text-decoration: none; white-space: nowrap; }
+.top__tg:hover { text-decoration: underline; }
 
 /* ── 标题栏公告链接 ──────────────────
    与「热榜 TOP 30」同组跟在 H1 标题之后；窄屏随 .page__aside 一起换行，
