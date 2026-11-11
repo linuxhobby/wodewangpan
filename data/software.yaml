@@ -1,6 +1,6 @@
 # 软件资源（131 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
 - id: app-001
-  title: "Parallels Desktop 18"
+  title: "Parallels Desktop 18 - macOS 虚拟机软件"
   category: 软件
   tags: ["软件", "虚拟机", "macOS", "Parallels Desktop 18"]
   quark_url: "https://pan.quark.cn/s/e9d2e5ed8ccc"
@@ -10,7 +10,7 @@
   image: app-001.jpg
 
 - id: app-002
-  title: "Parallels Desktop 19"
+  title: "Parallels Desktop 19 - 适配 Apple 芯片的虚拟机"
   category: 软件
   tags: ["软件", "虚拟机", "macOS", "Parallels Desktop 19"]
   quark_url: "https://pan.quark.cn/s/2c1e8d006a03"
@@ -20,7 +20,7 @@
   image: app-002.jpg
 
 - id: app-003
-  title: "Raycast - macOS排第二好用的软件"
+  title: "Raycast - macOS 启动器与效率工具"
   category: 软件
   tags: ["软件", "启动器", "效率工具", "macOS", "Raycast"]
   quark_url: "https://pan.quark.cn/s/75eb7fb3f303"
@@ -30,7 +30,7 @@
   image: app-003.jpg
 
 - id: app-004
-  title: "Alfred - macOS排第一好用的软件"
+  title: "Alfred - macOS 启动器与工作流工具"
   category: 软件
   tags: ["软件", "启动器", "效率工具", "macOS", "Alfred"]
   quark_url: "https://pan.quark.cn/s/f206383617c1"
@@ -40,7 +40,7 @@
   image: app-004.jpg
 
 - id: app-005
-  title: "AdGuard - 全平台广告过滤器"
+  title: "AdGuard - 系统级广告与跟踪拦截"
   category: 软件
   tags: ["软件", "广告拦截", "隐私保护", "macOS", "Windows", "AdGuard"]
   quark_url: "https://pan.quark.cn/s/166c0e8f2f68"
@@ -83,7 +83,7 @@
 
 
 - id: app-009
-  title: "Obsidian - 最好用的知识管理-笔记软件"
+  title: "Obsidian - 本地 Markdown 双链笔记"
   category: 软件
   tags: ["软件", "笔记", "知识管理", "Markdown", "Obsidian"]
   quark_url: "https://pan.quark.cn/s/bf87d215f3a7"
@@ -94,7 +94,7 @@
 
 
 - id: app-010
-  title: "OpenShot - 免费但是很专业的剪辑软件"
+  title: "OpenShot - 跨平台开源视频剪辑"
   category: 软件
   tags: ["软件", "macOS", "OpenShot"]
   quark_url: "https://pan.quark.cn/s/2a7a6ceaf2e0"
@@ -105,7 +105,7 @@
 
 
 - id: app-011
-  title: "Zettlr - 写论文必备"
+  title: "Zettlr - 学术写作 Markdown 编辑器"
   category: 软件
   tags: ["软件", "macOS", "Zettlr"]
   quark_url: "https://pan.quark.cn/s/13f0687c73ca"
@@ -116,7 +116,7 @@
 
 
 - id: app-012
-  title: "Zed"
+  title: "Zed - Rust 编写的高速代码编辑器"
   category: 软件
   tags: ["软件", "macOS", "Zed"]
   quark_url: "https://pan.quark.cn/s/8d336b50ada9"
@@ -127,7 +127,7 @@
 
 
 - id: app-013
-  title: "WWDCScholars"
+  title: "WWDCScholars - WWDC 获奖者作品社区"
   category: 软件
   tags: ["软件", "社交", "macOS", "WWDCScholars"]
   quark_url: "https://pan.quark.cn/s/0a433df1a8fc"
@@ -138,7 +138,7 @@
 
 
 - id: app-014
-  title: "ueli - 跨平台的键盘启动器"
+  title: "ueli - 跨平台键盘启动器"
   category: 软件
   tags: ["软件", "macOS", "ueli"]
   quark_url: "https://pan.quark.cn/s/9bf8e4b94001"
@@ -149,7 +149,7 @@
 
 
 - id: app-015
-  title: "WezTerm"
+  title: "WezTerm - GPU 加速的多路复用终端"
   category: 软件
   tags: ["软件", "macOS", "WezTerm"]
   quark_url: "https://pan.quark.cn/s/1d1d8d89b810"
@@ -160,7 +160,7 @@
 
 
 - id: app-016
-  title: "Transmission Hub"
+  title: "Transmission Hub - macOS 下载任务管理器"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Transmission Hub"]
   quark_url: "https://pan.quark.cn/s/90171efe5108"
@@ -182,7 +182,7 @@
 
 
 - id: app-018
-  title: "Tiny Wi-Fi Analyzer"
+  title: "Tiny Wi-Fi Analyzer - macOS 无线信道分析"
   category: 软件
   tags: ["软件", "macOS", "Tiny Wi-Fi Analyzer"]
   quark_url: "https://pan.quark.cn/s/81797bc93355"
@@ -193,7 +193,7 @@
 
 
 - id: app-019
-  title: "Pritunl"
+  title: "Pritunl - 团队 VPN 的 macOS 客户端"
   category: 软件
   tags: ["软件", "macOS", "Pritunl"]
   quark_url: "https://pan.quark.cn/s/6244279c21ad"
@@ -204,7 +204,7 @@
 
 
 - id: app-020
-  title: "Selectedvendors"
+  title: "Selectedvendors - 经销渠道采购下单工具"
   category: 软件
   tags: ["软件", "购物", "macOS", "Selectedvendors"]
   quark_url: "https://pan.quark.cn/s/fbf3316effc3"
@@ -215,7 +215,7 @@
 
 
 - id: app-021
-  title: "Marker Data"
+  title: "Marker Data - FCPXML 标记数据导出"
   category: 软件
   tags: ["软件", "macOS", "Marker Data"]
   quark_url: "https://pan.quark.cn/s/196a9f4d8870"
@@ -226,7 +226,7 @@
 
 
 - id: app-022
-  title: "PearCleaner"
+  title: "PearCleaner - macOS 应用卸载清理"
   category: 软件
   tags: ["软件", "macOS", "PearCleaner"]
   quark_url: "https://pan.quark.cn/s/a683246591b5"
@@ -237,7 +237,7 @@
 
 
 - id: app-023
-  title: "LeafView"
+  title: "LeafView - 极简 macOS 图片查看器"
   category: 软件
   tags: ["软件", "macOS", "LeafView"]
   quark_url: "https://pan.quark.cn/s/32603f93f857"
@@ -248,7 +248,7 @@
 
 
 - id: app-024
-  title: "OpenEmu"
+  title: "OpenEmu - macOS 多主机模拟器前端"
   category: 软件
   tags: ["软件", "macOS", "OpenEmu"]
   quark_url: "https://pan.quark.cn/s/daa09128237e"
@@ -259,7 +259,7 @@
 
 
 - id: app-025
-  title: "Only Switch"
+  title: "Only Switch - 菜单栏系统开关集合"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Only Switch"]
   quark_url: "https://pan.quark.cn/s/a3a42a3d2081"
@@ -281,7 +281,7 @@
 
 
 - id: app-027
-  title: "MonitorControl Lite"
+  title: "MonitorControl Lite - 外接显示器亮度调节"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "MonitorControl Lite"]
   quark_url: "https://pan.quark.cn/s/92831965704d"
@@ -292,7 +292,7 @@
 
 
 - id: app-028
-  title: "MeetingBar"
+  title: "MeetingBar - 菜单栏会议日程提醒"
   category: 软件
   tags: ["软件", "效率", "macOS", "MeetingBar"]
   quark_url: "https://pan.quark.cn/s/391aadfc4405"
@@ -314,7 +314,7 @@
 
 
 - id: app-030
-  title: "System Color Picker"
+  title: "System Color Picker - 系统取色器快捷调用"
   category: 软件
   tags: ["软件", "开发工具", "macOS", "System Color Picker"]
   quark_url: "https://pan.quark.cn/s/10a30ed0fd8d"
@@ -325,7 +325,7 @@
 
 
 - id: app-032
-  title: "UnnaturalScrollWheels"
+  title: "UnnaturalScrollWheels - 鼠标滚轮方向独立反转"
   category: 软件
   tags: ["软件", "macOS", "UnnaturalScrollWheels"]
   quark_url: "https://pan.quark.cn/s/5ccf926dff51"
@@ -336,7 +336,7 @@
 
 
 - id: app-033
-  title: "SwiftShift Job Compare"
+  title: "SwiftShift Job Compare - 工作 offer 对比计算"
   category: 软件
   tags: ["软件", "商务", "macOS", "SwiftShift Job Compare"]
   quark_url: "https://pan.quark.cn/s/d24fe4ee73d7"
@@ -347,7 +347,7 @@
 
 
 - id: app-035
-  title: "Tomato Bar"
+  title: "Tomato Bar - 菜单栏番茄钟"
   category: 软件
   tags: ["软件", "美食佳饮", "macOS", "Tomato Bar"]
   quark_url: "https://pan.quark.cn/s/d743608560e7"
@@ -358,7 +358,7 @@
 
 
 - id: app-036
-  title: "Tauview"
+  title: "Tauview - 轻量图片查看器"
   category: 软件
   tags: ["软件", "macOS", "Tauview"]
   quark_url: "https://pan.quark.cn/s/59654547d72d"
@@ -369,7 +369,7 @@
 
 
 - id: app-037
-  title: "Swift Bar"
+  title: "Swift Bar - 脚本驱动的菜单栏工具"
   category: 软件
   tags: ["软件", "macOS", "Swift Bar"]
   quark_url: "https://pan.quark.cn/s/7fbdc7f5420a"
@@ -380,7 +380,7 @@
 
 
 - id: app-038
-  title: "Pika"
+  title: "Pika - 屏幕取色与格式转换"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Pika"]
   quark_url: "https://pan.quark.cn/s/71a79e30adf1"
@@ -391,7 +391,7 @@
 
 
 - id: app-039
-  title: "SwiftQuit"
+  title: "SwiftQuit - 关窗自动退出应用"
   category: 软件
   tags: ["软件", "macOS", "SwiftQuit"]
   quark_url: "https://pan.quark.cn/s/82cf9ec8f993"
@@ -402,7 +402,7 @@
 
 
 - id: app-040
-  title: "Reminders"
+  title: "Reminders - 时间地点双模提醒工具"
   category: 软件
   tags: ["软件", "效率", "macOS", "Reminders"]
   quark_url: "https://pan.quark.cn/s/44420c3c3961"
@@ -424,7 +424,7 @@
 
 
 - id: app-042
-  title: "SlowQuitApps"
+  title: "SlowQuitApps - 防误按退出键延迟"
   category: 软件
   tags: ["软件", "macOS", "SlowQuitApps"]
   quark_url: "https://pan.quark.cn/s/4b6fa3e9b9aa"
@@ -435,7 +435,7 @@
 
 
 - id: app-043
-  title: "Plash"
+  title: "Plash - 网页动态桌面壁纸"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Plash"]
   quark_url: "https://pan.quark.cn/s/d92462a5b9b2"
@@ -457,7 +457,7 @@
 
 
 - id: app-045
-  title: "LinearMouse"
+  title: "LinearMouse - 鼠标滚轮与按键自定义"
   category: 软件
   tags: ["软件", "macOS", "LinearMouse"]
   quark_url: "https://pan.quark.cn/s/c8b45ad05fdd"
@@ -468,7 +468,7 @@
 
 
 - id: app-046
-  title: "Macdown"
+  title: "Macdown - 开源 Markdown 编辑器"
   category: 软件
   tags: ["软件", "macOS", "Macdown"]
   quark_url: "https://pan.quark.cn/s/ddfafe83d514"
@@ -479,7 +479,7 @@
 
 
 - id: app-047
-  title: "ScriptManager"
+  title: "ScriptManager - 运维脚本管理执行器"
   category: 软件
   tags: ["软件", "macOS", "ScriptManager"]
   quark_url: "https://pan.quark.cn/s/10fe4b271739"
@@ -490,7 +490,7 @@
 
 
 - id: app-048
-  title: "XME LOOPS"
+  title: "XME LOOPS - 演出 Loop 音源管理"
   category: 软件
   tags: ["软件", "音乐", "macOS", "XME LOOPS"]
   quark_url: "https://pan.quark.cn/s/806595433da3"
@@ -512,7 +512,7 @@
 
 
 - id: app-050
-  title: "Braver Search"
+  title: "Braver Search - Safari 隐私搜索重定向"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Braver Search"]
   quark_url: "https://pan.quark.cn/s/6a616f2c31be"
@@ -534,7 +534,7 @@
 
 
 - id: app-052
-  title: "Pine Player"
+  title: "Pine Player - 高解析度媒体播放器"
   category: 软件
   tags: ["软件", "音乐", "macOS", "Pine Player"]
   quark_url: "https://pan.quark.cn/s/b450339128ee"
@@ -545,7 +545,7 @@
 
 
 - id: app-054
-  title: "MarkEdit"
+  title: "MarkEdit - 轻量 Markdown 编辑器"
   category: 软件
   tags: ["软件", "macOS", "MarkEdit"]
   quark_url: "https://pan.quark.cn/s/0ecfeacbd2c0"
@@ -556,7 +556,7 @@
 
 
 - id: app-055
-  title: "MacSymbolicator"
+  title: "MacSymbolicator - 崩溃日志符号化工具"
   category: 软件
   tags: ["软件", "macOS", "MacSymbolicator"]
   quark_url: "https://pan.quark.cn/s/82e09197ea44"
@@ -567,7 +567,7 @@
 
 
 - id: app-056
-  title: "Image optimizer Compression"
+  title: "Image optimizer Compression - 图片无损压缩与格式转换"
   category: 软件
   tags: ["软件", "图形与设计", "macOS", "Image optimizer Compression"]
   quark_url: "https://pan.quark.cn/s/f52055dd0c71"
@@ -589,7 +589,7 @@
 
 
 - id: app-059
-  title: "Keyboard Cowboy"
+  title: "Keyboard Cowboy - 系统快捷键与自动化"
   category: 软件
   tags: ["软件", "macOS", "Keyboard Cowboy"]
   quark_url: "https://pan.quark.cn/s/e91ea3b2841a"
@@ -600,7 +600,7 @@
 
 
 - id: app-060
-  title: "Maccy"
+  title: "Maccy - 轻量剪贴板历史管理"
   category: 软件
   tags: ["软件", "效率", "macOS", "Maccy"]
   quark_url: "https://pan.quark.cn/s/38c43e66883d"
@@ -611,7 +611,7 @@
 
 
 - id: app-061
-  title: "MiniSim"
+  title: "MiniSim - 移动端模拟器快捷启动"
   category: 软件
   tags: ["软件", "macOS", "MiniSim"]
   quark_url: "https://pan.quark.cn/s/d52d91b9730f"
@@ -622,7 +622,7 @@
 
 
 - id: app-062
-  title: "Karabiner-Elements"
+  title: "Karabiner-Elements - macOS 键盘改键工具"
   category: 软件
   tags: ["软件", "macOS", "Karabiner-Elements"]
   quark_url: "https://pan.quark.cn/s/4dca82c98051"
@@ -633,7 +633,7 @@
 
 
 - id: app-063
-  title: "iTerm2 Buddy"
+  title: "iTerm2 Buddy - iPhone 远程查看终端"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "iTerm2 Buddy"]
   quark_url: "https://pan.quark.cn/s/243cd6a063bd"
@@ -644,7 +644,7 @@
 
 
 - id: app-064
-  title: "Keka"
+  title: "Keka - macOS 压缩解压工具"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Keka"]
   quark_url: "https://pan.quark.cn/s/41bea86fb87a"
@@ -655,7 +655,7 @@
 
 
 - id: app-065
-  title: "MacBox"
+  title: "MacBox - 老式 PC 模拟器前端"
   category: 软件
   tags: ["软件", "macOS", "MacBox"]
   quark_url: "https://pan.quark.cn/s/77d078b85a67"
@@ -666,7 +666,7 @@
 
 
 - id: app-066
-  title: "Mac Mouse Fix"
+  title: "Mac Mouse Fix - 第三方鼠标滚动优化"
   category: 软件
   tags: ["软件", "macOS", "Mac Mouse Fix"]
   quark_url: "https://pan.quark.cn/s/01bcfdfbdac8"
@@ -677,7 +677,7 @@
 
 
 - id: app-067
-  title: "KeePassXC"
+  title: "KeePassXC - 本地加密密码管理"
   category: 软件
   tags: ["软件", "macOS", "KeePassXC"]
   quark_url: "https://pan.quark.cn/s/1d188dd46a9c"
@@ -688,7 +688,7 @@
 
 
 - id: app-068
-  title: "Itsycal"
+  title: "Itsycal - 菜单栏小月历"
   category: 软件
   tags: ["软件", "macOS", "Itsycal"]
   quark_url: "https://pan.quark.cn/s/af01f6acf4c3"
@@ -710,7 +710,7 @@
 
 
 - id: app-070
-  title: "Kap"
+  title: "Kap - 屏幕录制导出动图"
   category: 软件
   tags: ["软件", "macOS", "Kap"]
   quark_url: "https://pan.quark.cn/s/a8071c3ed1c9"
@@ -721,7 +721,7 @@
 
 
 - id: app-071
-  title: "Jan"
+  title: "Jan - 本地运行大模型客户端"
   category: 软件
   tags: ["软件", "macOS", "Jan"]
   quark_url: "https://pan.quark.cn/s/eb72d9555f21"
@@ -732,7 +732,7 @@
 
 
 - id: app-072
-  title: "KeyCastr"
+  title: "KeyCastr - 录屏按键可视化"
   category: 软件
   tags: ["软件", "macOS", "KeyCastr"]
   quark_url: "https://pan.quark.cn/s/20cbbc7b2d01"
@@ -754,7 +754,7 @@
 
 
 - id: app-075
-  title: "IINA"
+  title: "IINA - 基于 mpv 的 macOS 播放器"
   category: 软件
   tags: ["软件", "macOS", "IINA"]
   quark_url: "https://pan.quark.cn/s/a3710e68737c"
@@ -765,7 +765,7 @@
 
 
 - id: app-076
-  title: "HostsX"
+  title: "HostsX - hosts 配置分组管理"
   category: 软件
   tags: ["软件", "macOS", "HostsX"]
   quark_url: "https://pan.quark.cn/s/6390303c2481"
@@ -787,7 +787,7 @@
 
 
 - id: app-078
-  title: "Ice"
+  title: "Ice - macOS 菜单栏图标管理"
   category: 软件
   tags: ["软件", "macOS", "Ice"]
   quark_url: "https://pan.quark.cn/s/2f056d98424a"
@@ -798,7 +798,7 @@
 
 
 - id: app-079
-  title: "Hoppscotch"
+  title: "Hoppscotch - 轻量 API 调试客户端"
   category: 软件
   tags: ["软件", "macOS", "Hoppscotch"]
   quark_url: "https://pan.quark.cn/s/dca4ff659b8b"
@@ -809,7 +809,7 @@
 
 
 - id: app-080
-  title: "Hello HTTP"
+  title: "Hello HTTP - 本地优先 HTTP 调试工具"
   category: 软件
   tags: ["软件", "macOS", "Hello HTTP"]
   quark_url: "https://pan.quark.cn/s/b42906c5e1ea"
@@ -842,7 +842,7 @@
 
 
 - id: app-083
-  title: "Freeter"
+  title: "Freeter - 项目工作区一键启动"
   category: 软件
   tags: ["软件", "macOS", "Freeter"]
   quark_url: "https://pan.quark.cn/s/76c09b69fe0f"
@@ -853,7 +853,7 @@
 
 
 - id: app-084
-  title: "Hammerspoon"
+  title: "Hammerspoon - Lua 桌面自动化框架"
   category: 软件
   tags: ["软件", "macOS", "Hammerspoon"]
   quark_url: "https://pan.quark.cn/s/84306791d1f7"
@@ -864,7 +864,7 @@
 
 
 - id: app-085
-  title: "Flameshot"
+  title: "Flameshot - 截图即时标注工具"
   category: 软件
   tags: ["软件", "macOS", "Flameshot"]
   quark_url: "https://pan.quark.cn/s/065d3a45378e"
@@ -875,7 +875,7 @@
 
 
 - id: app-086
-  title: "Espanso"
+  title: "Espanso - 跨平台文本扩展器"
   category: 软件
   tags: ["软件", "macOS", "Espanso"]
   quark_url: "https://pan.quark.cn/s/3d97ce0d7e0b"
@@ -886,7 +886,7 @@
 
 
 - id: app-087
-  title: "Bitwarden"
+  title: "Bitwarden - 开源跨平台密码管理"
   category: 软件
   tags: ["软件", "效率", "macOS", "Bitwarden"]
   quark_url: "https://pan.quark.cn/s/a0e3d15b21b0"
@@ -897,7 +897,7 @@
 
 
 - id: app-088
-  title: "Elephicon"
+  title: "Elephicon - 应用图标格式批量生成"
   category: 软件
   tags: ["软件", "macOS", "Elephicon"]
   quark_url: "https://pan.quark.cn/s/e2efab4229ac"
@@ -908,7 +908,7 @@
 
 
 - id: app-089
-  title: "Diffusion Bee"
+  title: "Diffusion Bee - 本地 AI 绘画客户端"
   category: 软件
   tags: ["软件", "macOS", "Diffusion Bee"]
   quark_url: "https://pan.quark.cn/s/423f58cbab17"
@@ -919,7 +919,7 @@
 
 
 - id: app-090
-  title: "DevToysMac"
+  title: "DevToysMac - 开发者零碎工具集合"
   category: 软件
   tags: ["软件", "macOS", "DevToysMac"]
   quark_url: "https://pan.quark.cn/s/77a864666aec"
@@ -930,7 +930,7 @@
 
 
 - id: app-091
-  title: "Cyberduck"
+  title: "Cyberduck - FTP 与云存储文件浏览器"
   category: 软件
   tags: ["软件", "效率", "macOS", "Cyberduck"]
   quark_url: "https://pan.quark.cn/s/c3920e5b5e64"
@@ -941,7 +941,7 @@
 
 
 - id: app-092
-  title: "CotEditor"
+  title: "CotEditor - 轻量纯文本编辑器"
   category: 软件
   tags: ["软件", "效率", "macOS", "CotEditor"]
   quark_url: "https://pan.quark.cn/s/d67d7b90f4bf"
@@ -952,7 +952,7 @@
 
 
 - id: app-093
-  title: "Koder Code Editor"
+  title: "Koder Code Editor - iOS 代码编辑器"
   category: 软件
   tags: ["软件", "开发工具", "macOS", "Koder Code Editor"]
   quark_url: "https://pan.quark.cn/s/f4104ea610ec"
@@ -963,7 +963,7 @@
 
 
 - id: app-094
-  title: "Clop"
+  title: "Clop - 法国烟草店位置查询"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Clop"]
   quark_url: "https://pan.quark.cn/s/8ff8e54ce269"
@@ -974,7 +974,7 @@
 
 
 - id: app-095
-  title: "Bruno Reels Casino"
+  title: "Bruno Reels Casino - 老虎机休闲游戏"
   category: 软件
   tags: ["软件", "游戏", "macOS", "Bruno Reels Casino"]
   quark_url: "https://pan.quark.cn/s/906631a0f47a"
@@ -985,7 +985,7 @@
 
 
 - id: app-096
-  title: "Browserosaurus"
+  title: "Browserosaurus - 链接打开浏览器选择器"
   category: 软件
   tags: ["软件", "macOS", "Browserosaurus"]
   quark_url: "https://pan.quark.cn/s/6fe751342a77"
@@ -996,7 +996,7 @@
 
 
 - id: app-097
-  title: "Brooklyn Nets"
+  title: "Brooklyn Nets - 篮网官方赛事应用"
   category: 软件
   tags: ["软件", "体育", "macOS", "Brooklyn Nets"]
   quark_url: "https://pan.quark.cn/s/cb6a84e4391d"
@@ -1018,7 +1018,7 @@
 
 
 - id: app-099
-  title: "Hidden Bar"
+  title: "Hidden Bar - 菜单栏图标隐藏收纳"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Hidden Bar"]
   quark_url: "https://pan.quark.cn/s/66c23a8c264c"
@@ -1029,7 +1029,7 @@
 
 
 - id: app-101
-  title: "Calendr"
+  title: "Calendr - 菜单栏日历与日程"
   category: 软件
   tags: ["软件", "macOS", "Calendr"]
   quark_url: "https://pan.quark.cn/s/d288f8bedd86"
@@ -1040,7 +1040,7 @@
 
 
 - id: app-102
-  title: "Barton & Gray Clubhouse"
+  title: "Barton & Gray Clubhouse - 游艇俱乐部会员应用"
   category: 软件
   tags: ["软件", "生活", "macOS", "Barton & Gray Clubhouse"]
   quark_url: "https://pan.quark.cn/s/9f2b6b82c58e"
@@ -1051,7 +1051,7 @@
 
 
 - id: app-103
-  title: "Free Ruler"
+  title: "Free Ruler - 屏幕像素标尺"
   category: 软件
   tags: ["软件", "开发工具", "macOS", "Free Ruler"]
   quark_url: "https://pan.quark.cn/s/f12c1dab66ae"
@@ -1073,7 +1073,7 @@
 
 
 - id: app-107
-  title: "CalendarX"
+  title: "CalendarX - 菜单栏月历小工具"
   category: 软件
   tags: ["软件", "macOS", "CalendarX"]
   quark_url: "https://pan.quark.cn/s/8456b9dde9d0"
@@ -1084,7 +1084,7 @@
 
 
 - id: app-110
-  title: "BatteryBoi"
+  title: "BatteryBoi - 电池健康与充电提醒"
   category: 软件
   tags: ["软件", "macOS", "BatteryBoi"]
   quark_url: "https://pan.quark.cn/s/bacfe01bce7e"
@@ -1106,7 +1106,7 @@
 
 
 - id: app-113
-  title: "Aural Wiz"
+  title: "Aural Wiz - 视唱练耳训练工具"
   category: 软件
   tags: ["软件", "音乐", "macOS", "Aural Wiz"]
   quark_url: "https://pan.quark.cn/s/258ef88041dc"
@@ -1117,7 +1117,7 @@
 
 
 - id: app-115
-  title: "AnyBar"
+  title: "AnyBar - 菜单栏状态指示点"
   category: 软件
   tags: ["软件", "macOS", "AnyBar"]
   quark_url: "https://pan.quark.cn/s/96cf6cfd934d"
@@ -1128,7 +1128,7 @@
 
 
 - id: app-117
-  title: "AltTab Switcher"
+  title: "AltTab Switcher - Windows 式窗口切换"
   category: 软件
   tags: ["软件", "效率", "macOS", "AltTab Switcher"]
   quark_url: "https://pan.quark.cn/s/bca9d78027ff"
@@ -1139,7 +1139,7 @@
 
 
 - id: app-118
-  title: "Aerial Landscapes Wallpaper"
+  title: "Aerial Landscapes Wallpaper - 航拍动态壁纸"
   category: 软件
   tags: ["软件", "实用工具", "macOS", "Aerial Landscapes Wallpaper"]
   quark_url: "https://pan.quark.cn/s/f171ae2a4367"
@@ -1150,7 +1150,7 @@
 
 
 - id: app-119
-  title: "Alacritty"
+  title: "Alacritty - GPU 加速的极简终端"
   category: 软件
   tags: ["软件", "macOS", "Alacritty"]
   quark_url: "https://pan.quark.cn/s/202d4b413cc5"
@@ -1161,7 +1161,7 @@
 
 
 - id: app-120
-  title: "OBS Studio"
+  title: "OBS Studio - 开源直播录屏推流"
   category: 软件
   tags: ["软件", "直播", "录屏", "视频", "macOS", "Windows", "OBS Studio"]
   quark_url: "https://pan.quark.cn/s/9201298c4375"
@@ -1172,7 +1172,7 @@
 
 
 - id: app-121
-  title: "PortableApps.com Platform"
+  title: "PortableApps.com Platform - 便携软件启动器"
   category: 软件
   tags: ["软件", "便携软件", "启动器", "效率工具", "Windows", "PortableApps"]
   quark_url: "https://pan.quark.cn/s/7b841b75f613"
@@ -1205,7 +1205,7 @@
 
 
 - id: app-125
-  title: "RevPDF - Adobe最好的免费替代品"
+  title: "RevPDF - 离线本地 PDF 编辑器"
   category: 软件
   tags: ["软件", "PDF", "编辑器", "办公工具", "Windows", "macOS", "RevPDF"]
   quark_url: "https://pan.quark.cn/s/1d7b4e6435e6"
@@ -1215,7 +1215,7 @@
   image: app-125.jpg
 
 - id: app-126
-  title: "百度网盘"
+  title: "百度网盘 - 云存储与文件同步客户端"
   category: 软件
   tags: ["软件", "网盘", "云存储", "macOS", "百度网盘"]
   quark_url: "https://pan.quark.cn/s/697855b1cf6b"
@@ -1225,7 +1225,7 @@
   image: app-126.jpg
 
 - id: app-127
-  title: "TikTok 国际版"
+  title: "TikTok 国际版 - 海外短视频社区客户端"
   category: 软件
   tags: ["软件", "短视频", "社交", "安卓", "iOS", "TikTok"]
   quark_url: "https://pan.quark.cn/s/c070e950373d"
@@ -1245,7 +1245,7 @@
   image: app-128.jpg
 
 - id: app-129
-  title: "夸克网盘"
+  title: "夸克网盘 - 多端云存储与文件备份"
   category: 软件
   tags: ["软件", "网盘", "云存储", "Windows", "macOS", "TV", "夸克网盘 Quark CloudDrive"]
   quark_url: "https://pan.quark.cn/s/24bc15b80f81"
@@ -1255,7 +1255,7 @@
   image: app-129.jpg
 
 - id: app-031
-  title: "Tailscale-最便捷的网络打洞工具"
+  title: "Tailscale - WireGuard 零配置组网"
   category: "软件"
   tags: [软件, 网络工具, VPN, Tailscale]
   quark_url: "https://pan.quark.cn/s/2bf8da65d73d"
@@ -1497,7 +1497,7 @@
       trendFinder-v1.0.6-mac-arm64.tar.gz.crdownload
 
 - id: app-057
-  title: "NapCat"
+  title: "NapCat - 无头 QQ 机器人框架"
   category: 软件
   tags: ["软件", "QQ机器人", "聊天机器人", "开源工具", "NapCat"]
   quark_url: "https://pan.quark.cn/s/a17694ba1b5a"
