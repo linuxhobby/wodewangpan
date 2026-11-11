@@ -51,12 +51,6 @@ slugs:
 # 页脚访问统计：local = 本地统计（VPS 解析 nginx 日志生成 /stats.json，不依赖第三方）；
 #              留空则不显示
 stats: local
-# 顶栏 Telegram 群入口：全站每页顶部都出现；enabled: false 可一键关闭
-telegram:
-  enabled: true
-  url: https://t.me/wodewangpantop
-  text: TG 群
-  title: 加入 Telegram 群，群里有资源查询机器人
 # 页脚联系方式（可选，留空整段则不显示）：页面上只显示图标，地址写进 title / aria-label 不直接露出
 contact:
   QQ群: https://qm.qq.com/q/UkO8hrPaQ

@@ -294,8 +294,6 @@ export function loadSite(configDir) {
     promo: cfg.promo && typeof cfg.promo === 'object' ? cfg.promo : null,
     // 顶部公告条：enabled 为 false 时渲染层不输出，文案/链接由 site.yaml 维护
     notice: cfg.notice && typeof cfg.notice === 'object' ? cfg.notice : null,
-    // 顶栏 Telegram 群入口：enabled 为 false 或没配 http(s) 链接时渲染层不输出
-    telegram: cfg.telegram && typeof cfg.telegram === 'object' ? cfg.telegram : null,
   };
 }
 
