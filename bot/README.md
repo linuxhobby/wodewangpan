@@ -407,7 +407,7 @@ NapCat 依赖它自己那份 QQ 客户端，QQ 一退出就掉。检查那份 QQ
 修法是把 BOM 去掉（存成无 BOM 的 UTF-8）。用 PowerShell 的 `Out-File`、部分编辑器「另存为 UTF-8」都会加 BOM，改完务必确认前三个字节不是 `EF BB BF`。当前 token 是 `wodewangpan2026`。
 
 **每次启动都要扫码**
-`NapCatWinBootMain.exe` 支持带账号参数走快速登录：`NapCatWinBootMain.exe 909008620`。三个 vbs 里的 `QQUIN` 常量就是干这个的，改账号只改那一行。前提是那份 QQ 数据目录里还留着登录凭证（`Documents\Tencent Files\<QQ号>` 没被清）。走二维码登录时启动日志会有「没有 -q 指令指定快速登录」这句。
+NapCat 现用 **Shell v4 独立版**（`C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4`，NapCat 4.18.42，2026-11-11 起替代旧 OneKey 包：旧版取码域名 `ssl.qq.com` 被腾讯停用导致无法登录）。`napcat.bat -q 909008620` 走快速登录；登录态失效时控制台直接画二维码，同时存到 `napcat\cache\qrcode.png`。OneBot 网络配置在 `NapCat.Shell.v4\napcat\config\onebot11_<uin>.json`（HTTP 服务 :3000、上报 127.0.0.1:6700）。三个 vbs 里的 `QQUIN` 常量就是干这个的，改账号只改那一行。前提是那份 QQ 数据目录里还留着登录凭证（`Documents\Tencent Files\<QQ号>` 没被清）。走二维码登录时启动日志会有「没有 -q 指令指定快速登录」这句。
 
 **会不会封号**
 会，协议端是真实 QQ 号，高频发外链是主要风险。所以用小号、控频率、别在多个群同时炸。真被限制了换号即可，代码不用改。

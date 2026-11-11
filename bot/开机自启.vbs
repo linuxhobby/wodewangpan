@@ -9,9 +9,9 @@ Set ws = CreateObject("WScript.Shell")
 
 BOT_DIR = "C:\Users\marco\Github\wodewangpan\bot"
 PYW = "C:\Users\marco\AppData\Local\Programs\Python\Python312\pythonw.exe"
-NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell\NapCatWinBootMain.exe"
+NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4\napcat.bat"
 QQUIN = "909008620"
-NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell"
+NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4"
 LOG = BOT_DIR & "\logs\auto-start.log"
 
 If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
@@ -31,7 +31,7 @@ For Each p In list
   If InStr(1, p.Name & "", "python", 1) > 0 Then
     If (InStr(1, p.CommandLine & "", "bot.py", 1) > 0 And InStr(1, p.CommandLine & "", "telegram_bot.py", 1) = 0) Then running = True
   End If
-  If InStr(1, p.Name & "", "napcat", 1) > 0 Then napcat = True
+  If InStr(1, p.CommandLine & "", "NapCat", 1) > 0 Then napcat = True
   If LCase(p.Name & "") = "qq.exe" And InStr(1, p.CommandLine & "", "NapCat", 1) > 0 Then napcat = True
 Next
 
@@ -40,7 +40,7 @@ If napcat Then
   started = started & "NapCat 已在运行；"
 ElseIf fso.FileExists(NAPCAT_EXE) Then
   ws.CurrentDirectory = NAPCAT_DIR
-  ws.Run """" & NAPCAT_EXE & """ " & QQUIN, 0, False
+  ws.Run """" & NAPCAT_EXE & """ -q " & QQUIN, 0, False
   started = started & "已拉起 NapCat；"
   WScript.Sleep 3000
 Else

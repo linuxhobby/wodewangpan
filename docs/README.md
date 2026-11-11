@@ -227,7 +227,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 1. **HTTP 上报回 204 不能带响应体**。回 204 又写 `{}` 会让 Node 端按规范忽略这 2 字节、残留在 keep-alive 连接里，之后每个事件都报 `Parse Error: Expected HTTP/, RTSP/ or ICE/`；curl 却能容忍，本地测试全绿。正确做法是回 200 且 `Content-Length` 与响应体严格一致。
 2. **上报请求体可能是 chunked**。只读 `Content-Length` 会把请求体当 0 字节，事件被静默丢弃，表现为「NapCat 上报成功、机器人毫无反应」。两种传输都要支持。
-3. **改 `config/onebot11_<uin>.json` 不热加载**，必须重启 NapCat（杀 `NapCatWinBootMain` 与全部 `QQ` 进程后再启动）。
+3. **改 `config/onebot11_<uin>.json` 不热加载**，必须重启 NapCat（Shell v4 下杀命令行带 `NapCat.Shell.v4` 的 node 进程后再启动）。
 4. **重启后不会自动登录**。`config/webui.json` 的 `autoLoginAccount` 填小号 QQ 号（或用环境变量 `NAPCAT_QUICK_ACCOUNT`），启动即快速登录，不用重新扫码。
 5. **NapCat 4.18.42 有 bug**：注入成功但核心静默不启动，无端口无日志，报 `error code v2:-8`。**锁 4.18.41**，别升级。
 6. **不能拿机器人自己的号发指令**。号主自己发的消息是 self message，默认不上报，看起来就像「群里没反应」，其实是指令根本没送到。
@@ -311,7 +311,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 | 项 | 路径 |
 |---|---|
 | 仓库 | macOS `/Users/marco.chan/Documents/GitHub/wodewangpan`；Windows `C:\Users\marco\Github\wodewangpan` |
-| QQ 机器人代码 | 站内 `bot/`（原 `C:\Users\marco\Github\wodewangpan-bot` 已并入；NapCat 在 `C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell`） |
+| QQ 机器人代码 | 站内 `bot/`（原 `C:\Users\marco\Github\wodewangpan-bot` 已并入；NapCat 现为 Shell v4 独立版 `C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4`，2026-11-11 从旧 OneKey 包升级，旧包保留作回退） |
 | 远端 | `git@github.com:linuxhobby/wodewangpan.git` |
 | 线上 | https://www.wodewangpan.top |
 | 技能真身 | `~/.workbuddy/skills/`（`quark-resource-sync` v1.11 / `quarkclouddrive` / `quark-upload-share`）；`~/.codebuddy/skills/` 为符号链接 |

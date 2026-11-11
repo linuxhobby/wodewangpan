@@ -22,8 +22,8 @@ End If
 
 ' 写死解释器路径，避免 PATH 里有多份 Python 时起错、或者同时起两个
 PYW = "C:\Users\marco\AppData\Local\Programs\Python\Python312\pythonw.exe"
-NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell\NapCatWinBootMain.exe"
-NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell"
+NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4\napcat.bat"
+NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4"
 QQUIN = "909008620"
 
 If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
@@ -50,7 +50,7 @@ For Each p In list
       killed = killed + 1
     End If
   End If
-  If InStr(1, nm, "napcat", 1) > 0 Or (LCase(nm) = "qq.exe" And InStr(1, cmdline, "NapCat", 1) > 0) Then
+  If InStr(1, cmdline, "NapCat.Shell.v4", 1) > 0 Or InStr(1, nm, "napcat", 1) > 0 Or (LCase(nm) = "qq.exe" And InStr(1, cmdline, "NapCat", 1) > 0) Then
     p.Terminate
     napcatKilled = napcatKilled + 1
   End If
@@ -71,7 +71,7 @@ WScript.Sleep 2000
 ' ---------- 3. 起 NapCat（带账号参数，走快速登录，不用扫码） ----------
 If fso.FileExists(NAPCAT_EXE) Then
   ws.CurrentDirectory = NAPCAT_DIR
-  ws.Run """" & NAPCAT_EXE & """ " & QQUIN, 0, False
+  ws.Run """" & NAPCAT_EXE & """ -q " & QQUIN, 0, False
 Else
   MsgBox "找不到 NapCat 程序，没能拉起：" & vbCrLf & NAPCAT_EXE, 16, "重启 QQ 机器人"
   WScript.Quit 1
@@ -115,7 +115,7 @@ Function NapcatBusy()
   On Error Resume Next
   Set q = GetObject("winmgmts:\\.\root\cimv2").ExecQuery("SELECT Name, CommandLine FROM Win32_Process")
   For Each c In q
-    If InStr(1, c.Name & "", "napcat", 1) > 0 Then busy = True
+    If InStr(1, c.CommandLine & "", "NapCat", 1) > 0 Then busy = True
     If LCase(c.Name & "") = "qq.exe" And InStr(1, c.CommandLine & "", "NapCat", 1) > 0 Then busy = True
   Next
   Err.Clear

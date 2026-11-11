@@ -16,9 +16,9 @@ End If
 
 ' 写死解释器路径，避免 PATH 里有多份 Python 时起错、或者同时起两个
 PYW = "C:\Users\marco\AppData\Local\Programs\Python\Python312\pythonw.exe"
-NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell\NapCatWinBootMain.exe"
+NAPCAT_EXE = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4\napcat.bat"
 QQUIN = "909008620"
-NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.52230.Shell"
+NAPCAT_DIR = "C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4"
 
 If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
   MsgBox "找不到机器人代码：" & vbCrLf & BOT_DIR & "\app\bot.py" & vbCrLf & vbCrLf & _
@@ -37,7 +37,7 @@ For Each p In list
   If InStr(1, p.Name & "", "python", 1) > 0 Then
     If (InStr(1, p.CommandLine & "", "bot.py", 1) > 0 And InStr(1, p.CommandLine & "", "telegram_bot.py", 1) = 0) Then running = True
   End If
-  If InStr(1, p.Name & "", "napcat", 1) > 0 Then napcat = True
+  If InStr(1, p.CommandLine & "", "NapCat", 1) > 0 Then napcat = True
   If LCase(p.Name & "") = "qq.exe" And InStr(1, p.CommandLine & "", "NapCat", 1) > 0 Then napcat = True
 Next
 
@@ -45,7 +45,7 @@ Next
 If Not napcat Then
   If fso.FileExists(NAPCAT_EXE) Then
     ws.CurrentDirectory = NAPCAT_DIR
-    ws.Run """" & NAPCAT_EXE & """ " & QQUIN, 0, False
+    ws.Run """" & NAPCAT_EXE & """ -q " & QQUIN, 0, False
     napcatStarted = True
     WScript.Sleep 3000
   End If
