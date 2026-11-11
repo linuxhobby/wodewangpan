@@ -437,10 +437,10 @@ install_stats() {
   fi
   local py
   py=$(command -v python3)
-  (cd "$SITE_DIR" && "$py" tools/sitestats.py --reset --backfill) >> "$SETUP_LOG" 2>&1 \
+  (cd "$SITE_DIR" && "$py" scripts/sitestats.py --reset --backfill) >> "$SETUP_LOG" 2>&1 \
     || warn "统计初始化失败（不影响站点），日志：$SETUP_LOG"
-  add_cron 'tools/sitestats.py' \
-    "*/5 * * * * cd $SITE_DIR && $py tools/sitestats.py >> /var/log/sitestats.log 2>&1"
+  add_cron 'scripts/sitestats.py' \
+    "*/5 * * * * cd $SITE_DIR && $py scripts/sitestats.py >> /var/log/sitestats.log 2>&1"
   log "已装本地访问统计（每 5 分钟）；页脚数字会在有访问后逐步累积"
 }
 

@@ -94,17 +94,17 @@ PY
   cp "$OLD_STATS_DB" "$STATS_DB"
   echo "已导入旧统计库 -> $STATS_DB（保留历史 PV/UV，迁移后新访问在其上累加）"
   # 关键：导入旧库后【不能】--reset，否则历史会被清掉；只回填当前 access.log（inode 不匹配会自动从日志头重读）
-  python3 tools/sitestats.py --backfill
+  python3 scripts/sitestats.py --backfill
 else
   echo "未指定 OLD_STATS_DB：按全新站点重置统计（旧排名会丢失，热榜从零累积）"
-  python3 tools/sitestats.py --reset --backfill
+  python3 scripts/sitestats.py --reset --backfill
 fi
 ls -l "$STATS_OUT"
 python3 -c "import json;d=json.load(open('$STATS_OUT'));print('res 条数:',len(d['res']),'| 总PV:',d['pv'],'| 总UV:',d['uv'],'| since:',d.get('since'))"
 
 echo "== 3. 配置 cron 增量（每 5 分钟） =="
-LINE="*/5 * * * * cd $REPO_DIR && /usr/bin/python3 tools/sitestats.py >> /var/log/sitestats.log 2>&1"
-( crontab -l 2>/dev/null | grep -v 'tools/sitestats.py'; echo "$LINE" ) | crontab -
+LINE="*/5 * * * * cd $REPO_DIR && /usr/bin/python3 scripts/sitestats.py >> /var/log/sitestats.log 2>&1"
+( crontab -l 2>/dev/null | grep -v 'scripts/sitestats.py'; echo "$LINE" ) | crontab -
 echo "cron -> $LINE"
 
 echo "== 4. 验证线上 =="
