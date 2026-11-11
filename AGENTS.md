@@ -334,7 +334,7 @@ ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
 ### 影视类（mv-/tv-/dc-/an-）：TMDB 官方海报
 
 ```bash
-T=~/.codebuddy/skills/quark-resource-sync/scripts/tmdb.mjs
+T=~/.qwenworkcn/skills/quark-resource-sync/scripts/tmdb.mjs
 node $T search --type movie --query "All Quiet on the Western Front" --year 2022   # 先拿 id
 node $T detail --type movie --id 49046 --poster static/images/mv-212.jpg           # 再下海报
 ```

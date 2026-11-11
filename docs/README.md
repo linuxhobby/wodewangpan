@@ -102,9 +102,9 @@
 ### 网盘失效修复（顺序不能颠倒）
 
 ```bash
-node ~/.workbuddy/skills/quark-resource-sync/scripts/check-drive-sync.mjs   # ① 只比目录名
-node ~/.workbuddy/skills/quark-resource-sync/scripts/check-share-links.mjs  # ② 验链接
-node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-check --apply  # ③ 重出链写回 YAML
+node ~/.qwenworkcn/skills/quark-resource-sync/scripts/check-drive-sync.mjs   # ① 只比目录名
+node ~/.qwenworkcn/skills/quark-resource-sync/scripts/check-share-links.mjs  # ② 验链接
+node ~/.qwenworkcn/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-check --apply  # ③ 重出链写回 YAML
 ```
 
 - `41004` 改名可重出链；`41012`/`41026` 用户取消/风控，**不可恢复**，标「待补资源」或问下架。
@@ -143,7 +143,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 | `quarkclouddrive` | 1.0.24（官方，自动更新） | 夸克 CLI：`browse`/`rename`/`share`/`search`/`upload` |
 | `quark-upload-share` | — | 上传本地文件并生成公开分享链接 |
 
-- 真身只在 `~/.workbuddy/skills/`；`~/.codebuddy/skills/` 是符号链接。**别放进客户端 builtin/**（更新会清空）。
+- 真身只在 `~/.qwenworkcn/skills/`（现役客户端目录；旧机 `~/.workbuddy` / `~/.codebuddy` 为历史遗留，仍被脚本回退探测）。**别放进客户端 builtin/**（更新会清空）。
 - 升级 `quarkclouddrive` 用 `bash scripts/install.sh`，不用 `quark-drive.cjs update`。
 - 两台机经 `~/Documents/SynologyDrive/sync-skill/` 中转，`config.env` 含凭据不同步。
 - 脚本清单（`quark-resource-sync/scripts/`）：`scan-new` / `tmdb` / `make-entry` / `check-desc` / `check-drive-sync` / `check-share-links` / `reshare-batch` / `backfill-*` / `placeholder-fill` / `trending-sync` / `install` / `lib/config`。
@@ -314,8 +314,8 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 | QQ 机器人代码 | 站内 `bot/`（原 `C:\Users\marco\Github\wodewangpan-bot` 已并入；NapCat 现为 Shell v4 独立版 `C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4`，2026-11-11 从旧 OneKey 包升级，旧包保留作回退） |
 | 远端 | `git@github.com:linuxhobby/wodewangpan.git` |
 | 线上 | https://www.wodewangpan.top |
-| 技能真身 | `~/.workbuddy/skills/`（`quark-resource-sync` v1.11 / `quarkclouddrive` / `quark-upload-share`）；`~/.codebuddy/skills/` 为符号链接 |
-| 凭据 | `~/.workbuddy/skills/quark-resource-sync/config.env`（含凭据，不写进文档） |
+| 技能真身 | `~/.qwenworkcn/skills/`（`quark-resource-sync` / `quarkclouddrive` / `quark-upload-share`）；旧机 `~/.workbuddy`、`~/.codebuddy` 为历史目录 |
+| 凭据 | `~/.qwenworkcn/skills/quark-resource-sync/config.env`（含凭据，不写进文档） |
 | 中转 | `~/Documents/SynologyDrive/sync-skill/`（不含 `config.env`） |
 | VPS autoupdate | `/usr/local/bin/wdwp-autoupdate`（拉取→npm ci→构建→原子替换 public→reload nginx） |
 
@@ -343,7 +343,7 @@ node scripts/poster.mjs set    --title "套装名" --out static/images/bk-006.jp
 node scripts/share-poster.mjs  # 改完站点配置后重跑，刷新 static/share.jpg
 ```
 
-资源同步 skill（`S=~/.workbuddy/skills/quark-resource-sync/scripts`）：
+资源同步 skill（`S=~/.qwenworkcn/skills/quark-resource-sync/scripts`）：
 
 ```bash
 node $S/scan-new.mjs

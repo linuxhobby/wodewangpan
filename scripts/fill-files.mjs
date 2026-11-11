@@ -69,11 +69,15 @@ import {
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
-// 夸克官方 skill 的 CLI（share-detail 支持客态，不需要网盘授权）
-const CLI = path.join(
-  process.env.HOME || process.env.USERPROFILE || '',
-  '.codebuddy/skills/quarkclouddrive/scripts/quark-drive.cjs'
-);
+// 夸克官方 skill 的 CLI（share-detail 支持客态，不需要网盘授权）。
+// 客户端目录按新旧依次探测：.qwenworkcn（现役）→ .codebuddy / .workbuddy（旧机回退）。
+const CLI =
+  ['.qwenworkcn', '.codebuddy', '.workbuddy']
+    .map((dir) =>
+      path.join(process.env.HOME || process.env.USERPROFILE || '', dir, 'skills/quarkclouddrive/scripts/quark-drive.cjs')
+    )
+    .find((p) => fs.existsSync(p)) ||
+  path.join(process.env.HOME || process.env.USERPROFILE || '', '.qwenworkcn/skills/quarkclouddrive/scripts/quark-drive.cjs');
 
 // 网盘目录里的「占位说明文件」是同步任务自建（或人工放过）的工作流产物，不是资源内容。
 // 2026-11-08 起 trending-sync / mirror-baidu 预置三份：更新通知、QQ 群缺失反馈、站点导流；
@@ -171,7 +175,7 @@ const SESSION_INPUT = '批量抓取分享链接的文件清单';
 
 if (!fs.existsSync(CLI)) {
   console.error(`! 找不到夸克 CLI：${CLI}`);
-  console.error('  先安装 quarkclouddrive skill（bash ~/.codebuddy/skills/quarkclouddrive/scripts/install.sh）');
+  console.error('  先安装 quarkclouddrive skill（bash ~/.qwenworkcn/skills/quarkclouddrive/scripts/install.sh）');
   process.exit(1);
 }
 
