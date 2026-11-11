@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""QQ 登录二维码放大落桌面（供 QQ扫码登录.vbs 调用）。
+r"""QQ 登录二维码放大落桌面（供 QQ扫码登录.vbs 调用）。
 
 用法: python qr_desktop.py [napcat二维码路径]
 默认取 NapCat Shell v4 的 napcat/cache/qrcode.png。
