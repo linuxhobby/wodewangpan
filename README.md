@@ -20,6 +20,10 @@ wodewangpan 的机器人本体与社媒推送脚本。2026-11-12 从公开仓库
   以后新平台加 `push/<platform>/<platform>-post.mjs` 即可。
 - `config.json` 单文件三段式：`common`（全平台共享）/ `qq` / `telegram`。
   各端入口用 `core.config.section_view` 把 common 与自己那段合并成平铺视图。
+- 群查询回复由 `core/handlers.py` 产出中立标记 `[网盘名](URL)`：QQ 端 `qq/render.py` 转裸链、
+  TG 端 `telegram/render.py` 转可点超链接；尾部（QQ 站点地址 / TG 订阅频道）由各端入口注入。
+- `/f`、`/失效`、`/无`、`/无效`、`/错误` 失效反馈统一经 `core/feedback.py` 走飞书推给管理员本人，两端共用；
+  搜索无结果时还会自动给入口（QQ 可复制的 `/f` 指令行、TG 一点即送达的行内按钮）。
 
 ## 目录
 

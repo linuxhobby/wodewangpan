@@ -36,6 +36,7 @@ from core import handlers                        # noqa: E402
 from core import site_client as sc               # noqa: E402
 from core.config import load_raw, section_view   # noqa: E402
 from core.runtime import Logger, RateControl     # noqa: E402
+from qq import render as qq_render               # noqa: E402
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -48,6 +49,12 @@ log = Logger(LOG_DIR, time.strftime("bot-%Y-%m-%d.log"))
 
 RAW = load_raw(ROOT)          # 整份三段式配置
 CFG = section_view(RAW, "qq")  # common + qq 合并的平铺视图（handlers 只认这个）
+
+# QQ 群尾部：站点地址 + /help 提示（TG 那边换成订阅频道，由 telegram/bot.py 自己给）
+QQ_TAIL = ["更多资源访问：" + CFG["site_url"], handlers.TAIL_HELP]
+# 搜索无结果时的反馈入口：QQ 没有原生按钮，给一行可直接发/复制的指令。
+# {kw} 由 handlers 用用户刚才搜的关键词填充。
+QQ_FEEDBACK_HINT = "反馈资源无效 / 资源错误：发 /f {kw}（或 /无效 /错误）"
 
 rate = RateControl()
 
@@ -151,10 +158,12 @@ def process(event):
         return
 
     log(f"→ [{mtype}:{group_id or ''}] {nickname}：{text[:60]}")
-    replies = handlers.handle(text, CFG, key)
+    replies = handlers.handle(text, CFG, key, tail=QQ_TAIL, platform="qq",
+                              feedback_hint=QQ_FEEDBACK_HINT)
     log(f"← 准备回复 {len(replies)} 条")
 
     for i, chunk in enumerate(replies):
+        chunk = qq_render.to_plain(chunk)   # [网盘名](URL) -> 裸 URL，QQ 客户端自动识别
         if mtype == "group":
             message = chunk
             if CFG.get("reply_at_sender") and i == 0:

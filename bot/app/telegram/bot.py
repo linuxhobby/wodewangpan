@@ -40,6 +40,7 @@ ROOT = os.path.dirname(APP_DIR)                                          # bot/
 sys.path.insert(0, APP_DIR)
 
 from core import handlers                        # noqa: E402
+from core import feedback                        # noqa: E402
 from telegram import render as tg_render         # noqa: E402
 from core.config import load_raw, section_view   # noqa: E402
 from core.runtime import Logger, RateControl     # noqa: E402
@@ -66,6 +67,11 @@ _ME = {}
 rate = RateControl()
 _STASH = {}              # 深链补发用：token -> (uid, chunks, 时间)
 _STASH_TTL = 1800        # 备好的结果留 30 分钟，过期作废
+_FB_STASH = {}           # 一键反馈按钮：token -> (关键词, chat_id, uid, 时间)
+_FB_TTL = 1800           # 按钮 30 分钟内有效，过期提示重新搜索
+FB_BTN_TEXT = "反馈资源问题"
+# 搜索无结果时的提示：TG 给按钮（一点即送达），QQ 给可复制的 /f 指令行
+TG_FEEDBACK_HINT = "搜不到？点下方按钮反馈资源无效 / 资源错误"
 
 TG_HELP = (
     "我的网盘索引站 · 指令\n"
@@ -78,10 +84,12 @@ TG_HELP = (
     "/random     随便抽一个\n"
     "/id         看当前会话的信息\n"
     "/welcome    把入群欢迎语再发一遍\n"
-    "/help       再看一次这份说明\n"
+    "/f 内容     反馈失效资源给管理员（/失效 /无 /无效 /错误 同，需 @我）\n"
+    "/help /帮助 再看一次这份说明\n"
     "\n"
     "群里直接发 /s 关键词 就行，不用 @ 我。\n"
-    "@我 之后只发关键词也能搜。"
+    "@我 之后只发关键词也能搜。\n"
+    "搜不到时点消息下方的「反馈资源问题」按钮，一键反馈。"
 )
 
 # Telegram 命令名只能是拉丁字符，这里把拉丁命令映射成 handlers 认识的中文指令
@@ -94,6 +102,15 @@ CMD_MAP = {
     "cats": "/cats", "category": "/cats", "categories": "/cats",
     "random": "/random",
 }
+
+def _tg_tail():
+    """TG 群尾部：资源列表后空一行，再挂订阅频道与 /help 提示。
+
+    订阅地址取 config.json 的 telegram.subscribe_url，没配就用 @myquark。
+    """
+    url = (TG.get("subscribe_url") or "https://t.me/myquark").rstrip("/")
+    return ["", "更多资源订阅：" + url, handlers.TAIL_HELP]
+
 
 # 入群欢迎语：正文放在 welcome-tg.txt，改文案不用动代码，也不用重启（按文件修改时间热加载）
 WELCOME_FILE = os.path.join(ROOT, "welcome-tg.txt")
@@ -213,9 +230,10 @@ def _api(method, params=None, timeout=40):
 
 # ---------- 发送 ----------
 
-def _send_raw(chat_id, text, reply_to=None):
+def _send_raw(chat_id, text, reply_to=None, reply_markup=None):
     """发一条，返回 (是否成功, 原始响应)。优先 HTML，被拒（400）退回纯文本。
-    私发全量时容易撞上 429，按 Telegram 给的 retry_after 等一次再重试。"""
+    私发全量时容易撞上 429，按 Telegram 给的 retry_after 等一次再重试。
+    reply_markup 挂行内按钮（搜索无结果时的一键反馈）。"""
     body = (text or "")[:MAX_TG_LEN]
     html = tg_render.to_html(body)
     if len(html) > 4090:
@@ -229,6 +247,8 @@ def _send_raw(chat_id, text, reply_to=None):
     if reply_to:
         params["reply_to_message_id"] = reply_to
         params["allow_sending_without_reply"] = True
+    if reply_markup:
+        params["reply_markup"] = reply_markup
 
     res = _api("sendMessage", params)
     if res and res.get("error_code") == 429:
@@ -248,9 +268,9 @@ def _send_raw(chat_id, text, reply_to=None):
     return False, res
 
 
-def send(chat_id, text, reply_to=None):
+def send(chat_id, text, reply_to=None, reply_markup=None):
     """优先发 HTML（网盘名可点），被拒就退回纯文本，绝不让用户收不到。"""
-    ok, _ = _send_raw(chat_id, text, reply_to)
+    ok, _ = _send_raw(chat_id, text, reply_to, reply_markup)
     return ok
 
 
@@ -354,8 +374,12 @@ def _deliver(chat_id, uid, ctype, chunks, reply_to, meta=None):
         _receipt(chat_id, uid, chunks, reply_to, items)
         return
 
+    kw = (meta or {}).get("feedback_kw")
+    markup = _feedback_markup(kw, chat_id, uid) if kw else None
     for i, chunk in enumerate(chunks):
-        ok = send(chat_id, chunk, reply_to=reply_to if i == 0 else None)
+        # 无结果时第一条消息挂「反馈资源问题」按钮；拆条的后续条不重复挂
+        ok = send(chat_id, chunk, reply_to=reply_to if i == 0 else None,
+                  reply_markup=markup if i == 0 else None)
         if not ok:
             log("× 发送失败（第 %d/%d 条）" % (i + 1, len(chunks)))
             break
@@ -418,9 +442,76 @@ def _canonical(text):
     return t
 
 
+# ---------- 搜索无结果时的一键反馈按钮 ----------
+# callback_data 上限 64 字节，中文关键词放不下，所以只带一个短 token；
+# 关键词与会话信息留在进程内存里，按钮 30 分钟过期，重启后旧按钮会提示重新搜索。
+
+def _fb_put(kw, chat_id, uid):
+    now = time.time()
+    for k in [k for k, v in _FB_STASH.items() if now - v[3] > _FB_TTL]:
+        _FB_STASH.pop(k, None)
+    token = uuid.uuid4().hex[:12]
+    _FB_STASH[token] = (kw, chat_id, uid, now)
+    return token
+
+
+def _fb_take(token):
+    v = _FB_STASH.pop(token, None)
+    if not v or time.time() - v[3] > _FB_TTL:
+        return None
+    return v[:3]
+
+
+def _feedback_markup(kw, chat_id, uid):
+    token = _fb_put(kw, chat_id, uid)
+    return {"inline_keyboard": [[{"text": FB_BTN_TEXT, "callback_data": "fb:" + token}]]}
+
+
+def _spawn(target, *args):
+    """后台跑：飞书推送可能耗时几秒，别让它卡住 getUpdates 轮询。"""
+    threading.Thread(target=target, args=args, daemon=True).start()
+
+
+def _safe_callback(cb):
+    try:
+        _handle_callback(cb)
+    except Exception:
+        log("× 处理反馈按钮异常\n" + traceback.format_exc())
+
+
+def _handle_callback(cb):
+    """点一下按钮就把「资源无效 / 资源错误 + 搜索关键词」推给管理员，零输入。"""
+    cid = cb.get("id") or ""
+    data = cb.get("data") or ""
+    chat_id = ((cb.get("message") or {}).get("chat") or {}).get("id")
+    uid = (cb.get("from") or {}).get("id")
+    if not data.startswith("fb:"):
+        _api("answerCallbackQuery", {"callback_query_id": cid})
+        return
+    got = _fb_take(data[3:])
+    if not got:
+        _api("answerCallbackQuery", {"callback_query_id": cid,
+                                     "text": "按钮已过期，请重新搜索或发 /f 反馈"})
+        return
+    kw, saved_chat, saved_uid = got
+    if chat_id is not None and str(chat_id) != str(saved_chat):
+        _api("answerCallbackQuery", {"callback_query_id": cid, "text": "这个按钮不是本会话的"})
+        return
+    ok = feedback.send_no_result_feedback(
+        kw, source="telegram", key="tg:%s:%s" % (chat_id, uid or saved_uid))
+    _api("answerCallbackQuery", {"callback_query_id": cid,
+                                 "text": "已反馈给管理员，谢谢" if ok else "反馈没发出去，请稍后再试"})
+    if ok and chat_id is not None:
+        send(chat_id, handlers.FEEDBACK_REPLY)
+
+
 # ---------- 单条更新 ----------
 
 def handle_update(update):
+    cb = update.get("callback_query")
+    if cb:
+        _spawn(_safe_callback, cb)
+        return
     msg = update.get("message")
     if not msg:
         return
@@ -521,7 +612,9 @@ def handle_update(update):
     log("→ [%s %s] %s：%s" % (ctype, chat_id, name, text[:60]))
     meta = {}
     replies = handlers.handle(_canonical(text), _load_cfg_cached(), key,
-                              page=_page_size(ctype), meta=meta)
+                              page=_page_size(ctype), meta=meta,
+                              tail=_tg_tail(), platform="telegram",
+                              feedback_hint=TG_FEEDBACK_HINT)
     if replies:
         _deliver(chat_id, uid, ctype, replies, msg.get("message_id"), meta)
 
@@ -593,7 +686,8 @@ def run_forever(cfg=None, stop_event=None):
             log("· 收到停止信号，退出轮询")
             return
         res = _api("getUpdates",
-                   {"offset": offset, "timeout": poll, "allowed_updates": ["message"]},
+                   {"offset": offset, "timeout": poll,
+                    "allowed_updates": ["message", "callback_query"]},
                    timeout=poll + 20)
         if res is None:
             time.sleep(backoff)

@@ -60,18 +60,25 @@ check("/more", tg._canonical("/more"), "/more")
 check("未知命令不动", tg._canonical("/xyz"), "/xyz")
 check("纯关键词不动", tg._canonical("青之箱"), "青之箱")
 
-print("3) 版式转换")
-plain = handlers.handle("/s 杀人执照", CFG, key="tg-test")[0]
+print("3) 版式转换（TG 尾部：订阅频道）")
+TG_TAIL = ["", "更多资源订阅：" + (CFG.get("subscribe_url") or "https://t.me/myquark"),
+           handlers.TAIL_HELP]
+plain = handlers.handle("/s 杀人执照", CFG, key="tg-test", tail=TG_TAIL)[0]
 html = tg_render.to_html(plain)
 print("--- 纯文本 ---")
 print(plain)
 print("--- Telegram HTML ---")
 print(html)
+check("🔍 标题行", plain.splitlines()[0], "🔍 搜索结果")
+check("每条资源是 • + 中点的一行",
+      all((" · " in l) for l in plain.splitlines() if l.startswith("• ")), True)
 check("夸克是超链接", '<a href="https://pan.quark.cn/' in html, True)
 check("百度是超链接", '<a href="https://pan.baidu.com/' in html, True)
 check("正文不再有裸链接", "\thttps://" in html, False)
 check("提取码保留在链接文字里", "提取码" in html, True)
-check("站点尾巴也是链接", '<a href="https://www.wodewangpan.top"' in html, True)
+check("列表与尾部之间有空行", "\n\n更多资源订阅：" in plain, True)
+check("订阅地址是超链接", '<a href="https://t.me/myquark"' in html, True)
+check("/help 提示行", "/help  - 查看指令表" in plain, True)
 check("制表符清除", "\t" in html, False)
 
 print("4) 转义")
@@ -84,7 +91,7 @@ check("链接名含尖括号", tg_render.to_html("a<b网盘\thttps://x.test/"),
 print("5) 各指令都能产出消息")
 for q in ["/s 青之箱", "/latest", "/today", "/cats", "/random", "/help", "/more", "/id"]:
     try:
-        out = handlers.handle(tg._canonical(q), CFG, key="tg-test")
+        out = handlers.handle(tg._canonical(q), CFG, key="tg-test", tail=TG_TAIL)
         n = len(out)
         h = tg_render.to_html(out[0])
         assert h.strip()
@@ -109,7 +116,7 @@ print("7) handle_update 对新成员的反应（拦截发送，不联网）")
 sent = []
 
 
-def fake_send(chat_id, text, reply_to=None):
+def fake_send(chat_id, text, reply_to=None, reply_markup=None):
     sent.append((chat_id, text))
     return True
 
@@ -176,7 +183,8 @@ STATE = {"items": 1, "chunks": ["神探狄仁杰 第一部 ｜ 电视剧\n夸克
          "page": None}
 
 
-def fake_handle(text, cfg, key, page=None, meta=None):
+def fake_handle(text, cfg, key, page=None, meta=None, tail=None, platform="",
+                feedback_hint=""):
     STATE["page"] = page
     if meta is not None:
         meta.update({"cmd": "search", "items": STATE["items"], "total": STATE["items"]})
@@ -301,7 +309,7 @@ m2 = {}
 out2 = handlers.handle("/s 电影", CFG, key="page-b", page=10, meta=m2)
 check("page=10 就给 10 条", m2.get("items"), 10)
 check("条数多了自动拆多条消息", len(out2) >= 1, True)
-check("拆条后首条仍是资源名", "｜" in out2[0], True)
+check("拆条后首条仍是资源行", "• " in out2[0], True)
 check("尾巴只挂最后一条", "更多资源访问" in out2[-1], True)
 m3 = {}
 handlers.handle("/cats", CFG, key="page-c", page=10, meta=m3)
@@ -341,6 +349,92 @@ check("另一个进程抢不到锁（会自己退出）", (_r.stdout or _r.stder
 
 # 内嵌开关：默认关（TG 由独立进程跑），配置里必须能读到这个键
 check("telegram.embedded 默认关", bool((_cfg_raw.get("telegram") or {}).get("embedded", False)), False)
+
+print("11) /help 与 /f 失效反馈（飞书发送打桩，不真发）")
+check("/help 与 /帮助 同一指令", handlers.parse("/help")[0], handlers.parse("/帮助")[0])
+check("指令表列出 /help", "/help" in handlers.HELP_TEXT, True)
+check("指令表列出 /f", "/f 内容" in handlers.HELP_TEXT, True)
+for _alias in ["/f 挂了", "/失效 挂了", "/无 挂了", "/无效 挂了"]:
+    check("反馈别名 %s" % _alias, handlers.parse(_alias)[0], "feedback")
+check("反馈内容原样保留 URL",
+      handlers.parse("/f https://pan.quark.cn/s/abc 打不开了")[1],
+      "https://pan.quark.cn/s/abc 打不开了")
+_fb = handlers.feedback.send_feedback
+_captured = {}
+
+
+def _fake_feedback(text, source="", key=""):
+    _captured.update(text=text, source=source, key=key)
+    return True
+
+
+handlers.feedback.send_feedback = _fake_feedback
+check("群里回执", handlers.handle("/f 链接失效", CFG, key="tg-test", platform="telegram"),
+      [handlers.FEEDBACK_REPLY])
+check("反馈带上原话", _captured.get("text"), "链接失效")
+check("反馈标出来源", _captured.get("source"), "telegram")
+check("空反馈给用法提示", "要反馈什么" in handlers.handle("/f", CFG)[0], True)
+handlers.feedback.send_feedback = _fb
+
+import unittest.mock as _mock
+check("飞书脚本路径存在", os.path.exists(handlers.feedback.FEISHU_SCRIPT), True)
+with _mock.patch.object(handlers.feedback.subprocess, "run") as _run:
+    _run.return_value.returncode = 0
+    check("反馈能送达飞书", handlers.feedback.send_feedback("测试", source="qq", key="k"), True)
+    _argv = _run.call_args[0][0]
+    check("用 warn 级别推送", "--level" in _argv and "warn" in _argv, True)
+    check("推的是机器人专用脚本", "notify-feishu.mjs" in " ".join(_argv), True)
+
+print("12) 搜索无结果的一键反馈（被动入口）")
+mfb = {}
+out = handlers.handle("/s 不存在的资源xyz", CFG, key="fb-test", meta=mfb,
+                      tail=TG_TAIL, feedback_hint=tg.TG_FEEDBACK_HINT)
+check("无结果回填关键词", mfb.get("feedback_kw"), "不存在的资源xyz")
+check("无结果带按钮提示", "点下方按钮" in out[0], True)
+qq_hint = "反馈资源无效 / 资源错误：发 /f {kw}（或 /无效 /错误）"
+outqq = handlers.handle("/s 不存在的资源xyz", CFG, key="fb-test2",
+                        feedback_hint=qq_hint)[0]
+check("QQ 提示带具体指令", "发 /f 不存在的资源xyz" in outqq, True)
+check("QQ 提示带两个问题词", "资源无效 / 资源错误" in outqq, True)
+
+markup = tg._feedback_markup("不存在的资源xyz", -100123, 42)
+btn = markup["inline_keyboard"][0][0]
+check("只放一个合并按钮", len(markup["inline_keyboard"][0]), 1)
+check("按钮文字", btn["text"], tg.FB_BTN_TEXT)
+check("callback_data 是短 token",
+      btn["callback_data"].startswith("fb:") and len(btn["callback_data"]) < 64, True)
+
+_cb_calls = []
+_sent2 = []
+tg._api = lambda method, params=None, timeout=40: (
+    _cb_calls.append((method, params)) or {"ok": True, "result": {}})
+tg.send = lambda chat_id, text, reply_to=None, reply_markup=None: (
+    _sent2.append((chat_id, text)) or True)
+_fb2 = tg.feedback.send_no_result_feedback
+_fb_got = {}
+
+
+def _fake_no_result(kw, source="", key=""):
+    _fb_got.update(kw=kw, source=source, key=key)
+    return True
+
+
+tg.feedback.send_no_result_feedback = _fake_no_result
+_spawn_real = tg._spawn
+tg._spawn = lambda fn, *a: fn(*a)   # 测试里同步执行，避免后台线程竞态
+tg.handle_update({"update_id": 9901, "callback_query": {
+    "id": "cb1", "data": btn["callback_data"],
+    "message": {"chat": {"id": -100123, "type": "supergroup"}},
+    "from": {"id": 42},
+}})
+tg._spawn = _spawn_real
+check("飞书收到搜索关键词", _fb_got.get("kw"), "不存在的资源xyz")
+check("回调应答已发", any(m == "answerCallbackQuery" for m, p in _cb_calls), True)
+check("群里回执", bool(_sent2) and _sent2[-1][1] == handlers.FEEDBACK_REPLY, True)
+check("token 用完即废", tg._fb_take(btn["callback_data"][3:]), None)
+tg.feedback.send_no_result_feedback = _fb2
+tg._api = real_api
+tg.send = real_send
 
 print("\n结果：%d 通过，%d 失败" % (ok, bad))
 sys.exit(1 if bad else 0)

@@ -18,15 +18,25 @@ QQ 群 @机器人  →  NapCat  →  HTTP 上报 :6700  →  查站点  →  回
 
 | 指令 | 作用 |
 |---|---|
-| `/搜索 关键词` | 查资源，回「名称 ｜ 类型」与各网盘链接（按最新排，一次最多 10 条） |
+| `/搜索 关键词` | 查资源，一条资源一行（按最新排，一次最多 10 条） |
 | `/更多` | 接着看下一批 10 条 |
 | `/最新` | 最近上架的 10 条 |
 | `/今日` | 今天更新的资源，没有则显示最近一次更新 |
 | `/分类` | 各分类资源数量 |
 | `/随机` | 随机抽一条 |
-| `/帮助` | 用法说明 |
+| `/帮助` `/help` | 用法说明（两者完全相同） |
+| `/f 内容` | 反馈失效资源给管理员，原话走飞书卡片推给本人 |
 
-别名：`/s`、`/搜`、`/找`、`/查`、`/search` 都等于 `/搜索`；`/more`、`/下一页`、`/next` 等于 `/更多`；`/new`、`/latest`、`/today`、`/categories`、`/random`、`/help` 同理。
+别名：`/s`、`/搜`、`/找`、`/查`、`/search` 都等于 `/搜索`；`/more`、`/下一页`、`/next` 等于 `/更多`；`/new`、`/latest`、`/today`、`/categories`、`/random` 同理。
+`/f` 的同义写法还有 `/失效`、`/无`、`/无效`、`/错误`、`/资源无效`、`/资源错误`；群里会回一句「已反馈给管理员，谢谢」，反馈内容（含分享链接）原样送达，不回显到群里。
+
+**反馈有主动、被动两个入口**：
+
+- **主动**（没搜索也能用）：直接发 `/f 资源名或失效链接`，飞书卡片标题「资源失效反馈」。
+- **被动**（搜索无结果时自动给）：QQ 在「没找到」下面直接附一行可复制的指令
+  `反馈资源无效 / 资源错误：发 /f <刚才的关键词>（或 /无效 /错误）`；
+  TG 在提示下面挂一个「反馈资源问题」行内按钮，**点一下即把「资源无效 / 资源错误 + 搜索关键词」推给管理员**，
+  群里回「已反馈给管理员，谢谢」（飞书标题「搜索无结果反馈」）。按钮 30 分钟内有效、用一次即废。
 
 **群里不用 @ 机器人**，直接以 `/` 开头发指令即可。@ 了之后只发裸关键词也能搜，例如 `青之箱`。
 （裸关键词必须 @，否则群里正常聊天会被误当搜索，既刷屏又容易触发风控。开关见 `group_no_at_slash`。）
@@ -34,22 +44,23 @@ QQ 群 @机器人  →  NapCat  →  HTTP 上报 :6700  →  查站点  →  回
 
 ## 回复长什么样
 
-资源名单独一行，网上每行一个网盘；资源之间不空行；末尾固定两行网站地址与帮助提示：
+2026-11-12 定的版式：🔍 标题行 + 每条资源一行（`• 标题 · 网盘链接 …`），行间不空行；提示行与尾部照旧：
 
 ```
-007：杀人执照 ｜ 电影
-夸克网盘	https://pan.quark.cn/s/53d0d4c3382a
-百度网盘（提取码 fw1j）	https://pan.baidu.com/s/1hhjstqN6mzFj6f13djyY6Q
-权力的游戏 第八季 ｜ 电视剧
-夸克网盘	https://pan.quark.cn/s/f97b92e8951c
+🔍 搜索结果
+• 007：杀人执照 · https://pan.quark.cn/s/53d0d4c3382a · https://pan.baidu.com/s/1hhjstqN6mzFj6f13djyY6Q （提取码 fw1j）
+• 权力的游戏 第八季 · https://pan.quark.cn/s/f97b92e8951c
 命中 442 条，先给 10 条，发 /更多 看下一批
 更多资源访问：https://www.wodewangpan.top
-/帮助 — 查看指令表
+/help  - 查看指令表
 ```
 
-- 网盘名与链接之间是一个制表符（`\t`），聊天窗口里读作两列
-- 名称、类型、网盘名来自站点索引与详情页，提取码从详情页的 `linkrow__code` 读，跟在网盘名后面
+- 链接由 QQ 自动识别成可点击；一条资源有多个网盘时用 ` · ` 串在同一行，提取码跟在对应链接后
+- 标题、链接来自站点索引与详情页，提取码从详情页的 `linkrow__code` 读
 - 链接按页面顺序排，夸克在前、百度在后；条目没有链接时写「暂无网盘链接」
+- 尾部由 QQ 平台入口传入（`app/qq/bot.py` 的 `QQ_TAIL`）；TG 换成订阅频道，见 5
+
+共享层 `handlers.py` 只产出中立标记 `[网盘名](URL)`：`app/qq/render.py` 转成裸 URL，`app/telegram/render.py` 转成可点超链接。
 
 **命中太多怎么办**：群里一次最多回 10 条（`handlers.py` 的 `PAGE_SIZE`），命中按**上架日期从新到旧**排，先给最新的 10 条。命中数超过 10 条时，末尾会补一句「命中 N 条，先给 10 条，发 /更多 看下一批」；`/更多` 按「群 / 私聊」分别记住上一次的关键词和已翻到的位置，只翻同一批结果，5 分钟后过期，群里几个人同时查也不会串页。TG 侧开了私聊投递也是 10 条一批（见 5.1）。
 
@@ -126,7 +137,9 @@ Telegram 的命令名只允许拉丁字符，`/搜索` 这类中文命令在群�
 | `/today` | `/今日` |
 | `/cats` `/categories` | `/分类` |
 | `/random` | `/随机` |
-| `/help` `/start` | `/帮助` |
+| `/help` `/start` `/帮助` | 用法说明（三者完全相同） |
+| `/f 内容` | 反馈失效资源给管理员（`/失效` `/无` `/无效` `/错误` 同，中文别名需 @机器人才能收到） |
+| 搜索无结果时的按钮 | 「反馈资源问题」，一点即送达（无需输入） |
 | `/id` | 只在 TG 有：回 chat_id，用来填白名单 |
 | `/welcome` `/公告` | 只在 TG 有：把入群欢迎语再发一遍 |
 
@@ -135,14 +148,22 @@ Telegram 的命令名只允许拉丁字符，`/搜索` 这类中文命令在群�
 ### 5. 版式
 
 ```
-007：杀人执照 ｜ 电影
-夸克网盘
-百度网盘（提取码 fw1j）
-更多资源访问：www.wodewangpan.top
-/帮助 — 查看指令表
+🔍 搜索结果
+• 007：杀人执照 · 夸克网盘 · 百度网盘（提取码 fw1j）
+• 权力的游戏 第八季 · 夸克网盘
+命中 442 条，先给 10 条，发 /更多 看下一批
+
+更多资源订阅：https://t.me/myquark
+/help  - 查看指令表
 ```
 
-第二、三行在客户端是可点的超链接，`app/telegram/render.py` 把 handlers 输出的「网盘名<TAB>URL」转成 `<a href>`，QQ 的纯文本版式一点没改。
+网盘名在客户端是可点的超链接，`app/telegram/render.py` 把共享层的 `[网盘名](URL)` 标记转成 `<a href>`，正文不出现裸链；QQ 那边同样的标记被转成裸 URL。
+列表与尾部之间空一行；订阅地址取 `config.json` 的 `telegram.subscribe_url`（默认 `https://t.me/myquark`）。
+
+**搜索无结果**时第一条消息会多挂一个「反馈资源问题」行内按钮。长轮询的 `allowed_updates` 已加上
+`callback_query`；`callback_data` 只带一个短 token（中文关键词放不进 64 字节），关键词与会话信息留在
+`telegram/bot.py` 的 `_FB_STASH` 里。点击回调走后台线程（飞书推送不阻塞收消息），处理完用
+`answerCallbackQuery` 弹提示并在群里回一句回执。
 想在正文任意位置放一个自定义链接文字的超链接，写成 `[文字](https://...)` 即可，渲染时转成 `<a href>`，文字与网址都会做 HTML 转义；HTML 被拒退回纯文本时，会还原成「文字（网址）」。HTML 被 TG 拒收（极少见）时会自动退回纯文本重发，保证用户一定收到。
 
 单条上限 4096 字，实际按 3900 字截，比 QQ 的 900 字宽松；单群约 20 条/分钟，群里一次 10 条（拆成 2 条消息左右）不会撞限。走私聊投递时报文都落在私聊，不占群的额度。
@@ -263,27 +284,45 @@ cp config.example.json config.json
 
 ```json
 {
-  "site_url": "https://www.wodewangpan.top",
-  "listen_host": "127.0.0.1",
-  "listen_port": 6700,
-  "napcat_api": "http://127.0.0.1:3000",
-  "access_token": "",
-  "group_whitelist": [],
-  "allow_private": true,
-  "cooldown_seconds": 3,
-  "global_rate_per_minute": 20,
-  "reply_at_sender": false,
-  "napcat_watchdog": {
+  "common": {
+    "site_url": "https://www.wodewangpan.top"
+  },
+  "qq": {
+    "listen_host": "127.0.0.1",
+    "listen_port": 6700,
+    "napcat_api": "http://127.0.0.1:3000",
+    "access_token": "",
+    "group_whitelist": [],
+    "group_no_at_slash": true,
+    "allow_private": true,
+    "cooldown_seconds": 3,
+    "global_rate_per_minute": 20,
+    "reply_at_sender": false,
+    "napcat_watchdog": {
+      "enabled": true,
+      "interval_seconds": 300,
+      "down_strikes": 2,
+      "realert_minutes": 30
+    }
+  },
+  "telegram": {
     "enabled": true,
-    "interval_seconds": 300,
-    "down_strikes": 2,
-    "realert_minutes": 30
+    "embedded": false,
+    "token": "",
+    "allowed_chats": [],
+    "reply_mode": "group",
+    "subscribe_url": "https://t.me/myquark",
+    "private_max_results": 10,
+    "proxy": ""
   }
 }
 ```
 
+`config.json` 是单文件三段式：`common` 全平台共享，`qq` / `telegram` 各管各的。下表字段名省略了 `qq.` 前缀，TG 段的字段以 `telegram.` 开头。
+
 | 字段 | 说明 |
 |---|---|
+| `telegram.subscribe_url` | TG 查询结果尾部的订阅频道地址，默认 `https://t.me/myquark` |
 | `group_whitelist` | 只响应这些群号。留空表示所有群都响应，**首次跑通后建议填上群号** |
 | `group_no_at_slash` | 群里以 `/` 开头的消息免 @ 直接执行，默认 `true`。设为 `false` 就恢复「必须 @」 |
 | `cooldown_seconds` | 同一个人在同一个群，多少秒内只能查一次，防刷屏。默认 3 秒；设太大会出现「发完 /帮助 接着查词没反应」，日志里写着 `限频忽略` |
@@ -380,11 +419,11 @@ python test_dispatch.py   # 验证 @ 识别、去重、限频、群白名单
 
 这台机器人在一个有完整文件权限的系统上跑，所以按最小权限写死：
 
-1. 只允许出站到 `www.wodewangpan.top` 一个域名，代码里任何其他 host 都直接拒绝
-2. 只有 GET 请求，没有写操作
-3. 不读取本地资源仓库，不打开任何本地文件（配置和日志除外）
+1. 站点客户端只允许出站到 `www.wodewangpan.top` 一个域名，代码里任何其他 host 都直接拒绝
+2. 站点查询只有 GET 请求，没有写操作；唯一额外的出站是 `/f` 反馈与看门狗走飞书推送
+3. 不读取本地资源仓库（配置、日志、飞书临时 md 除外）
 4. 群消息一律当不可信输入，只认白名单指令，未知斜杠指令直接回「没这条指令」
-5. 关键词清洗只保留中文、字母、数字、空格和 `_.-`
+5. 关键词清洗只保留中文、字母、数字、空格和 `_.-`；**例外**：`/f` 反馈保留原文（含分享链接），最多 500 字，只进飞书卡片不回显到群
 6. 同一 message_id 只处理一次，防止上报重试刷屏
 7. 群白名单 + 单人冷却 + 全局每分钟上限，三层限频
 

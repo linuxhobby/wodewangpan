@@ -115,6 +115,53 @@ def main():
     results.append(at_ok)
     bot.CFG["reply_at_sender"] = False
 
+    # QQ 渲染：中立标记 [网盘名](URL) -> 裸 URL，提取码不能丢
+    from qq import render as qq_render
+    sample = ("• 资源标题 · [夸克网盘](https://pan.quark.cn/s/abc) · "
+              "[百度网盘（提取码 fw1j）](https://pan.baidu.com/s/xyz)")
+    out = qq_render.to_plain(sample)
+    raw_ok = ("[夸克网盘]" not in out and "https://pan.quark.cn/s/abc" in out
+              and "https://pan.baidu.com/s/xyz （提取码 fw1j）" in out)
+    print(f"[{'PASS' if raw_ok else 'FAIL'}] QQ 渲染成裸链并保留提取码")
+    results.append(raw_ok)
+
+    # 真实走一遍 /搜索，确认群里收到的是新版式 + 站点尾部 + /help
+    SENT.clear()
+    bot.process(ev_group("/搜索 杀人执照", user=120, mid="m9"))
+    txt = SENT[0]["params"]["message"] if SENT else ""
+    if isinstance(txt, list):
+        txt = "".join(seg.get("data", {}).get("text", "") for seg in txt)
+    fmt_ok = (isinstance(txt, str) and "🔍 搜索结果" in txt and "• " in txt
+              and " · " in txt and "https://pan.quark.cn" in txt and "](" not in txt
+              and "更多资源访问：https://www.wodewangpan.top" in txt
+              and "/help  - 查看指令表" in txt)
+    print(f"[{'PASS' if fmt_ok else 'FAIL'}] QQ 群查询版式（🔍/•/中点/裸链/站点尾部）")
+    results.append(fmt_ok)
+
+    # 搜索无结果：直接给可复制的 /f 指令行（被动反馈入口）
+    SENT.clear()
+    bot.process(ev_group("/搜索 不存在的资源xyz", user=121, mid="m10"))
+    txt = SENT[0]["params"]["message"] if SENT else ""
+    if isinstance(txt, list):
+        txt = "".join(seg.get("data", {}).get("text", "") for seg in txt)
+    fb_ok = (isinstance(txt, str) and "没找到" in txt
+             and "反馈资源无效 / 资源错误" in txt
+             and "/f 不存在的资源xyz" in txt)
+    print(f"[{'PASS' if fb_ok else 'FAIL'}] 无结果自动带 /f 反馈指令行")
+    results.append(fb_ok)
+
+    # 主动反馈：/f 与 /错误 都认（飞书发送打桩，不真发）
+    from core import feedback as fbmod
+    _real_fb = fbmod.send_feedback
+    fbmod.send_feedback = lambda *a, **kw: True
+    SENT.clear()
+    bot.process(ev_group("/错误 链接挂了", user=122, mid="m11"))
+    reply = SENT[0]["params"]["message"] if SENT else ""
+    cmd_ok = isinstance(reply, str) and "已反馈给管理员" in reply
+    print(f"[{'PASS' if cmd_ok else 'FAIL'}] 主动指令 /错误 也可反馈")
+    results.append(cmd_ok)
+    fbmod.send_feedback = _real_fb
+
     total = len(results)
     passed = sum(1 for r in results if r)
     print(f"\n{passed}/{total} 通过")
