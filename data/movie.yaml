@@ -499,6 +499,14 @@
   date: 2017-10-03
   added: 2026-09-30
   image: mv-024.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "6.8 GB"
+    format: "MP4"
+    tree: |
+      024-南汉山城2017/
+      南汉山城.The.Fortress.2017.BD1080P.韩语中字.mp4
 
 - id: mv-025
   title: "速度与激情"
@@ -523,6 +531,18 @@
   date: 2013-02-21
   added: 2026-09-30
   image: mv-026.jpg
+  updated: 2026-11-12
+  files:
+    count: 5
+    size: "10.0 GB"
+    format: "SSA×2 / SRT×2 / MKV"
+    tree: |
+      026-新世界.New.World.2013.BluRay.720p.x264.AC3-CnSCG/
+      新世界.New.World.2013.BluRay.1080p.DTS.x264-CHD.繁体.srt
+      新世界.New.World.2013.BluRay.1080p.DTS.x264-CHD.简体.srt
+      新世界.New.World.2013.BluRay.1080p.DTS.x264-CHD.繁体.ssa
+      新世界.New.World.2013.BluRay.1080p.DTS.x264-CHD.简体.ssa
+      新世界.New.World.2013.BluRay.1080p.DTS.x264-CHD.mkv
 
 - id: mv-027
   title: "勇敢之人"
@@ -535,6 +555,14 @@
   date: 2025-01-30
   added: 2026-09-30
   image: mv-027.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "5.8 GB"
+    format: "MKV"
+    tree: |
+      027-勇敢之人 Valiant One (2025)/
+      勇敢之人 Valiant.One.2025.2160p.WEB-DL.DDP5.1.SDR.H265-中英双字幕-ed3000翻译官.mkv
 
 - id: mv-028
   title: "加勒比海盗2：聚魂棺"
