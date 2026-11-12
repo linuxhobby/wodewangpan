@@ -14,10 +14,12 @@
  *
  * 凭据来源（优先级从高到低，均不入库）：
  *   1. 环境变量 FEISHU_APP_ID / FEISHU_APP_SECRET
- *   2. 用户级 ~/.workbuddy/feishu-app.json（跨项目共享，gitignore）
+ *   2. 机器人专用 ~/.workbuddy/feishu-app-bot.json（本脚本独享，gitignore）
+ *   3. 用户级 ~/.workbuddy/feishu-app.json（跨项目共享，gitignore）
  * 找不到凭据时回退 lark-cli（feishu 连接器）以尽量保证送达。
  *
- * 目标：用户本人 open_id（指挥官）；可用环境变量 FEISHU_TARGET_USER 覆盖。
+ * 目标：用户本人 union_id（同一组织下跨应用通用；open_id 按应用隔离不能跨应用用）。
+ *   可用环境变量 FEISHU_TARGET_UNION 覆盖。
  * 失败处理：最多重试 1 次；最终仍失败打印错误并以退出码 0 结束（绝不阻断机器人本体）。
  */
 import fs from 'node:fs';
@@ -28,7 +30,9 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = (() => { try { return path.dirname(fileURLToPath(import.meta.url)); } catch { return process.cwd(); } })();
 
-const TARGET_USER = process.env.FEISHU_TARGET_USER || 'ou_0764f86861e2cf5828510280f4372df8';
+const TARGET_UNION = process.env.FEISHU_TARGET_UNION || 'on_64114d6dcd3276815fc62360b2727b8e';
+// lark-cli 回退走 feishu 连接器（旧应用），仍用旧应用视角的 open_id
+const TARGET_OPEN_ID = 'ou_0764f86861e2cf5828510280f4372df8';
 const LARK = process.env.LARK_CLI || 'C:/Users/marco/.workbuddy/binaries/node/cli-connector-packages/lark-cli';
 const FEISHU_API = 'https://open.feishu.cn';
 const MAX_TITLE_LEN = 40;
@@ -39,12 +43,18 @@ function loadCredentials() {
   const appSecret = process.env.FEISHU_APP_SECRET;
   if (appId && appSecret) return { appId, appSecret, src: 'env' };
 
-  const userPath = path.join(os.homedir(), '.workbuddy', 'feishu-app.json');
-  if (fs.existsSync(userPath)) {
-    try {
-      const j = JSON.parse(fs.readFileSync(userPath, 'utf8'));
-      if (j.app_id && j.app_secret) return { appId: j.app_id, appSecret: j.app_secret, src: userPath };
-    } catch { /* ignore */ }
+  const candidates = [
+    // 机器人专用凭据优先，与院采雷达等共享凭据（feishu-app.json）解耦
+    path.join(os.homedir(), '.workbuddy', 'feishu-app-bot.json'),
+    path.join(os.homedir(), '.workbuddy', 'feishu-app.json'),
+  ];
+  for (const userPath of candidates) {
+    if (fs.existsSync(userPath)) {
+      try {
+        const j = JSON.parse(fs.readFileSync(userPath, 'utf8'));
+        if (j.app_id && j.app_secret) return { appId: j.app_id, appSecret: j.app_secret, src: userPath };
+      } catch { /* ignore */ }
+    }
   }
   return null;
 }
@@ -87,14 +97,14 @@ function toCard(md, level) {
 async function sendViaApi(appId, appSecret, md, level) {
   const token = await getTenantToken(appId, appSecret);
   const card = toCard(md, level);
-  const r = await fetch(`${FEISHU_API}/open-apis/im/v1/messages?receive_id_type=open_id`, {
+  const r = await fetch(`${FEISHU_API}/open-apis/im/v1/messages?receive_id_type=union_id`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      receive_id: TARGET_USER,
+      receive_id: TARGET_UNION,
       msg_type: 'interactive',
       content: JSON.stringify(card),
     }),
@@ -158,7 +168,7 @@ async function main() {
         const j = await sendViaApi(creds.appId, creds.appSecret, md, level);
         out = `msg_id=${(j.data && j.data.message_id) || 'n/a'}`;
       } else {
-        out = runLark(['im', '+messages-send', '--as', 'bot', '--user-id', TARGET_USER, '--markdown', '-'], md);
+        out = runLark(['im', '+messages-send', '--as', 'bot', '--user-id', TARGET_OPEN_ID, '--markdown', '-'], md);
       }
       console.log('[feishu] 推送成功:', out.slice(0, 120).replace(/\s+/g, ' '));
       return;
