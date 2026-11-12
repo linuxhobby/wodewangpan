@@ -709,6 +709,14 @@
   date: 2010-09-15
   added: 2026-09-30
   image: mv-034.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "5.3 GB"
+    format: "MKV"
+    tree: |
+      034-城中大盗/
+      城中大盗.mkv
 
 - id: mv-035
   title: "我要复仇"
@@ -721,6 +729,14 @@
   date: 2002-03-29
   added: 2026-09-30
   image: mv-035.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "2.8 GB"
+    format: "MP4"
+    tree: |
+      035-我要复仇2002/
+      我要复仇.2002.BD1080p.中文字幕.mp4
 
 - id: mv-037
   title: "飞黄腾达"
@@ -733,6 +749,15 @@
   date: 2024-10-09
   added: 2026-09-30
   image: mv-037.jpg
+  updated: 2026-11-12
+  files:
+    count: 2
+    size: "2.3 GB"
+    format: "MP4 / ASS"
+    tree: |
+      037-飞黄腾达 The Apprentice (2024)/
+      飞黄腾达.The.Apprentice.2024.1080p.WEBRip.x264.AAC5.1.ass
+      飞黄腾达.The.Apprentice.2024.1080p.WEBRip.x264.AAC5.1.mp4
 
 - id: mv-038
   title: "智能觉醒"
