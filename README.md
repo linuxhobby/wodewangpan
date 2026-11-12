@@ -75,6 +75,21 @@ node bluesky-push/bluesky-post.mjs
 | 我的网盘.资源推送 Telegram 频道 | 每小时 `:40`，漏跑 `skip` | `21a463d6-ea25-43c1-9c4b-32327b0262ff` |
 | 我的网盘.资源推送到 Bluesky | 每小时 `:10` | `f9355e9c-86ed-424a-a286-2731684d7578` |
 
+## 代码权威源与旧路径转发壳
+
+**本仓库是唯一实现**。2026-11-12 迁移动作之后：
+
+- `~/.qwenworkcn/skills/wodewangpan-telegram/scripts/tg-post.mjs` 与
+  `~/.qwenworkcn/skills/wodewangpan-bluesky/scripts/bluesky-post.mjs` 已改成**几行的转发壳**
+  （`import` 本仓库的真身），原件备份为同目录 `*.bak-20261112`。壳存在只为让旧路径继续可用、
+  避免为了改一行路径去重抄上千字的任务 prompt；真身只有一份，不会漂移。
+- 「我的网盘.资源推送 Telegram 频道」的 prompt 已**直接指向本仓库**的 `telegram-push/tg-post.mjs`。
+- 「我的网盘.资源推送到 Bluesky」的 prompt 仍指旧路径，靠壳转发；哪天要摘掉壳，只需把那条 prompt 里的路径改掉。
+- 凭据查找顺序：脚本**同目录**的 `*.env` → `~/.qwenworkcn/*.env` → `~/.workbuddy/*.env`（老环境回退）。
+  所以本仓库里的 `telegram-push/wodewangpan-tg.env`、`bluesky-push/wodewangpan-bluesky.env` 是**现役凭据**。
+- `posted.json` 判重记录**永远留在本机** `~/.qwenworkcn/{telegram,bluesky}-posts/`，不进 git、不搬仓库：
+  复制或搬走会让已发过的资源重复发布。
+
 ## 迁移留档
 
 - 2026-11-12 起，两个机器人进程已从本目录运行（`app\bot.py`、`app\telegram_bot.py`，cwd 必须是 `bot/`），

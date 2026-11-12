@@ -16,13 +16,17 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execFile } from 'node:child_process';
 
 const HOME = os.homedir();
 // 数据目录（2026-10-30 迁移）：优先 ~/.qwenworkcn（沙箱可直接读写、写入快）；
 // 老环境只有 ~/.workbuddy 时自动回退。沙箱里 existsSync 不可靠，统一用 statSync 判存在。
 const firstPresent = (...c) => { for (const p of c) { try { fs.statSync(p); return p; } catch {} } return c[0]; };
+// 权威源在私有仓：同目录的 wodewangpan-bluesky.env 优先，其次迁移前的 ~/.qwenworkcn，最后老环境 ~/.workbuddy。
+// STATE_FILE（posted.json）不动：那是现网判重状态，不进 git，搬家或复制都会导致重复发。
 const ENV_FILE = firstPresent(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), 'wodewangpan-bluesky.env'),
   path.join(HOME, '.qwenworkcn', 'wodewangpan-bluesky.env'),
   path.join(HOME, '.workbuddy', 'wodewangpan-bluesky.env'),
 );

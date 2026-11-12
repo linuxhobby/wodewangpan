@@ -28,12 +28,15 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 
 const HOME = os.homedir();
 // 沙箱里 existsSync 会对真实存在的文件误报 false（statSync 正常），统一用 statSync 探测。
 const firstPresent = (...c) => { for (const p of c) { try { fs.statSync(p); return p; } catch {} } return c[0]; };
+// 权威源在私有仓：同目录的 wodewangpan-tg.env 优先，其次 ~/.qwenworkcn（迁移前的老位置），最后 ~/.workbuddy。
+// 判重记录 STATE_FILE 故意不跟着搬——那是现网状态，不进 git，搬走或复制都会导致重复发。
 const ENV_FILE = firstPresent(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), 'wodewangpan-tg.env'),
   path.join(HOME, '.qwenworkcn', 'wodewangpan-tg.env'),
   path.join(HOME, '.workbuddy', 'wodewangpan-tg.env'),
 );
