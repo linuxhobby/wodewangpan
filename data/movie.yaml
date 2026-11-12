@@ -1074,6 +1074,14 @@
   date: 2023-04-27
   added: 2026-09-30
   image: mv-054.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "7.1 GB"
+    format: "MKV"
+    tree: |
+      054-Knights.of.the.Zodiac.2023.1080p.AMZN.WEB-DL.DDP5.1.H.264-SCOPE/
+      Knights.of.the.Zodiac.2023.1080p.AMZN.WEB-DL.DDP5.1.H.264-SCOPE.mkv
 
 - id: mv-055
   title: "狩猎"
@@ -1086,6 +1094,14 @@
   date: 2022-08-10
   added: 2026-09-30
   image: mv-055.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "7.7 GB"
+    format: "M2TS"
+    tree: |
+      055-Hunt.2022.1080p.WEB-DL.AAC5.1.H264-BBQDDQ/
+      Hunt.2022.1080p.WEB-DL.AAC5.1.H264-BBQDDQ.m2ts
 
 - id: mv-056
   title: "幸运数字斯莱文"
@@ -1098,6 +1114,14 @@
   date: 2006-02-24
   added: 2026-09-30
   image: mv-056.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "2.0 GB"
+    format: "MKV"
+    tree: |
+      056-幸运数字斯莱文.Lucky Number Slevin.2006.BluRay.720p.x264.AC3-CMCT/
+      幸运数字斯莱文.Lucky Number Slevin.2006.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-057
   title: "罪证子弹3"
