@@ -77,10 +77,10 @@
 
   <div id="qr-panel">
     <h1>QQ 扫码登录</h1>
-    <div class="sub">新二维码会自动出现在下方，手机 QQ 扫一扫即可</div>
+    <div class="sub">二维码会自动出现在下方并随 NapCat 刷新，手机 QQ 扫一扫即可</div>
     <div id="qr-imgbox"><img id="qrimg" alt="二维码"></div>
-    <div id="qr-status">正在启动 NapCat…</div>
-    <div id="qr-tip">二维码几分钟自动过期；过期后 NapCat 会画新码，这里会自动换。</div>
+    <div id="qr-status">正在检测 NapCat 状态…</div>
+    <div id="qr-tip">二维码几分钟自动过期；过期后 NapCat 会画新码，这里会自动换图。</div>
     <button class="back" onclick="closeQr()">返回菜单</button>
   </div>
 
@@ -89,6 +89,7 @@ var NAPBAT = 'C:\\Users\\marco\\Downloads\\NapCatOneKey\\NapCat.Shell.v4\\napcat
 var QR_IMG = 'C:\\Users\\marco\\Downloads\\NapCatOneKey\\NapCat.Shell.v4\\napcat\\cache\\qrcode.png';
 var PY = 'C:\\Users\\marco\\.workbuddy\\tools\\venv\\Scripts\\python.exe';
 var QR_TOOL = 'C:\\Users\\marco\\Github\\wodewangpan\\bot\\scripts\\qr_desktop.py';
+var QR_OUT_DIR = 'C:\\Users\\marco\\Github\\wodewangpan\\bot\\icons';
 var QQUIN = '909008620';
 var qrTimer = null, qrBase = null, qrStart = 0, qrShown = false;
 
@@ -144,7 +145,21 @@ function fileMtime(p) {
   catch (e) { return null; }
 }
 
-function httpGet(url, timeoutMs) {
+// 用 WMI 按命令行判 NapCat 是否在跑；HTTP 探测 WebUI 会被 301 重定向坑（13:36 双实例事故的根因）
+function napcatRunning() {
+  try {
+    var wmi = GetObject('winmgmts:\\\\.\\root\\cimv2');
+    var items = wmi.ExecQuery("SELECT CommandLine FROM Win32_Process WHERE Name='node.exe'");
+    var e = new Enumerator(items);
+    for (; !e.atEnd(); e.moveNext()) {
+      var cl = String(e.item().CommandLine || '');
+      if (cl.indexOf('NapCat.Shell.v4') >= 0) return true;
+    }
+    return false;
+  } catch (err) { return null; }   // WMI 不可用时返回未知
+}
+
+function httpGet(url) {
   try {
     var x = new ActiveXObject('MSXML2.XMLHTTP');
     x.open('GET', url, false);
@@ -164,12 +179,26 @@ function showQr() {
   } catch (e) {}
   qrStart = (new Date()).getTime();
   qrBase = fileMtime(QR_IMG);
-  stat('正在启动 NapCat…');
-  // NapCat 没在跑（WebUI 6099 不通）才启动；在跑就等它自己画新码
-  if (httpGet('http://127.0.0.1:6099/') !== 200) {
+  qrShown = false;
+
+  // NapCat 没在跑才补启；跑着就不动它，等它画码
+  var running = napcatRunning();
+  if (running === false || (running === null && httpGet('http://127.0.0.1:6099/') === 0)) {
+    stat('NapCat 没在跑，正在启动…');
     var sh = new ActiveXObject('WScript.Shell');
     sh.Run('cmd /c "' + NAPBAT + '" -q ' + QQUIN, 0, false);
+  } else {
+    stat('NapCat 在跑，等待/读取二维码…');
   }
+
+  // 现有码是 90 秒内画的就算新鲜，直接展示，不等下一张
+  try {
+    if (qrBase) {
+      var age = ((new Date()).getTime() - qrBase.getTime()) / 1000;
+      if (age >= 0 && age < 90) { genQr(); }
+    }
+  } catch (e) {}
+
   qrTimer = window.setInterval(qrTick, 2000);
 }
 
@@ -184,32 +213,48 @@ function closeQr() {
   document.getElementById('pick').focus();
 }
 
+// 放大最新码 → 输出唯一文件名（纯 ASCII 路径，避开 IE 对中文 file URL 和缓存的问题）→ 展示
+function genQr() {
+  var sh = new ActiveXObject('WScript.Shell');
+  var ts = (new Date()).getTime();
+  var outp = QR_OUT_DIR + '\\qr-' + ts + '.png';
+  // 清掉其他临时图（保留当前正在显示的那张）
+  try {
+    var fso = new ActiveXObject('Scripting.FileSystemObject');
+    var curName = '';
+    try { curName = decodeURIComponent(String(document.getElementById('qrimg').src || '')).split('/').pop(); } catch (e0) {}
+    var folder = fso.GetFolder(QR_OUT_DIR);
+    var e = new Enumerator(folder.Files);
+    for (; !e.atEnd(); e.moveNext()) {
+      if (/^qr-\d+\.png$/i.test(e.item().Name) && e.item().Name !== curName) e.item().Delete(true);
+    }
+  } catch (err) {}
+  sh.Run('"' + PY + '" "' + QR_TOOL + '" "' + QR_IMG + '" "' + outp + '"', 0, true);   // 同步，约 1 秒
+  var img = document.getElementById('qrimg');
+  img.src = 'file:///' + outp.replace(/\\/g, '/');
+  img.style.display = 'block';
+  qrBase = fileMtime(QR_IMG);
+  qrShown = true;
+  stat('请用手机 QQ 扫描上方二维码', 'warn');
+}
+
 function qrTick() {
-  var sh, img, elapsed;
-  // 1) 登录成功 = 3000 端口就绪
+  // 1) 登录成功 = OneBot 3000 端口有响应
   if (httpGet('http://127.0.0.1:3000/get_status') !== 0) {
     window.clearInterval(qrTimer); qrTimer = null;
-    stat('✅ QQ 登录成功，机器人已恢复', 'ok');
+    stat('QQ 登录成功，机器人已恢复', 'ok');
     window.setTimeout(closeQr, 4000);
     return;
   }
-  // 2) NapCat 画出了新码 → 放大落桌面并展示
-  var m = fileMtime(QR_IMG);
-  elapsed = ((new Date()).getTime() - qrStart) / 1000;
-  if (m && (!qrBase || m > qrBase)) {
-    stat('检测到新二维码，正在生成放大版…');
-    sh = new ActiveXObject('WScript.Shell');
-    sh.Run('"' + PY + '" "' + QR_TOOL + '" "' + QR_IMG + '"', 0, true);   // 同步，约 1 秒
-    img = document.getElementById('qrimg');
-    img.src = encodeURI('file:///C:/Users/marco/Desktop/QQ登录二维码.png') + '?t=' + (new Date()).getTime();
-    img.style.display = 'block';
-    qrBase = m;
-    qrShown = true;
-    stat('📱 请用手机 QQ 扫描上方二维码', 'warn');
-    return;
-  }
+  // 2) NapCat 画出了比基准新的码 → 展示
+  try {
+    var m = fileMtime(QR_IMG);
+    if (m && (!qrBase || m.getTime() > qrBase.getTime())) { genQr(); return; }
+  } catch (e2) {}
+  // 3) 超时提示
+  var elapsed = ((new Date()).getTime() - qrStart) / 1000;
   if (elapsed > 150 && !qrShown) {
-    stat('等了很久还没等到新码，检查黑色控制台窗口的报错，或点「返回菜单」再试', 'warn');
+    stat('等了很久还没等到新码，检查 NapCat 控制台窗口的报错，或点「返回菜单」再试', 'warn');
   }
 }
 </script>

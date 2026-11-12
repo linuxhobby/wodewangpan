@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 r"""QQ 登录二维码放大落桌面（供 菜单.vbs 序号 4 调用）。
 
-用法: python qr_desktop.py [napcat二维码路径]
-默认取 NapCat Shell v4 的 napcat/cache/qrcode.png。
-输出: 桌面\QQ登录二维码.png（放大 4 倍 + 静区白边，覆盖旧文件）。
+用法: python qr_desktop.py [napcat二维码路径] [输出路径]
+默认取 NapCat Shell v4 的 napcat/cache/qrcode.png，输出桌面 QQ登录二维码.png。
+（HTA 面板会传第二参数输出到 bot/icons/qr-<时间戳>.png，纯 ASCII 路径供 img 显示。）
 """
 import os
 import sys
@@ -13,7 +13,7 @@ from PIL import Image
 SRC = sys.argv[1] if len(sys.argv) > 1 else \
     r"C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4\napcat\cache\qrcode.png"
 DESKTOP = os.path.join(os.environ["USERPROFILE"], "Desktop")
-OUT = os.path.join(DESKTOP, "QQ登录二维码.png")
+OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(DESKTOP, "QQ登录二维码.png")
 
 if not os.path.isfile(SRC):
     print("二维码文件不存在:", SRC)
@@ -32,9 +32,10 @@ canvas.paste(big, (pad, pad))
 canvas.save(OUT)
 print("已保存:", OUT, canvas.size)
 
-# 原图备份（万一放大版反而不认）
-try:
-    import shutil
-    shutil.copyfile(SRC, os.path.join(DESKTOP, "QQ登录二维码-原图.png"))
-except OSError as e:
-    print("原图备份失败(忽略):", e)
+# 原图备份（桌面模式才备份；HTA 传了自定义输出路径时不备份，避免刷码时重复覆盖）
+if len(sys.argv) <= 2:
+    try:
+        import shutil
+        shutil.copyfile(SRC, os.path.join(DESKTOP, "QQ登录二维码-原图.png"))
+    except OSError as e:
+        print("原图备份失败(忽略):", e)
