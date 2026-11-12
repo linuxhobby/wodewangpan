@@ -896,6 +896,15 @@
   date: 2024-05-23
   added: 2026-09-30
   image: mv-044.jpg
+  updated: 2026-11-12
+  files:
+    count: 2
+    size: "10.1 GB"
+    format: "SRT / MKV"
+    tree: |
+      044-Wake.Up.Dead.Man.A.Knives.Out.Mystery/
+      Wake.Up.Dead.Man.A.Knives.Out.Mystery.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-EniaHD.mkv
+      Wake.Up.Dead.Man.A.Knives.Out.Mystery.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-EniaHD_CHS_11720894.srt
 
 - id: mv-045
   title: "虎胆龙威"
@@ -908,6 +917,17 @@
   date: 1988-07-15
   added: 2026-09-30
   image: mv-045.jpg
+  updated: 2026-11-12
+  files:
+    count: 6
+    tree: |
+      045-虎胆龙威.Die Hard/
+      虎胆龙威1.Die.Hard.1988.BD1080P.X264.AC3.MandarinEnglish.CHS-ENG/
+      虎胆龙威2.Die.Hard.2.1990.BD1080P.X264.AC3.MandarinEnglish.CHS-ENG/
+      虎胆龙威3.Die.Hard.With.a.Vengeance.1995.BD1080P.X264.AAC.MandarinEnglish.CHS-ENG/
+      虎胆龙威4.Live.Free.or.Die.Hard.2007.BD1080P.X264.AAC.MandarinEnglish.CHS-ENG/
+      虎胆龙威5.A.Good.Day.to.Die.Hard.2013.EXTENDED.BD1080P.X264.AAC.MandarinEnglish.CHS-ENG/
+      .DS_Store
 
 - id: mv-047
   title: "诺曼底72小时"
@@ -920,6 +940,14 @@
   date: 2026-05-28
   added: 2026-09-30
   image: mv-047.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "17.7 GB"
+    format: "MKV"
+    tree: |
+      047-诺曼底72小时.Pressure.2026.2160p.WEB-DL.DDP5.1.Atmos.H265.HDR.DV-DIY@HDSWEB/
+      诺曼底72小时.Pressure.2026.2160p.WEB-DL.DDP5.1.Atmos.H265.HDR.DV-DIY@HDSWEB.mkv
 
 - id: mv-048
   title: "特工迷阵"
