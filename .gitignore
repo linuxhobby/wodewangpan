@@ -1,0 +1,15 @@
+# 私有仓：凭据按指挥官口径原样入库（config.json / *.env 不再排除）
+# 但运行态与可再生垃圾永远不进 git——聊天日志里有用户 id 与会话内容，属隐私不是配置
+logs/
+__pycache__/
+*.pyc
+*.pyo
+*.lnk
+
+# 扫码面板/桌面落盘的一次性二维码临时图
+bot/icons/qr-*.png
+bot/**/qr-*.png
+
+# Telegram / Bluesky 判重记录：现网状态，只留本机（删了会重复发）
+posted.json
+*.state.json
