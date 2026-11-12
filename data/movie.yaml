@@ -1,4 +1,4 @@
-# 电影资源（444 条）
+# 电影资源（445 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -5842,3 +5842,29 @@
       Legend.of.the.White.Dragon.2026.2160p.UHD.Blu-ray.Atmos.TrueHD7.1.x265-HDH.mkv
       Legend.of.the.White.Dragon.2026.2160p.UHD.Blu-ray.Atmos.TrueHD7.1.x265-HDH.nfo
       Cover.png
+
+- id: mv-445
+  title: "隐入尘烟"
+  category: 电影
+  tags: ["电影", "剧情", "爱情", "隐入尘烟 隐入尘烟"]
+  quark_url: "https://pan.quark.cn/s/dbd2c55cf644"
+  description: "西北农村，沉默寡言的马有铁生活贫困，常年独自劳作；身体不便的曹贵英也一直寄居在哥嫂家中，备受冷落。两个在各自家庭中都没有多少选择的人，经人撮合成为夫妻。起初陌生而拘谨的两个人，在日复一日的相处与劳作中逐渐学会彼此照顾，也第一次开始认真经营属于自己的生活。他们一起种地、养鸡、打土坯、盖房子，在贫瘠的土地上慢慢建立起一个小小的家。面对生活不断带来的困顿与变故，这对原本孤单的人也在彼此身上找到了从未拥有过的陪伴与温暖……｜TMDB 7.3"
+  date: 2022-07-08
+  added: 2026-11-12
+  image: mv-445.jpg
+  updated: 2026-11-12
+  files:
+    count: 9
+    size: "14.3 GB"
+    format: "JPG×6 / MKV / PNG / NFO"
+    tree: |
+      445-隐入尘烟 (2022)/
+      backdrop.jpg
+      banner.jpg
+      fanart.jpg
+      landscape.jpg
+      poster.jpg
+      thumb.jpg
+      Return to Dust (2022) - 2160p WEB-DL H265 DDP 2.0.mkv
+      Return to Dust (2022) - 2160p WEB-DL H265 DDP 2.0.nfo
+      logo.png

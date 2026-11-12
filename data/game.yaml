@@ -1,4 +1,4 @@
-# 游戏资源（38 条）
+# 游戏资源（40 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -780,3 +780,44 @@
       nsp非整合版/
       xci整合版v1.0.5/
       1.0.4金手指.zip
+
+- id: game-039
+  title: "三国志14 威力加强版"
+  category: 游戏
+  tags: ["游戏", "模拟", "策略", "三国志14 Romance of the Three Kingdoms XIV"]
+  quark_url: "https://pan.quark.cn/s/87a5a684573f"
+  description: "光荣特库摩（KOEI TECMO GAMES）经典历史策略模拟系列第 14 代《三国志14》。本作以「夺取土地、丧失土地、收复失地——得土地者得天下」为核心，围绕广阔的国土展开势力争夺：玩家扮演君主，通过内政经营、军事征伐、外交斡旋与武将招募，在三国乱世中攻城略地、逐步统一天下。目录内为收录《威力加强版》扩展包（Diplomacy and Strategy Expansion Pack）的整合版本，追加军师系统、更多剧本与武将、战术要素及编辑功能，策略深度与耐玩度进一步提升。类型：模拟 / 策略。发行时间 2020-01-15。"
+  date: 2020-01-15
+  added: 2026-11-12
+  image: game-039.jpg
+  updated: 2026-11-12
+  files:
+    count: 4
+    format: "NSP / XCI"
+    tree: |
+      039-三国志14 with威力加强传承版 ROMANCE OF THE THREE KINGDOMS XIV Diplomacy and Strategy Expansion Pack Bundle/
+      DLC 1/
+      dlc/
+      [升级档v1.1.1][0100CD4012DCA800][22.5.0][中文][HK].nsp
+      [本体v1.1.0][0100CD4012DCA000][22.5.0][中文][HK].xci
+
+- id: game-040
+  title: "七龙珠 超宇宙2"
+  category: 游戏
+  tags: ["游戏", "动作", "冒险", "七龙珠 超宇宙2 Dragon Ball Xenoverse 2"]
+  quark_url: "https://pan.quark.cn/s/45b5bac97104"
+  description: "万代南梦宫（Bandai Namco Entertainment）出品、QLOC 与 Dimps 开发的《龙珠》题材动作角色扮演续作《DRAGON BALL XENOVERSE 2 七龙珠 超宇宙2》，带领玩家进入系列史上最庞大、最多彩的世界。玩家可创建并培养专属的时空巡逻者角色，在跨越各个时空的《龙珠》经典剧情中战斗、修行，收集人气角色、招式与变身形态。本作支持单人剧情与大型多人在线对战 / 合作，画面表现相较前作全面提升。本目录为 Nintendo Switch 版本。类型：动作 / 冒险 / 大型多人在线。发行时间 2016-10-27。"
+  date: 2016-10-27
+  added: 2026-11-12
+  image: game-040.jpg
+  updated: 2026-11-12
+  files:
+    count: 5
+    format: "NSP×2"
+    tree: |
+      040-七龙珠 超宇宙2 DRAGON BALL XENOVERSE 2 FOR NINTENDO SWITCH/
+      20261029批次新增/
+      历史版本[不用下载]/
+      DLC81/
+      [本体v1.07.00][010078D000F88000][3.0.0][中文][US].nsp
+      [升级档v1.26.01][010078D000F88800][22.5.0][中文][US].nsp

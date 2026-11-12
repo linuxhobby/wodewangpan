@@ -1,4 +1,4 @@
-# 电视剧资源（173 条）
+# 电视剧资源（175 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3330,3 +3330,48 @@
       season01-poster.jpg
       tvshow.nfo
       logo.png
+
+- id: tv-106
+  title: "谁是爱丽丝"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "悬疑", "犯罪", "谁是爱丽丝 Hunting Alice Bell"]
+  quark_url: "https://pan.quark.cn/s/c916519a5b3e"
+  description: "【第 1 季 · 共 6 集】Hunting Alice Bell（Hunting Alice Bell）是 2026 年首播的剧情剧集，官方暂未公布详细剧情简介。本剧类型：剧情 / 悬疑 / 犯罪。2026 年首播，已获续订，仍在播出，全剧 1 季，累计 6 集。播出平台：Channel 4。制片国家/地区：英国。主创：David Baddiel、Peter Bradshaw。｜TMDB 10.0"
+  date: 2026-11-11
+  added: 2026-11-12
+  image: tv-106.jpg
+  updated: 2026-11-12
+  files:
+    count: 6
+    size: "9.5 GB"
+    format: "MKV×6"
+    tree: |
+      106-谁是爱丽丝-Hunting Alice Bell (2026)/
+      Hunting.Alice.Bell.2026.S01E01.1080p.WEB-DL.AAC.Qshan.mkv
+      Hunting.Alice.Bell.2026.S01E02.1080p.WEB-DL.AAC.Qshan.mkv
+      Hunting.Alice.Bell.2026.S01E03.1080p.WEB-DL.AAC.Qshan.mkv
+      Hunting.Alice.Bell.2026.S01E04.1080p.WEB-DL.AAC.Qshan.mkv
+      Hunting.Alice.Bell.2026.S01E05.1080p.WEB-DL.AAC.Qshan.mkv
+      Hunting.Alice.Bell.2026.S01E06.1080p.WEB-DL.AAC.Qshan.mkv
+
+- id: tv-107
+  title: "莓好遇见你"
+  category: 电视剧
+  tags: ["电视剧", "喜剧", "剧情", "莓好遇见你 メリーベリーラブ"]
+  quark_url: "https://pan.quark.cn/s/e8219d96bbfa"
+  description: "【第 1 季 · 共 10 集】一夜之间失去一切的韩国空间规划师，与一心只扑在草莓上的日本农业女孩——在美丽岛屿上展开的、跨越国界的酸甜浪漫爱情喜剧。本剧类型：喜剧 / 剧情。2026 年首播，已获续订，仍在播出，全剧 1 季，累计 10 集。播出平台：Nippon TV。制片国家/地区：日本、韩国。主创：李载允。出品方：Nippon Television Network Corporation、CJ ENM Japan、Shochiku Studio。｜TMDB 8.3"
+  date: 2026-10-07
+  added: 2026-11-12
+  image: tv-107.jpg
+  updated: 2026-11-12
+  files:
+    count: 5
+    size: "6.3 GB"
+    format: "MKV×5"
+    tree: |
+      107-爱上草莓的季节/
+      E02.mkv
+      E03.mkv
+      E04.mkv
+      E05.mkv
+      E06.mkv
