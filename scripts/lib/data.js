@@ -13,10 +13,13 @@ const NETDISK_PRESETS = [
   { key: 'mobile_url', code: 'mobile_code', kind: 'mobile', name: '移动云盘' },
 ];
 
+// 构建期兜底护栏：只防单条超长撑爆页面，不参与日常口径。
+// 实际写入上限由 skill 侧控制在 700 字（lib/desc.mjs 的 DESC_MAX、process-batch / app-batch / backfill-desc），
+// 这里刻意保留 1200：现有条目最长 710 字，若降到 700 会在构建时把存量正文截成省略号，属于「动以前的数据」。
 const MAX_DESC = 1200;
 
-/** 正文下限：低于它详情页易被判薄内容。改这里 = 改全站标准 */
-export const MIN_DESC = 300;
+/** 正文下限：低于它详情页易被判薄内容。改这里 = 改全站标准（2026-11-12 起 150 字，此前长期漂在 300） */
+export const MIN_DESC = 150;
 
 /** 正文字数：【…】标签与结尾 ｜… 署名不计入。全站只此一个口径，改它会影响 list-short-desc / fill-desc / skill */
 export function bodyLength(text) {

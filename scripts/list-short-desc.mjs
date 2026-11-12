@@ -2,14 +2,16 @@
  * 列出简介过短的资源，方便逐条补写。
  *
  * Bing / Google 对「模板重 + 正文稀」的聚合页容忍度很低，简介越短越容易被判 thin content。
- * 现在的硬标准是**正文不低于 300 字**（2026-10-08 从 200 提高），所以默认阈值就是 300。
+ * 现在的硬标准是**正文不低于 150 字**（沿革：2026-10-08 从 200 提到 300 → 2026-10-22 下调回 200 → 2026-11-12 下调到 150），
+ * 默认阈值取 data.js 的 MIN_DESC 这一处定义。注意：data.js 里该常量曾长期漂在 300 没跟着 SKILL 降，
+ * 2026-11-12 已校正为 150，本站下限与写入侧 lib/desc.mjs 的 DESC_MIN 对齐。
  *
  * 字数口径与 fill-desc.mjs、skill 的 check-desc.mjs 三处必须一致：
  * 先剥掉【第 N 季 · 共 M 集】这类标签，再剥掉结尾 ｜TMDB 评分 / ｜作者 / ｜开发者 署名。
  *
  * 用法：
- *   npm run list:short                 # 列出正文不足 300 字的全部条目（默认阈值 300）
- *   npm run list:short -- --max=200    # 换个阈值复核
+ *   npm run list:short                 # 列出正文不足 150 字的全部条目（默认阈值取 data.js 的 MIN_DESC）
+ *   npm run list:short -- --max=250    # 换个阈值复核
  *   npm run list:short -- --limit=30   # 只列最前的 30 条
  *   npm run list:short -- --cat=电影    # 只看某个分类
  *
