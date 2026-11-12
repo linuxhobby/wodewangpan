@@ -22,8 +22,8 @@ BOT_ROOT = os.path.dirname(os.path.dirname(_HERE))           # bot/
 FEISHU_SCRIPT = os.path.join(BOT_ROOT, "scripts", "notify-feishu.mjs")
 
 # TG 群的失效反馈发到指挥官指定的另一个飞书应用：
-# 凭据放 ~/.workbuddy/feishu-app-tg.json（app_id / app_secret / 可选 target_union），
-# 或环境变量 FEISHU_TG_APP_ID / FEISHU_TG_APP_SECRET，均不入库。
+# 凭据在 bot/config.json 的 feishu.tg（app_id / app_secret / 可选 target_union），
+# 也支持环境变量 FEISHU_TG_APP_ID / FEISHU_TG_APP_SECRET 或 ~/.workbuddy/feishu-app-tg.json 覆盖。
 # QQ 反馈、NapCat 看门狗通知仍走默认机器人应用。
 TG_PROFILE = "tg"
 

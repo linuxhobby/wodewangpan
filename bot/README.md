@@ -39,9 +39,9 @@ QQ 群 @机器人  →  NapCat  →  HTTP 上报 :6700  →  查站点  →  回
   群里回「已反馈给管理员，谢谢」（飞书标题「搜索无结果反馈」）。按钮 30 分钟内有效、用一次即废。
 
 **TG 群的反馈走单独的飞书应用**：`core/feedback.py` 按 `source=telegram` 自动选 `profile=tg`，
-经环境变量 `FEISHU_PROFILE` 传给 `notify-feishu.mjs`；凭据读 `~/.workbuddy/feishu-app-tg.json`
-（`app_id` / `app_secret`，可选 `target_union`）或 `FEISHU_TG_APP_ID` / `FEISHU_TG_APP_SECRET`。
-专用通道缺凭据时直接判失败，**不回退**默认应用，避免反馈发错地方。
+经环境变量 `FEISHU_PROFILE` 传给 `notify-feishu.mjs`；凭据优先读 `config.json` 的 `feishu.tg`
+（`app_id` / `app_secret`，可选 `target_union`），也支持 `FEISHU_TG_APP_ID` / `FEISHU_TG_APP_SECRET` 或
+`~/.workbuddy/feishu-app-tg.json` 覆盖。专用通道缺凭据时直接判失败，**不回退**默认应用，避免反馈发错地方。
 QQ 的 `/f`、NapCat 看门狗通知仍走默认机器人应用。
 
 **群里不用 @ 机器人**，直接以 `/` 开头发指令即可。@ 了之后只发裸关键词也能搜，例如 `青之箱`。

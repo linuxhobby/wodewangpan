@@ -13,15 +13,16 @@
  *   node notify-feishu.mjs --dry-run alert.md          # 只打印卡片 JSON，不发送
  *   node notify-feishu.mjs --profile tg alert.md       # 走 TG 群反馈专用的另一个飞书应用
  *
- * 凭据来源（默认通道，优先级从高到低，均不入库）：
+ * 凭据来源（默认通道，优先级从高到低）：
  *   1. 环境变量 FEISHU_APP_ID / FEISHU_APP_SECRET
- *   2. 机器人专用 ~/.workbuddy/feishu-app-bot.json（本脚本独享，gitignore）
- *   3. 用户级 ~/.workbuddy/feishu-app.json（跨项目共享，gitignore）
- * 找不到凭据时回退 lark-cli（feishu 连接器）以尽量保证送达。
+ *   2. 机器人专用 ~/.workbuddy/feishu-app-bot.json
+ *   3. 用户级 ~/.workbuddy/feishu-app.json
+ *   4. 找不到凭据时回退 lark-cli（feishu 连接器）以尽量保证送达。
  *
- * 专用通道 --profile <name> / 环境变量 FEISHU_PROFILE=<name>：
- *   1. 环境变量 FEISHU_<NAME>_APP_ID / FEISHU_<NAME>_APP_SECRET
- *   2. ~/.workbuddy/feishu-app-<name>.json 的 app_id / app_secret
+ * 专用通道 --profile <name> / 环境变量 FEISHU_PROFILE=<name>，凭据按下列顺序取、命中即止：
+ *   1. bot/config.json 的 feishu.<name>.app_id / app_secret（私人仓库可直接写这里）
+ *   2. 环境变量 FEISHU_<NAME>_APP_ID / FEISHU_<NAME>_APP_SECRET
+ *   3. ~/.workbuddy/feishu-app-<name>.json 的 app_id / app_secret
  *   可选 target_union（或 FEISHU_<NAME>_TARGET_UNION）覆盖收件人。
  *   专用通道找不到凭据时**直接失败**，绝不回退默认应用或 lark-cli，避免反馈发错地方。
  *
@@ -45,8 +46,20 @@ const FEISHU_API = 'https://open.feishu.cn';
 const MAX_TITLE_LEN = 40;
 
 // ---------- 凭据解析 ----------
+function loadConfig() {
+  const p = path.join(__dirname, '..', 'config.json');
+  try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return {}; }
+}
+
 function loadCredentials(profile) {
   if (profile) {
+    const cfg = loadConfig();
+    const app = cfg && cfg.feishu && cfg.feishu[profile];
+    if (app && app.app_id && app.app_secret) {
+      return { appId: app.app_id, appSecret: app.app_secret,
+               src: `config.json:feishu.${profile}`,
+               targetUnion: app.target_union || '' };
+    }
     const tag = profile.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
     const envId = process.env[`FEISHU_${tag}_APP_ID`];
     const envSecret = process.env[`FEISHU_${tag}_APP_SECRET`];
