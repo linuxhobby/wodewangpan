@@ -575,6 +575,19 @@
   date: 2006-07-06
   added: 2026-09-30
   image: mv-028.jpg
+  updated: 2026-11-12
+  files:
+    count: 5
+    size: "75.3 GB"
+    format: "MKV×5"
+    tree: |
+      028-加勒比海盗/
+      4K/
+      加勒比海盗1：黑珍珠号的诅咒Pirates.of.the.Caribbean.The.Curse.of.the.Black.Pearl.2003.2160p.SDR.H265.AAC.English.CHS-ENG.BOBO.mkv
+      加勒比海盗2：聚魂棺Pirates.of the.Caribbean.Dead.Man&#39;s.Chest.2006.2160p.SDR.H265.AAC.English.CHS-ENG.BOBO.mkv
+      加勒比海盗3：世界的尽头Pirates.of the.Caribbean.At.World&#39;s.End.2007.2160p.SDR.H265.AAC.English.CHS-ENG.BOBO.mkv
+      加勒比海盗4：惊涛怪浪Pirates.of the.Caribbean.On.Stranger.Tides.2011.2160p.SDR.H265.AAC.English.CHS-ENG.BOBO.mkv
+      加勒比海盗5：死无对证Pirates.of.the.Caribbean.Dead.Men.Tell.No.Tales.2017.BluRay.SDR.2160p.H265.TrueHD.7.1.Atmos.English.CHS-ENG.BOBO.mkv
 
 - id: mv-029
   title: "末代皇帝"
@@ -587,6 +600,14 @@
   date: 1987-10-04
   added: 2026-09-30
   image: mv-029.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "4.4 GB"
+    format: "MKV"
+    tree: |
+      029-末代皇帝·1987·国语中字 加长版/
+      Top146.末代皇帝(加长版).The.Last.Emperor.1987.Extended.Bluray.1080p.x265.AAC(5.1).2Audios.GREENOTEA.mkv
 
 - id: mv-030
   title: "月球叛军：火之女"
@@ -599,6 +620,13 @@
   date: 2023-12-15
   added: 2026-09-30
   image: mv-030.jpg
+  updated: 2026-11-12
+  files:
+    count: 2
+    tree: |
+      030-月球叛军/
+      月球叛军：火之女（2023）/
+      月球叛军2：烙印之人（2024）/
 
 - id: mv-031
   title: "心慌方"
