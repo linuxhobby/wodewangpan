@@ -14,10 +14,11 @@
  *   node notify-feishu.mjs --profile tg alert.md       # 走 TG 群反馈专用的另一个飞书应用
  *
  * 凭据来源（默认通道，优先级从高到低）：
- *   1. 环境变量 FEISHU_APP_ID / FEISHU_APP_SECRET
- *   2. 机器人专用 ~/.workbuddy/feishu-app-bot.json
- *   3. 用户级 ~/.workbuddy/feishu-app.json
- *   4. 找不到凭据时回退 lark-cli（feishu 连接器）以尽量保证送达。
+ *   1. 本仓库 bot/config.json 的 feishu.default（app_id / app_secret / 可选 target_union）
+ *   2. 环境变量 FEISHU_APP_ID / FEISHU_APP_SECRET
+ *   3. ~/.workbuddy/feishu-app-bot.json（兼容回退）
+ *   4. ~/.workbuddy/feishu-app.json（兼容回退，跨项目共享）
+ *   5. 找不到凭据时回退 lark-cli（feishu 连接器）以尽量保证送达。
  *
  * 专用通道 --profile <name> / 环境变量 FEISHU_PROFILE=<name>，凭据按下列顺序取、命中即止：
  *   1. bot/config.json 的 feishu.<name>.app_id / app_secret（私人仓库可直接写这里）
@@ -78,6 +79,15 @@ function loadCredentials(profile) {
       } catch { /* ignore */ }
     }
     return null;
+  }
+
+  // 默认通道：优先本仓库 config.json 的 feishu.default
+  const cfg = loadConfig();
+  const def = cfg && cfg.feishu && cfg.feishu.default;
+  if (def && def.app_id && def.app_secret) {
+    return { appId: def.app_id, appSecret: def.app_secret,
+             src: 'config.json:feishu.default',
+             targetUnion: def.target_union || '' };
   }
 
   const appId = process.env.FEISHU_APP_ID;
