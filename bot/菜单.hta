@@ -38,30 +38,60 @@
   #go { margin-left:8px; padding:7px 18px; font-family:inherit; font-size:15px; color:#fff;
         background:#2563eb; border:0; border-radius:6px; cursor:pointer; }
   #msg { height:20px; margin-top:8px; font-size:14px; color:#dc2626; }
+
+  /* ---- 扫码面板 ---- */
+  #qr-panel { display:none; text-align:center; }
+  #qr-imgbox { width:340px; height:340px; margin:6px auto 10px; padding:12px;
+               background:#fff; border:1px solid #d5dce5; border-radius:10px; }
+  #qr-imgbox img { width:316px; height:316px; display:none; }
+  #qr-status { min-height:24px; font-size:16px; font-weight:600; color:#1f2937; }
+  #qr-status.ok { color:#16a34a; }
+  #qr-status.warn { color:#d97706; }
+  #qr-tip { font-size:13px; color:#6b7280; margin-top:6px; }
+  .back { margin-top:12px; padding:8px 26px; font-family:inherit; font-size:15px;
+          color:#374151; background:#fff; border:1px solid #d5dce5; border-radius:6px; cursor:pointer; }
 </style>
 </head>
 <body onload="init()">
-  <h1>机器人控制台</h1>
-  <div class="sub">点击按钮，或输入序号 1-7 后回车 · Esc 退出</div>
+  <div id="menu">
+    <h1>机器人控制台</h1>
+    <div class="sub">点击按钮，或输入序号 1-7 后回车 · Esc 退出</div>
 
-  <div class="group">QQ 机器人</div>
-  <button class="item" onclick="run(0)"><span class="num">1</span>启动QQ机器人</button>
-  <button class="item" onclick="run(1)"><span class="num">2</span>重启QQ机器人</button>
-  <button class="item" onclick="run(2)"><span class="num">3</span>结束QQ机器人</button>
-  <button class="item" onclick="run(3)"><span class="num">4</span>QQ扫码登录</button>
+    <div class="group">QQ 机器人</div>
+    <button class="item" onclick="run(0)"><span class="num">1</span>启动QQ机器人</button>
+    <button class="item" onclick="run(1)"><span class="num">2</span>重启QQ机器人</button>
+    <button class="item" onclick="run(2)"><span class="num">3</span>结束QQ机器人</button>
+    <button class="item" onclick="run(3)"><span class="num">4</span>QQ扫码登录</button>
 
-  <div class="group">TG 机器人</div>
-  <button class="item" onclick="run(4)"><span class="num">5</span>启动TG机器人</button>
-  <button class="item" onclick="run(5)"><span class="num">6</span>重启TG机器人</button>
-  <button class="item" onclick="run(6)"><span class="num">7</span>结束TG机器人</button>
+    <div class="group">TG 机器人</div>
+    <button class="item" onclick="run(4)"><span class="num">5</span>启动TG机器人</button>
+    <button class="item" onclick="run(5)"><span class="num">6</span>重启TG机器人</button>
+    <button class="item" onclick="run(6)"><span class="num">7</span>结束TG机器人</button>
 
-  <div class="foot">
-    输入序号：<input id="pick" type="text" maxlength="2" autocomplete="off">
-    <button id="go" onclick="goPick()">执行</button>
-    <div id="msg"></div>
+    <div class="foot">
+      输入序号：<input id="pick" type="text" maxlength="2" autocomplete="off">
+      <button id="go" onclick="goPick()">执行</button>
+      <div id="msg"></div>
+    </div>
+  </div>
+
+  <div id="qr-panel">
+    <h1>QQ 扫码登录</h1>
+    <div class="sub">新二维码会自动出现在下方，手机 QQ 扫一扫即可</div>
+    <div id="qr-imgbox"><img id="qrimg" alt="二维码"></div>
+    <div id="qr-status">正在启动 NapCat…</div>
+    <div id="qr-tip">二维码几分钟自动过期；过期后 NapCat 会画新码，这里会自动换。</div>
+    <button class="back" onclick="closeQr()">返回菜单</button>
   </div>
 
 <script language="JavaScript">
+var NAPBAT = 'C:\\Users\\marco\\Downloads\\NapCatOneKey\\NapCat.Shell.v4\\napcat.bat';
+var QR_IMG = 'C:\\Users\\marco\\Downloads\\NapCatOneKey\\NapCat.Shell.v4\\napcat\\cache\\qrcode.png';
+var PY = 'C:\\Users\\marco\\.workbuddy\\tools\\venv\\Scripts\\python.exe';
+var QR_TOOL = 'C:\\Users\\marco\\Github\\wodewangpan\\bot\\scripts\\qr_desktop.py';
+var QQUIN = '909008620';
+var qrTimer = null, qrBase = null, qrStart = 0, qrShown = false;
+
 function botDir(sh) {
   var d = sh.ExpandEnvironmentStrings('%WODEWANGPAN_BOT_DIR%');
   if (d && d.charAt(0) !== '%' && d.indexOf('\\') >= 0) return d.replace(/\\+$/, '');
@@ -70,6 +100,7 @@ function botDir(sh) {
 }
 
 function run(i) {
+  if (i === 3) { showQr(); return; }   // 扫码在 HTA 内直接呈现
   var sh = new ActiveXObject('WScript.Shell');
   sh.Run('wscript.exe "' + botDir(sh) + '\\菜单.vbs" ' + (i + 1), 1, false);
   window.close();
@@ -93,10 +124,93 @@ function init() {
 function onKey() {
   var e = window.event, k = e.keyCode;
   if (k === 27) { window.close(); return; }
+  if (document.getElementById('qr-panel').style.display === 'block') return;
   if (k === 13) { goPick(); return; }
   if (e.srcElement && e.srcElement.id === 'pick') return;
   if (k >= 49 && k <= 55) run(k - 49);
   else if (k >= 97 && k <= 103) run(k - 97);
+}
+
+/* ---------------- 扫码面板 ---------------- */
+
+function stat(text, cls) {
+  var el = document.getElementById('qr-status');
+  el.innerText = text;
+  el.className = cls || '';
+}
+
+function fileMtime(p) {
+  try { return new ActiveXObject('Scripting.FileSystemObject').GetFile(p).DateLastModified; }
+  catch (e) { return null; }
+}
+
+function httpGet(url, timeoutMs) {
+  try {
+    var x = new ActiveXObject('MSXML2.XMLHTTP');
+    x.open('GET', url, false);
+    x.setRequestHeader('If-Modified-Since', 'Thu, 01 Jan 1970 00:00:00 GMT');
+    x.send(null);
+    return x.status;
+  } catch (e) { return 0; }
+}
+
+function showQr() {
+  document.getElementById('menu').style.display = 'none';
+  document.getElementById('qr-panel').style.display = 'block';
+  document.getElementById('qrimg').style.display = 'none';
+  try {
+    window.resizeTo(560, 800);
+    window.moveTo(Math.max(0, (screen.width - 560) / 2), Math.max(0, (screen.height - 800) / 2));
+  } catch (e) {}
+  qrStart = (new Date()).getTime();
+  qrBase = fileMtime(QR_IMG);
+  stat('正在启动 NapCat…');
+  // NapCat 没在跑（WebUI 6099 不通）才启动；在跑就等它自己画新码
+  if (httpGet('http://127.0.0.1:6099/') !== 200) {
+    var sh = new ActiveXObject('WScript.Shell');
+    sh.Run('cmd /c "' + NAPBAT + '" -q ' + QQUIN, 0, false);
+  }
+  qrTimer = window.setInterval(qrTick, 2000);
+}
+
+function closeQr() {
+  if (qrTimer) { window.clearInterval(qrTimer); qrTimer = null; }
+  document.getElementById('qr-panel').style.display = 'none';
+  document.getElementById('menu').style.display = 'block';
+  try {
+    window.resizeTo(560, 680);
+    window.moveTo(Math.max(0, (screen.width - 560) / 2), Math.max(0, (screen.height - 680) / 2));
+  } catch (e) {}
+  document.getElementById('pick').focus();
+}
+
+function qrTick() {
+  var sh, img, elapsed;
+  // 1) 登录成功 = 3000 端口就绪
+  if (httpGet('http://127.0.0.1:3000/get_status') !== 0) {
+    window.clearInterval(qrTimer); qrTimer = null;
+    stat('✅ QQ 登录成功，机器人已恢复', 'ok');
+    window.setTimeout(closeQr, 4000);
+    return;
+  }
+  // 2) NapCat 画出了新码 → 放大落桌面并展示
+  var m = fileMtime(QR_IMG);
+  elapsed = ((new Date()).getTime() - qrStart) / 1000;
+  if (m && (!qrBase || m > qrBase)) {
+    stat('检测到新二维码，正在生成放大版…');
+    sh = new ActiveXObject('WScript.Shell');
+    sh.Run('"' + PY + '" "' + QR_TOOL + '" "' + QR_IMG + '"', 0, true);   // 同步，约 1 秒
+    img = document.getElementById('qrimg');
+    img.src = encodeURI('file:///C:/Users/marco/Desktop/QQ登录二维码.png') + '?t=' + (new Date()).getTime();
+    img.style.display = 'block';
+    qrBase = m;
+    qrShown = true;
+    stat('📱 请用手机 QQ 扫描上方二维码', 'warn');
+    return;
+  }
+  if (elapsed > 150 && !qrShown) {
+    stat('等了很久还没等到新码，检查黑色控制台窗口的报错，或点「返回菜单」再试', 'warn');
+  }
 }
 </script>
 </body>

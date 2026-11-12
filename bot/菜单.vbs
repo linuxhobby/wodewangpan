@@ -183,7 +183,7 @@ Sub StopQQ()
 End Sub
 
 Sub QrLogin()
-  Dim i, q, msg
+  Dim i, q, msg, oldM, haveOld, fresh
   If PortReady() Then
     MsgBox "QQ 已经在线，不用扫码。" & vbCrLf & vbCrLf & "如果群里发指令没反应，那是别的问题，跟我说「QQ 没反应」排查。", 64, "QQ 扫码登录"
     Exit Sub
@@ -192,32 +192,47 @@ Sub QrLogin()
     MsgBox "找不到新版 NapCat：" & vbCrLf & NAPCAT_BAT, 16, "QQ 扫码登录"
     Exit Sub
   End If
+  ' 记住旧二维码时间：只认 NapCat 新画出来的码，避免拿上次残留的过期码
+  haveOld = False
+  If fso.FileExists(QR_IMG) Then
+    oldM = fso.GetFile(QR_IMG).DateLastModified
+    haveOld = True
+  End If
   ws.CurrentDirectory = NAPCAT_DIR
   ws.Run "cmd /c """ & NAPCAT_BAT & """ -q " & QQUIN, 1, False
+  fresh = False
   i = 0
-  Do While (Not PortReady()) And i < 120
+  Do While i < 120
     WScript.Sleep 2000
     i = i + 2
+    If PortReady() Then
+      MsgBox "QQ 登录成功（快速登录，没用扫码）。" & vbCrLf & "机器人自动恢复，去群里发 /帮助 试试。" & vbCrLf & vbCrLf & "那个黑色控制台窗口可以关掉，关掉不影响在线。", 64, "QQ 扫码登录"
+      Exit Sub
+    End If
+    If fso.FileExists(QR_IMG) Then
+      If (Not haveOld) Or (fso.GetFile(QR_IMG).DateLastModified > oldM) Then
+        fresh = True
+        Exit Do
+      End If
+    End If
   Loop
-  If PortReady() Then
-    MsgBox "QQ 登录成功（快速登录，没用扫码）。" & vbCrLf & "机器人自动恢复，去群里发 /帮助 试试。" & vbCrLf & vbCrLf & "那个黑色控制台窗口可以关掉，关掉不影响在线。", 64, "QQ 扫码登录"
+  If Not fresh Then
+    MsgBox "等了 120 秒：既没快速登录成功，也没等到新二维码。" & vbCrLf & "看看黑色控制台窗口里的报错，稍后重新执行菜单序号 4。", 48, "QQ 扫码登录"
     Exit Sub
   End If
-  If fso.FileExists(QR_IMG) Then
-    q = Chr(34)
-    ws.Run q & PY_QR & q & " " & q & QR_TOOL & q & " " & q & QR_IMG & q, 0, True
-    If fso.FileExists(DESKTOP_QR) Then
-      ws.Run q & DESKTOP_QR & q, 1, False
-    Else
-      ws.Run q & QR_IMG & q, 1, False
-    End If
+  ' 新码放大落桌面并直接弹出（qr_desktop.py：4x 放大 + 静区白边）
+  q = Chr(34)
+  ws.Run q & PY_QR & q & " " & q & QR_TOOL & q & " " & q & QR_IMG & q, 0, True
+  If fso.FileExists(DESKTOP_QR) Then
+    ws.Run q & DESKTOP_QR & q, 1, False
+  Else
+    ws.Run q & QR_IMG & q, 1, False
   End If
-  msg = "登录态已失效，需要扫码（较少发生）。" & vbCrLf & vbCrLf
-  msg = msg & "刚弹出的黑色控制台窗口里已经画好二维码，" & vbCrLf
-  msg = msg & "用手机 QQ 扫桌面刚打开的「QQ登录二维码.png」即可（放大版，比控制台里的清楚）。" & vbCrLf & vbCrLf
-  msg = msg & "注意：二维码几分钟就过期，过期后关掉控制台窗口，重新执行菜单序号 4。" & vbCrLf
-  msg = msg & "扫码成功后本窗口不用管，机器人自动恢复。"
-  MsgBox msg, 48, "QQ 扫码登录 · 需要扫码"
+  msg = "新二维码已生成，桌面「QQ登录二维码.png」已自动打开。" & vbCrLf & vbCrLf
+  msg = msg & "用手机 QQ 扫它即可；黑色控制台窗口里的码太小，不用看那个。" & vbCrLf
+  msg = msg & "注意：二维码几分钟就过期，过期后重新执行菜单序号 4，会自动换新码。" & vbCrLf
+  msg = msg & "扫码成功后机器人自动恢复，不用重启。"
+  MsgBox msg, 64, "QQ 扫码登录 · 请扫码"
 End Sub
 
 Sub StartTG()
