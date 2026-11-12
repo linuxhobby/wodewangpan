@@ -326,16 +326,6 @@
   date: 2024-11-20
   added: 2026-09-30
   image: mv-016.jpg
-  updated: 2026-11-12
-  files:
-    count: 3
-    size: "10.4 KB"
-    format: "MP4"
-    tree: |
-      016-隐藏的面孔.Hidden/
-      ._Hidden隐藏的面孔.mp4
-      ._.DS_Store
-      .DS_Store
 
 - id: mv-017
   title: "暗影力量"
@@ -919,7 +909,7 @@
   image: mv-045.jpg
   updated: 2026-11-12
   files:
-    count: 6
+    count: 5
     tree: |
       045-虎胆龙威.Die Hard/
       虎胆龙威1.Die.Hard.1988.BD1080P.X264.AC3.MandarinEnglish.CHS-ENG/
@@ -927,7 +917,6 @@
       虎胆龙威3.Die.Hard.With.a.Vengeance.1995.BD1080P.X264.AAC.MandarinEnglish.CHS-ENG/
       虎胆龙威4.Live.Free.or.Die.Hard.2007.BD1080P.X264.AAC.MandarinEnglish.CHS-ENG/
       虎胆龙威5.A.Good.Day.to.Die.Hard.2013.EXTENDED.BD1080P.X264.AAC.MandarinEnglish.CHS-ENG/
-      .DS_Store
 
 - id: mv-047
   title: "诺曼底72小时"
