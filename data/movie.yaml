@@ -1014,6 +1014,14 @@
   date: 2014-11-05
   added: 2026-09-30
   image: mv-051.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "3.3 GB"
+    format: "MP4"
+    tree: |
+      051-星际穿越.Interstellar (2014).IMAX版.超清国英双语修正特效中英双字/
+      星际穿越.Interstellar (2014).IMAX版.超清国英双语修正特效中英双字.mp4
 
 - id: mv-052
   title: "冷血动物"
@@ -1026,6 +1034,14 @@
   date: 2023-09-29
   added: 2026-09-30
   image: mv-052.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "8.2 GB"
+    format: "MKV"
+    tree: |
+      052-Reptile.2023.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-DreamHD/
+      Reptile.2023.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-DreamHD.mkv
 
 - id: mv-053
   title: "斗士"
@@ -1038,6 +1054,14 @@
   date: 2025-03-29
   added: 2026-09-30
   image: mv-053.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "5.2 GB"
+    format: "MKV"
+    tree: |
+      053-Sikandar.2025.1080p.NF.WEB-DL.DDP5.1.H264-PandaQT/
+      Sikandar.2025.1080p.NF.WEB-DL.DDP5.1.H264-PandaQT.mkv
 
 - id: mv-054
   title: "圣斗士星矢"
