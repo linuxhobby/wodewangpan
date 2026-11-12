@@ -949,6 +949,19 @@
   date: 2026-01-28
   added: 2026-09-30
   image: mv-048.jpg
+  updated: 2026-11-13
+  files:
+    count: 6
+    size: "13.3 GB"
+    format: "MKV"
+    tree: |
+      048-特工迷阵/
+      The.Wrecking.Crew.2026.2160p.AMZN.WEB-DL.H.265.DV.HDR.DDP5.1.Atmos.mkv
+      Fratelli.demolitori.The.Wrecking.Crew.2026.1080p.WEB-DL.DDP5.1.H.264-FHC.mkv.torrent
+      The.Wrecking.Crew.2026.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-FLUX.torrent
+      The.Wrecking.Crew.2026.1080p.AMZN.WEB-DL.DDP5.1.H264@Argon .torrent
+      The.Wrecking.Crew.2026.2160p.AMZN.WEB-DL.DDP5.1.Atmos.HDR.H265-FLUX.mkv.torrent
+      The.Wrecking.Crew.2026.MULTi.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR10.H.265-OzW.mkv.torrent
 
 - id: mv-049
   title: "老千3：独眼杰克"
@@ -961,6 +974,14 @@
   date: 2019-09-11
   added: 2026-09-30
   image: mv-049.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "4.0 GB"
+    format: "MP4"
+    tree: |
+      049-老千3：独眼杰克.Tazza.One.Eyed.Jack.HD1080P.X264.AAC.韩语中字无水印/
+      老千3：独眼杰克.Tazza.One.Eyed.Jack.HD1080P.X264.AAC.韩语中字无水印.mp4
 
 - id: mv-050
   title: "黑道中人"
@@ -973,6 +994,14 @@
   date: 2025-03-19
   added: 2026-09-30
   image: mv-050.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "6.4 GB"
+    format: "MKV"
+    tree: |
+      050-The.Alto.Knights.2025.1080p.iTunes.WEB-DL.DDP.5.1.Atmos.H.264-DreamHD/
+      The.Alto.Knights.2025.1080p.iTunes.WEB-DL.DDP.5.1.Atmos.H.264-DreamHD.mkv
 
 - id: mv-051
   title: "星际穿越"
