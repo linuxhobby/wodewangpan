@@ -20,11 +20,14 @@ import os
 import re
 import sys
 import time
-import handlers
-import tg_render
-import telegram_bot as tg
+from core import handlers
+from telegram import render as tg_render
+from telegram import bot as tg
 
-CFG = json.load(open(os.path.join(BASE, "config.json"), encoding="utf-8"))
+# 2026-11-12 平台拆分：共享层在 app/core/，TG 端在 app/telegram/
+_cfg_raw = json.load(open(os.path.join(BASE, "config.json"), encoding="utf-8"))
+# handlers 只认平铺视图（site_url 在顶层）：common + telegram 合并
+CFG = {**(_cfg_raw.get("common") or {}), **(_cfg_raw.get("telegram") or {})}
 BOT = "wodewangpan_bot"
 
 ok = 0
@@ -311,7 +314,7 @@ handlers.handle("/s 青之箱", CFG, key="page-e", page=0, meta=m5)
 check("page=0 给全部命中", m5.get("items"), m5.get("total"))
 
 # 排序：命中按上架日期从新到旧，先给最新的 10 条
-import site_client as sc
+from core import site_client as sc
 hits, total = sc.search(CFG["site_url"], "电影", 10, 0)
 dates = [it.get("date") or "" for it in hits]
 check("默认 10 条", len(hits), 10)
@@ -330,14 +333,14 @@ check("单实例锁重复获取幂等", (tg._acquire_single_instance(), tg._acqu
 check("锁文件已落地", os.path.exists(tg.LOCK_FILE), True)
 check("pid 单独记了一份（锁文件被锁住读不了）", os.path.getsize(tg.PID_FILE) > 0, True)
 
-_child = ("import sys,os;sys.path.insert(0,'app');import telegram_bot as t;"
+_child = ("import sys,os;sys.path.insert(0,'app');from telegram import bot as t;"
           "t.LOCK_FILE=%r;t.PID_FILE=%r;"
           "print(t._acquire_single_instance())" % (tg.LOCK_FILE, tg.PID_FILE))
 _r = subprocess.run([sys.executable, "-c", _child], capture_output=True, text=True)
 check("另一个进程抢不到锁（会自己退出）", (_r.stdout or _r.stderr).strip()[:5], "False")
 
 # 内嵌开关：默认关（TG 由独立进程跑），配置里必须能读到这个键
-check("telegram.embedded 默认关", bool((CFG.get("telegram") or {}).get("embedded", False)), False)
+check("telegram.embedded 默认关", bool((_cfg_raw.get("telegram") or {}).get("embedded", False)), False)
 
 print("\n结果：%d 通过，%d 失败" % (ok, bad))
 sys.exit(1 if bad else 0)

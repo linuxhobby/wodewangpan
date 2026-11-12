@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wodewangpan 群机器人 · Telegram Bot API 接入（长轮询，零依赖）。
+wodewangpan 群机器人 · Telegram 端入口（Bot API 长轮询，零依赖）。
 
 数据流：
   TG 群 /s 关键词 -> Telegram Bot API getUpdates -> 查线上站点 -> sendMessage 回群
 
+目录定位（2026-11-12 按平台拆分后）：
+  app/core/       平台无关共享层（handlers / site_client / config / runtime）
+  app/qq/         QQ 端适配层，独立进程跑
+  app/telegram/   本目录：bot.py 入口 + render.py 富文本渲染
+  以后新增平台照此模式加 app/<platform>/ 目录，共享层不动。
+
 两种跑法，同一份代码：
-  1) 挂在 QQ 机器人进程里：bot.py 启动时调 start(CFG)，起一个后台线程；
+  1) 挂在 QQ 机器人进程里：qq/bot.py 启动时调 start(RAW)，起一个后台线程；
      桌面上的启动/重启/结束 QQ 机器人脚本会一并管理它。
-  2) 单独跑（放海外 VPS 时用）：python app/telegram_bot.py
+  2) 单独跑（放海外 VPS 时用）：python app/telegram/bot.py
 
 约束：
   - 只用标准库。国内直连 api.telegram.org 不通，要么给 telegram.proxy 配代理，
@@ -29,12 +35,14 @@ import traceback
 import urllib.request
 import urllib.error
 
-BASE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(BASE)
-sys.path.insert(0, BASE)
+APP_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # bot/app/
+ROOT = os.path.dirname(APP_DIR)                                          # bot/
+sys.path.insert(0, APP_DIR)
 
-import handlers      # noqa: E402
-import tg_render     # noqa: E402
+from core import handlers                        # noqa: E402
+from telegram import render as tg_render         # noqa: E402
+from core.config import load_raw, section_view   # noqa: E402
+from core.runtime import Logger, RateControl     # noqa: E402
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -43,25 +51,19 @@ except Exception:
     pass
 
 LOG_DIR = os.path.join(ROOT, "logs")
-os.makedirs(LOG_DIR, exist_ok=True)
-LOG_FILE = os.path.join(LOG_DIR, time.strftime("tg-%Y-%m-%d.log"))
 STATE_FILE = os.path.join(LOG_DIR, "tg-state.json")
 LOCK_FILE = os.path.join(LOG_DIR, "tg.lock")
 PID_FILE = os.path.join(LOG_DIR, "tg.pid")
 
-TAG = "[TG]"
+log = Logger(LOG_DIR, time.strftime("tg-%Y-%m-%d.log"), tag="[TG]")
+
 MAX_TG_LEN = 3900        # Telegram 上限 4096，留出 HTML 标签的余量
 PRIVATE_PAGE_SIZE = 10   # 私发一次最多给几条；私聊不刷屏，给一批比群里多（config 可改，0=不限）
 
-_log_lock = threading.Lock()
-
-TG = {}                  # telegram 段配置
+TG = {}                  # config.json 的 telegram 段
 _OPEN = urllib.request.build_opener()
 _ME = {}
-_seen = {}
-_cd = {}
-_rate = []
-_rate_lock = threading.Lock()
+rate = RateControl()
 _STASH = {}              # 深链补发用：token -> (uid, chunks, 时间)
 _STASH_TTL = 1800        # 备好的结果留 30 分钟，过期作废
 
@@ -114,21 +116,6 @@ def welcome_text():
     return _welcome_cache["text"] or _WELCOME_FALLBACK
 
 
-
-def log(msg):
-    line = "%s [%s] %s" % (TAG, time.strftime("%H:%M:%S"), msg)
-    with _log_lock:
-        try:
-            print(line, flush=True)
-        except Exception:
-            pass
-        try:
-            with open(LOG_FILE, "a", encoding="utf-8") as f:
-                f.write(line + "\n")
-        except Exception:
-            pass
-
-
 # ---------- 单实例 ----------
 
 _lock_handle = None      # 持有锁的文件对象，进程活着就一直拿着
@@ -177,14 +164,17 @@ def _acquire_single_instance():
 # ---------- 配置与网络 ----------
 
 def _load_config():
-    with open(os.path.join(ROOT, "config.json"), "r", encoding="utf-8") as f:
-        return json.load(f)
+    return load_raw(ROOT)
 
 
 def _setup(cfg):
-    """读 telegram 段、建带代理的 opener。返回是否应该启动。"""
-    global TG, _OPEN
+    """读 telegram 段、建带代理的 opener。返回是否应该启动。
+
+    cfg 是整份原始配置；TG 段与 handlers 用的平铺视图在这里一并备好。
+    """
+    global TG, _OPEN, _CFG_VIEW
     TG = cfg.get("telegram") or {}
+    _CFG_VIEW = section_view(cfg, "telegram")
     proxy = (TG.get("proxy") or os.environ.get("TG_PROXY") or "").strip()
     if proxy:
         _OPEN = urllib.request.build_opener(
@@ -219,45 +209,6 @@ def _api(method, params=None, timeout=40):
     except Exception as e:
         log("× %s 连不上：%s: %s（代理是否可用？）" % (method, e.__class__.__name__, str(e)[:80]))
         return None
-
-
-# ---------- 限频 ----------
-
-def _too_fast(key):
-    cd = int(TG.get("cooldown_seconds") or 0)
-    if cd <= 0:
-        return False
-    now = time.time()
-    if now - _cd.get(key, 0) < cd:
-        return True
-    _cd[key] = now
-    return False
-
-
-def _over_rate():
-    limit = int(TG.get("global_rate_per_minute") or 0)
-    if limit <= 0:
-        return False
-    now = time.time()
-    with _rate_lock:
-        while _rate and now - _rate[0] > 60:
-            _rate.pop(0)
-        if len(_rate) >= limit:
-            return True
-        _rate.append(now)
-    return False
-
-
-def _dup(mid):
-    if not mid:
-        return False
-    now = time.time()
-    if mid in _seen:
-        return True
-    _seen[mid] = now
-    for k in [k for k, v in list(_seen.items()) if now - v > 600]:
-        _seen.pop(k, None)
-    return False
 
 
 # ---------- 发送 ----------
@@ -499,7 +450,7 @@ def handle_update(update):
     if joined:
         if not TG.get("welcome_enabled", True):
             return
-        if _dup("%s:join:%s" % (chat_id, msg.get("message_id"))):
+        if rate.dup("%s:join:%s" % (chat_id, msg.get("message_id"))):
             return
         who = "、".join(m.get("username") or m.get("first_name") or str(m.get("id")) for m in joined)
         log("· %s 有新成员入群（%s），发欢迎语" % (chat_id, who))
@@ -530,7 +481,7 @@ def handle_update(update):
     if not text:
         text = "/help"
 
-    if _dup("%s:%s" % (chat_id, msg.get("message_id"))):
+    if rate.dup("%s:%s" % (chat_id, msg.get("message_id"))):
         return
 
     # 本地指令，不走站点
@@ -560,10 +511,10 @@ def handle_update(update):
         key = "tg:u:%s" % uid
     else:
         key = "tg:%s:%s" % (chat_id, uid)
-    if _too_fast(key):
+    if rate.too_fast(key, TG.get("cooldown_seconds")):
         log("· 限频忽略 %s「%s」" % (key, text[:20]))
         return
-    if _over_rate():
+    if rate.over_rate(TG.get("global_rate_per_minute")):
         log("· 触发全局频率上限，丢弃本条")
         return
 
@@ -575,11 +526,12 @@ def handle_update(update):
         _deliver(chat_id, uid, ctype, replies, msg.get("message_id"), meta)
 
 
-_CFG = {}
+_CFG_VIEW = {}
 
 
 def _load_cfg_cached():
-    return _CFG or _load_config()
+    """handlers 只认平铺视图（site_url 在顶层）：common + telegram 合并后的那份。"""
+    return _CFG_VIEW or section_view(_load_config(), "telegram")
 
 
 # ---------- offset 持久化 ----------
@@ -603,13 +555,12 @@ def _save_offset(offset):
 # ---------- 主循环 ----------
 
 def run_forever(cfg=None, stop_event=None):
-    global _ME, _CFG
+    global _ME
     if cfg is None:
         cfg = _load_config()
     if not _setup(cfg):
         log("· 未启用或未配 token，停止")
         return
-    _CFG = cfg
 
     if not _acquire_single_instance():
         log("· 已经有另一个 Telegram 进程在跑了，本进程退出（不退出会互相抢消息，各收一半）")
@@ -628,7 +579,7 @@ def run_forever(cfg=None, stop_event=None):
     chats = TG.get("allowed_chats") or []
     log("=" * 52)
     log("Telegram 机器人启动：@%s（id %s）" % (_ME.get("username"), _ME.get("id")))
-    log("站点：%s" % cfg.get("site_url"))
+    log("站点：%s" % (_CFG_VIEW.get("site_url") or ""))
     log("群白名单：%s" % (chats if chats else "未设置（任何群都响应，建议用 /id 取回后回填）"))
     log("代理：%s" % (TG.get("proxy") or "未设置（直连）"))
     log("进程：pid %d（独立进程守着 %s）" % (os.getpid(), os.path.basename(LOCK_FILE)))
@@ -675,7 +626,7 @@ def _safe_run(cfg, stop_event):
 
 
 def start(cfg, stop_event=None):
-    """给 bot.py 用：起一个后台线程，失败不影响 QQ 那边。"""
+    """给 qq/bot.py 用：起一个后台线程，失败不影响 QQ 那边。cfg 是整份原始配置。"""
     try:
         if not _setup(cfg):
             log("· 未配置 telegram.token，不启动 Telegram 适配器")

@@ -6,7 +6,7 @@
 - 代码放在本站仓库的 `bot/` 目录，跟站点共用一次 `git pull`，但**不参与站点构建**（`scripts/build.js` 只读 `theme/`、`static/` 等显式路径，不扫根目录）
 - 零第三方依赖，只用 Python 标准库，不需要 `pip install`
 - 通道走 NapCat + OneBot v11（HTTP 上报 + HTTP API），能正常发链接，不受官方机器人「不允许发 URL」限制
-- 另带一条 Telegram 通道（`app/telegram_bot.py`），共用同一套查询与排版，见下方「Telegram 群」
+- 另带一条 Telegram 通道（`app/telegram/bot.py`），共用同一套查询与排版，见下方「Telegram 群」
 
 ## 链路
 
@@ -106,13 +106,13 @@ id - 看当前会话信息
 
 | 方式 | 命令 | 适用 |
 |---|---|---|
-| 独立进程（默认） | 桌面控制台序号 5，或 `python app/telegram_bot.py` | 本机常开。TG 单独一个进程，QQ 重启、NapCat 掉线、QQ 掉登录都不影响它 |
+| 独立进程（默认） | 桌面控制台序号 5，或 `python app/telegram/bot.py` | 本机常开。TG 单独一个进程，QQ 重启、NapCat 掉线、QQ 掉登录都不影响它 |
 | 内嵌进 QQ 进程 | `config.json` 里 `telegram.embedded` 设成 `true` | 想省一个进程时用。代价是 QQ 那边重启/崩溃会连带 TG 一起停 |
-| 放到海外 VPS | `python app/telegram_bot.py` | 本机不开机也要 TG 在跑 |
+| 放到海外 VPS | `python app/telegram/bot.py` | 本机不开机也要 TG 在跑 |
 
 配了 `token` 才会启动，没配就自动跳过，不影响 QQ 那边。日志写在 `logs/tg-YYYY-MM-DD.log`。
 
-**同一时刻只能有一个 TG 进程**：Telegram 的 `getUpdates` 是「谁取走算谁的」，两个实例同时跑会各收一半消息。所以 `telegram_bot.py` 启动时会去抢 `logs/tg.lock` 的排他锁，抢不到就直接退出并在日志里留一句「已经有另一个 Telegram 进程在跑」。进程崩了或被强杀，系统会自动释放这把锁，不用手动清理。
+**同一时刻只能有一个 TG 进程**：Telegram 的 `getUpdates` 是「谁取走算谁的」，两个实例同时跑会各收一半消息。所以 `app\telegram\bot.py` 启动时会去抢 `logs/tg.lock` 的排他锁，抢不到就直接退出并在日志里留一句「已经有另一个 Telegram 进程在跑」。进程崩了或被强杀，系统会自动释放这把锁，不用手动清理。
 
 ### 4. 指令差异
 
@@ -142,7 +142,7 @@ Telegram 的命令名只允许拉丁字符，`/搜索` 这类中文命令在群�
 /帮助 — 查看指令表
 ```
 
-第二、三行在客户端是可点的超链接，`tg_render.py` 把 handlers 输出的「网盘名<TAB>URL」转成 `<a href>`，QQ 的纯文本版式一点没改。
+第二、三行在客户端是可点的超链接，`app/telegram/render.py` 把 handlers 输出的「网盘名<TAB>URL」转成 `<a href>`，QQ 的纯文本版式一点没改。
 想在正文任意位置放一个自定义链接文字的超链接，写成 `[文字](https://...)` 即可，渲染时转成 `<a href>`，文字与网址都会做 HTML 转义；HTML 被拒退回纯文本时，会还原成「文字（网址）」。HTML 被 TG 拒收（极少见）时会自动退回纯文本重发，保证用户一定收到。
 
 单条上限 4096 字，实际按 3900 字截，比 QQ 的 900 字宽松；单群约 20 条/分钟，群里一次 10 条（拆成 2 条消息左右）不会撞限。走私聊投递时报文都落在私聊，不占群的额度。
@@ -330,7 +330,7 @@ QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的�
 | 快捷方式 | 指向 | 实际动作 |
 |---|---|---|
 | `QQ机器人开机自启.lnk` | `bot/开机自启.vbs` | 转发到 `菜单.vbs autostart-qq`，等 25 秒，先拉 NapCat、再拉 `bot.py`，已在跑就跳过 |
-| `TG机器人开机自启.lnk` | `bot/TG机器人开机自启.vbs` | 转发到 `菜单.vbs autostart-tg`，等 25 秒，拉起 `app\telegram_bot.py` 独立进程，已在跑就跳过 |
+| `TG机器人开机自启.lnk` | `bot/TG机器人开机自启.vbs` | 转发到 `菜单.vbs autostart-tg`，等 25 秒，拉起 `app\telegram\bot.py` 独立进程，已在跑就跳过 |
 
 真正的实现只有一份，在 `菜单.vbs` 的 `AutoStart` 里。两个垫片各只有几行，只负责把参数传过去，所以快捷方式不用跟着改。按 `Win + R` 输入 `shell:startup` 回车能看到那两个快捷方式。
 
@@ -339,7 +339,7 @@ QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的�
 - NapCat 路径写死在 `菜单.vbs` 的 `NAPCAT_DIR`，挪了目录要改；找不到就只启动机器人并在日志里记一笔
 - 垫片必须留在 `bot/` 目录里，启动文件夹只放快捷方式，不要再复制一份 vbs 过去
 
-**改了代码怎么生效**：QQ 用控制台序号 2，TG 用序号 6。各自只结束自己那个进程，不会互相牵连（判断进程时会刻意排除 `telegram_bot.py`，否则 `bot.py` 这个子串会误杀 TG）。Python 没有热加载，只能重启。`菜单.vbs` 里 `PYW` 写死了 `Python312\pythonw.exe` 的绝对路径，避免 PATH 里有多份 Python 时起错或同时起两个实例；换 Python 版本记得改这一行（找不到就自动回落到 `pythonw`）。
+**改了代码怎么生效**：QQ 用控制台序号 2，TG 用序号 6。各自只结束自己那个进程，不会互相牵连（判断进程按完整入口路径匹配：QQ 是 `app\qq\bot.py`，TG 是 `app\telegram\bot.py`，互不为子串）。Python 没有热加载，只能重启。`菜单.vbs` 里 `PYW` 写死了 `Python312\pythonw.exe` 的绝对路径，避免 PATH 里有多份 Python 时起错或同时起两个实例；换 Python 版本记得改这一行（找不到就自动回落到 `pythonw`）。
 
 ### 8. 桌面快捷操作
 
@@ -349,20 +349,20 @@ QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的�
 |---|---|---|
 | 1 | 启动QQ机器人 | 没在跑就静默拉起，NapCat 没在跑也一起拉起 |
 | 2 | 重启QQ机器人 | 结束旧进程再拉起，改完代码用这个，等 `:3000` 就绪才报成功 |
-| 3 | 结束QQ机器人 | 只结束命令行含 `bot.py` 的进程（排除 `telegram_bot.py`），不动其它 Python，也不动 NapCat |
+| 3 | 结束QQ机器人 | 只结束命令行含 `app\qq\bot.py` 的进程，不动其它 Python，也不动 NapCat |
 | 4 | QQ扫码登录 | 快速登录失效时弹控制台二维码，并把放大版落到桌面 |
 | 5 | 启动TG机器人 | 拉起 TG 独立进程，已在跑就提示不要重复启动 |
 | 6 | 重启TG机器人 | 只重启 TG：结束旧进程，等锁释放，启动，读日志确认成功 |
-| 7 | 结束TG机器人 | 只结束 `telegram_bot.py`，QQ 那边一点不动 |
+| 7 | 结束TG机器人 | 只结束 `app\telegram\bot.py`，QQ 那边一点不动 |
 
 界面在同目录的 `菜单.hta`（系统自带 `mshta.exe`，不用装东西），`菜单.vbs` 同时是界面启动器和全部动作的唯一实现。命令行也能直连：`wscript 菜单.vbs 3` 等于序号 3，`wscript 菜单.vbs --check` 只做语法自检，`wscript 菜单.vbs 5` 直接起 TG。原来的系统 `InputBox` 菜单留作兜底：找不到 `mshta.exe` 或 `菜单.hta` 时自动回落；想回到旧界面，把 `菜单.hta` 改名即可。`菜单.vbs` 与 `菜单.hta` 必须放同一目录。
 
-`菜单.vbs` 会先按自己所在目录找 `app\bot.py`，找不到才回落到写死的仓库路径，所以经桌面快捷方式启动也正确。判断 NapCat 在不在，看进程名里有没有 `napcat` 或 `QQ.exe`。缺失时弹窗会明确写「已顺带拉起」，不再只是提醒你去手动开。
+`菜单.vbs` 会先按自己所在目录找 `app\qq\bot.py`，找不到才回落到写死的仓库路径，所以经桌面快捷方式启动也正确。判断 NapCat 在不在，看进程名里有没有 `napcat` 或 `QQ.exe`。缺失时弹窗会明确写「已顺带拉起」，不再只是提醒你去手动开。
 
 **编码**：三类文件三套口径，别混：
 
 - `.vbs`（`菜单.vbs`、两个自启垫片）：GBK + CRLF。`wscript.exe` 按系统 ANSI 代码页读脚本，存成 UTF-8 中文弹窗就花；代价是 GitHub 网页上看是乱码。用记事本改完请存成 ANSI。
-- `.bat`（只剩 `启动.bat`）：UTF-8 + CRLF + 文件内 `chcp 65001`。`app/bot.py` 把 stdout 强制设成 UTF-8，控制台必须留在 65001，把 bat 改成 GBK 会让机器人日志乱码。用记事本改完请存成 UTF-8，别存成 ANSI；行尾必须是 CRLF。
+- `.bat`（只剩 `启动.bat`）：UTF-8 + CRLF + 文件内 `chcp 65001`。`app/qq/bot.py` 把 stdout 强制设成 UTF-8，控制台必须留在 65001，把 bat 改成 GBK 会让机器人日志乱码。用记事本改完请存成 UTF-8，别存成 ANSI；行尾必须是 CRLF。
 - `菜单.hta`：UTF-8（HTML 里声明了 `charset=utf-8`），macOS、Windows、GitHub 网页看都正常，别存成 ANSI 或 UTF-16。
 
 两端 VS Code 的按语言编码设置见仓库根 `.vscode/settings.json`：`.vbs` 对应 `gbk`，`.bat` 对应 `utf8`。

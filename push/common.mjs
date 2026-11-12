@@ -1,0 +1,239 @@
+#!/usr/bin/env node
+// push/common.mjs —— 各社媒推送脚本共用的流水线。
+//
+// 分层约定（2026-11-12 重构定死）：
+//   本文件只做「读站点数据 → 判重 → 选片」这些平台无关的事，
+//   文案渲染与平台 API 收发全部留在 push/<platform>/<platform>-post.mjs 平台适配层里。
+//   以后新增平台 = 新建一个目录一个脚本 + 复用本文件，不再复制第三份流水线。
+//
+// ⚠️ 沙箱坑（别删）：existsSync 对真实存在的文件会误报 false（statSync/readFileSync 正常），
+//    所有「文件在不在」的判定统一走 firstPresent / statSync。
+
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+export const HOME = os.homedir();
+export const firstPresent = (...c) => { for (const p of c) { try { fs.statSync(p); return p; } catch {} } return c[0]; };
+
+// 分类轮转/加权的展示顺序；数据里出现 CAT_ORDER 之外的新分类会自动排到后面，不用改这里。
+export const CAT_ORDER = ['电影', '电视剧', '纪录片', '动漫', '游戏', '软件', '课程', '电子书', '其他'];
+export const DEFAULT_REPO = 'C:/Users/marco/Github/wodewangpan';
+export const DEFAULT_SITE_URL = 'https://www.wodewangpan.top';
+
+// ---------- CLI ----------
+export const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i >= 0 ? process.argv[i + 1] : d; };
+export const has = (k) => process.argv.includes(`--${k}`);
+export const collectPicks = () => process.argv.reduce(
+  (a, v, i) => (v === '--pick' && process.argv[i + 1] ? a.concat(process.argv[i + 1]) : a), []
+);
+
+// ---------- 凭据 ----------
+// 查找顺序：调用脚本同目录的 <envName> → ~/.qwenworkcn（迁移前老位置）→ ~/.workbuddy（更老环境回退）。
+export function findEnvFile(callerUrl, envName) {
+  return firstPresent(
+    path.join(path.dirname(fileURLToPath(callerUrl)), envName),
+    path.join(HOME, '.qwenworkcn', envName),
+    path.join(HOME, '.workbuddy', envName),
+  );
+}
+
+// env 缺失不阻断 --dry：返回空对象，真要发送时由平台层检查 token。
+export function parseEnvFile(file) {
+  try {
+    return Object.fromEntries(
+      fs.readFileSync(file, 'utf8').split('\n')
+        .filter((l) => l.trim() && !l.trim().startsWith('#'))
+        .map((l) => { const i = l.indexOf('='); return [l.slice(0, i).trim(), l.slice(i + 1).trim()]; })
+    );
+  } catch { return {}; }
+}
+
+export function loadEnv(callerUrl, envName) {
+  const file = findEnvFile(callerUrl, envName);
+  return { file, values: parseEnvFile(file) };
+}
+
+// ---------- 判重状态 ----------
+// posted.json 是现网判重状态，永远留在本机 home、不进 git、不搬仓库（复制会导致重复发）。
+export function findStateFile(dir, file = 'posted.json') {
+  return firstPresent(
+    path.join(HOME, '.qwenworkcn', dir, file),
+    path.join(HOME, '.workbuddy', dir, file),
+  );
+}
+
+export function loadState(stateFile) {
+  let state = { posted: {}, lastCategory: null, history: [] };
+  try { state = JSON.parse(fs.readFileSync(stateFile, 'utf8')); }
+  catch (e) { if (e.code !== 'ENOENT') console.log('状态读取警告：', String(e.message).slice(0, 120)); }
+  state.posted = state.posted || {};
+  state.history = state.history || [];
+  return state;
+}
+
+export function saveState(stateFile, state) {
+  fs.mkdirSync(path.dirname(stateFile), { recursive: true });
+  fs.writeFileSync(stateFile, JSON.stringify(state, null, 1));
+}
+
+// ---------- 读站点数据 ----------
+// data/*.yaml 是手写 YAML 子集，正则按行抽字段就够，别引入 YAML 解析库。
+export function parseYaml(file) {
+  // 软件.yaml 等是 CRLF，行尾 \r 会混进字段值（链接变坏链），统一清掉。
+  const raw = fs.readFileSync(file, 'utf8').replace(/\r/g, '');
+  const out = [];
+  for (const part of raw.split(/(?=^- id: )/m)) {
+    const id = part.match(/^- id:\s*"?([^"\n]+)"?/m)?.[1];
+    if (!id) continue;
+    const get = (k) => part.match(new RegExp(`^\\s*${k}:\\s*"([\\s\\S]*?)"\\s*$`, 'm'))?.[1]
+      ?? part.match(new RegExp(`^\\s*${k}:\\s*([^\\n]+)`, 'm'))?.[1];
+    out.push({
+      id,
+      title: get('title') || '',
+      category: get('category') || '',
+      quark: get('quark_url') || '',
+      baidu: get('baidu_url') || '',
+      baiduCode: get('baidu_code') || '',
+      desc: get('description') || '',
+      date: get('date') || '',
+      added: get('added') || '',
+      image: get('image') || '',
+      size: get('size') || '',            // files.size，缺失即空串
+      tags: [...(part.match(/^\s*tags:\s*\[(.*?)\]/m)?.[1] || '').matchAll(/"([^"]+)"/g)].map((m) => m[1]),
+    });
+  }
+  return out;
+}
+
+export function loadItems(repo) {
+  const dataDir = path.join(repo, 'data');
+  let items = [];
+  for (const f of fs.readdirSync(dataDir)) {
+    if (!f.endsWith('.yaml') || f === 'site.yaml') continue;
+    items = items.concat(parseYaml(path.join(dataDir, f)));
+  }
+  return items;
+}
+
+export const imgPath = (repo, image) => path.join(repo, 'static', 'images', image);
+
+// 沙箱里 existsSync 不可靠，判海报一律 statSync().isFile()。
+export const hasImgFile = (repo, it) => {
+  if (!it.image) return false;
+  try { return fs.statSync(imgPath(repo, it.image)).isFile(); } catch { return false; }
+};
+
+// ---------- 判重口径（用户定死）：夸克或百度链接任一相同 = 同一份资源 ----------
+// 标题相同但链接不同照发（系列电影、多季剧是不同资源）；两条链接都空按 id 判重。
+export const normTitle = (s) => String(s || '').replace(/[【\[(（].*?[】\])）]/g, '')
+  .replace(/[\s·・:：\-_.、,，!！?？'"“”‘’]/g, '').toLowerCase();
+
+/**
+ * 判重器工厂。
+ * extraSkips    ：平台专属、在链接判重**之前**跑的不可发判定（返回原因串或 null）。
+ * fallbackSkips ：平台专属、在链接判重**之后**跑的判定（如 TG 的 --require-size）。
+ */
+export function makeDeduper({ state, items, extraSkips = [], fallbackSkips = [] }) {
+  // 老记录缺字段时用当前数据回填，保证去重不留缺口
+  for (const [id, rec] of Object.entries(state.posted)) {
+    if (rec.quark && rec.baidu && rec.titleNorm) continue;
+    const it = items.find((x) => x.id === id);
+    if (it) {
+      rec.quark = rec.quark || it.quark;
+      rec.baidu = rec.baidu || it.baidu;
+      rec.titleNorm = rec.titleNorm || normTitle(it.title);
+      rec.title = rec.title || it.title;
+    }
+  }
+  const seenLinks = new Set();
+  for (const r of Object.values(state.posted)) {
+    if (r.quark) seenLinks.add(r.quark);
+    if (r.baidu) seenLinks.add(r.baidu);
+  }
+  const noteSeen = (it) => { if (it.quark) seenLinks.add(it.quark); if (it.baidu) seenLinks.add(it.baidu); };
+  const skipReason = (it) => {
+    for (const f of extraSkips) { const r = f(it); if (r) return r; }
+    if (it.quark && seenLinks.has(it.quark)) return '夸克链接已发过（同一份资源）';
+    if (it.baidu && seenLinks.has(it.baidu)) return '百度链接已发过（同一份资源）';
+    if (!it.quark && !it.baidu && state.posted[it.id]) return '已发过（无链接，按 id 判重）';
+    for (const f of fallbackSkips) { const r = f(it); if (r) return r; }
+    return null;
+  };
+  return { seenLinks, noteSeen, skipReason };
+}
+
+// 发帖成功后写记录的公共字段；平台专属字段（messageId / uri 等）由平台层自己展开。
+export const baseRecord = (it, text) => ({
+  at: new Date().toISOString(),
+  category: it.category,
+  title: it.title,
+  titleNorm: normTitle(it.title),
+  quark: it.quark,
+  baidu: it.baidu,
+  text,
+});
+
+// ---------- 选片 ----------
+/**
+ * 选片器：latest（最新优先）/ random / rotate（按分类固定轮转）/ weighted（默认，
+ * 按各分类剩余可发条数加权随机选分类，再在分类内随机挑一条）。
+ * pickOne(usedNow) 返回 { item, info }，info 是给人看的选片说明（可能为空串）。
+ */
+export function makePicker({ items, state, picks, strategy, skipReason, catOrder = CAT_ORDER }) {
+  let info = '';
+  function pickOne(usedNow) {
+    info = '';
+    const item = pickItem(usedNow);
+    return { item, info };
+  }
+  function pickItem(usedNow) {
+    if (picks.length) {
+      const id = picks.shift();
+      const it = items.find((x) => x.id === id);
+      if (!it) throw new Error(`找不到条目 ${id}`);
+      return it;
+    }
+    const unseen = items.filter((x) => !usedNow.has(x.id) && !skipReason(x));
+    if (!unseen.length) throw new Error('没有新条目可发（全部重复或已被筛选条件排除）');
+    if (strategy === 'latest') {
+      return unseen.sort((a, b) => String(b.added).localeCompare(String(a.added)) || b.id.localeCompare(a.id))[0];
+    }
+    if (strategy === 'random') return unseen[Math.floor(Math.random() * unseen.length)];
+    if (strategy === 'rotate') {
+      const start = state.lastCategory ? catOrder.indexOf(state.lastCategory) + 1 : 0;
+      for (let k = 0; k < catOrder.length; k++) {
+        const cat = catOrder[(start + k) % catOrder.length];
+        const inCat = unseen.filter((x) => x.category === cat).sort((a, b) => a.id.localeCompare(b.id, 'en', { numeric: true }));
+        if (inCat.length) { info = `轮转分类：${cat}`; return inCat[0]; }
+      }
+      return unseen[0];
+    }
+    // weighted：库存多的分类出现得多，小分类也有机会露脸；发完的分类权重归零自动退出。
+    const catSet = new Set(unseen.map((x) => x.category).filter(Boolean));
+    const ordered = [...catOrder.filter((c) => catSet.has(c)), ...[...catSet].filter((c) => !catOrder.includes(c))];
+    const pools = ordered.map((cat) => ({ cat, list: unseen.filter((x) => x.category === cat) })).filter((p) => p.list.length);
+    if (!pools.length) throw new Error('没有新条目可发');
+    const total = pools.reduce((s, p) => s + p.list.length, 0);
+    let r = Math.random() * total;
+    let chosen = pools[0];
+    for (const p of pools) { r -= p.list.length; if (r <= 0) { chosen = p; break; } }
+    info = `随机选中分类：${chosen.cat}（剩余 ${chosen.list.length} 条，权重 ${((chosen.list.length / total) * 100).toFixed(1)}%）`;
+    return chosen.list[Math.floor(Math.random() * chosen.list.length)];
+  }
+  return { pickOne, get info() { return info; } };
+}
+
+// ---------- --audit / 汇总 ----------
+export function countReasons(items, skipReason) {
+  const reasons = {};
+  for (const it of items) { const r = skipReason(it); if (r) reasons[r] = (reasons[r] || 0) + 1; }
+  return reasons;
+}
+
+export function printSummary(results, { state, items, skipReason }) {
+  console.log(`\n===== 汇总 =====`);
+  console.log(`本次 ${results.length} 条 | 成功 ${results.filter((r) => r.ok).length} | 失败 ${results.filter((r) => r.ok === false).length}`);
+  console.log(`已发 ${Object.keys(state.posted).length} / 全站 ${items.length} | 剩余可发 ${items.filter((x) => !skipReason(x)).length}`);
+}

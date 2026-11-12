@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-wodewangpan 群机器人 · OneBot v11 HTTP 接入。
+wodewangpan 群机器人 · QQ 端入口（OneBot v11 HTTP 接入）。
 
 数据流：
   QQ 群 @机器人 -> NapCat -> HTTP 上报到本服务(:6700) -> 查线上站点 -> 调 NapCat HTTP API 回群
+
+目录定位（2026-11-12 按平台拆分后）：
+  app/core/      平台无关共享层（handlers / site_client / config / runtime）
+  app/qq/        本文件，QQ 端适配层
+  app/telegram/  TG 端适配层，独立进程跑；想内嵌进本进程见 main() 里的 telegram.embedded
+  以后新增平台照此模式加 app/<platform>/ 目录，共享层不动。
 
 设计约束：
   - 只用 Python 标准库，Windows 上拷过去就能跑，不需要 pip install。
@@ -22,11 +28,14 @@ import urllib.request
 import urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-BASE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(BASE)
-sys.path.insert(0, BASE)
+APP_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # bot/app/
+ROOT = os.path.dirname(APP_DIR)                                          # bot/
+sys.path.insert(0, APP_DIR)
 
-import handlers  # noqa: E402
+from core import handlers                        # noqa: E402
+from core import site_client as sc               # noqa: E402
+from core.config import load_raw, section_view   # noqa: E402
+from core.runtime import Logger, RateControl     # noqa: E402
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -35,79 +44,12 @@ except Exception:
     pass
 
 LOG_DIR = os.path.join(ROOT, "logs")
-os.makedirs(LOG_DIR, exist_ok=True)
-LOG_FILE = os.path.join(LOG_DIR, time.strftime("bot-%Y-%m-%d.log"))
+log = Logger(LOG_DIR, time.strftime("bot-%Y-%m-%d.log"))
 
-_log_lock = threading.Lock()
+RAW = load_raw(ROOT)          # 整份三段式配置
+CFG = section_view(RAW, "qq")  # common + qq 合并的平铺视图（handlers 只认这个）
 
-
-def log(msg):
-    line = f"[{time.strftime('%H:%M:%S')}] {msg}"
-    with _log_lock:
-        try:
-            print(line, flush=True)
-        except Exception:
-            pass
-        try:
-            with open(LOG_FILE, "a", encoding="utf-8") as f:
-                f.write(line + "\n")
-        except Exception:
-            pass
-
-
-def load_config():
-    path = os.path.join(ROOT, "config.json")
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-CFG = load_config()
-
-_seen = {}
-_seen_lock = threading.Lock()
-_cooldown = {}
-_rate = []
-_rate_lock = threading.Lock()
-
-
-def _dup(message_id):
-    """同一 message_id 只处理一次，防止上报重试导致重复刷屏。"""
-    if not message_id:
-        return False
-    now = time.time()
-    with _seen_lock:
-        if message_id in _seen:
-            return True
-        _seen[message_id] = now
-        for k in [k for k, v in list(_seen.items()) if now - v > 600]:
-            _seen.pop(k, None)
-    return False
-
-
-def _too_fast(key):
-    cd = int(CFG.get("cooldown_seconds") or 0)
-    if cd <= 0:
-        return False
-    now = time.time()
-    last = _cooldown.get(key, 0)
-    if now - last < cd:
-        return True
-    _cooldown[key] = now
-    return False
-
-
-def _over_global_rate():
-    limit = int(CFG.get("global_rate_per_minute") or 0)
-    if limit <= 0:
-        return False
-    now = time.time()
-    with _rate_lock:
-        while _rate and now - _rate[0] > 60:
-            _rate.pop(0)
-        if len(_rate) >= limit:
-            return True
-        _rate.append(now)
-    return False
+rate = RateControl()
 
 
 def _api(action, params):
@@ -173,7 +115,7 @@ def process(event):
     user_id = event.get("user_id")
     nickname = event.get("sender", {}).get("card") or event.get("sender", {}).get("nickname") or user_id
 
-    if _dup(event.get("message_id")):
+    if rate.dup(event.get("message_id")):
         return
 
     if mtype == "group":
@@ -201,10 +143,10 @@ def process(event):
         text = "/帮助"
 
     key = f"{mtype}:{group_id or ''}:{user_id}"
-    if _too_fast(key):
+    if rate.too_fast(key, CFG.get("cooldown_seconds")):
         log(f"· 限频忽略 {key} 「{text[:20]}」")
         return
-    if _over_global_rate():
+    if rate.over_rate(CFG.get("global_rate_per_minute")):
         log("· 触发全局频率上限，丢弃本条")
         return
 
@@ -242,7 +184,6 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         total, with_link = (0, 0)
         try:
-            import site_client as sc
             total, with_link = sc.stats(CFG["site_url"])
         except Exception:
             pass
@@ -316,9 +257,8 @@ def _safe_process(event):
 
 
 def _warm():
-    """启动即拉一次索引，别让群里第一个 @ 干等下载。"""
+    """启动即拉一次索引，别让群里第一个 @ 干等。"""
     try:
-        import site_client as sc
         t0 = time.time()
         total, with_link = sc.stats(CFG["site_url"])
         log(f"索引预热完成：{total} 条，{with_link} 条有网盘链接，用时 {time.time() - t0:.1f}s")
@@ -354,7 +294,7 @@ def _check_napcat():
 # 标准推送（notify-feishu.mjs）第一时间告知，恢复时报平安。
 # 推送失败只记日志，绝不影响机器人本体。
 
-FEISHU_SCRIPT = r"C:\Users\marco\Github\mybot\bot\scripts\notify-feishu.mjs"
+FEISHU_SCRIPT = os.path.join(ROOT, "scripts", "notify-feishu.mjs")
 
 
 def _feishu(md_text, level="info"):
@@ -481,14 +421,14 @@ def main():
     threading.Thread(target=_warm, daemon=True).start()
     threading.Thread(target=_napcat_watchdog, daemon=True).start()
 
-    # Telegram 默认由独立进程跑（app/telegram_bot.py，桌面「启动TG机器人」/ 开机自启），
+    # Telegram 默认由独立进程跑（app/telegram/bot.py，桌面「启动TG机器人」/ 开机自启），
     # 这样 QQ 这边重启、NapCat 掉线、QQ 掉登录，都不会把 TG 一起拖下水。
     # 想回到「同一个进程里顺带跑 TG」的老模式，把 config.json 的 telegram.embedded 设成 true。
-    tg_cfg = CFG.get("telegram") or {}
+    tg_cfg = RAW.get("telegram") or {}
     if tg_cfg.get("embedded", False):
         try:
-            import telegram_bot
-            telegram_bot.start(CFG)
+            from telegram import bot as tg_bot
+            tg_bot.start(RAW)
             log("Telegram：内嵌模式（telegram.embedded=true），跑在后台线程")
         except Exception:
             log("× Telegram 适配器启动失败\n" + traceback.format_exc())

@@ -10,7 +10,7 @@ import time
 import types
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "app"))
-import bot  # noqa: E402
+from qq import bot  # noqa: E402   2026-11-12 平台拆分后 QQ 入口在 app/qq/bot.py
 
 ok = bad = 0
 

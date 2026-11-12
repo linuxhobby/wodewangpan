@@ -17,9 +17,11 @@ try:
 except Exception:
     pass
 
-import handlers  # noqa: E402
+from core import handlers  # noqa: E402   2026-11-12 平台拆分后共享层在 app/core/
 
-CFG = json.load(open(os.path.join(BASE, "config.json"), encoding="utf-8"))
+_cfg_raw = json.load(open(os.path.join(BASE, "config.json"), encoding="utf-8"))
+# handlers 只认平铺视图（site_url 在顶层）：common + qq 合并
+CFG = {**(_cfg_raw.get("common") or {}), **(_cfg_raw.get("qq") or {})}
 
 CASES = [
     "/搜索 青之箱",

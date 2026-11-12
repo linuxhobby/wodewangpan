@@ -17,7 +17,7 @@ try:
 except Exception:
     pass
 
-import bot  # noqa: E402
+from qq import bot  # noqa: E402   2026-11-12 平台拆分后 QQ 入口在 app/qq/bot.py
 
 SENT = []
 

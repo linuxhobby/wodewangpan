@@ -4,7 +4,7 @@
 指令路由与回复组装。
 
 只做一件事：把群里 @机器人 的一句话解析成一个指令，查站点，拼成要发回群里的文本。
-不碰消息发送（由 bot.py 负责），不碰本地文件。
+不碰消息发送（由各平台入口 qq/bot.py、telegram/bot.py 负责），不碰本地文件。
 
 回复版式（一条资源一块，块内不空行）：
     资源名称 ｜ 类型
@@ -19,7 +19,7 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-import site_client as sc
+from core import site_client as sc
 
 PAGE_SIZE = 10         # 群里一次回几条资源（按最新排，最多 10 条）
 MAX_MSG_LEN = 900      # 单条消息字数上限，超了拆条

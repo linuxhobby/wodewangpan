@@ -12,7 +12,7 @@ version: "1.2"
 
 | 项 | 位置 |
 |---|---|
-| 凭据 | `~/.qwenworkcn/wodewangpan-bluesky.env`（`BLUESKY_IDENTIFIER` / `BLUESKY_APP_PASSWORD` / `BLUESKY_PDS` / `REPO` / `SITE_URL`）——**本机专用，绝不进 git，也不要打印到对话**。2026-10-30 已从 `~/.workbuddy` 迁入，脚本 `ENV_FILE` 自动二选一（老环境回退 `~/.workbuddy`） |
+| 凭据 | `push/bluesky/wodewangpan-bluesky.env`（`BLUESKY_IDENTIFIER` / `BLUESKY_APP_PASSWORD` / `BLUESKY_PDS` / `REPO` / `SITE_URL`）——**本机专用，绝不进 git，也不要打印到对话**。2026-11-12 随仓库重构迁入 `push/bluesky/`，脚本查找顺序：同目录 → `~/.qwenworkcn` → `~/.workbuddy`（老环境回退） |
 | 已发记录 | `~/.qwenworkcn/bluesky-posts/posted.json` —— 去重唯一依据，**勿删**，删了会重发（老环境回退 `~/.workbuddy`，脚本自动二选一） |
 | 数据源 | `C:/Users/marco/Github/wodewangpan` 的 `data/*.yaml`（id / title / category / **quark_url** / **baidu_url + baidu_code** / description / date / image） |
 | 图片 | `static/images/<image>`，全部 < 260KB（Bluesky blob 上限 1MB，目前无压缩需求） |
@@ -20,14 +20,14 @@ version: "1.2"
 ## 用法
 
 ```bash
-node ~/.qwenworkcn/skills/wodewangpan-bluesky/scripts/bluesky-post.mjs --dry   # 只打印文案与选中条目，不发帖
-node ~/.qwenworkcn/skills/wodewangpan-bluesky/scripts/bluesky-post.mjs         # 发一条
-node …/bluesky-post.mjs --count 3          # 补发多条
-node …/bluesky-post.mjs --pick mv-248      # 指定条目（可重复传，忽略已发记录）
-node …/bluesky-post.mjs --strategy weighted|rotate|random|latest   # 默认 weighted（按分类剩余量加权随机选分类）
-node …/bluesky-post.mjs --no-site-link     # 正文不带站点详情页链接
-node …/bluesky-post.mjs --require-image    # 只发有海报的（默认无海报也发，纯文本帖）
-node …/bluesky-post.mjs --audit            # 打印不可发条目的原因分布，排查去重用
+node push/bluesky/bluesky-post.mjs --dry   # 只打印文案与选中条目，不发帖
+node push/bluesky/bluesky-post.mjs         # 发一条
+node push/bluesky/bluesky-post.mjs --count 3          # 补发多条
+node push/bluesky/bluesky-post.mjs --pick mv-248      # 指定条目（可重复传，忽略已发记录）
+node push/bluesky/bluesky-post.mjs --strategy weighted|rotate|random|latest   # 默认 weighted（按分类剩余量加权随机选分类）
+node push/bluesky/bluesky-post.mjs --no-site-link     # 正文不带站点详情页链接
+node push/bluesky/bluesky-post.mjs --require-image    # 只发有海报的（默认无海报也发，纯文本帖）
+node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的原因分布，排查去重用
 ```
 
 ## 去重口径（用户定死，2026-10-10 修订）：**只认夸克分享链接或百度分享链接**

@@ -1,73 +1,47 @@
 #!/usr/bin/env node
+// push/bluesky/bluesky-post.mjs —— Bluesky 平台适配层。
 // 把 wodewangpan 资源站的一条资源发到 Bluesky：海报图（embed images）+ 夸克/百度分享链接 + 简介。
 // 素材全部来自仓库：static/images/<image>、data/<分类>.yaml 的 title/description/quark_url/baidu_url。
+// 读数据、判重、选片共用 ../common.mjs；本文件只留文案渲染与 AT Protocol 收发。
 //
 // 用法：
 //   node bluesky-post.mjs --dry            # 只打印待发文案与选中条目，不发帖
-//   node bluesky-post.mjs                  # 发一条（默认按分类轮转，绝不重复已发过的）
+//   node bluesky-post.mjs                  # 发一条（默认 weighted 加权随机选分类，绝不重复已发过的）
 //   node bluesky-post.mjs --count 3        # 一次发 3 条（补发用）
 //   node bluesky-post.mjs --pick mv-248    # 指定条目（--pick 可重复，忽略已发记录）
-//   node bluesky-post.mjs --strategy latest|random|rotate   # 默认 rotate
+//   node bluesky-post.mjs --strategy latest|random|rotate   # 默认 weighted
 //   node bluesky-post.mjs --no-site-link   # 正文不带站点详情页链接
 //   node bluesky-post.mjs --with-site-link # 正文带站点详情页链接（默认带）
+//   node bluesky-post.mjs --audit          # 打印不可发条目的原因分布
 //
-// 凭据：~/.qwenworkcn/wodewangpan-bluesky.env（BLUESKY_IDENTIFIER / BLUESKY_APP_PASSWORD / REPO / SITE_URL）
+// 凭据：同目录 wodewangpan-bluesky.env（回退 ~/.qwenworkcn → ~/.workbuddy）
+//   （BLUESKY_IDENTIFIER / BLUESKY_APP_PASSWORD / BLUESKY_PDS / REPO / SITE_URL）
 // 已发记录：~/.qwenworkcn/bluesky-posts/posted.json（去重唯一依据，勿删；见 SKILL.md「沙箱坑」）
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { execFile } from 'node:child_process';
+import {
+  arg, has, collectPicks, loadEnv, findStateFile, loadState, saveState,
+  loadItems, imgPath, makeDeduper, makePicker, baseRecord, countReasons, printSummary,
+  DEFAULT_REPO, DEFAULT_SITE_URL,
+} from '../common.mjs';
 
-const HOME = os.homedir();
-// 数据目录（2026-10-30 迁移）：优先 ~/.qwenworkcn（沙箱可直接读写、写入快）；
-// 老环境只有 ~/.workbuddy 时自动回退。沙箱里 existsSync 不可靠，统一用 statSync 判存在。
-const firstPresent = (...c) => { for (const p of c) { try { fs.statSync(p); return p; } catch {} } return c[0]; };
-// 权威源在私有仓：同目录的 wodewangpan-bluesky.env 优先，其次迁移前的 ~/.qwenworkcn，最后老环境 ~/.workbuddy。
-// STATE_FILE（posted.json）不动：那是现网判重状态，不进 git，搬家或复制都会导致重复发。
-const ENV_FILE = firstPresent(
-  path.join(path.dirname(fileURLToPath(import.meta.url)), 'wodewangpan-bluesky.env'),
-  path.join(HOME, '.qwenworkcn', 'wodewangpan-bluesky.env'),
-  path.join(HOME, '.workbuddy', 'wodewangpan-bluesky.env'),
-);
-const STATE_FILE = firstPresent(
-  path.join(HOME, '.qwenworkcn', 'bluesky-posts', 'posted.json'),
-  path.join(HOME, '.workbuddy', 'bluesky-posts', 'posted.json'),
-);
-
-const env = Object.fromEntries(
-  fs
-    .readFileSync(ENV_FILE, 'utf8')
-    .split('\n')
-    .filter((l) => l.trim() && !l.trim().startsWith('#'))
-    .map((l) => {
-      const i = l.indexOf('=');
-      return [l.slice(0, i).trim(), l.slice(i + 1).trim()];
-    })
-);
+const { file: ENV_FILE, values: env } = loadEnv(import.meta.url, 'wodewangpan-bluesky.env');
 const IDENTIFIER = env.BLUESKY_IDENTIFIER;
 const APP_PASSWORD = env.BLUESKY_APP_PASSWORD;
 const PDS = env.BLUESKY_PDS || 'https://bsky.social';
-const REPO = env.REPO;
-const SITE_URL = (env.SITE_URL || 'https://www.wodewangpan.top').replace(/\/+$/, '');
+const REPO = env.REPO || DEFAULT_REPO;
+const SITE_URL = (env.SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, '');
 
-const arg = (k, d) => {
-  const i = process.argv.indexOf(`--${k}`);
-  return i >= 0 ? process.argv[i + 1] : d;
-};
-const has = (k) => process.argv.includes(`--${k}`);
 const DRY = has('dry');
 // 站里有 52 条软件类老条目没有 image 字段（无海报）。用户 2026-10-06 要求**照样发**（纯文本帖，文字+链接，不带图）；
 // 想只发带图的就加 --require-image。
 const ALLOW_NO_IMAGE = !has('require-image');
 const COUNT = parseInt(arg('count', '1'), 10);
 const STRATEGY = arg('strategy', 'weighted'); // weighted（默认）| rotate | random
-const PICKS = process.argv.reduce((acc, v, i) => {
-  if (v === '--pick' && process.argv[i + 1]) acc.push(process.argv[i + 1]);
-  return acc;
-}, []);
+const PICKS = collectPicks();
 const WITH_SITE_LINK = !has('no-site-link');
-const CAT_ORDER = ['电影', '电视剧', '纪录片', '动漫', '游戏', '软件', '电子书', '其他'];
 
 // [沙箱兼容] 主机仍走 curl（行为完全不变）；沙箱内 curl 无法 spawn(ENOENT) 或 Schannel TLS 失败(exit 35)
 // 时自动退回 Node 内置 fetch。curl 只在传输层出错才非零退出（HTTP 4xx/5xx 仍返回响应体），所以兜底语义一致。
@@ -119,144 +93,17 @@ const curlJson = async (args) => {
   try { return JSON.parse(s); } catch { throw new Error(`响应非 JSON：${String(s).slice(0, 200)}`); }
 };
 
-// ---------- 读站点数据 ----------
-function parseYaml(file) {
-  // 部分 yaml（软件.yaml）是 CRLF，行尾的 \r 会被当成字段值的一部分，
-  // 导致 id / quark_url 带上回车（链接发到 Bluesky 会坏掉），这里统一清掉。
-  const raw = fs.readFileSync(file, 'utf8').replace(/\r/g, '');
-  const out = [];
-  for (const part of raw.split(/(?=^- id: )/m)) {
-    const id = part.match(/^- id:\s*"?([^"\n]+)"?/m)?.[1];
-    if (!id) continue;
-    const get = (k) => part.match(new RegExp(`^\\s*${k}:\\s*"([\\s\\S]*?)"\\s*$`, 'm'))?.[1]
-      ?? part.match(new RegExp(`^\\s*${k}:\\s*([^\\n]+)`, 'm'))?.[1];
-    const title = get('title') || '';
-    const category = get('category') || '';
-    const quark = get('quark_url') || '';
-    const baidu = get('baidu_url') || '';
-    const baiduCode = get('baidu_code') || '';
-    const desc = get('description') || '';
-    const date = get('date') || '';
-    const added = get('added') || '';
-    const image = get('image') || '';
-    const tagsRaw = part.match(/^\s*tags:\s*\[(.*?)\]/m)?.[1] || '';
-    const tags = [...tagsRaw.matchAll(/"([^"]+)"/g)].map((m) => m[1]);
-    out.push({ id, title, category, quark, baidu, baiduCode, desc, date, added, image, tags });
-  }
-  return out;
-}
+// ---------- 数据与状态（共享流水线） ----------
+const STATE_FILE = findStateFile('bluesky-posts');
+const items = loadItems(REPO);
+const state = loadState(STATE_FILE);
 
-const DATA_DIR = path.join(REPO, 'data');
-const IMG_DIR = path.join(REPO, 'static', 'images');
-let items = [];
-for (const f of fs.readdirSync(DATA_DIR)) {
-  if (!f.endsWith('.yaml') || f === 'site.yaml') continue;
-  items = items.concat(parseYaml(path.join(DATA_DIR, f)));
-}
-
-// ---------- 状态 ----------
-let state = { posted: {}, lastCategory: null, history: [] };
-// [沙箱补丁] existsSync 在 .workbuddy 下返回 false，但 readFileSync 正常，改为直接尝试读取
-try { state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')); } catch (e) { if (e.code !== 'ENOENT') console.log('状态读取警告：', String(e.message).slice(0, 120)); }
-state.posted = state.posted || {};
-state.history = state.history || [];
-
-/**
- * 去重（用户定死口径，2026-10-10 修订）：**夸克分享链接或百度分享链接，任一相同即视为同一份资源**。
- * - 链接相同 → 发过就不再发；
- * - 标题相同但链接不同 → 照发（同系列电影、同一部剧的不同季都属于这种）；
- * - 两条链接都为空的条目不参与去重（按 id 判重）。
- */
-const normTitle = (s) =>
-  String(s || '')
-    .replace(/[【\[(（].*?[】\])）]/g, '')
-    .replace(/[\s·・:：\-_.、,，!！?？'"“”‘’]/g, '')
-    .toLowerCase();
-
-// 老记录缺字段时用当前数据回填，保证去重不留缺口
-for (const [id, rec] of Object.entries(state.posted)) {
-  if (rec.quark && rec.baidu && rec.titleNorm) continue;
-  const it = items.find((x) => x.id === id);
-  if (it) {
-    rec.quark = rec.quark || it.quark;
-    rec.baidu = rec.baidu || it.baidu;
-    rec.titleNorm = rec.titleNorm || normTitle(it.title);
-    rec.title = rec.title || it.title;
-  }
-}
-const seenLinks = new Set();
-for (const r of Object.values(state.posted)) {
-  if (r.quark) seenLinks.add(r.quark);
-  if (r.baidu) seenLinks.add(r.baidu);
-}
-const noteSeen = (it) => {
-  if (it.quark) seenLinks.add(it.quark);
-  if (it.baidu) seenLinks.add(it.baidu);
-};
-
-const skipReason = (it) => {
-  if (!it.image && !ALLOW_NO_IMAGE) return '无海报（--require-image 生效，跳过纯文本帖）';
-  if (it.quark && seenLinks.has(it.quark)) return '夸克链接已发过（同一份资源）';
-  if (it.baidu && seenLinks.has(it.baidu)) return '百度链接已发过（同一份资源）';
-  if (!it.quark && !it.baidu && state.posted[it.id]) return '已发过（该条目无链接，按 id 判重）';
-  return null;
-};
-
-// ---------- 选片 ----------
-let pickedCategory = null;
-let pickedInfo = '';
-function pickOne(usedNow) {
-  if (PICKS.length) {
-    const id = PICKS.shift();
-    const it = items.find((x) => x.id === id);
-    if (!it) throw new Error(`找不到条目 ${id}`);
-    return it;
-  }
-  const unseen = items.filter((x) => !usedNow.has(x.id) && !skipReason(x));
-  if (!unseen.length) throw new Error('所有资源都已发过（或全部重复），没有新条目可发');
-  if (STRATEGY === 'latest') {
-    return unseen.sort((a, b) => String(b.added).localeCompare(String(a.added)) || b.id.localeCompare(a.id))[0];
-  }
-  if (STRATEGY === 'random') {
-    return unseen[Math.floor(Math.random() * unseen.length)];
-  }
-  if (STRATEGY === 'rotate') {
-    // 固定轮转：从上次分类的下一个开始，取该分类下编号最小的一条
-    const startIdx = state.lastCategory ? CAT_ORDER.indexOf(state.lastCategory) + 1 : 0;
-    for (let k = 0; k < CAT_ORDER.length; k++) {
-      const cat = CAT_ORDER[(startIdx + k) % CAT_ORDER.length];
-      const inCat = unseen
-        .filter((x) => x.category === cat)
-        .sort((a, b) => a.id.localeCompare(b.id, 'en', { numeric: true }));
-      if (inCat.length) return inCat[0];
-    }
-    return unseen[0];
-  }
-  // weighted（默认）：各分类剩余可发条数不一样（电影 249 / 电视剧 111 / 纪录片 77 / 软件 119 / 其他 1 …），
-  // 按剩余数量加权随机选分类，再在该分类内随机挑一条。
-  // 效果：库存多的分类出现得多，小分类也有机会露脸，发完的分类权重归零自动退出。
-  // 分类不写死：以数据里实际出现的 category 为准，CAT_ORDER 只决定展示顺序，
-  // 这样站里新增分类（如「电子书」）会自动纳入，不用回来改代码。
-  const catSet = new Set(unseen.map((x) => x.category).filter(Boolean));
-  const ordered = [
-    ...CAT_ORDER.filter((c) => catSet.has(c)),
-    ...[...catSet].filter((c) => !CAT_ORDER.includes(c)),
-  ];
-  const pools = ordered.map((cat) => ({ cat, list: unseen.filter((x) => x.category === cat) })).filter(
-    (p) => p.list.length
-  );
-  if (!pools.length) throw new Error('没有新条目可发');
-  const total = pools.reduce((s, p) => s + p.list.length, 0);
-  let r = Math.random() * total;
-  let chosen = pools[0];
-  for (const p of pools) {
-    r -= p.list.length;
-    if (r <= 0) { chosen = p; break; }
-  }
-  pickedCategory = chosen.cat;
-  pickedInfo = `${chosen.cat}（剩余 ${chosen.list.length} 条，权重 ${((chosen.list.length / total) * 100).toFixed(1)}%）`;
-  return chosen.list[Math.floor(Math.random() * chosen.list.length)];
-}
+const deduper = makeDeduper({
+  state, items,
+  extraSkips: [ALLOW_NO_IMAGE ? null : (it) => (!it.image ? '无海报（--require-image 生效，跳过纯文本帖）' : null)].filter(Boolean),
+});
+const { noteSeen, skipReason } = deduper;
+const picker = makePicker({ items, state, picks: PICKS, strategy: STRATEGY, skipReason });
 
 // ---------- 文案 ----------
 const MAX = 300;
@@ -374,16 +221,12 @@ async function createPost({ did, jwt, text, blob, alt }) {
   return j;
 }
 
-const bskyUrl = (uri, did) =>
+const bskyUrl = (uri) =>
   `https://bsky.app/profile/${IDENTIFIER}/post/${String(uri).split('/').pop()}`;
 
 // ---------- 主流程 ----------
 if (has('audit')) {
-  const reasons = {};
-  for (const it of items) {
-    const r = skipReason(it);
-    if (r) reasons[r] = (reasons[r] || 0) + 1;
-  }
+  const reasons = countReasons(items, skipReason);
   console.log(`全站 ${items.length} 条，不可发 ${Object.values(reasons).reduce((a, b) => a + b, 0)} 条：`);
   console.log(JSON.stringify(reasons, null, 1));
   console.log(`可发：${items.filter((x) => !skipReason(x)).length} 条`);
@@ -395,27 +238,21 @@ let sess = null;
 if (!DRY) sess = await session();
 
 for (let n = 0; n < COUNT; n++) {
-  let it;
-  try {
-    pickedCategory = null;
-    pickedInfo = '';
-    it = pickOne(usedNow);
-  } catch (e) {
-    console.log(`× ${e.message}`);
-    break;
-  }
+  let it, pickedInfo;
+  try { ({ item: it, info: pickedInfo } = picker.pickOne(usedNow)); }
+  catch (e) { console.log(`× ${e.message}`); break; }
   usedNow.add(it.id);
   state.lastCategory = it.category; // 同批次内也轮转，避免一次 --count N 全发同一分类
-  const imgPath = path.join(IMG_DIR, it.image);
+  const imgPathFull = imgPath(REPO, it.image);
   // [沙箱补丁] 沙箱内 existsSync 对已存在文件会误报 false（statSync 正常），改用 statSync 判定，避免漏发海报
-  const hasImg = it.image && (() => { try { return fs.statSync(imgPath).isFile(); } catch { return false; } })();
+  const hasImg = it.image && (() => { try { return fs.statSync(imgPathFull).isFile(); } catch { return false; } })();
   const text = buildText(it);
   const len = [...text].length;
   const alt = `${it.title}${it.category ? `（${it.category}）` : ''} 海报`;
 
   console.log(`\n——— 第 ${n + 1} 条 ———`);
   console.log(`id: ${it.id} | ${it.category} | ${it.title} | 图: ${hasImg ? it.image : '（无海报，纯文本帖）'} | 字数 ${len}/300`);
-  if (pickedInfo) console.log(`随机选中分类：${pickedInfo}`);
+  if (pickedInfo) console.log(pickedInfo);
   console.log(text);
   console.log(`————————`);
 
@@ -432,22 +269,11 @@ for (let n = 0; n < COUNT; n++) {
   }
   try {
     let blob = null;
-    if (hasImg) blob = await uploadBlob(sess.jwt, imgPath);
+    if (hasImg) blob = await uploadBlob(sess.jwt, imgPathFull);
     const r = await createPost({ did: sess.did, jwt: sess.jwt, text, blob, alt });
-    const url = bskyUrl(r.uri, sess.did);
-    state.posted[it.id] = {
-      at: new Date().toISOString(),
-      uri: r.uri,
-      cid: r.cid,
-      category: it.category,
-      title: it.title,
-      titleNorm: normTitle(it.title),
-      quark: it.quark,
-      baidu: it.baidu,
-      text,
-    };
+    const url = bskyUrl(r.uri);
+    state.posted[it.id] = { ...baseRecord(it, text), uri: r.uri, cid: r.cid };
     noteSeen(it);
-    state.lastCategory = it.category;
     state.history.push({ id: it.id, at: new Date().toISOString(), uri: r.uri });
     console.log(`✓ 已发送 → ${url}`);
     results.push({ id: it.id, ok: true, url, uri: r.uri });
@@ -458,12 +284,8 @@ for (let n = 0; n < COUNT; n++) {
 }
 
 if (!DRY) {
-  fs.mkdirSync(path.dirname(STATE_FILE), { recursive: true });
-  fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 1));
+  saveState(STATE_FILE, state);
   console.log(`\n已发记录写入：${STATE_FILE}（累计 ${Object.keys(state.posted).length} 条）`);
 }
-console.log(`\n===== 汇总 =====`);
-console.log(`本次：${results.length} 条，成功 ${results.filter((r) => r.ok).length}，失败 ${results.filter((r) => r.ok === false).length}`);
-const remaining = items.filter((x) => !skipReason(x)).length;
-console.log(`已发：${Object.keys(state.posted).length} 条 | 剩余可发：${remaining} 条 / 全站 ${items.length} 条`);
+printSummary(results, { state, items, skipReason });
 console.log(JSON.stringify(results, null, 1));

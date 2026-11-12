@@ -17,7 +17,7 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 Set ws = CreateObject("WScript.Shell")
 
 BOT_DIR = fso.GetParentFolderName(WScript.ScriptFullName)
-If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
+If Not fso.FileExists(BOT_DIR & "\app\qq\bot.py") Then
   BOT_DIR = "C:\Users\marco\Github\mybot\bot"
 End If
 
@@ -114,8 +114,8 @@ End Sub
 
 Sub StartQQ()
   Dim msg, note
-  If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
-    MsgBox "找不到机器人代码：" & vbCrLf & BOT_DIR & "\app\bot.py", 16, "启动 QQ 机器人"
+  If Not fso.FileExists(BOT_DIR & "\app\qq\bot.py") Then
+    MsgBox "找不到机器人代码：" & vbCrLf & BOT_DIR & "\app\qq\bot.py", 16, "启动 QQ 机器人"
     Exit Sub
   End If
   note = EnsureNapcat()
@@ -130,8 +130,8 @@ End Sub
 
 Sub RestartQQ()
   Dim killed, dummy, i, msg
-  If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
-    MsgBox "找不到机器人代码：" & vbCrLf & BOT_DIR & "\app\bot.py", 16, "重启 QQ 机器人"
+  If Not fso.FileExists(BOT_DIR & "\app\qq\bot.py") Then
+    MsgBox "找不到机器人代码：" & vbCrLf & BOT_DIR & "\app\qq\bot.py", 16, "重启 QQ 机器人"
     Exit Sub
   End If
   killed = KillBy("bot")
@@ -176,7 +176,7 @@ Sub StopQQ()
   Dim killed
   killed = KillBy("bot")
   If killed = 0 Then
-    MsgBox "没有找到正在运行的 QQ 机器人（bot.py）。" & vbCrLf & vbCrLf & "它可能本来就没启动。", 64, "结束 QQ 机器人"
+    MsgBox "没有找到正在运行的 QQ 机器人（app\qq\bot.py）。" & vbCrLf & vbCrLf & "它可能本来就没启动。", 64, "结束 QQ 机器人"
   Else
     MsgBox "已结束 QQ 机器人（" & killed & " 个进程）。" & vbCrLf & vbCrLf & "TG 机器人是独立进程，没动；其它 Python 进程同样没动。" & vbCrLf & "要重新启动，用菜单序号 1。", 64, "结束 QQ 机器人"
   End If
@@ -237,8 +237,8 @@ End Sub
 
 Sub StartTG()
   Dim tail
-  If Not fso.FileExists(BOT_DIR & "\app\telegram_bot.py") Then
-    MsgBox "找不到 TG 机器人代码：" & vbCrLf & BOT_DIR & "\app\telegram_bot.py", 16, "启动 TG 机器人"
+  If Not fso.FileExists(BOT_DIR & "\app\telegram\bot.py") Then
+    MsgBox "找不到 TG 机器人代码：" & vbCrLf & BOT_DIR & "\app\telegram\bot.py", 16, "启动 TG 机器人"
     Exit Sub
   End If
   If ProcessBusy("tg") Then
@@ -259,8 +259,8 @@ End Sub
 
 Sub RestartTG()
   Dim killed, i, tail, msg
-  If Not fso.FileExists(BOT_DIR & "\app\telegram_bot.py") Then
-    MsgBox "找不到 TG 机器人代码：" & vbCrLf & BOT_DIR & "\app\telegram_bot.py", 16, "重启 TG 机器人"
+  If Not fso.FileExists(BOT_DIR & "\app\telegram\bot.py") Then
+    MsgBox "找不到 TG 机器人代码：" & vbCrLf & BOT_DIR & "\app\telegram\bot.py", 16, "重启 TG 机器人"
     Exit Sub
   End If
   killed = KillBy("tg")
@@ -292,7 +292,7 @@ Sub StopTG()
   Dim killed
   killed = KillBy("tg")
   If killed = 0 Then
-    MsgBox "没有找到正在运行的 TG 机器人（telegram_bot.py）。" & vbCrLf & vbCrLf & "它可能本来就没启动。", 64, "结束 TG 机器人"
+    MsgBox "没有找到正在运行的 TG 机器人（app\telegram\bot.py）。" & vbCrLf & vbCrLf & "它可能本来就没启动。", 64, "结束 TG 机器人"
   Else
     MsgBox "已结束 TG 机器人（" & killed & " 个进程）。" & vbCrLf & vbCrLf & "QQ 机器人没动，还在正常跑。" & vbCrLf & "要重新启动，用菜单序号 5。", 64, "结束 TG 机器人"
   End If
@@ -305,8 +305,8 @@ Sub AutoStart(isTg)
   Dim act
   WScript.Sleep 25000
   If isTg Then
-    If Not fso.FileExists(BOT_DIR & "\app\telegram_bot.py") Then
-      LogLine "[TG] 找不到 telegram_bot.py，跳过：" & BOT_DIR
+    If Not fso.FileExists(BOT_DIR & "\app\telegram\bot.py") Then
+      LogLine "[TG] 找不到 app\telegram\bot.py，跳过：" & BOT_DIR
       Exit Sub
     End If
     If ProcessBusy("tg") Then
@@ -316,8 +316,8 @@ Sub AutoStart(isTg)
       act = "[TG] 已启动 TG（独立进程）"
     End If
   Else
-    If Not fso.FileExists(BOT_DIR & "\app\bot.py") Then
-      LogLine "找不到 bot.py，跳过：" & BOT_DIR
+    If Not fso.FileExists(BOT_DIR & "\app\qq\bot.py") Then
+      LogLine "找不到 app\qq\bot.py，跳过：" & BOT_DIR
       Exit Sub
     End If
     If ProcessBusy("napcat") Then
@@ -345,12 +345,12 @@ End Sub
 
 Sub LaunchBot()
   ws.CurrentDirectory = BOT_DIR
-  ws.Run """" & PYW & """ ""app\bot.py""", 0, False
+  ws.Run """" & PYW & """ ""app\qq\bot.py""", 0, False
 End Sub
 
 Sub LaunchTG()
   ws.CurrentDirectory = BOT_DIR
-  ws.Run """" & PYW & """ ""app\telegram_bot.py""", 0, False
+  ws.Run """" & PYW & """ ""app\telegram\bot.py""", 0, False
 End Sub
 
 Function EnsureNapcat()
@@ -377,9 +377,9 @@ Function ProcessBusy(kind)
     nm = LCase(p.Name & "")
     If InStr(1, nm, "python", 1) > 0 Then
       If kind = "bot" Then
-        If InStr(1, cmd, "bot.py", 1) > 0 And InStr(1, cmd, "telegram_bot.py", 1) = 0 Then busy = True
+        If InStr(1, cmd, "app\qq\bot.py", 1) > 0 Then busy = True
       ElseIf kind = "tg" Then
-        If InStr(1, cmd, "telegram_bot.py", 1) > 0 Then busy = True
+        If InStr(1, cmd, "app\telegram\bot.py", 1) > 0 Then busy = True
       End If
     End If
     If kind = "napcat" Then
@@ -407,9 +407,9 @@ Function KillBy(kind)
       If nm = "qq.exe" And InStr(1, cmd, "NapCat", 1) > 0 Then hit = True
     ElseIf InStr(1, nm, "python", 1) > 0 Then
       If kind = "bot" Then
-        If InStr(1, cmd, "bot.py", 1) > 0 And InStr(1, cmd, "telegram_bot.py", 1) = 0 Then hit = True
+        If InStr(1, cmd, "app\qq\bot.py", 1) > 0 Then hit = True
       ElseIf kind = "tg" Then
-        If InStr(1, cmd, "telegram_bot.py", 1) > 0 Then hit = True
+        If InStr(1, cmd, "app\telegram\bot.py", 1) > 0 Then hit = True
       End If
     End If
     If hit Then

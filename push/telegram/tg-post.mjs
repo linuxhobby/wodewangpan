@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+// push/telegram/tg-post.mjs —— Telegram 平台适配层。
 // 把 wodewangpan 资源站的一条资源发到 Telegram 订阅号/频道：
 //   sendPhoto（海报）+ caption（名称 / 描述 / 链接 / 大小 / 标签）
-// 素材全部取自仓库 data/*.yaml 与 static/images/，不联网编造；缺字段就省略该行。
+// 读数据、判重、选片共用 ../common.mjs；本文件只留文案渲染与 TG API 收发。
 //
 // 用法：
 //   node tg-post.mjs --dry                 # 只打印选中条目与渲染后的 caption，不发送（无需 token）
@@ -20,51 +21,29 @@
 //   node tg-post.mjs --retract <id>        # 撤回之前由本脚本发出去的某条目消息（调试用）
 //   node tg-post.mjs --audit               # 打印不可发条目的原因分布
 //
-// 凭据：~/.qwenworkcn/wodewangpan-tg.env —— TG_BOT_TOKEN / TG_CHAT / REPO / SITE_URL
+// 凭据：同目录 wodewangpan-tg.env（回退 ~/.qwenworkcn → ~/.workbuddy）—— TG_BOT_TOKEN / TG_CHAT / REPO / SITE_URL
 //   （TG_CHAT 填 @频道用户名 或 -100 开头的数字 ID；bot 必须是该频道管理员并有「发布消息」权限）
-// 已发记录：~/.qwenworkcn/telegram-posts/posted.json —— 去重唯一依据，勿删
+// 已发记录：~/.qwenworkcn/telegram-posts/posted.json —— 去重唯一依据，勿删，不随仓库搬
 //
 // 传输只用 Node 内置 fetch（本机实测 api.telegram.org 直连 200），不走 curl，避开沙箱里 curl 无法 spawn 的坑。
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { pathToFileURL, fileURLToPath } from 'node:url';
+import { pathToFileURL } from 'node:url';
+import {
+  arg, has, collectPicks, loadEnv, findStateFile, loadState, saveState,
+  loadItems, imgPath, hasImgFile, makeDeduper, makePicker, baseRecord,
+  countReasons, printSummary, DEFAULT_REPO, DEFAULT_SITE_URL,
+} from '../common.mjs';
 
-const HOME = os.homedir();
-// 沙箱里 existsSync 会对真实存在的文件误报 false（statSync 正常），统一用 statSync 探测。
-const firstPresent = (...c) => { for (const p of c) { try { fs.statSync(p); return p; } catch {} } return c[0]; };
-// 权威源在私有仓：同目录的 wodewangpan-tg.env 优先，其次 ~/.qwenworkcn（迁移前的老位置），最后 ~/.workbuddy。
-// 判重记录 STATE_FILE 故意不跟着搬——那是现网状态，不进 git，搬走或复制都会导致重复发。
-const ENV_FILE = firstPresent(
-  path.join(path.dirname(fileURLToPath(import.meta.url)), 'wodewangpan-tg.env'),
-  path.join(HOME, '.qwenworkcn', 'wodewangpan-tg.env'),
-  path.join(HOME, '.workbuddy', 'wodewangpan-tg.env'),
-);
-const STATE_FILE = firstPresent(
-  path.join(HOME, '.qwenworkcn', 'telegram-posts', 'posted.json'),
-  path.join(HOME, '.workbuddy', 'telegram-posts', 'posted.json'),
-);
-
-// env 缺失也不阻断 --dry：给足默认值，只在真要发送时才检查 token
-const env = (() => {
-  try {
-    return Object.fromEntries(
-      fs.readFileSync(ENV_FILE, 'utf8').split('\n')
-        .filter((l) => l.trim() && !l.trim().startsWith('#'))
-        .map((l) => { const i = l.indexOf('='); return [l.slice(0, i).trim(), l.slice(i + 1).trim()]; })
-    );
-  } catch { return {}; }
-})();
+const { file: ENV_FILE, values: env } = loadEnv(import.meta.url, 'wodewangpan-tg.env');
 const TOKEN = env.TG_BOT_TOKEN || '';
 const CHAT = env.TG_CHAT || '';
-const REPO = env.REPO || 'C:/Users/marco/Github/wodewangpan';
-const SITE_URL = (env.SITE_URL || 'https://www.wodewangpan.top').replace(/\/+$/, '');
+const REPO = env.REPO || DEFAULT_REPO;
+const SITE_URL = (env.SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, '');
 const API_ROOT = env.TG_API_ROOT || 'https://api.telegram.org';
 
-const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i >= 0 ? process.argv[i + 1] : d; };
-const has = (k) => process.argv.includes(`--${k}`);
 const DRY = has('dry');
-const PICKS = process.argv.reduce((a, v, i) => (v === '--pick' && process.argv[i + 1] ? a.concat(process.argv[i + 1]) : a), []);
+const PICKS = collectPicks();
 // 传了 --pick 就按指定条数发，不用额外记 --count
 const COUNT = Math.max(parseInt(arg('count', '1'), 10), PICKS.length);
 const STRATEGY = arg('strategy', 'weighted');
@@ -79,111 +58,23 @@ const WITH_SITE_LINK = has('with-site-link');   // 默认不带，用户样例�
 const QR_MODE = has('qr-split') ? 'split' : (has('qr') ? 'album' : 'none');
 const NO_QR = QR_MODE === 'none';
 const QR_SIZE = parseInt(arg('qr-size', '480'), 10);
-const CAT_ORDER = ['电影', '电视剧', '纪录片', '动漫', '游戏', '软件', '课程', '电子书', '其他'];
 
 // Telegram caption 硬上限 1024，这里留 24 字符余量
 const MAX_CAPTION = 1000;
 const MIN_DESC = 60;      // 描述保底，低于这个字数就腾位置
 const PHOTO_MAX_BYTES = 5 * 1024 * 1024;
 
-// ---------- 读站点数据 ----------
-function parseYaml(file) {
-  // 软件.yaml 等是 CRLF，行尾 \r 会混进字段值（链接变坏链），统一清掉。
-  const raw = fs.readFileSync(file, 'utf8').replace(/\r/g, '');
-  const out = [];
-  for (const part of raw.split(/(?=^- id: )/m)) {
-    const id = part.match(/^- id:\s*"?([^"\n]+)"?/m)?.[1];
-    if (!id) continue;
-    const get = (k) => part.match(new RegExp(`^\\s*${k}:\\s*"([\\s\\S]*?)"\\s*$`, 'm'))?.[1]
-      ?? part.match(new RegExp(`^\\s*${k}:\\s*([^\\n]+)`, 'm'))?.[1];
-    out.push({
-      id,
-      title: get('title') || '',
-      category: get('category') || '',
-      quark: get('quark_url') || '',
-      baidu: get('baidu_url') || '',
-      baiduCode: get('baidu_code') || '',
-      desc: get('description') || '',
-      date: get('date') || '',
-      added: get('added') || '',
-      image: get('image') || '',
-      size: get('size') || '',            // files.size，缺失即空串
-      tags: [...(part.match(/^\s*tags:\s*\[(.*?)\]/m)?.[1] || '').matchAll(/"([^"]+)"/g)].map((m) => m[1]),
-    });
-  }
-  return out;
-}
+// ---------- 数据与状态（共享流水线） ----------
+const STATE_FILE = findStateFile('telegram-posts');
+const items = loadItems(REPO);
+const state = loadState(STATE_FILE);
 
-const DATA_DIR = path.join(REPO, 'data');
-const IMG_DIR = path.join(REPO, 'static', 'images');
-let items = [];
-for (const f of fs.readdirSync(DATA_DIR)) {
-  if (!f.endsWith('.yaml') || f === 'site.yaml') continue;
-  items = items.concat(parseYaml(path.join(DATA_DIR, f)));
-}
-
-// ---------- 状态 ----------
-let state = { posted: {}, lastCategory: null, history: [] };
-try { state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')); }
-catch (e) { if (e.code !== 'ENOENT') console.log('状态读取警告：', String(e.message).slice(0, 120)); }
-state.posted = state.posted || {};
-state.history = state.history || [];
-
-/** 去重口径沿用 Bluesky 那套（用户定死）：夸克或百度链接任一相同 = 同一份资源；标题相同但链接不同照发。 */
-const normTitle = (s) => String(s || '').replace(/[【\[(（].*?[】\])）]/g, '')
-  .replace(/[\s·・:：\-_.、,，!！?？'"“”‘’]/g, '').toLowerCase();
-for (const [id, rec] of Object.entries(state.posted)) {
-  if (rec.quark && rec.baidu && rec.titleNorm) continue;
-  const it = items.find((x) => x.id === id);
-  if (it) { rec.quark = rec.quark || it.quark; rec.baidu = rec.baidu || it.baidu; rec.titleNorm = rec.titleNorm || normTitle(it.title); rec.title = rec.title || it.title; }
-}
-const seenLinks = new Set();
-for (const r of Object.values(state.posted)) { if (r.quark) seenLinks.add(r.quark); if (r.baidu) seenLinks.add(r.baidu); }
-const noteSeen = (it) => { if (it.quark) seenLinks.add(it.quark); if (it.baidu) seenLinks.add(it.baidu); };
-
-const hasImgFile = (it) => { if (!it.image) return false; try { return fs.statSync(path.join(IMG_DIR, it.image)).isFile(); } catch { return false; } };
-
-function skipReason(it) {
-  if (it.quark && seenLinks.has(it.quark)) return '夸克链接已发过（同一份资源）';
-  if (it.baidu && seenLinks.has(it.baidu)) return '百度链接已发过（同一份资源）';
-  if (!it.quark && !it.baidu && state.posted[it.id]) return '已发过（无链接，按 id 判重）';
-  if (!it.size && REQUIRE_SIZE) return '缺 files.size（--require-size 生效）';
-  return null;
-}
-
-// ---------- 选片 ----------
-let pickedInfo = '';
-function pickOne(usedNow) {
-  if (PICKS.length) {
-    const id = PICKS.shift();
-    const it = items.find((x) => x.id === id);
-    if (!it) throw new Error(`找不到条目 ${id}`);
-    return it;
-  }
-  const unseen = items.filter((x) => !usedNow.has(x.id) && !skipReason(x));
-  if (!unseen.length) throw new Error('没有新条目可发（全部重复或已被筛选条件排除）');
-  if (STRATEGY === 'latest') return unseen.sort((a, b) => String(b.added).localeCompare(String(a.added)) || b.id.localeCompare(a.id))[0];
-  if (STRATEGY === 'random') return unseen[Math.floor(Math.random() * unseen.length)];
-  if (STRATEGY === 'rotate') {
-    const start = state.lastCategory ? CAT_ORDER.indexOf(state.lastCategory) + 1 : 0;
-    for (let k = 0; k < CAT_ORDER.length; k++) {
-      const cat = CAT_ORDER[(start + k) % CAT_ORDER.length];
-      const inCat = unseen.filter((x) => x.category === cat).sort((a, b) => a.id.localeCompare(b.id, 'en', { numeric: true }));
-      if (inCat.length) { pickedInfo = `轮转分类：${cat}`; return inCat[0]; }
-    }
-    return unseen[0];
-  }
-  // weighted：按各分类「剩余可发条数」加权随机选分类，再在分类内随机挑一条（沿用 Bluesky 口径）
-  const catSet = new Set(unseen.map((x) => x.category).filter(Boolean));
-  const ordered = [...CAT_ORDER.filter((c) => catSet.has(c)), ...[...catSet].filter((c) => !CAT_ORDER.includes(c))];
-  const pools = ordered.map((cat) => ({ cat, list: unseen.filter((x) => x.category === cat) })).filter((p) => p.list.length);
-  const total = pools.reduce((s, p) => s + p.list.length, 0);
-  let r = Math.random() * total;
-  let chosen = pools[0];
-  for (const p of pools) { r -= p.list.length; if (r <= 0) { chosen = p; break; } }
-  pickedInfo = `随机选中分类：${chosen.cat}（剩余 ${chosen.list.length} 条，权重 ${((chosen.list.length / total) * 100).toFixed(1)}%）`;
-  return chosen.list[Math.floor(Math.random() * chosen.list.length)];
-}
+const deduper = makeDeduper({
+  state, items,
+  fallbackSkips: [REQUIRE_SIZE ? (it) => (!it.size ? '缺 files.size（--require-size 生效）' : null) : null].filter(Boolean),
+});
+const { noteSeen, skipReason } = deduper;
+const picker = makePicker({ items, state, picks: PICKS, strategy: STRATEGY, skipReason });
 
 // ---------- 文案 ----------
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -350,9 +241,9 @@ async function sleepThenRetry(method, fields, files, ra) {
 const MIME = { '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' };
 const mimeOf = (p) => MIME[path.extname(p).toLowerCase()] || 'image/jpeg';
 const sendText = (caption) => tgCall('sendMessage', { chat_id: CHAT, text: caption, parse_mode: 'HTML', disable_web_page_preview: true });
-const sendPhoto = (caption, imgPath) => tgCall('sendPhoto',
+const sendPhoto = (caption, imgPath2) => tgCall('sendPhoto',
   { chat_id: CHAT, caption, parse_mode: 'HTML' },
-  [{ field: 'photo', path: imgPath, mime: mimeOf(imgPath) }]);
+  [{ field: 'photo', path: imgPath2, mime: mimeOf(imgPath2) }]);
 const sendPhotoBuf = (caption, buf, filename) => tgCall('sendPhoto',
   { chat_id: CHAT, caption, parse_mode: 'HTML' },
   [{ field: 'photo', buffer: buf, filename, mime: 'image/png' }]);
@@ -362,9 +253,9 @@ const sendPhotoBuf = (caption, buf, filename) => tgCall('sendPhoto',
  * sendMediaGroup 顶层的 parse_mode 明确「不影响 media 里 caption 的解析方式」，写在顶层等于退回 MarkdownV2 并报 400；
  * ② 相册元素只能用 attach://<键> 引用同一次 multipart 里同名部件。
  */
-const sendAlbum = (caption, imgPath, qrBuf, id) => {
+const sendAlbum = (caption, posterPath, qrBuf, id) => {
   const media = [{ type: 'photo', media: 'attach://poster', caption, parse_mode: 'HTML' }];
-  const files = [{ field: 'poster', path: imgPath, mime: mimeOf(imgPath) }];
+  const files = [{ field: 'poster', path: posterPath, mime: mimeOf(posterPath) }];
   if (qrBuf) {
     media.push({ type: 'photo', media: 'attach://qr' });
     files.push({ field: 'qr', buffer: qrBuf, filename: `${id}-quark-qr.png`, mime: 'image/png' });
@@ -389,8 +280,7 @@ async function sendQrFollow(qrBuf, id, replyTo) {
 
 // ---------- 主流程 ----------
 if (has('audit')) {
-  const reasons = {};
-  for (const it of items) { const r = skipReason(it); if (r) reasons[r] = (reasons[r] || 0) + 1; }
+  const reasons = countReasons(items, skipReason);
   console.log(`全站 ${items.length} 条 | 已发 ${Object.keys(state.posted).length} | 不可发 ${items.filter((x) => skipReason(x)).length}`);
   console.log('原因分布：' + JSON.stringify(reasons));
   console.log(`缺 files.size 的条目：${items.filter((x) => !x.size).length}（默认省略「大小」行）`);
@@ -444,17 +334,17 @@ if (!DRY) {
 const usedNow = new Set();
 const results = [];
 for (let n = 0; n < COUNT; n++) {
-  let it;
-  try { pickedInfo = ''; it = pickOne(usedNow); }
+  let it, pickedInfo;
+  try { ({ item: it, info: pickedInfo } = picker.pickOne(usedNow)); }
   catch (e) { console.log(`× ${e.message}`); break; }
   usedNow.add(it.id);
-  state.lastCategory = it.category;
+  state.lastCategory = it.category;   // 同批次内也轮转，避免一次 --count N 全发同一分类
 
   const caption = buildCaption(it);
-  const imgPath = path.join(IMG_DIR, it.image);
-  const imgOk = hasImgFile(it);
+  const imgPathFull = imgPath(REPO, it.image);
+  const imgOk = hasImgFile(REPO, it);
   if (!imgOk && !ALLOW_NO_IMAGE) { console.log(`× ${it.id} 无海报，--require-image 生效，跳过`); continue; }
-  const tooBig = imgOk && fs.statSync(imgPath).size > PHOTO_MAX_BYTES;
+  const tooBig = imgOk && fs.statSync(imgPathFull).size > PHOTO_MAX_BYTES;
   const qrBuf = NO_QR ? null : await qrPng(clean(it.quark));
 
   console.log(`\n——— 第 ${n + 1} 条 ———`);
@@ -473,23 +363,21 @@ for (let n = 0; n < COUNT; n++) {
     const mainHasImg = imgOk && !tooBig;
     let r, extra = null;
     if (QR_MODE === 'split') {
-      r = mainHasImg ? await sendPhoto(caption, imgPath) : await sendText(caption);
+      r = mainHasImg ? await sendPhoto(caption, imgPathFull) : await sendText(caption);
       if (qrBuf) extra = await sendQrFollow(qrBuf, it.id, r.message_id);
     } else if (qrBuf) {
-      r = mainHasImg ? await sendAlbum(caption, imgPath, qrBuf, it.id) : await sendPhotoBuf(caption, qrBuf, `${it.id}-quark-qr.png`);
+      r = mainHasImg ? await sendAlbum(caption, imgPathFull, qrBuf, it.id) : await sendPhotoBuf(caption, qrBuf, `${it.id}-quark-qr.png`);
     } else {
-      r = mainHasImg ? await sendPhoto(caption, imgPath) : await sendText(caption);
+      r = mainHasImg ? await sendPhoto(caption, imgPathFull) : await sendText(caption);
     }
     const msgs = Array.isArray(r) ? r : [r];
     const messageIds = msgs.map((m) => m.message_id);
     if (extra) messageIds.push(extra.message_id);
     state.posted[it.id] = {
-      at: new Date().toISOString(), messageId: messageIds[0], messageIds, chatId: msgs[0].chat?.id,
-      category: it.category, title: it.title, titleNorm: normTitle(it.title),
-      quark: it.quark, baidu: it.baidu, text: caption,
+      ...baseRecord(it, caption),
+      messageId: messageIds[0], messageIds, chatId: msgs[0].chat?.id,
     };
     noteSeen(it);
-    state.lastCategory = it.category;
     state.history.push({ id: it.id, at: new Date().toISOString(), messageId: messageIds[0], messageIds });
     const shape = QR_MODE === 'split'
       ? (extra ? '海报满宽单图 + 二维码第二条（回复）' : '海报满宽单图（二维码没发出去）')
@@ -503,10 +391,7 @@ for (let n = 0; n < COUNT; n++) {
 }
 
 if (!DRY) {
-  fs.mkdirSync(path.dirname(STATE_FILE), { recursive: true });
-  fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 1));
+  saveState(STATE_FILE, state);
   console.log(`\n已发记录写入 ${STATE_FILE}（累计 ${Object.keys(state.posted).length} 条）`);
 }
-console.log(`\n===== 汇总 =====`);
-console.log(`本次 ${results.length} 条 | 成功 ${results.filter((r) => r.ok).length} | 失败 ${results.filter((r) => r.ok === false).length}`);
-console.log(`已发 ${Object.keys(state.posted).length} / 全站 ${items.length} | 剩余可发 ${items.filter((x) => !skipReason(x)).length}`);
+printSummary(results, { state, items, skipReason });
