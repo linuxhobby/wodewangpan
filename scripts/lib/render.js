@@ -613,17 +613,31 @@ function summaryOf(item, max = 60) {
   return s;
 }
 
-/** 分享 / 复制出去的是多行「资源包」而非裸 URL：网盘在前（让人拿到资源），
-    页面在后（网盘会失效、页面不会，是长期兜底入口）。卡片怎么渲染由平台决定，
-    写进消息正文才是 100% 可控的部分。 */
-function shareTextOf(item, shareUrl) {
-  const year = item.date ? String(item.date).slice(0, 4) : '';
-  const head = `${item.title}${year ? `（${year}）` : ''} · ${item.category}`;
-  const summary = summaryOf(item);
+/** 标签转 hashtag：只留中英文、数字、下划线，空格与标点并成 _，
+    否则「一位好律师 Un bon avocat」这类原名粘到 TG 里点不动 */
+function hashtagOf(tags) {
+  return [...new Set((tags || []).map((t) => String(t).trim()).filter(Boolean))]
+    .map((t) => t.replace(/[^0-9A-Za-z\u4e00-\u9fa5_]+/g, '_').replace(/^_+|_+$/g, '').replace(/_+/g, '_'))
+    .filter(Boolean)
+    .slice(0, 6)
+    .map((t) => `#${t}`)
+    .join(' ');
+}
+
+/** 复制资源信息 / 分享出去的文案：字段固定为「名称 / 描述 / 链接 / 大小 / 标签」，
+    粘到 TG 等地方即可直接发。大小没有就留空，链接按条目真实网盘逐条列出，
+    不写死集数、清晰度等数据里没有的信息。 */
+function shareTextOf(item) {
   const links = item.links.length
-    ? item.links.map((l) => (l.code ? `${l.name}：${l.url} 提取码 ${l.code}` : `${l.name}：${l.url}`))
-    : ['（暂无可用链接，页面会更新补源）'];
-  return [head, summary, ...links, `更多同类 → ${shareUrl}`].filter(Boolean).join('\n');
+    ? item.links.map((l) => `链接：${l.url}${l.code ? ` 提取码 ${l.code}` : ''}`)
+    : ['链接：'];
+  return [
+    `名称：${item.title}`,
+    `描述：${summaryOf(item)}`,
+    ...links,
+    `大小：${item.files?.size || ''}`,
+    `标签：${hashtagOf(item.tags)}`,
+  ].join('\n');
 }
 
 /** 详情页反馈条：紧跟转存链接下面——用户刚发现链接打不开，此刻正需要出口。
@@ -797,7 +811,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   // 分享面板只留「分享（系统面板）+ 复制资源信息」两个动作：
   // 死链组件与国内零使用率的社交外链已删除，不再占详情页显眼位置。
   const shareUrl = `${baseUrl}${itemHref(item.id)}`;
-  const shareText = shareTextOf(item, shareUrl);
+  const shareText = shareTextOf(item);
   // 复制 / 分享时顺带出去的海报地址：必须是绝对路径——相对路径粘到站外就解析不出图了。
   // 占位图不复制：那张「暂无配图」粘出去只会让人以为是分享坏了。
   const sharePoster = /\/img\/placeholder/.test(img.detail || '') ? '' : `${baseUrl}${img.detail}`;
