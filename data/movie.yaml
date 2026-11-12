@@ -1,4 +1,4 @@
-# 电影资源（441 条）
+# 电影资源（444 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -5752,3 +5752,59 @@
   date: 2026-09-11
   added: "2026-11-10 03:51"
   image: mv-441.jpg
+
+- id: mv-442
+  title: "我要你的性"
+  category: 电影
+  tags: ["电影", "喜剧", "惊悚", "悬疑", "我要你的性 I Want Your Sex"]
+  quark_url: "https://pan.quark.cn/s/faebfb127c51"
+  description: "面容清秀的艾略特（库珀·霍夫曼 Cooper Hoffman 饰）在著名艺术家艾丽卡·特蕾西（奥利维亚·王尔德 Olivia Wilde 饰）那里找到了一份工作，当她邀请他成为自己的灵感缪斯时，他的梦想成真了。但很快他就被艾丽卡带入了一个充满性、痴迷、权力、背叛和谋杀的世界，他变得不知所措。本片类型：喜剧 / 惊悚 / 悬疑。｜TMDB 6.0"
+  date: 2026-07-29
+  added: 2026-11-12
+  image: mv-442.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "51.3 GB"
+    format: "MKV"
+    tree: |
+      442-我要你的性 (2026) 4K REMUX 杜比视界/
+      2160p.UHD.BluRay.REMUX.DoVi.P7.H.265.10-bit.24fps.TrueHD7.1Atmos-FD.mkv
+
+- id: mv-443
+  title: "角头：大桥头"
+  category: 电影
+  tags: ["电影", "犯罪", "动作", "角头：大桥头 角頭－大橋頭"]
+  quark_url: "https://pan.quark.cn/s/e6304ceb9294"
+  description: "一句大佬牌桌的轻佻玩笑，让大桥头二代麦克愤而掀桌宣战，却教大桥头角头Ko桑陷入两难。而无端卷入这场四帮混战的，还有三个底层求生的土狗帮无名小卒。为了帮弟弟筹贷款，不惜铤而走险做起卖药生意，到头来却身不由己赌上性命。角头宇宙来到第四部，时间溯回世界之初，新老面孔齐聚一堂，摊开一幅江湖黑帮的岁月群像。血气火拼分毫不减，再奏响内敛情深的父子哀歌。｜TMDB 7.3"
+  date: 2024-08-16
+  added: 2026-11-12
+  image: mv-443.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "5.1 GB"
+    format: "MKV"
+    tree: |
+      443-角头：大桥头/
+      GATAO.Like.Father.Like.Son.2024.1080p.NF.WEB-DL.DDP.5.1.H.264-DreamHD.mkv
+
+- id: mv-444
+  title: "白龙传说"
+  category: 电影
+  tags: ["电影", "动作", "奇幻", "白龙传说 Legend of the White Dragon"]
+  quark_url: "https://pan.quark.cn/s/08a545928050"
+  description: "被迫隐匿于暗处的逃亡英雄埃里克·里德必须洗清罪名才能与家人团聚。阻挡在他面前的是一位神秘的恶棍，此人一心想要彻底摧毁白龙帮。本片类型：动作 / 奇幻。2026 年上映，片长 97 分钟。制片国家/地区：美国。出品方：Bat in the Sun Productions、Paradox House。对白语言：英语。｜TMDB 6.7"
+  date: 2026-08-28
+  added: 2026-11-12
+  image: mv-444.jpg
+  updated: 2026-11-12
+  files:
+    count: 3
+    size: "17.6 GB"
+    format: "NFO / MKV / PNG"
+    tree: |
+      444-白龙传说 Legend of the White Dragon (2026)/
+      Legend.of.the.White.Dragon.2026.2160p.UHD.Blu-ray.Atmos.TrueHD7.1.x265-HDH.mkv
+      Legend.of.the.White.Dragon.2026.2160p.UHD.Blu-ray.Atmos.TrueHD7.1.x265-HDH.nfo
+      Cover.png

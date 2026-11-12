@@ -1,4 +1,4 @@
-# 电视剧资源（171 条）
+# 电视剧资源（173 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3283,3 +3283,50 @@
       Alicia&#39;s.Law.2026.S01E08.1080p.web.h264.Qshan.mkv
       Alicia&#39;s.Law.2026.S01E09.1080p.web.h264.Qshan.mkv
       Alicia&#39;s.Law.2026.S01E10.1080p.web.h264.Qshan.mkv
+
+- id: tv-104
+  title: "现在不是出轨的问题"
+  category: 电视剧
+  tags: ["电视剧", "犯罪", "喜剧", "剧情", "现在不是出轨的问题 지금 불륜이 문제가 아닙니다"]
+  quark_url: "https://pan.quark.cn/s/d219bb5fdd9d"
+  description: "【第 1 季 · 共 8 集】这是一部黑色喜剧，讲述了一对因出卖家庭而走红的网红夫妇，以及一对正在经历混乱离婚诉讼的邻居医生夫妇，随着他们卷入一个无法控制的秘密，一系列冲突不断升级，甚至连婚外情都显得微不足道。本剧类型：犯罪 / 喜剧 / 剧情。2026 年首播，已完结，全剧 1 季，累计 8 集。播出平台：Coupang Play。｜TMDB 8.3"
+  date: 2026-07-31
+  added: 2026-11-12
+  image: tv-104.jpg
+  updated: 2026-11-12
+  files:
+    count: 8
+    format: "JPG×4 / NFO / PNG"
+    tree: |
+      104-现在不是出轨的问题(2026)/
+      1080p 内嵌简中/
+      第 1 季 - 1080p WEB-DL H264 AAC/
+      backdrop.jpg
+      fanart.jpg
+      poster.jpg
+      season01-poster.jpg
+      tvshow.nfo
+      logo.png
+
+- id: tv-105
+  title: "青春共体"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "Sci-Fi & Fantasy", "青春共体 The Body"]
+  quark_url: "https://pan.quark.cn/s/f2a2cf65b271"
+  description: "【第 1 季 · 共 8 集】舞蹈队的入队仪式出了岔子后，一群行为不端的天主教学校女生开始出现预言性幻象，在镇上引发了集体恐慌。本剧类型：剧情 / Sci-Fi & Fantasy。2026 年首播，已完结，全剧 1 季，累计 8 集。播出平台：Netflix。制片国家/地区：美国。主创：奎恩·谢法德。出品方：Felix Culpa、The North Road Company、Chernin Entertainment。｜TMDB 7.7"
+  date: 2026-11-11
+  added: 2026-11-12
+  image: tv-105.jpg
+  updated: 2026-11-12
+  files:
+    count: 7
+    format: "JPG×4 / NFO / PNG"
+    tree: |
+      105-青春共体(2026)-8集全-4K.HDR10-高码率-内封简繁英-杜比全景声/
+      第 1 季 - 2160p WEB-DL HDR10 H265 DDP 5.1 Atmos/
+      backdrop.jpg
+      fanart.jpg
+      poster.jpg
+      season01-poster.jpg
+      tvshow.nfo
+      logo.png

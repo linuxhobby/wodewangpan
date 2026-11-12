@@ -1,4 +1,4 @@
-# 游戏资源（37 条）
+# 游戏资源（38 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -760,3 +760,23 @@
     tree: |
       037-泰坦之旅2 Titan Quest II/
       1154030  v0.7.1 Build.26462862.zip
+
+- id: game-038
+  title: "八方旅人 Octopath Traveler"
+  category: 游戏
+  tags: ["游戏", "角色扮演", "Switch"]
+  quark_url: "https://pan.quark.cn/s/330b867c2bda"
+  description: "Square Enix 出品的日式角色扮演游戏《八方旅人》（Octopath Traveler）于 2018 年登陆 Nintendo Switch 与 PC 平台，本作采用独特的 HD-2D 画面技术，将像素点阵角色与 3D 场景光影相结合，重现 16 位机时代的怀旧质感。游戏讲述八位出身、性格与目标各不相同的旅人——舞娘、学者、商人、剑士、药师、盗贼、猎人、神官——各自踏上旅途的八个篇章故事，玩家可自由选择任意角色开局，体验八条互相独立又彼此交织的剧情线。战斗系统在传统回合制基础上加入破防弱点与增幅机制，策略深度颇受好评。本整合包为 Switch 平台完整版本，解压即可游玩。"
+  date: 2018-07-13
+  added: 2026-11-12
+  image: game-038.jpg
+  updated: 2026-11-12
+  files:
+    count: 3
+    format: "ZIP"
+    packed: true
+    tree: |
+      038-八方旅人 Octopath Traveler/
+      nsp非整合版/
+      xci整合版v1.0.5/
+      1.0.4金手指.zip
