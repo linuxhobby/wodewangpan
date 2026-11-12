@@ -80,6 +80,12 @@ const picker = makePicker({ items, state, picks: PICKS, strategy: STRATEGY, skip
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const clean = (s) => String(s || '').replace(/^["']|["']$/g, '').trim();
 
+// 订阅号 caption 末尾固定一行：联系小艾。想换人或换链接，在 env 里写
+// TG_CONTACT_NAME / TG_CONTACT_URL 覆盖即可，不用改代码。
+const CONTACT_URL = (env.TG_CONTACT_URL || 'https://t.me/wodewangpantop').trim();
+const CONTACT_NAME = (env.TG_CONTACT_NAME || '小艾').trim();
+const CONTACT_LINE = `查询更多资源请联系 <a href="${esc(CONTACT_URL)}">${esc(CONTACT_NAME)}</a>`;
+
 /** 标签：空格与非法字符一律换成下划线（TG hashtag 不能带空格，否则 #暗黑破坏神3 永恒典藏版 会断成半截） */
 function hashTags(it) {
   const src = (it.tags && it.tags.length ? it.tags : [it.category]).map(clean).filter(Boolean);
@@ -113,7 +119,8 @@ function cutDesc(desc) {
  *   百度：<a href=baidu>baidu</a>（提取码 abcd）   ← 条目有 baidu_url 才有
  *   大小：1.2 GB                                  ← 缺 files.size 整行省略
  *   标签：#游戏 #动作角色扮演 …
- * 超预算时只砍描述；描述压到 MIN_DESC 仍不够就让出百度行；链接与标签永不截断。
+ *   查询更多资源请联系 小艾（小艾指向 t.me/wodewangpantop）
+ * 超预算时只砍描述；描述压到 MIN_DESC 仍不够就让出百度行；链接、标签、联系行永不截断。
  */
 function buildCaption(it) {
   const q = clean(it.quark), b = clean(it.baidu), bc = clean(it.baiduCode);
@@ -136,6 +143,7 @@ function buildCaption(it) {
     if (extra.site && siteLine) lines.push(siteLine);
     if (extra.size && sizeLine) lines.push(sizeLine);
     lines.push(tagLine);
+    lines.push(CONTACT_LINE);
     return lines.join('\n');
   };
 

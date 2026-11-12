@@ -75,13 +75,16 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 【电影】搏击俱乐部（1999）
 <description，超长自动截断加 …>
 
+订阅TG：https://t.me/myquark ，关注更多资源
 夸克网盘：https://pan.quark.cn/s/xxxx
 百度网盘：https://pan.baidu.com/s/xxxx（提取码 wt7p）
 详情：https://www.wodewangpan.top/resource/mv-075/
 #网盘资源 #电影
 ```
 
-- 上限 300 graphemes。放不下时**只砍简介，绝不动链接**；简介额度被压到 60 字以下（`MIN_DESC`）就先让出「详情」行，把额度还给简介 —— 两条网盘链接和标签永远保留，URL 永不截断。
+- 2026-11-12 版式：`订阅TG` 行固定在链接区**第一行**，指向 TG 订阅号 `@myquark`；替换掉 11-10 加的
+  `加入TG群组：https://t.me/wodewangpantop`。所有链接统一保留 `https://` 前缀（facet 直接可点）。
+- 上限 300 graphemes。放不下时**只砍简介，绝不动链接**；简介额度被压到 60 字以下（`MIN_DESC`）就先让出「详情」行，把额度还给简介 —— 两条网盘链接、订阅TG 行和标签永远保留，URL 永不截断。
 - 百度行只在条目**有** `baidu_url` 时出现（2026-10-24：795 条里 623 条有，缺的不补发百度行）；有 `baidu_code` 就紧跟一个 `（提取码 xxxx）`，没有就只给链接。
 - 图片走 `app.bsky.embed.images`，**alt 文本**写「标题（分类） 海报」；
 - URL 与话题标签都生成 **richtext facet**（`byteStart/byteEnd` 用 UTF-8 字节算），所以在客户端是可点的蓝链接，不是纯文本；

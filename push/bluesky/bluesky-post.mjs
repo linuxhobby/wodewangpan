@@ -110,10 +110,12 @@ const MAX = 300;
 /** 简介的保底字数：低于这个值就让出「详情」行（见 buildText） */
 const MIN_DESC = 60;
 /**
- * 帖子结构（用户 2026-10-10 要求：有条目的百度链接就一起放上）：
+ * 帖子结构（2026-11-12 改版式：订阅TG 引导行移到网盘链接之前，替换掉原「加入TG群组」行；
+ * 百度链接仍按 2026-10-10 的口径，条目有就一起放上）：
  *   【分类】标题（年份）
  *   简介…
  *
+ *   订阅TG：https://t.me/myquark ，关注更多资源
  *   夸克网盘：https://pan.quark.cn/s/xxxx
  *   百度网盘：https://pan.baidu.com/s/xxxx（提取码 abcd）
  *   详情：https://www.wodewangpan.top/resource/<id>/
@@ -129,11 +131,12 @@ function buildText(it) {
     it.baidu ? `百度网盘：${it.baidu}${it.baiduCode ? `（提取码 ${it.baiduCode}）` : ''}` : '',
   ].filter(Boolean);
   const siteLine = `详情：${SITE_URL}/resource/${it.id}/`;
-  // 固定加入 TG 群组链接（用户 2026-11-10 要求，同日改为永久公开链接），与网盘/详情链接一样永不被截断，落在标签行之前。
-  const tgLine = '加入TG群组：https://t.me/wodewangpantop';
+  // 订阅号引导行（2026-11-12 用户定）：替换掉 11-10 加的「加入TG群组：https://t.me/wodewangpantop」，
+  // 并移到网盘链接之前；与网盘/详情链接一样永不被截断。
+  const tgLine = '订阅TG：https://t.me/myquark ，关注更多资源';
   const tags = `#网盘资源 #${it.category}`;
   const assemble = (desc, withSite) => {
-    const lines = [...linkLines, tgLine];
+    const lines = [tgLine, ...linkLines];
     if (withSite) lines.push(siteLine);
     return `${header}\n${desc}${desc ? '\n\n' : '\n'}${lines.join('\n')}\n${tags}`;
   };

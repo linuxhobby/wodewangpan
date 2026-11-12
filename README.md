@@ -82,6 +82,9 @@ node push/bluesky/bluesky-post.mjs --dry
 node push/bluesky/bluesky-post.mjs
 ```
 
+TG 推送的 caption 末尾固定一行「查询更多资源请联系 [小艾](https://t.me/wodewangpantop)」（`小艾` 是可点超链接）；
+想换称呼或目标地址，在 `push/telegram/wodewangpan-tg.env` 里写 `TG_CONTACT_NAME` / `TG_CONTACT_URL` 覆盖，不用改代码。
+
 判重口径（定死，唯一实现在 `push/common.mjs`）：只认夸克或百度分享链接，任一相同即同一份资源；**标题相同但链接不同照发**（系列电影、多季剧是不同资源）。
 
 判重状态文件在**本机**、不在本仓库，删了会重复发：
