@@ -1,4 +1,4 @@
-# 电影资源（448 条）
+# 电影资源（449 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -6063,3 +6063,22 @@
   date: 2026-11-12
   added: "2026-11-13 03:52"
   image: mv-448.jpg
+
+- id: mv-449
+  title: "虎胆龙威2"
+  category: 电影
+  tags: ["电影", "动作", "惊悚", "虎胆龙威2 Die Hard 2"]
+  quark_url: "https://pan.quark.cn/s/71e819df7b58"
+  description: "圣诞节前夜，约翰·麦克莱恩正在华盛顿机场等待妻子乘飞机归来过节，却无意撞破一个重大阴谋：被解职的特种部队上校斯图尔特率部占领机场、控制塔台并切断空管通讯，挟持众多无法降落的客机，他的妻子霍莉正在其中一架飞机上。为了救回妻子与空中数千名乘客，麦克莱恩不得不再次孤身奋战。本片类型：动作 / 惊悚。1990 年上映，片长 124 分钟，导演：Renny Harlin。｜TMDB 7.0"
+  date: 1990-07-03
+  added: "2026-11-13 06:14"
+  image: mv-449.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "5.8 GB"
+    format: "MKV"
+    tree: |
+      449-虎胆龙威2 Die Hard 2/
+      虎胆龙威2.Die.Hard.2.1990.BD1080P.X264.AC3.Mandarin&English.CHS-ENG.mkv
+
