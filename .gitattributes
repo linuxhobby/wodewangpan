@@ -2,11 +2,5 @@
 # 显式属性优先于各机 core.autocrlf；仓库里现有 blob 已是 LF，加这行不产生任何内容 diff。
 data/*.yaml text eol=lf
 
-# bot/*.vbs：GBK + CRLF。wscript.exe 按系统 ANSI 代码页读脚本，存成 UTF-8 弹窗会花
-# bot/*.bat：UTF-8 + CRLF + 文件内 chcp 65001。bot.py 把 stdout 强制设成 UTF-8，控制台必须留在 65001，别改成 GBK
-# 两者都用 -text：别让 git 转编码或改行尾
-bot/*.vbs -text
-bot/*.bat -text
-
-# HTA 菜单是 UTF-8 页面（HTML 里已声明 charset），两端编辑器与 GitHub 都能直接看
-bot/*.hta text eol=lf
+# 机器人（QQ/TG）代码已于 2026-11-12 迁出本站仓库至私有仓 mybot，
+# 原先针对 bot/*.vbs（GBK+CRLF）、bot/*.bat、bot/*.hta 的行尾与编码规则一并随之移除。

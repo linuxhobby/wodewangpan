@@ -196,9 +196,9 @@ node ~/.qwenworkcn/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-c
 
 ### QQ 群查询机器人（2026-11-10 上线）
 
-- 代码在本站仓库的 `bot/` 目录下（原独立目录 `wodewangpan-bot` 已于 2026-11-10 并入）。**与站点构建完全隔离**：`npm run lint` 只扫 `scripts theme/assets`，`scripts/build.js` 只从 `theme/`、`static/`、`share.jpg` 等显式路径取文件、从不扫描仓库根目录，所以 `bot/` 不会被打进 `public/` 上线。
-- `bot/config.json`（真实群号）与 `bot/logs/` 走 `bot/.gitignore`，不入库；`bot/config.example.json` 是模板，首次部署复制成 `config.json` 再改。
-- 链路：群消息 → NapCat（真 QQ 号 909008620「艾特我」）→ OneBot HTTP 上报 `127.0.0.1:6700` → 查 `www.wodewangpan.top` → 回群。
+- **2026-11-12 起机器人代码不在本站仓库**：QQ/TG 机器人整体迁至私有仓 `mybot`（原站内 `bot/`，更早是独立目录 `wodewangpan-bot`），部署、配置、NapCat 与 OneBot 的运维细节和踩坑记录都在那边的 `bot/README.md`，本文只保留与站点有关的事实。
+- **与站点构建从来互不影响**：`npm run lint` 只扫 `scripts theme/assets`，`scripts/build.js` 只从 `theme/`、`static/`、`share.jpg` 等显式路径取文件、从不扫描仓库根目录，所以机器人代码既不参与构建、也不会被打进 `public/` 上线。
+- 链路：群消息 → NapCat（QQ 号与群号等真实参数只存私有仓，公开文档不再重复）→ OneBot HTTP 上报本机端口 → 查 `www.wodewangpan.top` → 回群。
 - **只读线上站**：数据源只有 `/search-index.json` 与 `/resource/<id>/` 两个 HTTP GET，不读 `data/*.yaml`，不依赖仓库，也不写任何本地资源。
 - 群里以 `/` 开头**免 @** 直接执行；裸关键词仍需 @（否则正常群聊会被当搜索，刷屏且招风控）。开关 `config.json` 的 `group_no_at_slash`。
 
@@ -216,30 +216,10 @@ node ~/.qwenworkcn/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-c
 
 **命中太多怎么办**：一次最多回 10 条，命中按上架日期从新到旧排，先给最新的 10 条；命中数超过 10 时末尾补一句「命中 N 条，先给 10 条，发 /更多 看下一批」。`/更多` 以「群号 / 私聊用户」为键记住上一次的关键词与偏移量，只翻同一批结果，5 分钟过期，避免群友之间互相串页；翻到底提示「结果已经到底了」。另外限制单条消息 900 字，超了按行拆条，固定尾巴只挂在最后一条上，不会被切散。
 
-**富媒体试过但不可用**：OneBot 的 `markdown` 段被 QQ 内核拒绝（`NodeIKernelMsgService/sendMsg` 超时，普通 QQ 号没有签名能力，NapCat 源码里该转换器标注 `// Need signing`）；Ark 卡片（`json` 段）能发出去、retcode 0，但多数客户端提示「发送者版本过低，无法展示内容」。所以最终走纯文本，靠 QQ 自动识别 URL 成可点击。
-
-**Telegram 通道（2026-11-10 加）**：`bot/app/telegram_bot.py` + `bot/app/tg_render.py`，共用 `handlers.py` 与 `site_client.py`，只换了收发层。TG 支持 HTML 富文本，所以那边网盘名直接是可点超链接，正文不出现裸链；命令名因为 TG 只认拉丁字符，改用 `/s` `/more` `/latest` `/today` `/cats` `/random` `/help` `/id`。配置在 `config.json` 的 `telegram` 段（token、allowed_chats、proxy）。**本机默认跑独立进程**：`python app/telegram_bot.py` 单独一份，桌面另有「启动TG机器人 / 重启TG机器人 / 结束TG机器人」三个脚本，开机自启是启动文件夹里的 `TG机器人开机自启.vbs`；这样 QQ 重启、NapCat 掉线、QQ 掉登录都不会连带停掉 TG。想省进程可把 `telegram.embedded` 设成 `true`，回到「QQ 进程里顺带跑线程」的老模式。同一时刻只允许一个 TG 进程，靠 `logs/tg.lock` 的排他锁互斥，否则两个实例会各抢一半 `getUpdates`。放到海外 VPS 时同一份代码直接跑即可。国内必须配 `telegram.proxy`，否则连不上 `api.telegram.org`。详见 `bot/README.md` 的「Telegram 群」一节。新人入群会自动发 `bot/welcome-tg.txt` 里的欢迎语与指令表（`telegram.welcome_enabled` 可关），群里发 `/welcome` 可随时重发。`telegram.reply_mode` 设成 `private` 时结果改发提问者私聊，群里只回一行「N 条结果已返回，请点击 助理小艾 查看」（“助理小艾”是指向机器人私聊的超链接），多人同时查也不刷屏；私聊同样是 10 条一批（`telegram.private_max_results` 可调，填 0 为不限），命中更多时提示发 `/more` 继续；没私聊过机器人的人会收到一条 `t.me/<bot>?start=...` 深链，点一次即可开通。
-
-- 拼音直接命中：索引自带 `py`/`py1`（全拼 + 首字母），`qingzhixiang`、`qzx` 都能搜。
-- 端口全绑 `127.0.0.1`：NapCat WebUI `6099`、OneBot HTTP `3000`、机器人上报 `6700`。
-
-**踩过的坑（都很难查，别再踩）**
-
-1. **HTTP 上报回 204 不能带响应体**。回 204 又写 `{}` 会让 Node 端按规范忽略这 2 字节、残留在 keep-alive 连接里，之后每个事件都报 `Parse Error: Expected HTTP/, RTSP/ or ICE/`；curl 却能容忍，本地测试全绿。正确做法是回 200 且 `Content-Length` 与响应体严格一致。
-2. **上报请求体可能是 chunked**。只读 `Content-Length` 会把请求体当 0 字节，事件被静默丢弃，表现为「NapCat 上报成功、机器人毫无反应」。两种传输都要支持。
-3. **改 `config/onebot11_<uin>.json` 不热加载**，必须重启 NapCat（Shell v4 下杀命令行带 `NapCat.Shell.v4` 的 node 进程后再启动）。
-4. **重启后不会自动登录**。`config/webui.json` 的 `autoLoginAccount` 填小号 QQ 号（或用环境变量 `NAPCAT_QUICK_ACCOUNT`），启动即快速登录，不用重新扫码。
-5. **NapCat 4.18.42 有 bug**：注入成功但核心静默不启动，无端口无日志，报 `error code v2:-8`。**锁 4.18.41**，别升级。
-6. **不能拿机器人自己的号发指令**。号主自己发的消息是 self message，默认不上报，看起来就像「群里没反应」，其实是指令根本没送到。
-7. WebUI 的 `/api/auth/login` 从外部 curl 调不通（返回 `token is empty` 或 `Unauthorized`），**直接改配置文件比调 API 快**。
-8. NapCat 的 `logs/` 默认是空的（`fileLog:false`），日志只在启动器控制台；排查先看那个黑窗口。
-
-**运维**
-
-- `一键启动.bat`：按现行 `NapCat.Shell.v4` 口径拉起 NapCat（`napcat.bat -q 909008620`），轮询 `3000` 端口就绪后再起 bot，保留控制台日志窗口。`NAPCAT_DIR` / `QQUIN` 写死在文件顶部，与三个 `.vbs` 保持一致。
-- 群白名单在 `config.json` 的 `group_whitelist`（当前只放行 `1045824859` 我的网盘资源站）。
-- 限频兜底：同一人 15 秒、全局每分钟 20 条；回复拆条间隔 0.6 秒。
-- 风险：协议端是真实 QQ 号，高频发外链是主要封号触发点，别用主号挂。
+- 拼音直接命中：索引自带 `py`/`py1`（全拼 + 首字母），`qingzhixiang`、`qzx` 都能搜——**这是搜索索引的设计，机器人只是消费方**。
+- QQ 侧回复走纯文本、靠客户端自动识别 URL：OneBot 的 `markdown` 段被 QQ 内核拒绝（普通 QQ 号无签名能力），Ark 卡片能发出去但多数客户端提示版本过低。TG 侧支持 HTML，网盘名是可点超链接、正文不出现裸链，命令名因 TG 只认拉丁字符而用 `/s` `/more` `/latest` `/today` `/cats` `/random` `/help` `/id`。
+- 机器人查询用的就是本站 `/search-index.json` 与详情页，与站点同源；**站内页面上的指令说明见 `/about/#qq-bot`**（`scripts/lib/render.js` 的 `qqBotBlock` 与 `theme/assets/style.css` 的 `.cmd-box`），那属于站点内容，不因机器人代码迁出而删除。
+- 部署、NapCat 版本与端口、OneBot 上报协议坑、白名单与限频、开机自启、双实例锁等，全部在私有仓 `mybot` 的 `bot/README.md`。
 
 ### 热门榜 `/hot/`
 
@@ -292,9 +272,10 @@ node ~/.qwenworkcn/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-c
 
 ### 变更记录（压缩）
 
-- 2026-11-10 新增 Telegram 群通道（`bot/app/telegram_bot.py`，长轮询，与 QQ 共用查询逻辑）；TG 侧网盘名为可点超链接，命令名改拉丁字符。
+- 2026-11-12 机器人代码整体迁出本站仓库至**私有仓 `mybot`**（站内 `bot/` 目录先整体移入回收站、再由 git 记录 22 个文件的删除，可恢复）：QQ/TG 机器人本体、启动器与运维文档随仓库走，社媒推送脚本（Telegram 频道 / Bluesky）也一并收进该仓。站内面向用户的机器人说明（README、`/about/#qq-bot`、导出脚本 note）保留——服务没停，只是代码换了户口。真实 QQ 号与群号不再出现在公开文档里（**历史提交里仍可见，属已发生的暴露，如需彻底抹除要重写公开仓历史**）。
+- 2026-11-10 新增 Telegram 群通道（`telegram_bot.py`，长轮询，与 QQ 共用查询逻辑）；TG 侧网盘名为可点超链接，命令名改拉丁字符。
 - 2026-11-10 TG 与 QQ 拆成两个独立进程：TG 单独跑 `app/telegram_bot.py`，各有各的启停脚本与开机自启，一边重启不影响另一边；`logs/tg.lock` 作单实例锁，避免自启与手动启动双开抢消息。
-- 2026-11-10 新增 QQ 群查询机器人（代码在本站仓库 `bot/`，NapCat + OneBot，群里 `/` 开头免 @ 查资源回夸克链接）；回复版式两次调整，定稿为「名称 ｜ 类型」+ 每网盘一行「网盘名<TAB>链接」、末尾固定「更多资源访问 + /帮助」，并加 `/更多` 翻页处理命中过多；详见第八节。
+- 2026-11-10 新增 QQ 群查询机器人（当时代码在本站仓库 `bot/`，2026-11-12 已迁至私有仓 `mybot`；NapCat + OneBot，群里 `/` 开头免 @ 查资源回夸克链接）；回复版式两次调整，定稿为「名称 ｜ 类型」+ 每网盘一行「网盘名<TAB>链接」、末尾固定「更多资源访问 + /帮助」，并加 `/更多` 翻页处理命中过多；详见第八节。
 - 2026-11-06 加 `static/ads.txt`（AdSense 发布商 `pub-5363695594162175`），构建复制到根目录供 AdSense「ads.txt 片段」验证。
 - 2026-11-02 robots 放开 `/stats.json`（前端 fetch 取数 + Googlebot 渲染需要；`/hit`/`/*/search-index.json`/`/*?q=` 保留）；取消全站阿里云联盟链接。
 - 2026-10-30 复制改富文本 + 复制海报按钮；2026-10-28 清空 623 条百度链接、反馈条扩到许愿。
@@ -311,8 +292,8 @@ node ~/.qwenworkcn/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-c
 | 项 | 路径 |
 |---|---|
 | 仓库 | macOS `/Users/marco.chan/Documents/GitHub/wodewangpan`；Windows `C:\Users\marco\Github\wodewangpan` |
-| QQ 机器人代码 | 站内 `bot/`（原 `C:\Users\marco\Github\wodewangpan-bot` 已并入；NapCat 现为 Shell v4 独立版 `C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4`，2026-11-11 从旧 OneKey 包升级，旧包保留作回退） |
-| 远端 | `git@github.com:linuxhobby/wodewangpan.git` |
+| 机器人代码 | **私有仓 `mybot`**：`C:\Users\marco\Github\mybot\bot`（2026-11-12 从站内 `bot/` 迁出并删除站内副本；进程与开机自启均已指向新目录） |
+| 远端 | `git@github.com:linuxhobby/wodewangpan.git`（公开）；机器人与社媒推送远端 `https://github.com/linuxhobby/mybot`（私有） |
 | 线上 | https://www.wodewangpan.top |
 | 技能真身 | `~/.qwenworkcn/skills/`（`quark-resource-sync` / `quarkclouddrive` / `quark-upload-share`）；旧机 `~/.workbuddy`、`~/.codebuddy` 为历史目录 |
 | 凭据 | `~/.qwenworkcn/skills/quark-resource-sync/config.env`（含凭据，不写进文档） |

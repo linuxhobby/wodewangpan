@@ -33,12 +33,10 @@ Thumbs.db
 browse/
 .quarkclouddrive/
 
-# 本地 skill 与凭据（含 cookie / token，严禁入库；实际放在 ~/.workbuddy/skills/ 下使用）
+# 本地 skill 与凭据（含 cookie / token，严禁入库；现网真身在 ~/.qwenworkcn/skills/ 下使用）
 skills/
 # skill 安装锁文件，只反映本机的安装状态
 skills-lock.json
 config.env
 
-# QQ 登录二维码临时图（扫码面板/桌面落盘的产物，一次性的，严禁入库）
-bot/icons/qr-*.png
-bot/**/qr-*.png
+# （2026-11-12 机器人已迁至私有仓 mybot，原 bot/**/qr-*.png 两条临时图规则随之移除）
