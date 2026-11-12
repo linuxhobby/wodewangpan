@@ -633,7 +633,7 @@ function shareTextOf(item) {
     : ['链接：'];
   return [
     `名称：${item.title}`,
-    `描述：${summaryOf(item)}`,
+    `描述：${summaryOf(item, 120)}`,
     ...links,
     `大小：${item.files?.size || ''}`,
     `标签：${hashtagOf(item.tags)}`,
