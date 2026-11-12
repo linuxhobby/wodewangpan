@@ -89,7 +89,7 @@ var NAPBAT = 'C:\\Users\\marco\\Downloads\\NapCatOneKey\\NapCat.Shell.v4\\napcat
 var QR_IMG = 'C:\\Users\\marco\\Downloads\\NapCatOneKey\\NapCat.Shell.v4\\napcat\\cache\\qrcode.png';
 var PY = 'C:\\Users\\marco\\.workbuddy\\tools\\venv\\Scripts\\python.exe';
 var QR_TOOL = 'C:\\Users\\marco\\Github\\wodewangpan\\bot\\scripts\\qr_desktop.py';
-var QR_OUT_DIR = 'C:\\Users\\marco\\Github\\wodewangpan\\bot\\icons';
+var QR_OUT_DIR = 'C:\\Users\\marco\\AppData\\Local\\Temp\\qq-qr';   // 仓库外，临时码不入 git
 var QQUIN = '909008620';
 var qrTimer = null, qrBaseMs = 0, qrStart = 0, qrShown = false, qrRestarts = 0;
 
@@ -242,6 +242,11 @@ function genQr() {
   var sh = new ActiveXObject('WScript.Shell');
   var ts = (new Date()).getTime();
   var outp = QR_OUT_DIR + '\\qr-' + ts + '.png';
+  // 确保输出目录存在（首次运行）
+  try {
+    var fso = new ActiveXObject('Scripting.FileSystemObject');
+    if (!fso.FolderExists(QR_OUT_DIR)) fso.CreateFolder(QR_OUT_DIR);
+  } catch (err0) {}
   // 清掉其他临时图（保留当前正在显示的那张）
   try {
     var fso = new ActiveXObject('Scripting.FileSystemObject');

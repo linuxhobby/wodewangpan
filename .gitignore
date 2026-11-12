@@ -38,3 +38,7 @@ skills/
 # skill 安装锁文件，只反映本机的安装状态
 skills-lock.json
 config.env
+
+# QQ 登录二维码临时图（扫码面板/桌面落盘的产物，一次性的，严禁入库）
+bot/icons/qr-*.png
+bot/**/qr-*.png
