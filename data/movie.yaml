@@ -833,6 +833,14 @@
   date: 2026-02-11
   added: 2026-09-30
   image: mv-041.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "4.8 GB"
+    format: "MKV"
+    tree: |
+      041-人工情报/
+      Humint 2026 1080p NF WEB-DL DDP5 1 Atmos H 264.mkv
 
 - id: mv-042
   title: "侵略机器"
@@ -845,6 +853,15 @@
   date: 2026-02-12
   added: 2026-09-30
   image: mv-042.jpg
+  updated: 2026-11-12
+  files:
+    count: 2
+    size: "11.7 GB"
+    format: "MKV"
+    tree: |
+      042-侵略机器/
+      War.Machine.2026.2160p.NF.WEB.SDR.HEVC.DDP.5.1.Atmos-老K.mkv
+      【内封简繁英】War Machine 2026 1080p NF WEB-DL DDP5 1 Atmos H 264-BYNDR.torrent
 
 - id: mv-043
   title: "真人快打"
@@ -857,6 +874,16 @@
   date: 2021-04-07
   added: 2026-09-30
   image: mv-043.jpg
+  updated: 2026-11-12
+  files:
+    count: 3
+    size: "3.6 GB"
+    format: "JPG×2 / MP4"
+    tree: |
+      043-真人快打 Mortal Kombat (2021)/
+      fanart.jpg
+      poster.jpg
+      真人快打 (2021) - 1080p.mp4
 
 - id: mv-044
   title: "Wake"
