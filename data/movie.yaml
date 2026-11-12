@@ -770,6 +770,16 @@
   date: 2024-08-15
   added: 2026-09-30
   image: mv-038.jpg
+  updated: 2026-11-12
+  files:
+    count: 3
+    size: "1.4 GB"
+    format: "SRT×2 / MKV"
+    tree: |
+      038-屈从 Subservience (2024)/
+      屈从.Subservience.2024.720p.10bit.WEBRip.eng.srt
+      Subservience.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.srt
+      屈从.2024.1080P.英语.mkv
 
 - id: mv-039
   title: "恶霸警察"
@@ -782,6 +792,14 @@
   date: 2019-03-20
   added: 2026-09-30
   image: mv-039.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "2.8 GB"
+    format: "MP4"
+    tree: |
+      039-恶霸警察（2019）/
+      A.mp4
 
 - id: mv-040
   title: "爆弹"
@@ -794,6 +812,15 @@
   date: 2025-10-31
   added: 2026-09-30
   image: mv-040.jpg
+  updated: 2026-11-12
+  files:
+    count: 2
+    size: "4.9 GB"
+    format: "SRT / MP4"
+    tree: |
+      040-爆弹/
+      1080p.mp4
+      简中.srt
 
 - id: mv-041
   title: "谍报暗线"
