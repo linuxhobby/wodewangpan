@@ -1,4 +1,4 @@
-# 动漫资源（50 条）
+# 动漫资源（52 条）
 # 来源：夸克网盘 SHARE/05动漫
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -834,3 +834,45 @@
       050-Re：从零开始的异世界生活-第三季：反击篇（2024）全16集 内封+内嵌字幕 4K+1080P/
       4K 内封多国字幕（Fyy RawsAAC Multi-Subs）/
       1080P 内嵌简中字幕（百冬 hyakuhuyu - WebRip AVC AAC CHS）/
+
+- id: an-051
+  title: "十万个冷笑话 第一季"
+  category: 动漫
+  tags: ["动漫", "喜剧", "动画", "十万个冷笑话 S01"]
+  quark_url: "https://pan.quark.cn/s/4de52491c580"
+  description: "【第 1 季 · 共 13 集】改编自寒舞在有妖气原创漫画梦工厂连载的同名人气漫画，国内知名声优山新、宝木中阳等参与配音，被观众称作中国版的日和。全剧由一连串脑洞大开的吐槽短篇拼成，短篇之间看似毫不相干，彼此却又埋着微妙呼应，网络化的台词和节奏精准戳中网民笑点。第一季把葫芦娃、哪吒等经典形象解构成反差强烈的荒诞角色，用夸张的画面与密集的梗制造笑料，每集时长不长却信息爆炸，是了解这套无厘头宇宙的入门之作，也为后续各季的世界观和人物关系打下基调。｜TMDB 6.6"
+  date: 2012-07-12
+  added: "2026-11-13 00:23"
+  image: an-051.jpg
+  updated: 2026-11-13
+  files:
+    count: 3
+    size: "3.6 GB"
+    format: "JPG / NFO / MKV"
+    tree: |
+      051-十万个冷笑话 第一季/
+      poster.jpg
+      One Hundred Thousand Bad Jokes (2014) - 1080p WEB-DL H264 AAC.mkv
+      One Hundred Thousand Bad Jokes (2014) - 1080p WEB-DL H264 AAC.nfo
+
+- id: an-052
+  title: "十万个冷笑话 第二季"
+  category: 动漫
+  tags: ["动漫", "喜剧", "动画", "十万个冷笑话 S02"]
+  quark_url: "https://pan.quark.cn/s/f1b411cf66ad"
+  description: "【第 2 季 · 共 14 集】延续第一季的吐槽短篇结构，寒舞原作改编、山新与宝木中阳等原班声优继续献声，把这套中国版日和式无厘头玩得更放开。第二季在保留高密度段子和对经典桥段恶搞的同时，扩充了世界末日篇、光之国篇等新章节，短篇之间的互文和伏笔也更成体系，角色不再只是单集笑料，而开始在跨集里积累性格与关系。制作上强化了夸张分镜与快速反转的喜剧节奏，台词依旧紧贴网络语境，吐槽点密而不乱。对喜欢第一季的观众来说，这一季是笑料与世界观的双重加码，也是整部动画人气攀升的关键阶段。｜TMDB 6.6"
+  date: 2012-07-12
+  added: "2026-11-13 00:23"
+  image: an-052.jpg
+  updated: 2026-11-13
+  files:
+    count: 5
+    size: "12.1 GB"
+    format: "JPG×3 / MP4 / NFO"
+    tree: |
+      052-十万个冷笑话 第二季/
+      backdrop.jpg
+      fanart.jpg
+      poster.jpg
+      One Hundred Thousand Bad Jokes II (2017) - 2160p WEB-DL H265 AAC.mp4
+      One Hundred Thousand Bad Jokes II (2017) - 2160p WEB-DL H265 AAC.nfo
