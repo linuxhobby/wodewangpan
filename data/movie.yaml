@@ -639,6 +639,13 @@
   date: 1998-07-11
   added: 2026-09-30
   image: mv-031.jpg
+  updated: 2026-11-12
+  files:
+    count: 2
+    tree: |
+      031-心慌方（1997-2002）1080p 中英字幕【含日版】/
+      心慌方-日版/
+      心慌方系列/
 
 - id: mv-032
   title: "极限审判"
@@ -651,6 +658,25 @@
   date: 2026-01-19
   added: 2026-09-30
   image: mv-032.jpg
+  updated: 2026-11-12
+  files:
+    count: 13
+    format: "SRT×4 / MKV×2 / MP4×2"
+    tree: |
+      032-极限审判/
+      【限时】手机端新用户保存可领1T容量，防.走丢点击获.取更多分.享内容/
+      Mercy.2026.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR.chs.srt
+      Mercy.2026.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR.cht.srt
+      Mercy.2026.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR.srt
+      Mercy.2026.1080p.WEBRip.AAC5.1.10bits.x265-Rapta_中英字幕.srt
+      Mercy.2026.1080p.WEBRip.AAC5.1.10bits.x265-Rapta.mkv
+      Mercy.2026.2160p.iTunes.WEB-DL.DDP.5.1.Atmos.HDR10+.H.265-CHDWEB.mkv
+      2026.1080p中英双字.mp4
+      2026.2160p.中英双字.mp4
+      【内封简繁英】Mercy.2026.2160p.iT.WEB-DL.DV.HDR10+.DDP5.1.Atmos.H265.MP4-BTM.torrent
+      Mercy 2026 1080p AMZN WEB-DL DDP5 1 Atmos H 264-BYNDR.torrent
+      Mercy 2026 1080P WEB H264-POKE.torrent
+      Mercy.2026.1080p.WEBRip.AAC5.1.10bits.x265-Rapta.torrent
 
 - id: mv-033
   title: "重返重生"
@@ -663,6 +689,14 @@
   date: 2025-12-28
   added: 2026-09-30
   image: mv-033.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "1.9 GB"
+    format: "MP4"
+    tree: |
+      033-重返重生（2025）美国/
+      重返重生.Redux Redux.mp4
 
 - id: mv-034
   title: "城中大盗"
