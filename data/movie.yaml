@@ -433,6 +433,19 @@
   date: 2017-05-17
   added: 2026-09-30
   image: mv-021.jpg
+  updated: 2026-11-12
+  files:
+    count: 6
+    size: "28.8 GB"
+    format: "PNG×2 / SUP×2 / JPG / MKV"
+    tree: |
+      021-不汗党.2017/
+      字幕截图1.png
+      字幕截图2.png
+      不汗党 2017 韩国 精修繁体中字.sup
+      不汗党 2017 韩国 精修简体中字.sup
+      不汗党.jpg
+      The.Merciless.2017.1080p.BluRay.REMUX.AVC.DTS-HD.MA.5.1-老K.mkv
 
 - id: mv-022
   title: "地狱尖兵"
@@ -445,6 +458,15 @@
   date: 2022-10-05
   added: 2026-09-30
   image: mv-022.jpg
+  updated: 2026-11-12
+  files:
+    count: 2
+    size: "4.8 GB"
+    format: "ASS / MKV"
+    tree: |
+      022-地狱尖兵.Best in Hell.(2022)/
+      字幕The.Best.in.Hell.2022.chs.ass
+      Best in Hell.地狱尖兵.mkv
 
 - id: mv-023
   title: "极寒潜袭"
@@ -457,6 +479,14 @@
   date: 2025-04-17
   added: 2026-09-30
   image: mv-023.jpg
+  updated: 2026-11-12
+  files:
+    count: 1
+    size: "6.5 GB"
+    format: "MP4"
+    tree: |
+      023-极寒潜袭.Кракен (2025)/
+      极寒潜袭.Кракен (2025).mp4
 
 - id: mv-024
   title: "南汉山城"
