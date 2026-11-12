@@ -11,12 +11,19 @@
  *   echo "标题\n正文" | node notify-feishu.mjs -       # stdin（传 - 或不传文件参数都读 stdin）
  *   node notify-feishu.mjs --level warn alert.md       # 卡片头部颜色：info=blue / warn=orange / ok=green / alert=red
  *   node notify-feishu.mjs --dry-run alert.md          # 只打印卡片 JSON，不发送
+ *   node notify-feishu.mjs --profile tg alert.md       # 走 TG 群反馈专用的另一个飞书应用
  *
- * 凭据来源（优先级从高到低，均不入库）：
+ * 凭据来源（默认通道，优先级从高到低，均不入库）：
  *   1. 环境变量 FEISHU_APP_ID / FEISHU_APP_SECRET
  *   2. 机器人专用 ~/.workbuddy/feishu-app-bot.json（本脚本独享，gitignore）
  *   3. 用户级 ~/.workbuddy/feishu-app.json（跨项目共享，gitignore）
  * 找不到凭据时回退 lark-cli（feishu 连接器）以尽量保证送达。
+ *
+ * 专用通道 --profile <name> / 环境变量 FEISHU_PROFILE=<name>：
+ *   1. 环境变量 FEISHU_<NAME>_APP_ID / FEISHU_<NAME>_APP_SECRET
+ *   2. ~/.workbuddy/feishu-app-<name>.json 的 app_id / app_secret
+ *   可选 target_union（或 FEISHU_<NAME>_TARGET_UNION）覆盖收件人。
+ *   专用通道找不到凭据时**直接失败**，绝不回退默认应用或 lark-cli，避免反馈发错地方。
  *
  * 目标：用户本人 union_id（同一组织下跨应用通用；open_id 按应用隔离不能跨应用用）。
  *   可用环境变量 FEISHU_TARGET_UNION 覆盖。
@@ -38,7 +45,28 @@ const FEISHU_API = 'https://open.feishu.cn';
 const MAX_TITLE_LEN = 40;
 
 // ---------- 凭据解析 ----------
-function loadCredentials() {
+function loadCredentials(profile) {
+  if (profile) {
+    const tag = profile.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+    const envId = process.env[`FEISHU_${tag}_APP_ID`];
+    const envSecret = process.env[`FEISHU_${tag}_APP_SECRET`];
+    if (envId && envSecret) {
+      return { appId: envId, appSecret: envSecret, src: `env:${tag}`,
+               targetUnion: process.env[`FEISHU_${tag}_TARGET_UNION`] || '' };
+    }
+    const only = path.join(os.homedir(), '.workbuddy', `feishu-app-${profile}.json`);
+    if (fs.existsSync(only)) {
+      try {
+        const j = JSON.parse(fs.readFileSync(only, 'utf8'));
+        if (j.app_id && j.app_secret) {
+          return { appId: j.app_id, appSecret: j.app_secret, src: only,
+                   targetUnion: j.target_union || '' };
+        }
+      } catch { /* ignore */ }
+    }
+    return null;
+  }
+
   const appId = process.env.FEISHU_APP_ID;
   const appSecret = process.env.FEISHU_APP_SECRET;
   if (appId && appSecret) return { appId, appSecret, src: 'env' };
@@ -94,7 +122,7 @@ function toCard(md, level) {
   };
 }
 
-async function sendViaApi(appId, appSecret, md, level) {
+async function sendViaApi(appId, appSecret, md, level, targetUnion) {
   const token = await getTenantToken(appId, appSecret);
   const card = toCard(md, level);
   const r = await fetch(`${FEISHU_API}/open-apis/im/v1/messages?receive_id_type=union_id`, {
@@ -104,7 +132,7 @@ async function sendViaApi(appId, appSecret, md, level) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      receive_id: TARGET_UNION,
+      receive_id: targetUnion || TARGET_UNION,
       msg_type: 'interactive',
       content: JSON.stringify(card),
     }),
@@ -133,10 +161,12 @@ function readInput(file) {
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const out = { level: 'info', file: null, dryRun: false };
+  const out = { level: 'info', file: null, dryRun: false,
+                profile: process.env.FEISHU_PROFILE || '' };
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
     if (a === '--level' || a === '-l') out.level = args[++i];
+    else if (a === '--profile' || a === '-p') out.profile = args[++i] || '';
     else if (a === '--dry-run') out.dryRun = true;
     else if (!a.startsWith('-')) out.file = a;
   }
@@ -147,7 +177,7 @@ function parseArgs() {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function main() {
-  const { level, file, dryRun } = parseArgs();
+  const { level, file, dryRun, profile } = parseArgs();
   const md = readInput(file).trim();
   if (!md) { console.log('[feishu] 内容为空，跳过推送'); return; }
 
@@ -157,15 +187,20 @@ async function main() {
     return;
   }
 
-  const creds = loadCredentials();
-  const mode = creds ? `自定义应用(${creds.appId})` : 'lark-cli 回退';
+  const creds = loadCredentials(profile);
+  if (profile && !creds) {
+    const tag = profile.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+    console.error(`[feishu] 专用通道 ${profile} 缺凭据：请配置 ~/.workbuddy/feishu-app-${profile}.json（app_id / app_secret）或 FEISHU_${tag}_APP_ID / FEISHU_${tag}_APP_SECRET；为避免发错应用，本次不推送`);
+    process.exit(1);
+  }
+  const mode = creds ? `自定义应用(${creds.appId}${profile ? '/' + profile : ''})` : 'lark-cli 回退';
   console.log(`[feishu] 使用通道: ${mode}`);
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
       let out;
       if (creds) {
-        const j = await sendViaApi(creds.appId, creds.appSecret, md, level);
+        const j = await sendViaApi(creds.appId, creds.appSecret, md, level, creds.targetUnion);
         out = `msg_id=${(j.data && j.data.message_id) || 'n/a'}`;
       } else {
         out = runLark(['im', '+messages-send', '--as', 'bot', '--user-id', TARGET_OPEN_ID, '--markdown', '-'], md);

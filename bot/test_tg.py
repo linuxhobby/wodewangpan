@@ -384,6 +384,15 @@ with _mock.patch.object(handlers.feedback.subprocess, "run") as _run:
     _argv = _run.call_args[0][0]
     check("用 warn 级别推送", "--level" in _argv and "warn" in _argv, True)
     check("推的是机器人专用脚本", "notify-feishu.mjs" in " ".join(_argv), True)
+    check("TG 反馈走专用飞书通道",
+          (handlers.feedback.send_feedback("测试", source="telegram", key="k") is True
+           and (_run.call_args.kwargs.get("env") or {}).get("FEISHU_PROFILE") == "tg"), True)
+    check("QQ 反馈仍走默认飞书通道",
+          (handlers.feedback.send_feedback("测试", source="qq", key="k") is True
+           and "FEISHU_PROFILE" not in (_run.call_args.kwargs.get("env") or {})), True)
+    check("一键按钮反馈也走专用通道",
+          (handlers.feedback.send_no_result_feedback("不存在", source="telegram", key="k") is True
+           and (_run.call_args.kwargs.get("env") or {}).get("FEISHU_PROFILE") == "tg"), True)
 
 print("12) 搜索无结果的一键反馈（被动入口）")
 mfb = {}

@@ -291,8 +291,13 @@ def _check_napcat():
         return False
     online = bool((res.get("data") or {}).get("online"))
     log("NapCat 就绪：online=%s" % online)
-    if not online:
+    if online:
+        # 启动即已登录：后台线程立刻给飞书报一次到，别让 node 子进程拖住服务启动
+        threading.Thread(target=_report_qq_online, args=("启动检查",),
+                         daemon=True).start()
+    else:
         log("  注意：NapCat 在线状态为 false，QQ 可能还没登录完。")
+        log("  登录成功后看门狗首次探到在线，会补发一条上线汇报到飞书。")
     return True
 
 
@@ -338,6 +343,40 @@ def _feishu(md_text, level="info"):
         return False
 
 
+# ---------- QQ 上线汇报：登录成功后第一时间告知飞书 ----------
+#
+# 以前只有「掉线 → 恢复」才报平安，启动即在线（最常见的情况）反而一声不吭，
+# 没法确认 QQ 是否已登录。这里按进程维度只报一次：
+#   - 启动时 NapCat 已 online -> _check_napcat 后台线程立刻发
+#   - 启动时还没登录       -> 看门狗首次探到 online 时补发
+# 之后探活多少次、掉线恢复多少次都不再重复发「已上线」；
+# 掉线告警与恢复报平安仍各走各自的卡片。
+
+_online_reported = False
+_online_report_lock = threading.Lock()
+
+
+def _report_qq_online(where=""):
+    """QQ 登录/上线后发一条飞书汇报，进程内只发一次（失败也不刷屏重试）。"""
+    global _online_reported
+    with _online_report_lock:
+        if _online_reported:
+            return False
+        _online_reported = True
+
+    text = (
+        "QQ 机器人已上线 ✅\n\n"
+        "NapCat 就绪，QQ 已登录成功，群里的 /搜索 可以正常用了。\n"
+        f"上报服务：http://{CFG.get('listen_host', '127.0.0.1')}:{CFG.get('listen_port', 6700)}/\n"
+        f"NapCat API：{CFG.get('napcat_api', '')}\n"
+        f"上线时间：{time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        f"探测来源：{where or '看门狗'}"
+    )
+    ok = _feishu(text, level="ok")
+    log("√ QQ 上线已汇报飞书" if ok else "× QQ 上线汇报没发出去（不重试，掉线/恢复提醒仍照常）")
+    return ok
+
+
 def _napcat_online():
     """NapCat 是否就绪（= QQ 已登录，OneBot 端口已开）。"""
     res = _api("get_status", {})
@@ -376,7 +415,10 @@ def _napcat_watchdog(max_loops=None):
         now = time.time()
 
         if online:
-            if down_since:
+            if not _online_reported:
+                # 启动时 QQ 还没登录，这里首次探到在线 -> 补一条上线汇报
+                _report_qq_online("看门狗首次探活")
+            elif down_since:
                 mins = max(1, round((now - down_since) / 60))
                 log(f"√ NapCat 已恢复（掉了约 {mins} 分钟）")
                 _feishu(f"QQ 机器人已恢复 ✅\n\n掉了约 {mins} 分钟，现在在线。\n群里的 /搜索 可以正常用了。", level="ok")

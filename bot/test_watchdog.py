@@ -42,9 +42,17 @@ def run(sequence):
     return alerts[start:]
 
 
-# 1. 全程在线：不提醒
+# 1. 全程在线：首次在线发一条上线汇报，之后探活不重复
 a = run([True, True, True])
-check("全程在线不提醒", len(a), 0)
+check("首次在线发一条上线汇报", len(a), 1)
+check("上线汇报写明 QQ 已登录", "QQ 机器人已上线" in a[0], True)
+check("上线汇报是绿色正常级", alert_levels[-1], "ok")
+
+# 1b. 启动时还没登录，稍后首次探到在线也要补发（且不当成「掉线恢复」）
+bot._online_reported = False
+a = run([False, True])
+check("稍后登录补发上线汇报", len(a), 1)
+check("补发的仍是上线汇报", "QQ 机器人已上线" in a[0], True)
 
 # 2. 在线 → 掉线连挂 2 次 → 报一次；之后掉线被 30 分钟节流；恢复报平安
 a = run([True, True, False, False, False, False, True])
@@ -79,10 +87,14 @@ bot.CFG["napcat_watchdog"] = {"enabled": True, "interval_seconds": 5,
                               "down_strikes": 2, "realert_minutes": 30}
 
 # 6. 真实飞书推送一次，验证 notify-feishu.mjs 链路（会发到飞书）
-t0 = time.time()
-real_ok = _real_feishu("QQ 机器人看门狗自检 ✅\n\n这是掉线提醒功能的测试推送，已改用机器人专用飞书脚本（bot/scripts/notify-feishu.mjs），收到说明链路通了。")
-check("真实飞书推送成功", real_ok, True)
-print(f"（真实推送用时 {time.time() - t0:.1f}s）", flush=True)
+#    只改逻辑不想骚扰飞书时加 --no-real：python test_watchdog.py --no-real
+if "--no-real" in sys.argv:
+    print("（跳过真实飞书推送：--no-real）", flush=True)
+else:
+    t0 = time.time()
+    real_ok = _real_feishu("QQ 机器人看门狗自检 ✅\n\n这是掉线提醒功能的测试推送，已改用机器人专用飞书脚本（bot/scripts/notify-feishu.mjs），收到说明链路通了。")
+    check("真实飞书推送成功", real_ok, True)
+    print(f"（真实推送用时 {time.time() - t0:.1f}s）", flush=True)
 
 print("\n结果：%d 通过，%d 失败" % (ok, bad), flush=True)
 sys.exit(1 if bad else 0)
