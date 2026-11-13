@@ -1434,6 +1434,14 @@
   date: 2025-12-11
   added: 2026-09-30
   image: mv-073.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "1.1 GB"
+    format: "MP4"
+    tree: |
+      073-尘兔.1080p.HD中英双字/
+      尘兔.1080p.HD中英双字.mp4
 
 - id: mv-074
   title: "反叛行动"
@@ -1446,6 +1454,14 @@
   date: 2026-01-13
   added: 2026-09-30
   image: mv-074.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "2.4 GB"
+    format: "MP4"
+    tree: |
+      074-反叛行动.1080p.HD中英双字/
+      反叛行动.1080p.HD中英双字.mp4
 
 - id: mv-075
   title: "搏击俱乐部"
@@ -1458,6 +1474,14 @@
   date: 1999-10-15
   added: 2026-09-30
   image: mv-075.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "3.3 GB"
+    format: "MP4"
+    tree: |
+      075-搏击俱乐部.Fight Club (1999)辩护人 변호인 (2013).BD720P.国英双语.中英双字/
+      搏击俱乐部.Fight Club (1999)辩护人 변호인 (2013).BD720P.国英双语.中英双字.mp4
 
 - id: mv-076
   title: "不大可能完成的任务"
