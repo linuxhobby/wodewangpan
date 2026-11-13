@@ -1254,6 +1254,14 @@
   date: 1972-03-14
   added: 2026-09-30
   image: mv-063.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "4.8 GB"
+    format: "MP4"
+    tree: |
+      063-教父2.The Godfather Part Ⅱ (1974).BD720P.国英双语.超清中英双字/
+      教父2.The Godfather Part Ⅱ (1974).BD720P.国英双语.超清中英双字.mp4
 
 - id: mv-064
   title: "指环王3：王者无敌"
@@ -1266,6 +1274,14 @@
   date: 2003-12-17
   added: 2026-09-30
   image: mv-064.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "8.2 GB"
+    format: "MP4"
+    tree: |
+      064-指环王3.魔戒三部曲：国王归来.TLOTR.The.Return.of.the.King.EE.2003.加长版.x265.BD1080P.国英双语.特效中英字幕/
+      指环王3.魔戒三部曲：国王归来.TLOTR.The.Return.of.the.King.EE.2003.加长版.x265.BD1080P.国英双语.特效中英字幕.mp4
 
 - id: mv-065
   title: "变形金刚：超能勇士崛起"
@@ -1278,6 +1294,14 @@
   date: 2023-06-06
   added: 2026-09-30
   image: mv-065.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "9.5 GB"
+    format: "MKV"
+    tree: |
+      065-Transformers.Rise.of.the.Beasts.2023.1080p.iTunes.WEB-DL.DDP.5.1.Atmos.H.264-HDBTHD/
+      Transformers.Rise.of.the.Beasts.2023.1080p.iTunes.WEB-DL.DDP.5.1.Atmos.H.264-HDBTHD.mkv
 
 - id: mv-066
   title: "寄生虫"
