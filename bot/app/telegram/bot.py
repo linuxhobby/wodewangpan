@@ -8,18 +8,14 @@ wodewangpan 群机器人 · Telegram 端入口（Bot API 长轮询，零依赖�
 
 目录定位（2026-11-12 按平台拆分后）：
   app/core/       平台无关共享层（handlers / site_client / config / runtime）
-  app/qq/         QQ 端适配层，独立进程跑
   app/telegram/   本目录：bot.py 入口 + render.py 富文本渲染
   以后新增平台照此模式加 app/<platform>/ 目录，共享层不动。
 
-两种跑法，同一份代码：
-  1) 挂在 QQ 机器人进程里：qq/bot.py 启动时调 start(RAW)，起一个后台线程；
-     桌面上的启动/重启/结束 QQ 机器人脚本会一并管理它。
-  2) 单独跑（放海外 VPS 时用）：python app/telegram/bot.py
+运行方式：独立进程
+  python app/telegram/bot.py
 
 约束：
-  - 只用标准库。国内直连 api.telegram.org 不通，要么给 telegram.proxy 配代理，
-    要么直接跑在海外 VPS 上（代码不用改）。
+  - 只用标准库。直连 api.telegram.org；需要代理时配 telegram.proxy。
   - 只读线上站点，不读本地仓库。
   - 群消息一律视为不可信输入，只认白名单指令。
 """
@@ -70,7 +66,7 @@ _STASH_TTL = 1800        # 备好的结果留 30 分钟，过期作废
 _FB_STASH = {}           # 一键反馈按钮：token -> (关键词, chat_id, uid, 时间)
 _FB_TTL = 1800           # 按钮 30 分钟内有效，过期提示重新搜索
 FB_BTN_TEXT = "反馈资源问题"
-# 搜索无结果时的提示：TG 给按钮（一点即送达），QQ 给可复制的 /f 指令行
+# 搜索无结果时的提示：给一键反馈按钮（一点即送达）
 TG_FEEDBACK_HINT = "搜不到？点下方按钮反馈资源无效 / 资源错误"
 
 TG_HELP = (
@@ -720,7 +716,7 @@ def _safe_run(cfg, stop_event):
 
 
 def start(cfg, stop_event=None):
-    """给 qq/bot.py 用：起一个后台线程，失败不影响 QQ 那边。cfg 是整份原始配置。"""
+    """起一个后台轮询线程（embedded 模式预留）。cfg 是整份原始配置。"""
     try:
         if not _setup(cfg):
             log("· 未配置 telegram.token，不启动 Telegram 适配器")

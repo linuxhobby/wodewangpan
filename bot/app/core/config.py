@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 """config.json 的统一读取。
 
-config.json 是单文件三段式（2026-11-12 重构定死）：
-    common    全平台共享（目前只有 site_url）
-    qq        QQ 端专属（NapCat / OneBot / 看门狗）
+config.json 按用途分段：
+    common    平台共享（目前只有 site_url）
     telegram  TG 端专属
+    feishu    失效反馈的飞书凭据（profile=tg）
 
-handlers 等共享层只认识平铺视图（site_url 在顶层），所以各平台入口用
-section_view() 把 common 与自己那段合并成平铺字典；需要看别的平台段
-（如 QQ 入口判断 telegram.embedded）时用 load_raw() 拿原始整份。
+handlers 等共享层只认识平铺视图（site_url 在顶层），所以平台入口用
+section_view() 把 common 与 telegram 段合并成平铺字典；需要读原始整份
+（如飞书凭据）时用 load_raw()。
 """
 
 import json

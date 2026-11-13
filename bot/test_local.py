@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-本地验证：不依赖 NapCat、不需要 QQ 登录，直接驱动指令处理逻辑。
+本地验证：不连 Telegram、不需要 token，直接驱动指令处理逻辑。
 会把每条指令的真实回复打印出来，用于确认查询与排版是否正常。
 """
 
@@ -20,8 +20,8 @@ except Exception:
 from core import handlers  # noqa: E402   2026-11-12 平台拆分后共享层在 app/core/
 
 _cfg_raw = json.load(open(os.path.join(BASE, "config.json"), encoding="utf-8"))
-# handlers 只认平铺视图（site_url 在顶层）：common + qq 合并
-CFG = {**(_cfg_raw.get("common") or {}), **(_cfg_raw.get("qq") or {})}
+# handlers 只认平铺视图（site_url 在顶层）：common + telegram 合并
+CFG = {**(_cfg_raw.get("common") or {}), **(_cfg_raw.get("telegram") or {})}
 
 CASES = [
     "/搜索 青之箱",

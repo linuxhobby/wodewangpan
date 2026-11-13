@@ -4,7 +4,7 @@
 指令路由与回复组装。
 
 只做一件事：把群里 @机器人 的一句话解析成一个指令，查站点，拼成要发回群里的文本。
-不碰消息发送（由各平台入口 qq/bot.py、telegram/bot.py 负责），不碰本地文件。
+不碰消息发送（由 telegram/bot.py 负责），不碰本地文件。
 
 回复版式（2026-11-12 定：🔍 + • + 中点）：
     🔍 搜索结果
@@ -14,7 +14,6 @@
     <平台尾部，由各平台入口通过 tail 参数传入>
 
 链接统一写成中立标记 [网盘名](URL)：
-    QQ 端 qq/render.py 转成裸 URL（客户端自动识别）；
     TG 端 telegram/render.py 转成 <a href> 超链接，正文不出现裸链。
 """
 
@@ -33,7 +32,7 @@ HEAD = "🔍 搜索结果"
 BULLET = "•"
 SEP = " · "
 TAIL_HELP = "/help  - 查看指令表"
-# 不带 tail 调用时的兜底（QQ 版式）；两端入口都会显式传自己的 tail。
+# 不带 tail 调用时的兜底版式；TG 入口会显式传自己的 tail。
 DEFAULT_TAIL = ["更多资源访问：https://www.wodewangpan.top", TAIL_HELP]
 FEEDBACK_REPLY = "已反馈给管理员，谢谢"
 FEEDBACK_FAIL = "反馈暂时没发出去，请稍后再试。"
@@ -234,10 +233,10 @@ def handle(text, cfg, key="", page=None, meta=None, tail=None, platform="",
     key           ：区分群/私聊，供 /更多 翻页。
     page          ：本次最多返回几条资源；None 用 PAGE_SIZE，传 0 表示不限（私发全量时用）。
     meta          ：可选 dict，回填 items / total / cmd，以及搜索无结果时的 feedback_kw。
-    tail          ：平台尾部文案列表（QQ=站点地址，TG=订阅频道），由各平台入口传入。
-    platform      ：来源标识（qq / telegram），写进失效反馈里便于管理员定位。
+    tail          ：平台尾部文案列表（TG=订阅频道），由平台入口传入。
+    platform      ：来源标识（telegram），写进失效反馈里便于管理员定位。
     feedback_hint ：搜索无结果时插在正文与尾部之间的提示模板，可含 {kw} 占位符。
-                    平台各自决定给「可复制的 /f 指令行」还是「点按钮」的提示。
+                    TG 端给「点按钮」的提示。
     """
     site_url = cfg["site_url"]
     cmd, arg = parse(text)

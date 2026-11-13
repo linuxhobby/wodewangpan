@@ -380,16 +380,13 @@ import unittest.mock as _mock
 check("飞书脚本路径存在", os.path.exists(handlers.feedback.FEISHU_SCRIPT), True)
 with _mock.patch.object(handlers.feedback.subprocess, "run") as _run:
     _run.return_value.returncode = 0
-    check("反馈能送达飞书", handlers.feedback.send_feedback("测试", source="qq", key="k"), True)
+    check("反馈能送达飞书", handlers.feedback.send_feedback("测试", source="telegram", key="k"), True)
     _argv = _run.call_args[0][0]
     check("用 warn 级别推送", "--level" in _argv and "warn" in _argv, True)
     check("推的是机器人专用脚本", "notify-feishu.mjs" in " ".join(_argv), True)
     check("TG 反馈走专用飞书通道",
           (handlers.feedback.send_feedback("测试", source="telegram", key="k") is True
            and (_run.call_args.kwargs.get("env") or {}).get("FEISHU_PROFILE") == "tg"), True)
-    check("QQ 反馈仍走默认飞书通道",
-          (handlers.feedback.send_feedback("测试", source="qq", key="k") is True
-           and "FEISHU_PROFILE" not in (_run.call_args.kwargs.get("env") or {})), True)
     check("一键按钮反馈也走专用通道",
           (handlers.feedback.send_no_result_feedback("不存在", source="telegram", key="k") is True
            and (_run.call_args.kwargs.get("env") or {}).get("FEISHU_PROFILE") == "tg"), True)
@@ -400,11 +397,6 @@ out = handlers.handle("/s 不存在的资源xyz", CFG, key="fb-test", meta=mfb,
                       tail=TG_TAIL, feedback_hint=tg.TG_FEEDBACK_HINT)
 check("无结果回填关键词", mfb.get("feedback_kw"), "不存在的资源xyz")
 check("无结果带按钮提示", "点下方按钮" in out[0], True)
-qq_hint = "反馈资源无效 / 资源错误：发 /f {kw}（或 /无效 /错误）"
-outqq = handlers.handle("/s 不存在的资源xyz", CFG, key="fb-test2",
-                        feedback_hint=qq_hint)[0]
-check("QQ 提示带具体指令", "发 /f 不存在的资源xyz" in outqq, True)
-check("QQ 提示带两个问题词", "资源无效 / 资源错误" in outqq, True)
 
 markup = tg._feedback_markup("不存在的资源xyz", -100123, 42)
 btn = markup["inline_keyboard"][0][0]

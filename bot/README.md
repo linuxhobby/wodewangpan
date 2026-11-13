@@ -1,468 +1,134 @@
-# wodewangpan 群机器人
+# wodewangpan Telegram 群机器人
 
-群里发指令，查网盘索引站的资源，直接回网盘链接（夸克 / 百度，含提取码）。
+在 Telegram 群里发指令，查网盘索引站的资源，回可点的网盘链接（夸克 / 百度，含提取码）。
 
 - 数据来源只有一处：`https://www.wodewangpan.top`，只读，不碰本地资源仓库
-- 代码放在本站仓库的 `bot/` 目录，跟站点共用一次 `git pull`，但**不参与站点构建**（`scripts/build.js` 只读 `theme/`、`static/` 等显式路径，不扫根目录）
-- 零第三方依赖，只用 Python 标准库，不需要 `pip install`
-- 通道走 NapCat + OneBot v11（HTTP 上报 + HTTP API），能正常发链接，不受官方机器人「不允许发 URL」限制
-- 另带一条 Telegram 通道（`app/telegram/bot.py`），共用同一套查询与排版，见下方「Telegram 群」
+- Python 标准库，零第三方依赖，不需要 `pip install`
+- 本网络可直连 `api.telegram.org`，`telegram.proxy` 留空即可
+- QQ 群机器人已迁至绿联 NAS Docker，本仓库不再包含 QQ 端（NapCat / OneBot）代码
 
 ## 链路
 
 ```
-QQ 群 @机器人  →  NapCat  →  HTTP 上报 :6700  →  查站点  →  回群
+TG 群 /s 关键词 → Telegram Bot API（getUpdates 长轮询）→ 查站点 → sendMessage 回群
 ```
 
 ## 指令
 
 | 指令 | 作用 |
 |---|---|
-| `/搜索 关键词` | 查资源，一条资源一行（按最新排，一次最多 10 条） |
-| `/更多` | 接着看下一批 10 条 |
-| `/最新` | 最近上架的 10 条 |
-| `/今日` | 今天更新的资源，没有则显示最近一次更新 |
-| `/分类` | 各分类资源数量 |
-| `/随机` | 随机抽一条 |
-| `/帮助` `/help` | 用法说明（两者完全相同） |
-| `/f 内容` | 反馈失效资源给管理员，原话走飞书卡片推给本人 |
+| `/s 关键词` | 查资源，一次最多 10 条（按上架日期从新到旧） |
+| `/more` | 接着看下一批 10 条（5 分钟内有效，按会话记） |
+| `/latest` | 最近上架 |
+| `/today` | 今天更新（没有则显示最近一次更新日） |
+| `/cats` | 各分类条数 |
+| `/random` | 随机一条 |
+| `/help` `/start` | 用法说明 |
+| `/f 内容` | 反馈失效资源给管理员（`/失效` `/无` `/无效` `/错误` 同） |
+| `/id` | 回当前 chat_id，用来填 `allowed_chats` |
+| `/welcome` `/公告` | 重发入群欢迎语 |
 
-别名：`/s`、`/搜`、`/找`、`/查`、`/search` 都等于 `/搜索`；`/more`、`/下一页`、`/next` 等于 `/更多`；`/new`、`/latest`、`/today`、`/categories`、`/random` 同理。
-`/f` 的同义写法还有 `/失效`、`/无`、`/无效`、`/错误`、`/资源无效`、`/资源错误`；群里会回一句「已反馈给管理员，谢谢」，反馈内容（含分享链接）原样送达，不回显到群里。
+中文关键词照旧，`/s 神探狄仁杰` 正常；支持拼音（`qingzhixiang`、`qzx`）。
+不带命令直接发关键词也能搜，但群里需要 @机器人（TG 隐私模式默认行为）。
 
-**反馈有主动、被动两个入口**：
+**反馈两个入口**：主动发 `/f 内容`；搜索无结果时给「反馈资源问题」行内按钮，点一下即送达
+（飞书卡片，按钮 30 分钟内有效、用一次即废）。链路是 `core/feedback.py` →
+`scripts/notify-feishu.mjs --profile tg` → `config.json` 的 `feishu.tg` 凭据。
 
-- **主动**（没搜索也能用）：直接发 `/f 资源名或失效链接`，飞书卡片标题「资源失效反馈」。
-- **被动**（搜索无结果时自动给）：QQ 在「没找到」下面直接附一行可复制的指令
-  `反馈资源无效 / 资源错误：发 /f <刚才的关键词>（或 /无效 /错误）`；
-  TG 在提示下面挂一个「反馈资源问题」行内按钮，**点一下即把「资源无效 / 资源错误 + 搜索关键词」推给管理员**，
-  群里回「已反馈给管理员，谢谢」（飞书标题「搜索无结果反馈」）。按钮 30 分钟内有效、用一次即废。
-
-**TG 群的反馈走单独的飞书应用**：`core/feedback.py` 按 `source=telegram` 自动选 `profile=tg`，
-经环境变量 `FEISHU_PROFILE` 传给 `notify-feishu.mjs`；凭据优先读 `config.json` 的 `feishu.tg`
-（`app_id` / `app_secret`，可选 `target_union`），也支持 `FEISHU_TG_APP_ID` / `FEISHU_TG_APP_SECRET` 或
-`~/.workbuddy/feishu-app-tg.json` 覆盖。专用通道缺凭据时直接判失败，**不回退**默认应用，避免反馈发错地方。
-QQ 的 `/f`、NapCat 看门狗通知仍走默认机器人应用。
-
-**群里不用 @ 机器人**，直接以 `/` 开头发指令即可。@ 了之后只发裸关键词也能搜，例如 `青之箱`。
-（裸关键词必须 @，否则群里正常聊天会被误当搜索，既刷屏又容易触发风控。开关见 `group_no_at_slash`。）
-支持拼音：`qingzhixiang`、`qzx` 都能命中。
-
-## 回复长什么样
-
-2026-11-12 定的版式：🔍 标题行 + 每条资源一行（`• 标题 · 网盘链接 …`），行间不空行；提示行与尾部照旧：
-
-```
-🔍 搜索结果
-• 007：杀人执照 · https://pan.quark.cn/s/53d0d4c3382a · https://pan.baidu.com/s/1hhjstqN6mzFj6f13djyY6Q （提取码 fw1j）
-• 权力的游戏 第八季 · https://pan.quark.cn/s/f97b92e8951c
-命中 442 条，先给 10 条，发 /更多 看下一批
-更多资源访问：https://www.wodewangpan.top
-/help  - 查看指令表
-```
-
-- 链接由 QQ 自动识别成可点击；一条资源有多个网盘时用 ` · ` 串在同一行，提取码跟在对应链接后
-- 标题、链接来自站点索引与详情页，提取码从详情页的 `linkrow__code` 读
-- 链接按页面顺序排，夸克在前、百度在后；条目没有链接时写「暂无网盘链接」
-- 尾部由 QQ 平台入口传入（`app/qq/bot.py` 的 `QQ_TAIL`）；TG 换成订阅频道，见 5
-
-共享层 `handlers.py` 只产出中立标记 `[网盘名](URL)`：`app/qq/render.py` 转成裸 URL，`app/telegram/render.py` 转成可点超链接。
-
-**命中太多怎么办**：群里一次最多回 10 条（`handlers.py` 的 `PAGE_SIZE`），命中按**上架日期从新到旧**排，先给最新的 10 条。命中数超过 10 条时，末尾会补一句「命中 N 条，先给 10 条，发 /更多 看下一批」；`/更多` 按「群 / 私聊」分别记住上一次的关键词和已翻到的位置，只翻同一批结果，5 分钟后过期，群里几个人同时查也不会串页。TG 侧开了私聊投递也是 10 条一批（见 5.1）。
-
-**关于富媒体**：试过 OneBot 的 `markdown` 段和 Ark 卡片（`json` 段）。markdown 被 QQ 内核拒绝（`sendMsg` 超时，普通 QQ 号没有签名权限）；Ark 卡片实际发出去了，但多数客户端提示「发送者版本过低，无法展示内容」。所以最终用纯文本，链接会被 QQ 自动识别成可点击。
-
-## Telegram 群（可选）
-
-同一套查询逻辑，另开一个 Telegram 通道。和 QQ 的差别：TG 支持 HTML 富文本，**网盘名本身就是可点的超链接**，正文里不再出现裸链接；没有风控、不用扫码、Bot 不会掉线。
-
-```
-TG 群 /s 关键词  →  Telegram Bot API（getUpdates 长轮询）  →  查站点  →  sendMessage 回群
-```
-
-### 1. 建机器人
-
-在 TG 里找 `@BotFather`，发 `/newbot`，按提示起名，拿到形如 `123456789:AAxxxx` 的 token。顺手发一次 `/setcommands`，粘下面这段，群里打字就会出现指令菜单：
-
-```
-s - 查资源
-more - 看下一批结果
-latest - 最近上架
-today - 今天更新
-cats - 各分类条数
-random - 随机一条
-help - 指令说明
-id - 看当前会话信息
-```
-
-### 2. 填配置
-
-`config.json` 的 `telegram` 段：
-
-| 字段 | 说明 |
-|---|---|
-| `enabled` | 总开关 |
-| `embedded` | 默认 `false`：TG 跑独立进程，QQ 那边不管它。设 `true` 则回到「QQ 进程里顺带跑 TG 线程」的老模式，省一个进程但会一起生死 |
-| `token` | BotFather 给的 token，留空则整个 TG 通道不启动 |
-| `allowed_chats` | 只管群和频道。先用 `/id` 取回后回填，留空表示哪都响应 |
-| `allow_private` | 默认 `true`。私聊是否响应。私聊**不受** `allowed_chats` 约束，否则群成员点深链进来会被丢掉 |
-| `reply_mode` | `group` 结果发在群里；`private` 发到提问者私聊，群里只留一行「N 条结果已返回，请点击 助理小艾 查看」。见 5.1 |
-| `display_name` | 回执里那个可点的名字，留空则自动用「助理 + 机器人 first_name」（现在是「助理小艾」） |
-| `private_max_results` | 私发一次最多给几条，默认 `10`，和群里一致；命中超过这个数会在末尾提示可以发 `/more` 接着要。填 `0` 表示不限条数（极端关键词会很啰嗦，慎用） |
-| `proxy` | 形如 `http://127.0.0.1:7890`。国内必须填，否则连不上 `api.telegram.org`；海外 VPS 留空即可 |
-| `poll_timeout` | 长轮询挂起秒数，默认 25 |
-| `cooldown_seconds` | 同一个人同一会话多少秒内只处理一次，默认 3 |
-| `reply_to_any_text` | 默认 `false`。群隐私模式关掉后想让它对纯文本也响应，才改成 `true` |
-| `welcome_enabled` | 默认 `true`。新成员入群时自动发 `welcome-tg.txt`，不想要就改 `false` |
-
-也可以不改文件，用环境变量 `TG_PROXY` 覆盖代理。
-
-### 3. 怎么跑
-
-**默认是独立进程**：TG 和 QQ 各跑各的，互不拖累。两种方式，同一份代码：
-
-| 方式 | 命令 | 适用 |
-|---|---|---|
-| 独立进程（默认） | 桌面控制台序号 5，或 `python app/telegram/bot.py` | 本机常开。TG 单独一个进程，QQ 重启、NapCat 掉线、QQ 掉登录都不影响它 |
-| 内嵌进 QQ 进程 | `config.json` 里 `telegram.embedded` 设成 `true` | 想省一个进程时用。代价是 QQ 那边重启/崩溃会连带 TG 一起停 |
-| 放到海外 VPS | `python app/telegram/bot.py` | 本机不开机也要 TG 在跑 |
-
-配了 `token` 才会启动，没配就自动跳过，不影响 QQ 那边。日志写在 `logs/tg-YYYY-MM-DD.log`。
-
-**同一时刻只能有一个 TG 进程**：Telegram 的 `getUpdates` 是「谁取走算谁的」，两个实例同时跑会各收一半消息。所以 `app\telegram\bot.py` 启动时会去抢 `logs/tg.lock` 的排他锁，抢不到就直接退出并在日志里留一句「已经有另一个 Telegram 进程在跑」。进程崩了或被强杀，系统会自动释放这把锁，不用手动清理。
-
-### 4. 指令差异
-
-Telegram 的命令名只允许拉丁字符，`/搜索` 这类中文命令在群里打不出来，所以 TG 侧用：
-
-| TG 指令 | 等价 |
-|---|---|
-| `/s 关键词` `/search` | `/搜索` |
-| `/more` `/next` | `/更多` |
-| `/latest` `/new` | `/最新` |
-| `/today` | `/今日` |
-| `/cats` `/categories` | `/分类` |
-| `/random` | `/随机` |
-| `/help` `/start` `/帮助` | 用法说明（三者完全相同） |
-| `/f 内容` | 反馈失效资源给管理员（`/失效` `/无` `/无效` `/错误` 同，中文别名需 @机器人才能收到） |
-| 搜索无结果时的按钮 | 「反馈资源问题」，一点即送达（无需输入） |
-| `/id` | 只在 TG 有：回 chat_id，用来填白名单 |
-| `/welcome` `/公告` | 只在 TG 有：把入群欢迎语再发一遍 |
-
-中文关键词照旧，`/s 神探狄仁杰` 正常。不带命令直接发关键词也能搜，但群里需要 @机器人（TG 客户端只把 `/命令`、@提及、回复它的消息推给 Bot，这是隐私模式的默认行为，不用改）。
-
-### 5. 版式
+## 回复版式
 
 ```
 🔍 搜索结果
 • 007：杀人执照 · 夸克网盘 · 百度网盘（提取码 fw1j）
 • 权力的游戏 第八季 · 夸克网盘
-命中 442 条，先给 10 条，发 /更多 看下一批
+命中 442 条，先给 10 条，发 /more 看下一批
 
 更多资源订阅：https://t.me/myquark
 /help  - 查看指令表
 ```
 
-网盘名在客户端是可点的超链接，`app/telegram/render.py` 把共享层的 `[网盘名](URL)` 标记转成 `<a href>`，正文不出现裸链；QQ 那边同样的标记被转成裸 URL。
-列表与尾部之间空一行；订阅地址取 `config.json` 的 `telegram.subscribe_url`（默认 `https://t.me/myquark`）。
+共享层 `handlers.py` 产出中立标记 `[网盘名](URL)`，`telegram/render.py` 转成 `<a href>`，
+正文不出现裸链；列表与尾部之间空一行，订阅地址取 `telegram.subscribe_url`。
+单条按 3900 字截（TG 硬限 4096）；单群约 20 条/分钟，一次 10 条不会撞限。
+HTML 被拒时自动退回纯文本重发。标题、链接来自站点索引与详情页，提取码从 `linkrow__code` 读，
+链接按页面顺序排（夸克在前、百度在后），没有链接时写「暂无网盘链接」。
 
-**搜索无结果**时第一条消息会多挂一个「反馈资源问题」行内按钮。长轮询的 `allowed_updates` 已加上
-`callback_query`；`callback_data` 只带一个短 token（中文关键词放不进 64 字节），关键词与会话信息留在
-`telegram/bot.py` 的 `_FB_STASH` 里。点击回调走后台线程（飞书推送不阻塞收消息），处理完用
-`answerCallbackQuery` 弹提示并在群里回一句回执。
-想在正文任意位置放一个自定义链接文字的超链接，写成 `[文字](https://...)` 即可，渲染时转成 `<a href>`，文字与网址都会做 HTML 转义；HTML 被拒退回纯文本时，会还原成「文字（网址）」。HTML 被 TG 拒收（极少见）时会自动退回纯文本重发，保证用户一定收到。
-
-单条上限 4096 字，实际按 3900 字截，比 QQ 的 900 字宽松；单群约 20 条/分钟，群里一次 10 条（拆成 2 条消息左右）不会撞限。走私聊投递时报文都落在私聊，不占群的额度。
-
-### 5.1 私聊投递（`reply_mode`）
-
-群里人多的时候，几个人同时查就把屏幕刷满了。所以结果可以改走私聊：
-
-| 值 | 行为 |
-|---|---|
-| `group` | 结果直接发在群里，和以前一样（`config.example.json` 里的默认值） |
-| `private` | 结果发给提问者的私聊，群里只回一行「12 条结果已返回，请点击 **助理小艾** 查看。」，其中「助理小艾」是指向 `https://t.me/<bot>` 的超链接 |
-
-**私发同样是 10 条一批**：和群里保持一致，只是投递渠道换成私聊，一次给 10 条（`private_max_results` 可调，默认 10，填 0 为不限）。命中多于这个数时，最后一条会带「命中 442 条，先给 10 条，发 /more 看下一批」，`/more` 每按一次再给 10 条，翻到底为止。
-
-长结果按 900 字拆成多条私信依次发，条与条之间隔 0.6 秒；撞上 TG 的 429 限频会按它给的 `retry_after` 等一下重试，不会丢条。
-
-**一条硬规则**：Telegram 不允许机器人主动私聊从没点过 Start 的人，这时 `sendMessage` 返回 403 `bot can't initiate conversation with a user`。所以第一次会遇到兜底流程：群里回一条 `https://t.me/<bot>?start=<token>` 深链，用户点一下进私聊，机器人从 `/start` 的参数里认出是谁，把当时备好的结果补发过去。用户只需开通一次，之后都不再需要这个动作。
-
-- 备好的结果留在内存里 30 分钟（`_STASH_TTL`），token 用一次即废
-- 翻页状态按**人**记（key 为 `tg:u:<uid>`），群里 `/s` 查出结果后，去私聊发 `/more` 能接着翻同一批
-- 先私发第一条探路：通了就在群里贴回执、接着把剩下的发完；一条都发不出去才回落深链
-- 帮助、分类、报错、没命中这类短消息**不走私聊**，直接回在群里，省得来回切窗口
-
-QQ 那边没做这个，因为 `send_private_msg` 要求对方是好友或能走群临时会话，可靠性远不如 TG。
-
-### 6. 排查
-
-| 现象 | 原因 |
-|---|---|
-| 日志一直 `getUpdates 连不上` | 代理不通。国内不配 `telegram.proxy` 必然如此 |
-| `409` | 同一个 token 有两个实例在跑，先把旧的停掉（比如本机一个、VPS 一个，或者自启与手动各起了一份）。本机有 `logs/tg.lock` 排他锁兜着，第二个实例会自己退出并在日志里写明 |
-| 群里发指令没反应 | Bot 没进群、或群是「频道」、或 `allowed_chats` 里没这个群 |
-| 发出去是纯文本没有超链接 | 看日志有没有「HTML 被拒」，多半是标题里有特殊字符，转义后重试即可 |
-| 群里只回「结果已备好，请点开助理小艾开通私聊」 | 提问者从没和机器人私聊过，TG 不给机器人主动私聊的权限。点一次那个链接（带 `?start=` 的深链）即可，之后直接私发 |
-| 私聊收不到结果 | 看日志有没有 `× 私发失败（uid ...）`，多半是用户把机器人拉黑或删了对话 |
-
-### 7. 群公告文案
-
-文案的**源文件是 `bot/welcome-tg.txt`**（UTF-8）。新人入群时机器人自动发这一份，也可以随时发 `/welcome` 让它重发一遍，方便重新置顶。改这个文件不用重启，下次触发时按文件修改时间热加载。
-
-下面是当前内容的副本，改完记得同步这一节：
-
-```
-欢迎来到「网盘资源索引站」
-影视、动漫、剧集、纪录片的夸克与百度网盘资源，都在这里。
-
-群里直接发指令，不用 @ 机器人：
-
-/s 关键词    查资源，回网盘链接
-/more        接着看下一批
-/latest      最近上架
-/today       今天更新
-/cats        各分类条数
-/random      随便抽一条
-/help        这份说明
-
-一次最多回 10 条，接着看发 /more。
-
-网站：https://www.wodewangpan.top
-```
-
-### 8. 新成员入群自动欢迎
-
-| 行为 | 说明 |
-|---|---|
-| 真人入群 | 自动发 `welcome-tg.txt` 的内容，作为对该系统消息的回复 |
-| 别家机器人入群 | 不理，避免互相打招呼刷屏 |
-| 关掉这个功能 | `config.json` 的 `telegram.welcome_enabled` 改成 `false` |
-| 手动补发 | 群里发 `/welcome`（也认 `/公告`） |
-
-**坑**：机器人要能看到「有人入群」这条系统消息，得是群成员。隐私模式不影响入群消息的推送，这条能收到。如果完全没反应，先看日志里有没有 `有新成员入群`。
-
-## 部署步骤
-
-### 1. 装 Python
-
-需要 Python 3.9 或更新版本，安装时勾选 Add to PATH。
-装完在命令行执行 `python --version` 能出版本号即可。
-
-### 2. 装 NapCat
-
-1. 去 `https://github.com/NapNeko/NapCatQQ/releases` 下载 `NapCat.Shell.Windows.OneKey.zip`
-2. 解压后运行 `NapCatInstaller.exe`。它会装一份**独立的 QQ**，不会动你现有的 QQ
-3. 装完后启动 NapCat 里的 QQ，**用一个 QQ 小号扫码登录**（不要用主号）
-4. 浏览器打开 `http://127.0.0.1:6099` 进 WebUI，token 见 `napcat/config/webui.json`
-
-### 3. 配 NapCat 网络（关键）
-
-在 WebUI 的「网络配置」里加两条：
-
-**A. HTTP 服务器**，供本程序发消息用
-
-| 项 | 值 |
-|---|---|
-| Host | `127.0.0.1` |
-| Port | `3000` |
-| Token | 留空，或自己定一串并同步到 config.json |
-
-**B. HTTP 客户端（HTTP 上报）**，把群消息推给本程序
-
-| 项 | 值 |
-|---|---|
-| URL | `http://127.0.0.1:6700/` |
-| 消息格式 | `array`（重要，别选 string） |
-
-两条都启用后保存。
-
-### 4. 改配置
-
-先复制一份本机配置（`config.json` 含真实群号，已 gitignore，不入库）：
-
-```bash
-cp config.example.json config.json
-```
-
-然后打开 `config.json`：
-
-```json
-{
-  "common": {
-    "site_url": "https://www.wodewangpan.top"
-  },
-  "qq": {
-    "listen_host": "127.0.0.1",
-    "listen_port": 6700,
-    "napcat_api": "http://127.0.0.1:3000",
-    "access_token": "",
-    "group_whitelist": [],
-    "group_no_at_slash": true,
-    "allow_private": true,
-    "cooldown_seconds": 3,
-    "global_rate_per_minute": 20,
-    "reply_at_sender": false,
-    "napcat_watchdog": {
-      "enabled": true,
-      "interval_seconds": 300,
-      "down_strikes": 2,
-      "realert_minutes": 30
-    }
-  },
-  "telegram": {
-    "enabled": true,
-    "embedded": false,
-    "token": "",
-    "allowed_chats": [],
-    "reply_mode": "group",
-    "subscribe_url": "https://t.me/myquark",
-    "private_max_results": 10,
-    "proxy": ""
-  }
-}
-```
-
-`config.json` 是单文件三段式：`common` 全平台共享，`qq` / `telegram` 各管各的。下表字段名省略了 `qq.` 前缀，TG 段的字段以 `telegram.` 开头。
+## 配置（`bot/config.json`）
 
 | 字段 | 说明 |
 |---|---|
-| `telegram.subscribe_url` | TG 查询结果尾部的订阅频道地址，默认 `https://t.me/myquark` |
-| `group_whitelist` | 只响应这些群号。留空表示所有群都响应，**首次跑通后建议填上群号** |
-| `group_no_at_slash` | 群里以 `/` 开头的消息免 @ 直接执行，默认 `true`。设为 `false` 就恢复「必须 @」 |
-| `cooldown_seconds` | 同一个人在同一个群，多少秒内只能查一次，防刷屏。默认 3 秒；设太大会出现「发完 /帮助 接着查词没反应」，日志里写着 `限频忽略` |
-| `global_rate_per_minute` | 全机器人每分钟最多回多少条，防炸群 |
-| `reply_at_sender` | 回复时是否 @ 提问的人，默认关闭 |
-| `access_token` | 与 NapCat HTTP 服务器的 Token 保持一致，都空也可以 |
-| `napcat_watchdog.enabled` | NapCat 看门狗开关，默认开。掉线走飞书提醒（见下方「NapCat 看门狗」） |
-| `napcat_watchdog.interval_seconds` | 探活间隔，默认 300 秒（5 分钟） |
-| `napcat_watchdog.down_strikes` | 连挂几次算掉线，默认 2（5 分钟一探即约 10 分钟确认） |
-| `napcat_watchdog.realert_minutes` | 一直掉线时每隔几分钟再催一次，默认 30 |
+| `common.site_url` | 站点地址 |
+| `telegram.token` | BotFather 给的 token，留空则不启动 |
+| `telegram.allowed_chats` | 只管这些群/频道；先用 `/id` 取回再填，留空表示哪都响应 |
+| `telegram.allow_private` | 私聊是否响应（不受 `allowed_chats` 约束） |
+| `telegram.reply_mode` | `group` 发群里；`private` 走私聊，群里只留一行回执 |
+| `telegram.private_max_results` | 私发一次最多几条，默认 10 |
+| `telegram.display_name` | 回执里可点的名字，留空自动用「助理 + bot first_name」 |
+| `telegram.subscribe_url` | 结果尾部订阅频道，默认 `https://t.me/myquark` |
+| `telegram.proxy` | 需要代理时填 `http://127.0.0.1:7890`；直连留空 |
+| `telegram.poll_timeout` | 长轮询挂起秒数，默认 25 |
+| `telegram.cooldown_seconds` / `global_rate_per_minute` | 单人冷却 / 全局每分钟上限 |
+| `telegram.welcome_enabled` | 新成员入群自动发 `welcome-tg.txt` |
+| `feishu.tg` | 失效反馈专用飞书应用凭据 |
 
-#### NapCat 看门狗（掉线飞书提醒）
+模板见 `config.example.json`。建机器人：TG 里找 `@BotFather` 发 `/newbot` 拿 token，
+再发 `/setcommands` 把指令菜单粘进去。
 
-QQ 反复掉登录（NapCat 只有登录成功才开 OneBot 端口），掉的时候群里没反应，但往往要等发现「群里怎么不理人」才知道。看门狗后台线程定期探活，掉线第一时间走飞书推送（本机器人专用脚本 `bot/scripts/notify-feishu.mjs`，发给本人 P2P；与院采雷达的采集简报脚本互不混用）：
+## 运行
 
-- **判定掉线**：连挂 `down_strikes` 次（默认 2 次，5 分钟一探即约 10 分钟确认），避免重启窗口期误报
-- **启动就一直连不上**：放宽到 10 次（约 50 分钟）才报，QQ 正常登录只要几十秒
-- **一直掉着**：每隔 `realert_minutes`（默认 30 分钟）再催一次，不刷屏
-- **上线汇报**：进程内首次探到 QQ 在线就发一条「QQ 机器人已上线 ✅」。启动即已登录由启动检查的后台线程立刻发；启动时还没登录，由看门狗首次探活补发。只发一次，之后探活不重复，也不与「恢复报平安」叠发
-- **恢复**：自动报平安，附掉线时长
-- **卡片样式**：markdown 首行作卡片标题，掉线告警橙色头（`--level warn`）、上线与恢复报平安绿色头（`--level ok`）
-- 提醒内容带恢复办法（桌面控制台序号 4 扫码）；推送失败只记日志，不影响机器人本体
-- 自检：`python test_watchdog.py --no-real`（加 `--no-real` 不真发飞书；不带参数会额外发一条真实测试推送）
-
-### 5. 启动
-
-日常起停用桌面「机器人控制台」。要看实时日志做调试时，双击 `启动.bat`，能看到日志窗口。启动时会预热索引，日志有这行就说明通了：
+进程 cwd 必须是 `bot/`（代码按相对路径找 `app/` 与 `logs/`）：
 
 ```
-索引预热完成：963 条，963 条有网盘链接，用时 2.2s
+cd bot
+python app\telegram\bot.py
 ```
 
-浏览器打开 `http://127.0.0.1:6700/` 能看到状态 JSON。
+- 日志：`logs/tg-YYYY-MM-DD.log`
+- 开机自启：启动文件夹 `TG机器人开机自启.lnk` → `bot\TG机器人开机自启.vbs` → `菜单.vbs autostart-tg`
+- 桌面控制台：`菜单.hta`（界面）+ `菜单.vbs`（实现），可启动 / 重启 / 结束 TG 进程
+- 本地验证（不连 TG、不需要 token）：`python test_local.py`
 
-### 6. 拉进群测试
+⚠️ **同一时刻只允许一个实例**：`getUpdates` 是「谁取走算谁的」，两个实例会各收一半消息。
+启动时抢 `logs/tg.lock` 排他锁，抢不到就退出并记日志。锁是按目录走的，换目录部署务必
+「停旧 → 确认进程消失 → 再启新」。
 
-1. 用那个小号 QQ 加入你的资源群，群设置里设成管理员（可选）
-2. 在群里**直接发** `/搜索 青之箱`（不用 @），或者 @ 机器人后只发 `青之箱`
-3. 正常会回资源名、类型、网盘名和三行内的链接
+⚠️ `.vbs` 文件是 GBK + CRLF（wscript 按系统 ANSI 代码页读，存 UTF-8 中文会花）；
+`菜单.hta` 是 UTF-8。改完用 `python check_vbs.py` 粗检。
 
-### 7. 开机自启
+## 私聊投递（`reply_mode=private`）
 
-启动文件夹里两个快捷方式，各自指向 `bot/` 里的一个薄垫片，互不依赖，各管一半：
+群里只回「N 条结果已返回，请点击 助理小艾 查看」，结果发到提问者私聊，同样 10 条一批，
+长结果按 900 字拆条、间隔 0.6 秒，撞 429 按 `retry_after` 重试。
 
-| 快捷方式 | 指向 | 实际动作 |
-|---|---|---|
-| `QQ机器人开机自启.lnk` | `bot/开机自启.vbs` | 转发到 `菜单.vbs autostart-qq`，等 25 秒，先拉 NapCat、再拉 `bot.py`，已在跑就跳过 |
-| `TG机器人开机自启.lnk` | `bot/TG机器人开机自启.vbs` | 转发到 `菜单.vbs autostart-tg`，等 25 秒，拉起 `app\telegram\bot.py` 独立进程，已在跑就跳过 |
+Telegram 不允许机器人主动私聊从没点过 Start 的人（403）。首次会回落深链
+`https://t.me/<bot>?start=<token>`，用户点一下进私聊后补发备好的结果（内存留 30 分钟，token 用一次即废）。
+翻页状态按人记（`tg:u:<uid>`），群里 `/s` 后去私聊发 `/more` 能接着翻。
+帮助、分类、报错、没命中这类短消息不走私聊，直接回群里。
 
-真正的实现只有一份，在 `菜单.vbs` 的 `AutoStart` 里。两个垫片各只有几行，只负责把参数传过去，所以快捷方式不用跟着改。按 `Win + R` 输入 `shell:startup` 回车能看到那两个快捷方式。
+## 排查
 
-- 每次启动动作都记在 `logs/auto-start.log`（TG 那行带 `[TG]` 前缀），看时间就能对上
-- **NapCat 不用再单独设自启**，QQ 那条会一起拉起。若 NapCat 自己的设置里也开了开机自启，两边可能同时起两份，建议只留脚本这一条
-- NapCat 路径写死在 `菜单.vbs` 的 `NAPCAT_DIR`，挪了目录要改；找不到就只启动机器人并在日志里记一笔
-- 垫片必须留在 `bot/` 目录里，启动文件夹只放快捷方式，不要再复制一份 vbs 过去
+| 现象 | 原因 |
+|---|---|
+| 日志一直 `getUpdates 连不上` | 代理不通或网络异常；直连环境检查 `telegram.proxy` 是否被误填 |
+| `409` | 同一 token 有两个实例在跑，先停旧的（本机 + VPS / 自启 + 手动各起一份常见） |
+| 群里发指令没反应 | Bot 没进群、或群是频道、或 `allowed_chats` 没这个群 |
+| 发出去是纯文本没有超链接 | 看日志「HTML 被拒」，多半标题有特殊字符 |
+| 群里只回「点开助理小艾开通私聊」 | 提问者没和机器人私聊过，点一次 `?start=` 深链即可 |
+| 私聊收不到结果 | 用户把机器人拉黑或删了对话 |
 
-**改了代码怎么生效**：QQ 用控制台序号 2，TG 用序号 6。各自只结束自己那个进程，不会互相牵连（判断进程按完整入口路径匹配：QQ 是 `app\qq\bot.py`，TG 是 `app\telegram\bot.py`，互不为子串）。Python 没有热加载，只能重启。`菜单.vbs` 里 `PYW` 写死了 `Python312\pythonw.exe` 的绝对路径，避免 PATH 里有多份 Python 时起错或同时起两个实例；换 Python 版本记得改这一行（找不到就自动回落到 `pythonw`）。
+## 入群欢迎
 
-### 8. 桌面快捷操作
-
-桌面只需要一个入口：**机器人控制台**（`机器人控制台.lnk`，指向 `bot/菜单.vbs`）。双击弹出大字号菜单，QQ 与 TG 分组列出 7 个动作，点按钮或输入 1-7 后回车执行，Esc 退出。
-
-| 序号 | 动作 | 说明 |
-|---|---|---|
-| 1 | 启动QQ机器人 | 没在跑就静默拉起，NapCat 没在跑也一起拉起 |
-| 2 | 重启QQ机器人 | 结束旧进程再拉起，改完代码用这个，等 `:3000` 就绪才报成功 |
-| 3 | 结束QQ机器人 | 只结束命令行含 `app\qq\bot.py` 的进程，不动其它 Python，也不动 NapCat |
-| 4 | QQ扫码登录 | 快速登录失效时弹控制台二维码，并把放大版落到桌面 |
-| 5 | 启动TG机器人 | 拉起 TG 独立进程，已在跑就提示不要重复启动 |
-| 6 | 重启TG机器人 | 只重启 TG：结束旧进程，等锁释放，启动，读日志确认成功 |
-| 7 | 结束TG机器人 | 只结束 `app\telegram\bot.py`，QQ 那边一点不动 |
-
-界面在同目录的 `菜单.hta`（系统自带 `mshta.exe`，不用装东西），`菜单.vbs` 同时是界面启动器和全部动作的唯一实现。命令行也能直连：`wscript 菜单.vbs 3` 等于序号 3，`wscript 菜单.vbs --check` 只做语法自检，`wscript 菜单.vbs 5` 直接起 TG。原来的系统 `InputBox` 菜单留作兜底：找不到 `mshta.exe` 或 `菜单.hta` 时自动回落；想回到旧界面，把 `菜单.hta` 改名即可。`菜单.vbs` 与 `菜单.hta` 必须放同一目录。
-
-`菜单.vbs` 会先按自己所在目录找 `app\qq\bot.py`，找不到才回落到写死的仓库路径，所以经桌面快捷方式启动也正确。判断 NapCat 在不在，看进程名里有没有 `napcat` 或 `QQ.exe`。缺失时弹窗会明确写「已顺带拉起」，不再只是提醒你去手动开。
-
-**编码**：三类文件三套口径，别混：
-
-- `.vbs`（`菜单.vbs`、两个自启垫片）：GBK + CRLF。`wscript.exe` 按系统 ANSI 代码页读脚本，存成 UTF-8 中文弹窗就花；代价是 GitHub 网页上看是乱码。用记事本改完请存成 ANSI。
-- `.bat`（只剩 `启动.bat`）：UTF-8 + CRLF + 文件内 `chcp 65001`。`app/qq/bot.py` 把 stdout 强制设成 UTF-8，控制台必须留在 65001，把 bat 改成 GBK 会让机器人日志乱码。用记事本改完请存成 UTF-8，别存成 ANSI；行尾必须是 CRLF。
-- `菜单.hta`：UTF-8（HTML 里声明了 `charset=utf-8`），macOS、Windows、GitHub 网页看都正常，别存成 ANSI 或 UTF-16。
-
-两端 VS Code 的按语言编码设置见仓库根 `.vscode/settings.json`：`.vbs` 对应 `gbk`，`.bat` 对应 `utf8`。
-
-## 不用 NapCat 时如何验证
-
-```bash
-python test_local.py      # 验证指令与查询，直接打印回复内容
-python test_dispatch.py   # 验证 @ 识别、去重、限频、群白名单
-```
-
-两个脚本都不需要 QQ 登录，`test_dispatch.py` 会把要发出的消息拦下来打印。
+源文件 `bot/welcome-tg.txt`（UTF-8），真人入群自动发，`/welcome` 可重发；改文件不用重启（按修改时间热加载）。
+别家机器人入群不理。机器人要是群成员才能收到入群系统消息。
 
 ## 安全设计
 
-这台机器人在一个有完整文件权限的系统上跑，所以按最小权限写死：
-
-1. 站点客户端只允许出站到 `www.wodewangpan.top` 一个域名，代码里任何其他 host 都直接拒绝
-2. 站点查询只有 GET 请求，没有写操作；唯一额外的出站是 `/f` 反馈与看门狗走飞书推送（飞书凭据只放本机 `~/.workbuddy/feishu-app-*.json` 或环境变量，不入库）
-3. 不读取本地资源仓库（配置、日志、飞书临时 md 除外）
+1. 站点客户端只允许出站 `www.wodewangpan.top`，其他 host 直接拒绝
+2. 站点查询只有 GET；唯一额外出站是 `/f` 反馈走飞书（凭据在 `config.json` / 环境变量，不入库）
+3. 不读本地资源仓库（配置、日志、飞书临时 md 除外）
 4. 群消息一律当不可信输入，只认白名单指令，未知斜杠指令直接回「没这条指令」
-5. 关键词清洗只保留中文、字母、数字、空格和 `_.-`；**例外**：`/f` 反馈保留原文（含分享链接），最多 500 字，只进飞书卡片不回显到群
-6. 同一 message_id 只处理一次，防止上报重试刷屏
-7. 群白名单 + 单人冷却 + 全局每分钟上限，三层限频
+5. 关键词清洗只保留中文、字母、数字、空格和 `_.-`；`/f` 保留原文、最多 500 字，只进飞书卡片
+6. 同一 message_id 只处理一次，防上报重试刷屏
+7. 白名单 + 单人冷却 + 全局每分钟上限，三层限频
 
-## 常见问题
-
-**群里 @ 了没反应**
-先看 `logs/` 里当天的日志。没有 `→` 行说明 NapCat 的上报没过来，检查 HTTP 客户端那条 URL 和端口；有 `→` 但没 `←` 说明查询卡住或报错。
-
-**日志出现「NapCat API 连不上」**
-NapCat 的 HTTP 服务器没启动，或端口不是 3000。打开 NapCat WebUI 确认那条配置已启用。
-
-**回复发出去了但群里看不到链接**
-大概率被 QQ 风控吞了。降低频率（调大 `cooldown_seconds`），或把单次返回条数改小（`handlers.py` 里的 `PAGE_SIZE`，现为 10）。
-
-**机器人掉线**
-NapCat 依赖它自己那份 QQ 客户端，QQ 一退出就掉。检查那份 QQ 是否还在线。
-
-**NapCat WebUI 输 token 提示「token is invalid」**
-`config/webui.json` 带了 UTF-8 BOM，NapCat 的 `JSON.parse` 直接抛 `Unexpected token '﻿'`，于是整份配置被丢弃，token 和 `autoLoginAccount` 全部失效，它改用一个随机 token。启动日志里能看到两行证据：
-
-```
-读取配置文件失败 SyntaxError: Unexpected token '﻿'
-[WebUi] WebUi Token: 063fb2f2fd3f     ← 不是配置文件里那个
-```
-
-修法是把 BOM 去掉（存成无 BOM 的 UTF-8）。用 PowerShell 的 `Out-File`、部分编辑器「另存为 UTF-8」都会加 BOM，改完务必确认前三个字节不是 `EF BB BF`。当前 token 是 `wodewangpan2026`。
-
-**每次启动都要扫码**
-NapCat 现用 **Shell v4 独立版**（`C:\Users\marco\Downloads\NapCatOneKey\NapCat.Shell.v4`，NapCat 4.18.42，2026-11-11 起替代旧 OneKey 包：旧版取码域名 `ssl.qq.com` 被腾讯停用导致无法登录）。`napcat.bat -q 909008620` 走快速登录；登录态失效时控制台直接画二维码，同时存到 `napcat\cache\qrcode.png`。OneBot 网络配置在 `NapCat.Shell.v4\napcat\config\onebot11_<uin>.json`（HTTP 服务 :3000、上报 127.0.0.1:6700）。`菜单.vbs` 里的 `QQUIN` 常量就是干这个的，改账号只改那一行。前提是那份 QQ 数据目录里还留着登录凭证（`Documents\Tencent Files\<QQ号>` 没被清）。走二维码登录时启动日志会有「没有 -q 指令指定快速登录」这句。
-
-**会不会封号**
-会，协议端是真实 QQ 号，高频发外链是主要风险。所以用小号、控频率、别在多个群同时炸。真被限制了换号即可，代码不用改。
-
-**和之前 WorkBuddy 那个 `/s` 技能冲突吗**
-不冲突。那是另一个 QQ 账（官方机器人），群里 @ 谁就是谁响应，可以留着当备份。
+> 定时推送（Telegram 频道 / Bluesky）在 `push/`，由 QwenWork 调度，详见仓库根 `AGENTS.md`。

@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""失效反馈与飞书通知（跨平台共用）。
+"""失效反馈与飞书通知（TG 端使用）。
 
-QQ / TG 两端的 /f、/失效、/无、/无效 都汇到这里：把用户原话写进一张飞书卡片
-推给管理员。用机器人专用的 bot/scripts/notify-feishu.mjs（markdown 首行作
-卡片标题）；推送失败只返回 False，绝不把异常抛回群聊。
-按来源分流：TG 群反馈（source=telegram，含一键按钮）走指挥官指定的另一个飞书应用
-（profile=tg），QQ 反馈走默认机器人应用，两边凭据互不影响。
-
-与 qq/bot.py 里 NapCat 看门狗的 _feishu 独立实现：那条链路带自己的日志与测试打桩，
-本模块只服务用户反馈，互不影响。
+TG 端的 /f、/失效、/无、/无效 都汇到这里：把用户原话写进一张飞书卡片
+推给管理员。用 bot/scripts/notify-feishu.mjs（markdown 首行作卡片标题）；
+推送失败只返回 False，绝不把异常抛回群聊。
+凭据走专用飞书应用（profile=tg，见 config.json 的 feishu.tg）。
 """
 
 import os
@@ -21,10 +17,9 @@ _HERE = os.path.dirname(os.path.abspath(__file__))          # bot/app/core
 BOT_ROOT = os.path.dirname(os.path.dirname(_HERE))           # bot/
 FEISHU_SCRIPT = os.path.join(BOT_ROOT, "scripts", "notify-feishu.mjs")
 
-# TG 群的失效反馈发到指挥官指定的另一个飞书应用：
+# TG 群的失效反馈发到专用飞书应用：
 # 凭据在 bot/config.json 的 feishu.tg（app_id / app_secret / 可选 target_union），
 # 也支持环境变量 FEISHU_TG_APP_ID / FEISHU_TG_APP_SECRET 或 ~/.workbuddy/feishu-app-tg.json 覆盖。
-# QQ 反馈、NapCat 看门狗通知仍走默认机器人应用。
 TG_PROFILE = "tg"
 
 
