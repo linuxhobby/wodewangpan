@@ -1134,6 +1134,14 @@
   date: 2025-05-06
   added: 2026-09-30
   image: mv-057.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "4.9 GB"
+    format: "MKV"
+    tree: |
+      057-Last.Bullet.2025.1080p.NF.WEB-DL.DDP5.1.H264-PandaQT/
+      Last.Bullet.2025.1080p.NF.WEB-DL.DDP5.1.H264-PandaQT.mkv
 
 - id: mv-058
   title: "极线杀手"
@@ -1146,6 +1154,14 @@
   date: 2019-01-25
   added: 2026-09-30
   image: mv-058.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "3.0 GB"
+    format: "MP4"
+    tree: |
+      058-极线杀手.Polar.2019.WEB-DL.1080P.X264.AAID：58449/
+      24.极线杀手.Polar.2019.WEB-DL.1080P.X264.AAID：58449.mp4
 
 - id: mv-059
   title: "龙与地下城：侠盗荣耀"
@@ -1158,6 +1174,14 @@
   date: 2023-03-23
   added: 2026-09-30
   image: mv-059.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "14.6 GB"
+    format: "MKV"
+    tree: |
+      059-Dungeons.and.Dragons.Honor.Among.Thieves.2023.2160p.AMZN.WEB-DL.x265.10bit.HDR10Plus.DDP5.1.x265-Q66/
+      Dungeons.and.Dragons.Honor.Among.Thieves.2023.2160p.AMZN.WEB-DL.x265.10bit.HDR10Plus.DDP5.1.x265-Q66.mkv
 
 - id: mv-060
   title: "周末狂飙"
