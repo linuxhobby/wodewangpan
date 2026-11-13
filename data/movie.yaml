@@ -1554,6 +1554,14 @@
   date: 2023-04-13
   added: 2026-09-30
   image: mv-079.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "4.8 GB"
+    format: "MKV"
+    tree: |
+      079-Mafia.Mamma.2023.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX/
+      Mafia.Mamma.2023.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv
 
 - id: mv-080
   title: "布吕歇尔号巡洋舰"
@@ -1566,6 +1574,14 @@
   date: 2025-09-26
   added: 2026-09-30
   image: mv-080.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "8.3 GB"
+    format: "MKV"
+    tree: |
+      080-布吕歇尔号巡洋舰.Blucher.2025.NORWEGiAN.2160p.iT.WEB-DL.H.265-NORViNE/
+      布吕歇尔号巡洋舰.Blucher.2025.NORWEGiAN.2160p.iT.WEB-DL.H.265-NORViNE.mkv
 
 - id: mv-081
   title: "黑袋行动"
@@ -1578,6 +1594,14 @@
   date: 2025-03-12
   added: 2026-09-30
   image: mv-081.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "5.7 GB"
+    format: "MKV"
+    tree: |
+      081-Black.Bag.2025.BluRay.1080p.TrueHD5.1.x265.10bit-DreamHD/
+      Black.Bag.2025.BluRay.1080p.TrueHD5.1.x265.10bit-DreamHD.mkv
 
 - id: mv-082
   title: "铁血战士：杀戮之王"
