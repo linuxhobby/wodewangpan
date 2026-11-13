@@ -1194,6 +1194,14 @@
   date: 2024-09-19
   added: 2026-09-30
   image: mv-060.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "5.4 GB"
+    format: "MKV"
+    tree: |
+      060-Weekend.in.Taipei.2024.1080p.Hami.WEB-DL.H264.AAC-SONYHD/
+      Weekend.in.Taipei.2024.1080p.Hami.WEB-DL.H264.AAC-SONYHD.mkv
 
 - id: mv-061
   title: "七宗罪"
@@ -1206,6 +1214,14 @@
   date: 1995-09-22
   added: 2026-09-30
   image: mv-061.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "4.4 GB"
+    format: "MKV"
+    tree: |
+      061-七宗罪.Se7en.Remastered.Edition.1995.BluRay.720p.x264.AC3.2Audios-CMCT/
+      七宗罪.Se7en.Remastered.Edition.1995.BluRay.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-062
   title: "一战再战"
@@ -1218,6 +1234,14 @@
   date: 2025-09-23
   added: 2026-09-30
   image: mv-062.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "3.3 GB"
+    format: "MP4"
+    tree: |
+      062-一战再战.1080p.国英双语.HD中英双字/
+      一战再战.1080p.国英双语.HD中英双字.mp4
 
 - id: mv-063
   title: "教父"
