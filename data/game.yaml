@@ -1,4 +1,4 @@
-# 游戏资源（43 条）
+# 游戏资源（44 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -883,3 +883,23 @@
       xci整合版v1.1.1/
       金手指配套插件.zip
       金手指v1.1.1(by 怪盗B).zip
+
+- id: game-044
+  title: "塞尔达传说风之杖HD - Wii U 移植"
+  category: 游戏
+  tags: ["游戏", "动作冒险", "塞尔达传说", "Wii U"]
+  quark_url: "https://pan.quark.cn/s/7e9d97fda903"
+  description: "《塞尔达传说：风之杖HD》（The Legend of Zelda: The Wind Waker HD）是 Nintendo 2013 年在 Wii U 平台推出的高清重制版本，原版 2002 年首发热销于 GameCube。游戏采用标志性的卡通渲染风格，玩家操控林克乘帆船穿梭于广阔的大海，在被洪水淹没的海拉鲁世界中冒险。HD 版在原作基础上提升了画面分辨率与光影效果，新增「英雄模式」高难度玩法，操作方式也针对 Wii U GamePad 做了优化。这份资源是 Wii U 平台的移植版本，可在模拟器环境中运行，适合怀旧玩家和系列粉丝重温这款经典之作。"
+  date: 2013-10-04
+  added: 2026-11-13T00:00:00.000Z
+  image: game-044.jpg
+  updated: 2026-11-14
+  files:
+    count: 2
+    size: "1.5 GB"
+    format: "ZIP / TXT"
+    packed: true
+    tree: |
+      044-塞尔达传说风之杖HD重编译版 The Legend of Zelda The Wind Waker HD/
+      安装说明.txt
+      数据包.zip
