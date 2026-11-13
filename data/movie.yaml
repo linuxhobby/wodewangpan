@@ -1314,6 +1314,14 @@
   date: 2019-05-30
   added: 2026-09-30
   image: mv-066.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "3.2 GB"
+    format: "MP4"
+    tree: |
+      066-寄生虫 기생충.Gisaengchung. (2019).HD1080P.国韩双语.特效注释字幕/
+      寄生虫 기생충.Gisaengchung. (2019).HD1080P.国韩双语.特效注释字幕.mp4
 
 - id: mv-067
   title: "拯救大兵瑞恩"
@@ -1326,6 +1334,14 @@
   date: 1998-07-24
   added: 2026-09-30
   image: mv-067.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "3.6 GB"
+    format: "MP4"
+    tree: |
+      067-拯救大兵瑞恩.Saving Private Ryan (1998).超清特效中英双语双字/
+      拯救大兵瑞恩.Saving Private Ryan (1998).超清特效中英双语双字.mp4
 
 - id: mv-068
   title: "正义过客"
@@ -1338,6 +1354,14 @@
   date: 2025-04-10
   added: 2026-09-30
   image: mv-068.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "10.5 GB"
+    format: "MKV"
+    tree: |
+      068-Jaat.2025.2160p.NF.WEB-DL.DDP.5.1.H.265-DreamHD/
+      Jaat.2025.2160p.NF.WEB-DL.DDP.5.1.H.265-DreamHD.mkv
 
 - id: mv-069
   title: "毒劫"
