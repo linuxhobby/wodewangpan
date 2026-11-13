@@ -70,14 +70,14 @@ import {
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
 // 夸克官方 skill 的 CLI（share-detail 支持客态，不需要网盘授权）。
-// 客户端目录按新旧依次探测：.qwenworkcn（现役）→ .codebuddy / .workbuddy（旧机回退）。
+// 客户端目录按新旧依次探测：.trae-cn（现役）→ .qwenworkcn → .codebuddy / .workbuddy（旧机回退）。
 const CLI =
-  ['.qwenworkcn', '.codebuddy', '.workbuddy']
+  ['.trae-cn', '.qwenworkcn', '.codebuddy', '.workbuddy']
     .map((dir) =>
       path.join(process.env.HOME || process.env.USERPROFILE || '', dir, 'skills/quarkclouddrive/scripts/quark-drive.cjs')
     )
     .find((p) => fs.existsSync(p)) ||
-  path.join(process.env.HOME || process.env.USERPROFILE || '', '.qwenworkcn/skills/quarkclouddrive/scripts/quark-drive.cjs');
+  path.join(process.env.HOME || process.env.USERPROFILE || '', '.trae-cn/skills/quarkclouddrive/scripts/quark-drive.cjs');
 
 // 网盘目录里的「占位说明文件」是同步任务自建（或人工放过）的工作流产物，不是资源内容。
 // 2026-11-08 起 trending-sync / mirror-baidu 预置三份：更新通知、QQ 群缺失反馈、站点导流；

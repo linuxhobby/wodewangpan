@@ -1614,6 +1614,14 @@
   date: 2025-06-05
   added: 2026-09-30
   image: mv-082.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "8.5 GB"
+    format: "MKV"
+    tree: |
+      082-Predator.Killer.of.Killers.2025.2160p.DSNP.WEB-DL.DDP.5.1.Atmos.HDR10.H.265-DreamHD/
+      Predator.Killer.of.Killers.2025.2160p.DSNP.WEB-DL.DDP.5.1.Atmos.HDR10.H.265-DreamHD.mkv
 
 - id: mv-083
   title: "恶魔士兵"
@@ -1626,6 +1634,14 @@
   date: 2023-09-11
   added: 2026-09-30
   image: mv-083.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "10.0 GB"
+    format: "MKV"
+    tree: |
+      083-Devil&#39;s.Men.2023.1080p.BluRay.x264.DTS-CTRLHD/
+      Devil&#39;s.Men.2023.1080p.BluRay.x264.DTS-CTRLHD.mkv
 
 - id: mv-084
   title: "熔炉"
@@ -1638,6 +1654,14 @@
   date: 2011-09-22
   added: 2026-09-30
   image: mv-084.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.5 GB"
+    format: "MP4"
+    tree: |
+      084-熔炉.Silenced.2011.BD720P.超清韩语中字/
+      熔炉.Silenced.2011.BD720P.超清韩语中字.mp4
 
 - id: mv-085
   title: "特工强档"
