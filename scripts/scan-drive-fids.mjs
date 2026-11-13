@@ -43,6 +43,9 @@ const SESSION_INPUT = '重建盘端目录 fid 映射';
 const TASK_DIR = path.join(os.tmpdir(), 'wdwp-scan-drive-fids', SESSION_ID);
 const delayMs = Number(getArg('delay', 300));
 
+/** 用户确认永久保留、不扫描内容的盘端根目录（2026-11-13 定）：整目录排除、不进入，也不算待补分类 */
+const EXCLUDED_ROOT_DIRS = new Set(['99-需要删除的移动到这里']);
+
 /** 分类目录名 → 站内 id 前缀（按中文关键词，不按数字前缀：「010其他」会被 slice(0,2) 误判成 01游戏） */
 const CAT_PREFIX = [
   ['游戏', 'game'],
@@ -125,6 +128,10 @@ const map = {};
 const unmatched = [];
 const cats = browse(share.fid).filter((f) => String(f.file_type) === '0' && /^\d/.test(String(f.filename)));
 for (const c of cats) {
+  if (EXCLUDED_ROOT_DIRS.has(String(c.filename))) {
+    console.log(`  · ${c.filename}：用户指定永久保留、不扫描，整目录跳过`);
+    continue;
+  }
   const prefix = (CAT_PREFIX.find(([k]) => String(c.filename).includes(k)) || [])[1];
   if (!prefix) {
     console.log(`  · ${c.filename} 不在分类前缀表里，整目录跳过（需要人工补 CAT_PREFIX）`);

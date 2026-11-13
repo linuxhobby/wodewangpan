@@ -105,6 +105,9 @@ node scripts/fill-files.mjs --limit 3 --delay 3000
   - `drive` 口径需要 id → 盘端目录 fid 的映射，即 `config/drive-fids.json`，由
     `node scripts/scan-drive-fids.mjs` 扫 SHARE 生成（`--dry-run` 只看统计）；盘端改名/换号后重跑。
     映射里查不到该 id 时自动回落 `share` 并打印一行提示，不会静默降级成假清单。
+    盘端根目录的「99-需要删除的移动到这里」是用户确认**永久保留、不扫描**的目录
+    （2026-11-13 定，`scan-drive-fids.mjs` 的 `EXCLUDED_ROOT_DIRS` 显式排除）：
+    扫描整目录跳过、不进入、不映射，属预期行为，**不要再当「需要人工分类」上报**。
   - 两套源**只换「取一个目录的直接子项」这一层**：下钻、剔占位、聚合、排序、签名比对仍然只有
     `locateContent` + `aggregate` + `scripts/lib/tree-sort.mjs` 一份实现，`drive` 的第一层会合成成
     「根目录里只有那个编号目录」，保证两边写出的 `files:` 块同构。绝不许为 `drive` 另写一份口径。
