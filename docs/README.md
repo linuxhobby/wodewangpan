@@ -232,9 +232,9 @@ node ~/.qwenworkcn/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-c
 
 - 分享的是**资源包文本**（网盘在前、页面在后），不是页面 URL（平台卡片渲染不可控，且群里要多走一步）。
 - 格式：`{标题}（{年份}）·{分类}\n{一句话概要}\n{网盘}：{链接}...\n更多同类→{canonical}`。概要取简介首句（`summaryOf()`，≤60 字，全角 `｜` 切尾标，退到句读断）。
-- 桌面端：分享(`navigator.share`→退化复制) / 复制资源信息(富文本带海报) / 复制海报(image/png 给微博) / 微信二维码。
+- 桌面端：分享(`navigator.share`→退化复制) / 复制资源信息(富文本带海报) / 复制海报(仅图片文件) / 微信二维码。
 - 富文本：`navigator.clipboard.write()` 同时写 `text/html`(海报`<img>`最前+各行) + `text/plain`；不支持就整段退回纯文本。海报用绝对地址、占位图不复制。
-- 微博只吃图片文件 → 单独「复制海报」按钮（webp→canvas→`image/png`；`write()` 同步发起，异步转码塞进 `ClipboardItem` Promise 值）。**不并入「复制资源信息」**（微信会走图片分支丢文字）。
+- 微博只吃图片文件 → 单独「复制海报」按钮（webp→canvas→`image/png`；`write()` 同步发起，异步转码塞进 `ClipboardItem` Promise 值）。**只写图片、不夹带文本，也不并入「复制资源信息」**（2026-11-13 用户定夺）；需要文字另点「复制资源信息」。
 - 微信网页分享无官方 SDK：放本页 URL 二维码 + 系统面板。
 - 实现：`render.js`(`shareTextOf`/`sharePoster`/`detail__share`) + `app.js`(`copyPoster`/`copyPacket`/`packetHtml`) + `assets.js`(`writeShareQr`) + `build.js`。
 

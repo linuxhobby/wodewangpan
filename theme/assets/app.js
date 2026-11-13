@@ -274,13 +274,13 @@ import { esc, tileHtml } from './card.js';
     }
   });
 
-  // 复制类按钮：网盘链接 / 提取码 / 资源包（含海报）
+  // 复制类按钮：网盘链接 / 提取码 / 资源包 / 海报图片
   document.addEventListener('click', function (e) {
-    // 「复制海报」要在复制文本分支之前判定：它同时带 data-copy（复用资源包文本），
-    // 落在下面会退化成只复制文本
+    // 「复制海报」要在复制文本分支之前判定：它只写图片，不带文本；
+    // 即使以后按钮又带上 data-copy，也不能被下面的纯文本分支截走
     var posterBtn = e.target.closest('[data-copy-poster]');
     if (posterBtn) {
-      copyPoster(posterBtn, posterBtn.getAttribute('data-copy-poster'), posterBtn.getAttribute('data-copy'));
+      copyPoster(posterBtn, posterBtn.getAttribute('data-copy-poster'));
       return;
     }
 
@@ -352,19 +352,20 @@ import { esc, tileHtml } from './card.js';
       });
   }
 
-  /** 把海报当图片文件复制进剪贴板，给微博这类编辑器用：
+  /** 只把海报当图片文件复制进剪贴板，给微博这类编辑器用：
       它们粘贴时会把 HTML 里的 <img> 剥掉（微信认，微博不认），只收剪贴板里的图片文件。
+      不夹带 text/plain —— 需要文字时另点「复制资源信息」，避免粘出来图文混排。
       write() 必须在点击里同步发起，异步部分塞进 ClipboardItem 的 Promise 值——
       Safari 不允许 await 完再调 write，Chrome 两种都吃 */
-  function copyPoster(btn, url, text) {
+  function copyPoster(btn, url) {
     if (!url || !window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) {
       flash(btn, '浏览器不支持');
       return;
     }
-    var flavors = { 'image/png': fetch(url).then(function (r) { return r.blob(); }).then(toPng) };
-    // 文本一起塞：编辑器若肯同时收，一次粘贴图 + 文都到位；只收图的也不会更差
-    if (text) flavors['text/plain'] = Promise.resolve(new Blob([text], { type: 'text/plain' }));
-    navigator.clipboard.write([new window.ClipboardItem(flavors)]).then(
+    var item = new window.ClipboardItem({
+      'image/png': fetch(url).then(function (r) { return r.blob(); }).then(toPng)
+    });
+    navigator.clipboard.write([item]).then(
       function () { flash(btn, '已复制海报'); },
       function () { flash(btn, '复制失败'); }
     );
