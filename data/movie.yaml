@@ -1480,8 +1480,8 @@
     size: "3.3 GB"
     format: "MP4"
     tree: |
-      075-搏击俱乐部.Fight Club (1999)辩护人 변호인 (2013).BD720P.国英双语.中英双字/
-      搏击俱乐部.Fight Club (1999)辩护人 변호인 (2013).BD720P.国英双语.中英双字.mp4
+      075-搏击俱乐部.Fight Club (1999).中英双字/
+      搏击俱乐部.Fight Club (1999).中英双字.mp4
 
 - id: mv-076
   title: "不大可能完成的任务"
@@ -1494,6 +1494,14 @@
   date: 2001-06-02
   added: 2026-09-30
   image: mv-076.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "14.3 GB"
+    format: "MP4"
+    tree: |
+      076-不可能的任務：最終清算/
+      不可能的任務：最終清算.mp4
 
 - id: mv-077
   title: "追随"
@@ -1506,6 +1514,14 @@
   date: 1999-04-02
   added: 2026-09-30
   image: mv-077.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "1.7 GB"
+    format: "MP4"
+    tree: |
+      077-追随.Following (1998).Criterion.Collection.HD720P.中英双字/
+      追随.Following (1998).Criterion.Collection.HD720P.中英双字.mp4
 
 - id: mv-078
   title: "盟约"
@@ -1518,6 +1534,14 @@
   date: 2023-04-19
   added: 2026-09-30
   image: mv-078.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "6.2 GB"
+    format: "MKV"
+    tree: |
+      078-Guy.Ritchies.The.Covenant.2023.1080p.AMZN.WEB-DL.DDP.5.1.H.264-DreamHD/
+      Guy.Ritchies.The.Covenant.2023.1080p.AMZN.WEB-DL.DDP.5.1.H.264-DreamHD.mkv
 
 - id: mv-079
   title: "黑帮老妈"
