@@ -1,4 +1,4 @@
-# 电视剧资源（177 条）
+# 电视剧资源（179 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3403,3 +3403,51 @@
   date: 2022-09-29
   added: "2026-11-13 03:52"
   image: tv-113.jpg
+
+- id: tv-136
+  title: "自首真相"
+  category: 电视剧
+  tags: ["电视剧", "悬疑", "自首真相 自首真相"]
+  quark_url: "https://pan.quark.cn/s/ac2a89f3c86f"
+  description: "【第 1 季 · 共 35 集】十八件高能烧脑惨案对应十八层地狱刑罚，刑警队长题安和心理师赵耀，从一个个看似离奇的案件背后，探究幽微的人性，缉拿人心中的怪物。本剧类型：悬疑。2026 年首播，已获续订，仍在播出，全剧 1 季，累计 35 集。播出平台：iQiyi。制片国家/地区：中国。对白语言：汉语普通话。本条目由 TMDB 每日热门榜单自动同步入库，剧情与演职员资料均以 TMDB 官方数据为准，评分会随投票实时变动，资源链接见页面网盘地址。｜TMDB 9.0"
+  date: 2026-11-07
+  added: 2026-11-13
+  image: tv-136.jpg
+  updated: 2026-11-13
+  files:
+    count: 7
+    format: "JPG×4 / PNG / NFO"
+    tree: |
+      136-自首真相 (2026)/
+      第 1 季 - 2160p WEB-DL H265 DDP 5.1/
+      backdrop.jpg
+      fanart.jpg
+      poster.jpg
+      season01-poster.jpg
+      tvshow.nfo
+      logo.png
+
+- id: tv-145
+  title: "异形：地球"
+  category: 电视剧
+  tags: ["电视剧", "科幻", "剧情", "异形：地球 Alien: Earth"]
+  quark_url: "https://pan.quark.cn/s/beec825d84f9"
+  description: "【第 1 季 · 共 8 集】一艘神秘的飞船坠毁在地球，一名年轻女子和一群形形色色的战术士兵发现了一个攸关命运的秘密，让他们与地球最大的威胁正面对抗。当坠毁回收队的成员在残骸中寻找生还者时，他们遇到了比他们想象中更可怕的神秘掠食生命体。随着这个新威胁的浮现，搜救队必须为生存而战，而他们如何处理这一发现，可能会改变他们所知的地球。｜TMDB 7.3"
+  date: 2025-08-12
+  added: 2026-11-13
+  image: tv-145.jpg
+  updated: 2026-11-13
+  files:
+    count: 9
+    format: "MP4×8"
+    tree: |
+      145-异形：地球（第一季）/
+      4K/
+      01.mp4
+      02.mp4
+      03.mp4
+      04.mp4
+      05.mp4
+      06.mp4
+      07.mp4
+      08.mp4
