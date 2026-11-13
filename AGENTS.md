@@ -417,11 +417,11 @@ node scripts/poster.mjs icon --icon <图> --out static/images/app-xxx.jpg --titl
 ```bash
 # 兜底：没有文生图结果，或明确要求参数化自绘时
 node scripts/poster.mjs set --title "丝绸之路" --badge "马友友 · 20 周年纪念特辑" --out static/images/ot-xxx.jpg
-# 编辑式主题版式：saas / arch / silk 三套预设，--title 用 | 分行，--sub / --foot / 配色可覆盖
+# 编辑式主题版式：saas / arch / silk / dl 四套预设，--title 用 | 分行，--sub / --foot / 配色可覆盖
 node scripts/poster.mjs scene --preset silk --out static/images/ot-xxx.jpg
 ```
 
-`scene` 是 2026-11-13 三张重绘海报（`cs-031` / `cs-032` / `ot-008`）的可复现实现，
+`scene` 是 2026-11-13 三张重绘海报（`cs-031` / `cs-032` / `ot-008`）与 `cs-029` 去字样重绘的可复现实现，
 不带覆盖参数出图与现图逐字节一致，可用 `shasum` 核对。
 
 文生图口径（沿用既有生成流程，具体命令 / 提示词以该流程为准，agent 不自拟工具、不擅自跳过）：
@@ -430,7 +430,8 @@ node scripts/poster.mjs scene --preset silk --out static/images/ot-xxx.jpg
   中文主标题、副标题、期数徽标一律本地叠加（生图写中文必错）。
 - 生成结果先 `file` 验类型，再用 sharp `resize(480,720,{fit:'cover'}).jpeg({quality:82})`
   统一尺寸；构建期自动派生详情页与缩略图 webp，不要手工改 `public/`。
-- 图若带平台合规水印（如右下角「AI生成」）**保留原样**，不要裁掉或抹除。
+- 图若带平台合规水印（如右下角「AI生成」）**保留原样**，不要裁掉或抹除；用户明确不要该字样时
+  走**整张重绘或换官方图源**（如 `cs-029` → `poster.mjs scene --preset dl`），不要在原图上擦水印。
 - 出图后逐张打开看：标题不溢出、不与副标 / 徽标重叠，主视觉没被裁坏，内容确实对得上资源。
 
 **红线：禁止一次性临时脚本出图后删除。** 新增或调整版式时，把配色、图形、字号落进

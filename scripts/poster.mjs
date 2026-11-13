@@ -5,11 +5,11 @@
  *   node scripts/poster.mjs book   --title "牧羊少年奇幻之旅" --author "[巴西] 保罗·柯艾略" --year 1988 --out static/images/bk-002.jpg
  *   node scripts/poster.mjs icon   --icon <本地文件|图片URL> --out static/images/app-005.jpg --title "AdGuard" --sub "广告拦截 · 隐私保护"
  *   node scripts/poster.mjs set    --title "王牌惊悚套装" --badge "共 17 册" --out static/images/bk-006.jpg
- *   node scripts/poster.mjs scene  --preset saas --out static/images/cs-031.jpg   # 预设还有 arch / silk
+ *   node scripts/poster.mjs scene  --preset dl --out static/images/cs-029.jpg    # 预设还有 saas / arch / silk
  *   node scripts/poster.mjs douban --title "飞越疯人院" --author "肯·克西" --out static/images/bk-001.jpg
  *
  * book / set 是「没封面时自己画一张」，icon 是把现成图标合成竖版，douban 是抓正版封面（优先），
- * scene 是编辑式主题版式（2026-11-13 三张重绘海报的可复现实现）：细双框 + 眉标 + 矢量主视觉 +
+ * scene 是编辑式主题版式（2026-11-13 三张重绘海报 + cs-029 的可复现实现）：细双框 + 眉标 + 矢量主视觉 +
  * 菱形分隔线 + 主/副标题 + 页脚。--title 用 | 分行，--sub / --foot / --badge / --kicker 与配色参数
  * （--bg1 --bg2 --halo --plate --ink --line --accent）可覆盖预设；不带覆盖参数时与当时写进
  * static/images/ 的 jpg 逐字节一致，可用 shasum 核对。新增版式一律在这里加预设，别再写一次性脚本。
@@ -347,9 +347,9 @@ async function posterSet() {
   return 0;
 }
 
-// ── scene：编辑式主题版式（2026-11-13 三张重绘海报的可复现实现）──────
+// ── scene：编辑式主题版式（2026-11-13 三张重绘海报 + cs-029 的可复现实现）──
 // 统一骨架：细双框 + 眉标 + 矢量主视觉 + 菱形分隔线 + 主/副标题 + 页脚。
-// 三套主视觉（saas 餐饮 POS / arch 分布式拓扑 / silk 丝路金月）与配色都落在下面的
+// 四套主视觉（saas 餐饮 POS / arch 分布式拓扑 / silk 丝路金月 / dl 脑网络）与配色都落在下面的
 // SCENES 里；不带覆盖参数时，出图与当时写进 static/images/ 的 jpg 逐字节一致。
 function sceneSvg(p) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
@@ -488,6 +488,47 @@ const ot008Text = `
   ${text(240, 650, '马友友  ·  Silk Road Music', 19, '#f7efdf', { opacity: 0.85 })}
   ${text(240, 692, 'WAV 无损  ·  2000 — 2020', 13, '#f7efdf', { opacity: 0.62, spacing: 1.6 })}`;
 
+// dl：深度学习课程（cs-029 重绘版）—— 深蓝发光脑网络，纯矢量、不带平台水印
+const DL_GRID = new Map();
+for (let row = -3; row <= 3; row++) {
+  for (let col = -5; col <= 5; col++) {
+    const xRaw = col * 23 + (row % 2 ? 11 : 0);
+    const yRaw = row * 23;
+    if ((xRaw * xRaw) / (112 * 112) + (yRaw * yRaw) / (86 * 86) > 1) continue;
+    const taper = yRaw > 0 ? 1 - (yRaw / 86) * 0.18 : 1;
+    DL_GRID.set(`${row},${col}`, [
+      240 + xRaw * taper + (((row * 3 + col * 5 + 50) % 5) - 2),
+      268 + yRaw + (((col * 3 - row * 2 + 50) % 5) - 2),
+    ]);
+  }
+}
+const DL_EDGES = [];
+for (const [key, p] of DL_GRID) {
+  const [row, col] = key.split(',').map(Number);
+  for (const [dr, dc] of [[0, 1], [1, 0], [1, 1], [1, -1]]) {
+    const q = DL_GRID.get(`${row + dr},${col + dc}`);
+    if (q) DL_EDGES.push([p, q]);
+  }
+}
+const dlArt = `
+  <circle cx="240" cy="268" r="152" fill="#3aa7e8" fill-opacity=".16"/>
+  <circle cx="240" cy="268" r="140" fill="#7fd4ff" fill-opacity=".1"/>
+  <circle cx="240" cy="268" r="118" fill="#c9efff" fill-opacity=".07"/>
+  <circle cx="240" cy="268" r="152" fill="none" stroke="#bfe9ff" stroke-opacity=".45" stroke-width="1.6"/>
+  <path d="M126 190 A152 152 0 0 1 342 168" fill="none" stroke="#ffffff" stroke-opacity=".38" stroke-width="3" stroke-linecap="round"/>
+  <path d="M330 372 A152 152 0 0 1 168 402" fill="none" stroke="#04203f" stroke-opacity=".28" stroke-width="2" stroke-linecap="round"/>
+  ${DL_EDGES.map(([p, q]) => `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="#dff5ff" stroke-opacity=".32" stroke-width="1"/>`).join('\n  ')}
+  ${[...DL_GRID.values()].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5.5" fill="#8fe0ff" fill-opacity=".22"/><circle cx="${x}" cy="${y}" r="2.2" fill="#ffffff"/>`).join('\n  ')}
+  <path d="M240 348 L238 378 L232 400 M238 378 L248 396" fill="none" stroke="#dff5ff" stroke-opacity=".4" stroke-width="1.2"/>
+  <circle cx="232" cy="400" r="2.2" fill="#ffffff"/><circle cx="248" cy="396" r="2.2" fill="#ffffff"/>
+  <ellipse cx="240" cy="432" rx="124" ry="17" fill="#5cc8ff" fill-opacity=".3"/>
+  <ellipse cx="240" cy="432" rx="78" ry="9" fill="#d6f4ff" fill-opacity=".35"/>`;
+
+const dlText = `
+  ${text(240, 556, '深度学习必修课', 52, '#ffffff', { weight: 700 })}
+  ${text(240, 612, '进击 AI 算法工程师 · PyTorch 实战', 20, '#ffffff', { opacity: 0.9 })}
+  ${text(240, 668, '梗直哥瞿炜  ·  100 讲  ·  3.7 GB', 13, '#ffffff', { opacity: 0.62, spacing: 1.6 })}`;
+
 const SCENES = {
   saas: {
     bg1: '#fff2df', bg2: '#ffb877', halo: '#ffffff', plate: '#ffffff', plateOpacity: '.42',
@@ -521,6 +562,17 @@ const SCENES = {
     layout: {
       lines: [{ y: 552, size: 68, weight: 700 }, { y: 604, size: 30, weight: 600, spacing: 2, accent: true }],
       sub: { y: 650, size: 19, opacity: 0.85 }, foot: { y: 692, size: 13, opacity: 0.62, spacing: 1.6 },
+    },
+  },
+  dl: {
+    bg1: '#0a3f78', bg2: '#04203f', halo: '#4fc9ff', plate: '#031528', plateOpacity: '.62',
+    line: '#9bdcff', ink: '#ffffff', accent: '#4fc9ff', kicker: 'DEEP LEARNING  /  COURSE 029',
+    art: dlArt, text: dlText,
+    titles: ['深度学习必修课'],
+    subText: '进击 AI 算法工程师 · PyTorch 实战', footText: '梗直哥瞿炜  ·  100 讲  ·  3.7 GB',
+    layout: {
+      lines: [{ y: 556, size: 52, weight: 700 }],
+      sub: { y: 612, size: 20, opacity: 0.9 }, foot: { y: 668, size: 13, opacity: 0.62, spacing: 1.6 },
     },
   },
 };

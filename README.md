@@ -805,7 +805,7 @@ scripts/             # 站点脚本单目录：构建 / 预览 / 内容运维工
   share-poster.mjs       # 生成首页品牌分享卡 static/share.jpg（改站点配置后重跑）
   fill-desc.mjs          # 把 .tmp/desc-draft.json 里的简介写回 YAML（自动接回【季/集】前缀与 ｜TMDB 后缀，--strict 拦不合格稿）
   list-short-desc.mjs    # 列出正文不足指定字数的条目（npm run list:short）
-  poster.mjs             # 海报/封面生成器，单入口五模式：book（生成书封兜底）/ icon（图标合成竖版）/ set（套装深色封面）/ scene（编辑式主题版式，saas/arch/silk 预设）/ douban（抓豆瓣正版封面）
+  poster.mjs             # 海报/封面生成器，单入口五模式：book（生成书封兜底）/ icon（图标合成竖版）/ set（套装深色封面）/ scene（编辑式主题版式，saas/arch/silk/dl 预设）/ douban（抓豆瓣正版封面）
 docs/                # 经验类文档（已合并为单一 README.md，含建站/内容/SEO/待办/规划），见 docs/README.md
 deploy/              # 部署用：setup-vps.sh 一键部署、Nginx 配置示例、自动更新脚本、统计日志格式、搜索引擎提交脚本
 public/              # 构建产物，部署这个目录（本目录不入库）
