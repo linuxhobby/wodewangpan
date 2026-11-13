@@ -417,7 +417,12 @@ node scripts/poster.mjs icon --icon <图> --out static/images/app-xxx.jpg --titl
 ```bash
 # 兜底：没有文生图结果，或明确要求参数化自绘时
 node scripts/poster.mjs set --title "丝绸之路" --badge "马友友 · 20 周年纪念特辑" --out static/images/ot-xxx.jpg
+# 编辑式主题版式：saas / arch / silk 三套预设，--title 用 | 分行，--sub / --foot / 配色可覆盖
+node scripts/poster.mjs scene --preset silk --out static/images/ot-xxx.jpg
 ```
+
+`scene` 是 2026-11-13 三张重绘海报（`cs-031` / `cs-032` / `ot-008`）的可复现实现，
+不带覆盖参数出图与现图逐字节一致，可用 `shasum` 核对。
 
 文生图口径（沿用既有生成流程，具体命令 / 提示词以该流程为准，agent 不自拟工具、不擅自跳过）：
 
@@ -429,7 +434,7 @@ node scripts/poster.mjs set --title "丝绸之路" --badge "马友友 · 20 周�
 - 出图后逐张打开看：标题不溢出、不与副标 / 徽标重叠，主视觉没被裁坏，内容确实对得上资源。
 
 **红线：禁止一次性临时脚本出图后删除。** 新增或调整版式时，把配色、图形、字号落进
-`scripts/poster.mjs` 的可复用模式或参数（与 `book` / `icon` / `set` / `douban` 同一入口），
+`scripts/poster.mjs` 的可复用模式或参数（`book` / `icon` / `set` / `scene` / `douban` 同一入口），
 保证下次按同样的命令能复现；临时脚本出完就删等于把流程断在仓库外，无法复核也无法迭代。
 搜到的图对不上内容就删掉重来，**宁可自绘也不放错图**。
 
