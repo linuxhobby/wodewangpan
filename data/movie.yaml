@@ -1374,6 +1374,14 @@
   date: 2025-04-25
   added: 2026-09-30
   image: mv-069.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "6.5 GB"
+    format: "MKV"
+    tree: |
+      069-Havoc.2025.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-DreamHD/
+      Havoc.2025.1080p.NF.WEB-DL.DDP.5.1.Atmos.H.264-DreamHD.mkv
 
 - id: mv-070
   title: "商海通牒"
@@ -1386,6 +1394,14 @@
   date: 2011-09-28
   added: 2026-09-30
   image: mv-070.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "9.4 GB"
+    format: "MKV"
+    tree: |
+      070-Margin.Call.2011.1080p.BluRay.x264.DTS-QuickIO/
+      Margin.Call.2011.1080p.BluRay.x264.DTS-QuickIO.mkv
 
 - id: mv-071
   title: "哈利·波特与魔法石"
@@ -1398,6 +1414,14 @@
   date: 2001-11-16
   added: 2026-09-30
   image: mv-071.jpg
+  updated: 2026-11-13
+  files:
+    count: 1
+    size: "7.5 GB"
+    format: "MP4"
+    tree: |
+      071-哈利·波特与魔法石 Harry Potter and the Sorcerer&#39;s Stone (2001)国英双语.超清1080.中英双字/
+      哈利·波特与魔法石 Harry Potter and the Sorcerer&#39;s Stone (2001)国英双语.超清1080.中英双字.mp4
 
 - id: mv-073
   title: "尘兔"
