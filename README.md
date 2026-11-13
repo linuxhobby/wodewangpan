@@ -1,9 +1,9 @@
 # wodewangpan · 网盘资源分享站
 用 YAML 写资源，构建成**纯静态站点**：海报压缩、二维码、搜索索引、SEO 标签全部在构建期生成，产物丢给 Nginx 就能跑。
 
-- **Telegram 群**： [https://t.me/wodewangpantop](https://t.me/wodewangpantop) ，群里有查询机器人
+- **加入 Telegram 群**： [https://t.me/wodewangpantop](https://t.me/wodewangpantop) ，群里有查询机器人
 
-- **Telegram 订阅号**：[https://t.me/myquark](https://t.me/myquark) ，更新站内最新资源
+- **加入 Telegram 订阅号**：[https://t.me/myquark](https://t.me/myquark) ，更新站内最新资源
 一个纯纯的静态网站！**无数据库、无后端、无登录。**
 
 
