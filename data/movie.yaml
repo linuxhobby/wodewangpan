@@ -1794,6 +1794,14 @@
   date: 2022-05-06
   added: 2026-09-30
   image: mv-072.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "7.7 GB"
+    format: "MKV"
+    tree: |
+      072-The.Conference.2022.GERMAN.1080p.AMZN.WEBRip.DDP5.1.x264-NOGRP/
+      The.Conference.2022.GERMAN.1080p.AMZN.WEBRip.DDP5.1.x264-NOGRP.mkv
 
 - id: mv-092
   title: "惊爆魔盗团"
@@ -1806,6 +1814,14 @@
   date: 2025-09-11
   added: 2026-09-30
   image: mv-092.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.3 GB"
+    format: "MP4"
+    tree: |
+      092-惊爆魔盗团.1080p.HD中字/
+      惊爆魔盗团.1080p.HD中字.mp4
 
 - id: mv-093
   title: "黑豹2"
@@ -1818,6 +1834,14 @@
   date: 2022-11-09
   added: 2026-09-30
   image: mv-093.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "7.8 GB"
+    format: "MKV"
+    tree: |
+      093-Black.Panther.Wakanda.Forever.2022.IMAX.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H.264-CMRG/
+      Black.Panther.Wakanda.Forever.2022.IMAX.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H.264-CMRG.mkv
 
 - id: mv-094
   title: "野兽们的战争"
