@@ -1974,6 +1974,14 @@
   date: 1990-12-07
   added: 2026-09-30
   image: mv-100.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.4 GB"
+    format: "MKV"
+    tree: |
+      100-剪刀手爱德华.Edward.Scissorhands.1990.BluRay.720p.x264.AC3-CMCT/
+      剪刀手爱德华.Edward.Scissorhands.1990.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-101
   title: "无形杀机"
@@ -1986,6 +1994,14 @@
   date: 2025-11-26
   added: 2026-09-30
   image: mv-101.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.3 GB"
+    format: "MP4"
+    tree: |
+      101-无形杀机.1080p.HD中英双字/
+      无形杀机.1080p.HD中英双字.mp4
 
 - id: mv-102
   title: "套现2：大赌客"
@@ -1998,6 +2014,14 @@
   date: 2025-03-14
   added: 2026-09-30
   image: mv-102.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "5.6 GB"
+    format: "MKV"
+    tree: |
+      102-Cash.Out.2.High.Rollers.2025.1080p.HamiVideo.WEB-DL.AAC2.0.H.264-DreamHD/
+      Cash.Out.2.High.Rollers.2025.1080p.HamiVideo.WEB-DL.AAC2.0.H.264-DreamHD.mkv
 
 - id: mv-103
   title: "镇上的新暴徒"
