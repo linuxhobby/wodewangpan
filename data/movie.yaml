@@ -1734,6 +1734,14 @@
   date: 2008-12-25
   added: 2026-09-30
   image: mv-088.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.0 GB"
+    format: "MP4"
+    tree: |
+      088-本杰明·巴顿奇事.The Curious Case of Benjamin Button (2008).BD1080P.国英双语.中英双字(1)/
+      本杰明·巴顿奇事.The Curious Case of Benjamin Button (2008).BD1080P.国英双语.中英双字(1).mp4
 
 - id: mv-089
   title: "触不可及"
@@ -1746,6 +1754,14 @@
   date: 2011-11-02
   added: 2026-09-30
   image: mv-089.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.3 GB"
+    format: "MP4"
+    tree: |
+      089-触不可及.Intouchables (2011).超清法语中法双字/
+      触不可及.Intouchables (2011).超清法语中法双字.mp4
 
 - id: mv-091
   title: "走到尽头"
@@ -1758,6 +1774,14 @@
   date: 2014-05-29
   added: 2026-09-30
   image: mv-091.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "4.0 GB"
+    format: "MKV"
+    tree: |
+      091-A.Hard.Day.2014.1080p.WEB-DL.x264.AAC-MOMOWEB/
+      A.Hard.Day.2014.1080p.WEB-DL.x264.AAC-MOMOWEB.mkv
 
 - id: mv-072
   title: "万湖会议"
