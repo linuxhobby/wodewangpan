@@ -1854,6 +1854,14 @@
   date: 2023-11-15
   added: 2026-09-30
   image: mv-094.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.0 GB"
+    format: "MP4"
+    tree: |
+      094-野兽们的战争.THE WILD.2023.HD1080P.韩语ID：61569/
+      野兽们的战争.THE WILD.2023.HD1080P.韩语ID：61569.mp4
 
 - id: mv-095
   title: "蓝甲虫"
@@ -1866,6 +1874,14 @@
   date: 2023-08-16
   added: 2026-09-30
   image: mv-095.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "6.8 GB"
+    format: "MKV"
+    tree: |
+      095-Blue.Beetle.2023.1080p.iTunes.WEB-DL.DDP.5.1.Atmos.H.265-DreamHD/
+      Blue.Beetle.2023.1080p.iTunes.WEB-DL.DDP.5.1.Atmos.H.265-DreamHD.mkv
 
 - id: mv-096
   title: "Idol Idol"
@@ -1878,6 +1894,14 @@
   date: 2019-06-12
   added: 2026-09-30
   image: mv-096.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "7.0 GB"
+    format: "MKV"
+    tree: |
+      096-Idol.2019.1080p.AMZN.WEB-DL.DDP2.0.H.264-TEPES/
+      Idol.2019.1080p.AMZN.WEB-DL.DDP2.0.H.264-TEPES.mkv
 
 - id: mv-097
   title: "网络谜踪"
