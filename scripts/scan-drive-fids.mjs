@@ -25,12 +25,12 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
 const outFile = path.join(root, 'config', 'drive-fids.json');
 const CLI =
-  ['.qwenworkcn', '.codebuddy', '.workbuddy']
+  ['.workbuddy', '.codebuddy']
     .map((dir) =>
       path.join(process.env.HOME || process.env.USERPROFILE || '', dir, 'skills/quarkclouddrive/scripts/quark-drive.cjs')
     )
     .find((p) => fs.existsSync(p)) ||
-  path.join(process.env.HOME || process.env.USERPROFILE || '', '.qwenworkcn/skills/quarkclouddrive/scripts/quark-drive.cjs');
+  path.join(process.env.HOME || process.env.USERPROFILE || '', '.workbuddy/skills/quarkclouddrive/scripts/quark-drive.cjs');
 const args = process.argv.slice(2);
 const getArg = (name, def) => {
   const i = args.indexOf(`--${name}`);

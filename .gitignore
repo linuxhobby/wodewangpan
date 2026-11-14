@@ -33,7 +33,7 @@ Thumbs.db
 browse/
 .quarkclouddrive/
 
-# 本地 skill 与凭据（含 cookie / token，严禁入库；现网真身在 ~/.qwenworkcn/skills/ 下使用）
+# 本地 skill 与凭据（含 cookie / token，严禁入库；现网真身在 ~/.workbuddy/skills/ 下使用）
 skills/
 # skill 安装锁文件，只反映本机的安装状态
 skills-lock.json

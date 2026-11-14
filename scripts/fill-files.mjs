@@ -70,14 +70,14 @@ import {
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
 // 夸克官方 skill 的 CLI（share-detail 支持客态，不需要网盘授权）。
-// 客户端目录按新旧依次探测：.trae-cn（现役）→ .qwenworkcn → .codebuddy / .workbuddy（旧机回退）。
+// 客户端目录按新旧依次探测：.workbuddy（现役）→ .trae-cn / .codebuddy（历史目录回退）。
 const CLI =
-  ['.trae-cn', '.qwenworkcn', '.codebuddy', '.workbuddy']
+  ['.workbuddy', '.trae-cn', '.codebuddy']
     .map((dir) =>
       path.join(process.env.HOME || process.env.USERPROFILE || '', dir, 'skills/quarkclouddrive/scripts/quark-drive.cjs')
     )
     .find((p) => fs.existsSync(p)) ||
-  path.join(process.env.HOME || process.env.USERPROFILE || '', '.trae-cn/skills/quarkclouddrive/scripts/quark-drive.cjs');
+  path.join(process.env.HOME || process.env.USERPROFILE || '', '.workbuddy/skills/quarkclouddrive/scripts/quark-drive.cjs');
 
 // 网盘目录里的「占位说明文件」是同步任务自建（或人工放过）的工作流产物，不是资源内容。
 // 2026-11-08 起 trending-sync / mirror-baidu 预置三份：更新通知、QQ 群缺失反馈、站点导流；
@@ -187,7 +187,7 @@ const SESSION_INPUT = '批量抓取分享链接的文件清单';
 
 if (!fs.existsSync(CLI)) {
   console.error(`! 找不到夸克 CLI：${CLI}`);
-  console.error('  先安装 quarkclouddrive skill（bash ~/.qwenworkcn/skills/quarkclouddrive/scripts/install.sh）');
+  console.error('  先安装 quarkclouddrive skill（bash ~/.workbuddy/skills/quarkclouddrive/scripts/install.sh）');
   process.exit(1);
 }
 
@@ -527,7 +527,7 @@ for (const item of pending.slice(0, maxTries)) {
     //   · 盘端只剩它们时 = 资源还没到位（TMDB 今日热门建的就是这种空目录）→ 整条跳过、一个字不写；
     //   · 否则把它们从清单里剔掉，count / tree / format 只统计真实内容（AGENTS.md §5：宁缺勿假）。
     // ⚠ 新增/改名占位文件时必须同步改这里，否则占位 md 会被当成真实资源写进 files: 假清单。
-    //   权威定义在 C:/Users/marco/.qwenworkcn/skills/quark-resource-sync/scripts/lib/placeholder.mjs（跨仓库，无法 import）。
+    //   权威定义在 C:/Users/marco/.workbuddy/skills/quark-resource-sync/scripts/lib/placeholder.mjs（跨仓库，无法 import）。
     // 下钻（最多 2 级）与剔占位的口径只在 locateContent 一份，连载轮询共用（2026-11-10 定稿）。
     const loc = await locateContent({ url: item.url, id: item.id }, root.files);
     if (loc.error) {
