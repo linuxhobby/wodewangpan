@@ -2094,6 +2094,14 @@
   date: 2025-10-21
   added: 2026-09-30
   image: mv-106.jpg
+  updated: 2026-11-15
+  files:
+    count: 1
+    size: "6.7 GB"
+    format: "MKV"
+    tree: |
+      106-Sisu.Road.To.Revenge.2025.1080p.WEB.h264-ETHEL/
+      Sisu.Road.To.Revenge.2025.1080p.WEB.h264-ETHEL.mkv
 
 - id: mv-107
   title: "V字仇杀队"
@@ -2106,6 +2114,14 @@
   date: 2006-02-23
   added: 2026-09-30
   image: mv-107.jpg
+  updated: 2026-11-15
+  files:
+    count: 1
+    size: "3.2 GB"
+    format: "MKV"
+    tree: |
+      107-V字仇杀队.V.For.Vendetta.2005.BluRay.720p.x264.AC3-CMCT/
+      V字仇杀队.V.For.Vendetta.2005.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-108
   title: "13骇人游戏"
@@ -2118,6 +2134,14 @@
   date: 2014-04-11
   added: 2026-09-30
   image: mv-108.jpg
+  updated: 2026-11-15
+  files:
+    count: 1
+    size: "2.7 GB"
+    format: "MKV"
+    tree: |
+      108-骇人游戏.13.Sins.2014.BluRay.720p.x264.AC3-CMCT/
+      13骇人游戏.13.Sins.2014.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-109
   title: "哈尔滨"
