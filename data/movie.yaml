@@ -2034,6 +2034,14 @@
   date: 2025-06-04
   added: 2026-09-30
   image: mv-103.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.5 GB"
+    format: "MKV"
+    tree: |
+      103-镇上的新暴徒.2025.BD.1080P.中英双字/
+      镇上的新暴徒.2025.BD.1080P.中英双字.mkv
 
 - id: mv-104
   title: "终结者2：审判日"
@@ -2046,6 +2054,14 @@
   date: 1991-07-03
   added: 2026-09-30
   image: mv-104.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "3.4 GB"
+    format: "MP4"
+    tree: |
+      104-终结者2：审判日.Terminator 2 Judgment Day (1991).超清国语双语中英双字/
+      终结者2：审判日.Terminator 2 Judgment Day (1991).超清国语双语中英双字.mp4
 
 - id: mv-105
   title: "星际迷航：31区"
@@ -2058,6 +2074,14 @@
   date: 2025-01-15
   added: 2026-09-30
   image: mv-105.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "6.1 GB"
+    format: "MKV"
+    tree: |
+      105-Star.Trek.Section.31.2025.BluRay.1080p.TrueHD7.1.x265.10bit-DreamHD/
+      Star.Trek.Section.31.2025.BluRay.1080p.TrueHD7.1.x265.10bit-DreamHD.mkv
 
 - id: mv-106
   title: "永生战士2"
