@@ -1,4 +1,4 @@
-# 软件资源（132 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
+# 软件资源（133 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
 - id: app-001
   title: "Parallels Desktop 18 - macOS 虚拟机软件"
   category: 软件
@@ -1539,3 +1539,22 @@
       MT管理器_Ver.2.26.9.apk
       MT管理器_Ver.2.26.10.apk
       MT管理器_Ver.2.26.11.apk
+
+- id: app-100
+  title: "PotPlayer - Windows 影音播放器"
+  category: 软件
+  tags: ["软件", "影音播放", "Windows", "64 位", "PotPlayer"]
+  quark_url: "https://pan.quark.cn/s/a227ec9cd2be"
+  description: "PotPlayer 是由 Kakao 开发的 Windows 免费影音播放器，以格式覆盖广、播放设置细致和可自定义程度高为主要特点。日常播放本地视频或音频时，可以在同一界面里管理播放列表、调整字幕、切换音轨，并按设备条件设置画面与声音效果；需要深入调校的用户也能继续配置解码、渲染和快捷键等选项。本次收录目录中的实际文件是 PotPlayerSetup64.rar，对应 Windows 64 位安装程序的压缩包，并非 macOS 应用，目录原名中的 Pop Player 应理解为名称误写。下载后先解压，再核对安装程序并按提示操作。播放器的功能较多，初次使用可以先保留默认设置，再按自己的字幕、画质与操作习惯逐项调整。"
+  date:
+  added: "2026-11-15 06:37"
+  image: app-100.jpg
+  updated: 2026-11-15
+  files:
+    count: 1
+    size: "39.3 MB"
+    format: "RAR"
+    packed: true
+    tree: |
+      100-PC最强播放器，Pop Player/
+      PotPlayerSetup64.rar

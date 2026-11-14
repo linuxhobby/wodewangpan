@@ -1,4 +1,4 @@
-# 课程资源（32 条）
+# 课程资源（33 条）
 # 来源：夸克网盘 SHARE/07课程
 # 链接：公开链接（无提取码），永久有效；简介由人工整理
 # 封面：TMDB 抓不到课程信息。优先用课程官方封面 / 宣传图，找不到再用 `node scripts/poster.mjs icon` 合成竖版
@@ -877,3 +877,29 @@
       5-9 高性能缓存代理方案Redis（下）_ev.mp4
       5-10 分布式检索引擎 ElasticSearch（上）_ev.mp4
       5-11 分布式检索引擎 ElasticSearch（下）_ev.mp4
+
+- id: cs-033
+  title: "WorkBuddy 全能实战课：多场景落地玩法"
+  category: 课程
+  tags: ["课程", "WorkBuddy", "AI 办公", "自动化", "效率工具", "MCP", "知识库"]
+  quark_url: "https://pan.quark.cn/s/5bc61e336c19"
+  description: "【视频课 · 共 9 讲】一套围绕 WorkBuddy 多场景应用整理的实操视频课，盘端共收录 9 个 MP4 文件。内容从具体任务出发，依次覆盖公众号运营、审美能力提升、个人网站搭建、小程序制作、重复流程自动化、定时工作安排、MCP 使用、知识库搭建和专家团协作。每个主题单独成课，既能按顺序了解工具从内容生产到流程管理的应用路径，也可以根据手头需求直接选看对应章节。课程适合希望把 AI 助手用于日常内容创作、个人项目和办公自动化的用户，重点在于把多个场景串成可执行的工作方式。学习时建议同步打开自己的工具环境跟做，并以当前产品界面和功能说明为准。"
+  date:
+  added: "2026-11-15 06:37"
+  image: cs-033.jpg
+  updated: 2026-11-15
+  files:
+    count: 9
+    size: "132 MB"
+    format: "MP4×9"
+    tree: |
+      033-WorkBuddy全能实战课，解锁多场景落地玩法/
+      01.用Workbuddy帮我运营公众号.mp4
+      02.用workBuddy帮我提高审美.mp4
+      03.用WorkBuddy搭建永久个人网站.mp4
+      04.用workBuddy帮我免费开发小程序.mp4
+      05.workbuddy-把重复流程做成一句话.mp4
+      06.WorkBuddy-AI早上9点替你上班.mp4
+      07.给WorkBuddy装外挂MCP接入实战.mp4
+      08.WorkBuddy-给AI建一个专属知识库.mp4
+      09.workbuddy-一句话造一个专属专家团.mp4

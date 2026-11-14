@@ -1,4 +1,4 @@
-# 纪录片资源（102 条）
+# 纪录片资源（103 条）
 # 来源：夸克网盘 SHARE/06纪录片
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -2172,3 +2172,23 @@
       04_名士风流_4K_HDR.mp4
       05_曲水流觞_4K_HDR.mp4
       06_洛水神游_4K_HDR.mp4
+
+- id: dc-103
+  title: "章鱼的秘密"
+  category: 纪录片
+  tags: ["纪录片", "自然", "海洋生物", "国家地理", "章鱼的秘密 Secrets of the Octopus"]
+  quark_url: "https://pan.quark.cn/s/cb909177341f"
+  description: "【第 1 季 · 共 3 集】章鱼没有骨骼，却能在复杂环境中打开缝隙、改变外形并解决各种问题，它们的行为常常超出人们对无脊椎动物的想象。这部国家地理自然纪录片把镜头对准不同种类的章鱼，通过水下影像观察它们捕猎、伪装、防御和与周围环境互动的方式，呈现这种古老海洋生物令人惊叹的适应能力。保罗·路德担任旁白，叙事在科学观察与探索趣味之间保持轻巧节奏，让普通观众也能理解研究成果背后的意义。全剧 1 季，共 3 集，单集约 42 分钟，2024 年首播，适合喜欢海洋生态与动物行为题材的观众。｜TMDB 8.3"
+  date: 2024-04-21
+  added: "2026-11-15 06:37"
+  image: dc-103.jpg
+  updated: 2026-11-15
+  files:
+    count: 3
+    size: "13.1 GB"
+    format: "MKV×3"
+    tree: |
+      103-章鱼的秘密 (2024) 4K HDR & Dv/
+      Secrets.of.the.Octopus.S01E01.2024.2160p.DSNP.WEB-DL.DDP5.1.DV.HDR.H.265-LelveTV.mkv
+      Secrets.of.the.Octopus.S01E02.2024.2160p.DSNP.WEB-DL.DDP5.1.DV.HDR.H.265-LelveTV.mkv
+      Secrets.of.the.Octopus.S01E03.2024.2160p.DSNP.WEB-DL.DDP5.1.DV.HDR.H.265-LelveTV.mkv

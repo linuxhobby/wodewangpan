@@ -1,4 +1,4 @@
-# 电视剧资源（183 条）
+# 电视剧资源（184 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3583,3 +3583,28 @@
   date: 2026-11-14
   added: "2026-11-15 03:55"
   image: tv-152.jpg
+
+- id: tv-153
+  title: "边缘世界"
+  category: 电视剧
+  tags: ["电视剧", "科幻", "剧情", "悬疑", "边缘世界 The Peripheral"]
+  quark_url: "https://pan.quark.cn/s/d585581ba305"
+  description: "【第 1 季 · 共 8 集】在近未来的美国乡间，弗林·费舍尔一边照顾家人，一边靠零工维持生活。她原本只想接下一份看似普通的仿真工作，却发现屏幕另一端的体验并不属于游戏，而是与数十年后的伦敦产生了真实联系。当陌生势力开始追踪她和家人，两个时间层面的危机彼此牵动，虚拟体验也变成无法抽身的现实。故事把小镇生活的局促与高科技社会的冷峻并置，重点不只是阴谋与追逐，也呈现普通人面对资本、技术和权力差距时的选择。全剧共 1 季 8 集，Prime Video 播出。｜TMDB 7.6"
+  date: 2022-10-20
+  added: "2026-11-15 06:37"
+  image: tv-153.jpg
+  updated: 2026-11-15
+  files:
+    count: 8
+    size: "50.7 GB"
+    format: "MKV×8"
+    tree: |
+      153-边缘世界 (2022) 4K HDR/
+      The.Peripheral.S01E01.2022.Amazon.WEB-DL.4K.HEVC.HDR.DDP-Xiaomi.mkv
+      The.Peripheral.S01E02.2022.Amazon.WEB-DL.4K.HEVC.HDR.DDP-Xiaomi.mkv
+      The.Peripheral.S01E03.2022.Amazon.WEB-DL.4K.HEVC.HDR.DDP-Xiaomi.mkv
+      The.Peripheral.S01E04.2022.Amazon.WEB-DL.4K.HEVC.HDR.DDP-Xiaomi.mkv
+      The.Peripheral.S01E05.2022.Amazon.WEB-DL.4K.HEVC.HDR.DDP-Xiaomi.mkv
+      The.Peripheral.S01E06.2022.Amazon.WEB-DL.4K.HEVC.HDR.DDP-Xiaomi.mkv
+      The.Peripheral.S01E07.2022.Amazon.WEB-DL.4K.HEVC.HDR.DDP-Xiaomi.mkv
+      The.Peripheral.S01E08.2022.Amazon.WEB-DL.2160p.HEVC.HDR.DDP-Xiaomi.mkv

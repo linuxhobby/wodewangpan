@@ -1,4 +1,4 @@
-# 动漫资源（53 条）
+# 动漫资源（54 条）
 # 来源：夸克网盘 SHARE/05动漫
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -886,3 +886,28 @@
   date: 2026-11-12
   added: "2026-11-15 03:55"
   image: an-054.jpg
+
+- id: an-055
+  title: "PLUTO 冥王"
+  category: 动漫
+  tags: ["动漫", "动画", "科幻", "悬疑", "犯罪", "PLUTO 冥王 PLUTO"]
+  quark_url: "https://pan.quark.cn/s/b04eb8967aaa"
+  description: "【第 1 季 · 共 8 集】在一个机器人与人类共同生活的世界里，全球最先进的七个机器人及其人类盟友接连遇害，欧洲刑警组织刑警盖吉特循着现场留下的线索展开调查，也逐渐意识到自己同样处在危险之中。案件把不同国家和身份的人物联系起来，表面是连环谋杀，背后还牵动着战争记忆、仇恨与人工智能的情感边界。作品改编自浦泽直树执笔、源自手冢治虫《铁臂阿童木》经典篇章的漫画《PLUTO》，以冷峻的刑侦叙事推进科幻命题。全剧 1 季，共 8 集，Netflix 播出。｜TMDB 7.9"
+  date: 2023-10-26
+  added: "2026-11-15 06:37"
+  image: an-055.jpg
+  updated: 2026-11-15
+  files:
+    count: 8
+    size: "18.9 GB"
+    format: "MKV×8"
+    tree: |
+      055-冥王 (2023) 1080P/
+      PLUTO.S01E01.2023.1080p.NF.WEB-DL.x264.DDP5.1-DDHDTV.mkv
+      PLUTO.S01E02.2023.1080p.NF.WEB-DL.x264.DDP5.1-DDHDTV.mkv
+      PLUTO.S01E03.2023.1080p.NF.WEB-DL.x264.DDP5.1-DDHDTV.mkv
+      PLUTO.S01E04.2023.1080p.NF.WEB-DL.x264.DDP5.1-DDHDTV.mkv
+      PLUTO.S01E05.2023.1080p.NF.WEB-DL.x264.DDP5.1-DDHDTV.mkv
+      PLUTO.S01E06.2023.1080p.NF.WEB-DL.x264.DDP5.1-DDHDTV.mkv
+      PLUTO.S01E07.2023.1080p.NF.WEB-DL.x264.DDP5.1-DDHDTV.mkv
+      PLUTO.S01E08.2023.1080p.NF.WEB-DL.x264.DDP5.1-DDHDTV.mkv
