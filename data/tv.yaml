@@ -1,4 +1,4 @@
-# 电视剧资源（181 条）
+# 电视剧资源（182 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3551,3 +3551,25 @@
       Fallout.S01E06.The.Trap.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
       Fallout.S01E07.The.Radio.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
       Fallout.S01E08.The.Beginning.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
+
+- id: tv-151
+  title: "边界者：警视厅特殊事件对策班"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "悬疑", "犯罪", "边界者：警视厅特殊事件对策班 ボーダーズ 警視庁特殊事件対策班"]
+  quark_url: "https://pan.quark.cn/s/fd718c987490"
+  description: "【第 1 季 · 共 4 集】警视总监直属的特命部门 SCU 专门接手那些容易被常规调查漏掉的边界案件，网络犯罪杀人、跨国毒品交易这类牵涉面广、线索又零散的麻烦事，全都压在这支小队肩上。队长结城新次郎由泽村一树饰演，四名队员各有所长，有人能从细枝末节里看出异常，有人精通 IT 追踪，也有人擅长硬碰硬的格斗。五个人性格差得远，办案时常常各说各话，可正是这些分歧让他们互相补位，把各自的长处拼成一张完整的网，顺着边缘地带一点点摸到真相。本剧改编自堂场瞬一的同名小说，走本格刑侦加团队群像的路子，案件推进干脆，人物关系也在一次次协作里慢慢变得牢靠。｜TMDB 7.7"
+  date: 2026-10-16
+  added: "2026-11-14 18:14"
+  image: tv-151.jpg
+  updated: 2026-11-14
+  files:
+    count: 5
+    size: "5.6 GB"
+    format: "MP4×5"
+    tree: |
+      151-日剧 Borders 警视厅特殊事件对策班/
+      01.mp4
+      02.mp4
+      03.mp4
+      04.mp4
+      05.mp4
