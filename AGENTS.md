@@ -161,7 +161,7 @@ node scripts/fill-files.mjs --limit 3 --delay 3000
 
 - 剔除靠 `scripts/fill-files.mjs` 顶部的 `PLACEHOLDER_FILE_RE`，它是**行首前缀匹配**（`^`）。
   不要退化成无锚子的串匹配——那会把片名里带「请先转存」之类的真实文件也误剔出清单。
-- 同一份前缀表的权威定义在 `C:/Users/marco/.qwenworkcn/skills/quark-resource-sync/scripts/lib/placeholder.mjs`
+- 同一份前缀表的权威定义在 `C:/Users/marco/.workbuddy/skills/quark-resource-sync/scripts/lib/placeholder.mjs`
   的 `PLACEHOLDER_PREFIXES`（夸克/百度两侧写入与 `baidu-share-links.mjs` 都从它取）。两个仓库无法互相 import，
   **改任何一侧的名字口径必须同时改另一侧**，否则新建目录的占位文件会立刻变成假清单。
 - 新增/改名占位文件时，旧名字一定要留在识别表里（参考上面第 4 项的教训），因为网盘删不掉。
@@ -376,7 +376,7 @@ ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
 ### 影视类（mv-/tv-/dc-/an-）：TMDB 官方海报
 
 ```bash
-T=~/.qwenworkcn/skills/quark-resource-sync/scripts/tmdb.mjs
+T=~/.workbuddy/skills/quark-resource-sync/scripts/tmdb.mjs
 node $T search --type movie --query "All Quiet on the Western Front" --year 2022   # 先拿 id
 node $T detail --type movie --id 49046 --poster static/images/mv-212.jpg           # 再下海报
 ```
@@ -467,7 +467,7 @@ npm run build                  # 第二次构建应「重新生成 0 个」（30
 ## 10. TMDB 今日热门同步的筛选口径（年份窗口 2026-11-10 起 · 节目类黑名单 2026-11-11 起）
 
 「我的网盘.TMDB今日热门影视每日同步」调的是 skill 脚本
-`~/.qwenworkcn/skills/quark-resource-sync/scripts/trending-sync.mjs`。从这天起本站的筛选口径多一条**内容日期窗口**：
+`~/.workbuddy/skills/quark-resource-sync/scripts/trending-sync.mjs`。从这天起本站的筛选口径多一条**内容日期窗口**：
 
 - **只收上映/首播落在近 12 个月内的今日热门**（滚动窗口，下限 = 运行当天往前推 12 个月）。
 - 电影（含热门电影榜里归入动漫的动画电影）按 `release_date`；剧集（含热门剧集榜里归入动漫的动画剧集）按**目标季 `air_date`**，

@@ -2,14 +2,13 @@
 //
 // 凭据只从环境变量或本机 quark-resource-sync skill 的 config.env 读，绝不写进仓库、
 // 不落缓存；查不到凭据 / 标题匹配不确定就返回 null，由调用方静默跳过。
-// 探测路径同时覆盖 macOS（~/.workbuddy / ~/.codebuddy / ~/.qwenworkcn）与 Windows 自动化机。
+// 探测路径同时覆盖 macOS（~/.workbuddy / ~/.codebuddy）与 Windows 自动化机。
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 const CONFIG_PATHS = [
-  '.qwenworkcn/skills/quark-resource-sync/config.env',
   '.workbuddy/skills/quark-resource-sync/config.env',
   '.codebuddy/skills/quark-resource-sync/config.env',
 ];
