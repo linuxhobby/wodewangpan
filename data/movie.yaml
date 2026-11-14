@@ -1,4 +1,4 @@
-# 电影资源（454 条）
+# 电影资源（455 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -1674,6 +1674,14 @@
   date: 2009-04-04
   added: 2026-09-30
   image: mv-085.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.6 GB"
+    format: "MKV"
+    tree: |
+      085-七级公务员.7th.Grade.Civil.Servant.2009.BluRay.720p.x264.AC3-CMCT/
+      七级公务员.7th.Grade.Civil.Servant.2009.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-086
   title: "龙与地下城：侠盗荣耀"
@@ -1686,6 +1694,14 @@
   date: 2023-03-23
   added: 2026-09-30
   image: mv-086.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "6.9 GB"
+    format: "MKV"
+    tree: |
+      086-dungeons.and.dragons.honor.among.thieves.2023.1080p.web.h264-slot/
+      dungeons.and.dragons.honor.among.thieves.2023.1080p.web.h264-slot.mkv
 
 - id: mv-087
   title: "守望者"
@@ -1698,6 +1714,14 @@
   date: 2009-03-04
   added: 2026-09-30
   image: mv-087.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "7.6 GB"
+    format: "MKV"
+    tree: |
+      087-Watchmen.The.Ultimate.Cut.2009.BluRay.1080p.x265.10bit-MiniHD/
+      Watchmen.The.Ultimate.Cut.2009.BluRay.1080p.x265.10bit-MiniHD.mkv
 
 - id: mv-088
   title: "本杰明·巴顿奇事"
@@ -6412,3 +6436,21 @@
     tree: |
       454-盗墓大案 (2026)/
       [盗墓大案].Grave.Robbers.2026.2160p.IQ.WEB-DL.H265.AAC-UBWEB.mkv
+
+- id: mv-455
+  title: "虎胆龙威4"
+  category: 电影
+  tags: ["电影", "动作", "惊悚", "犯罪", "虎胆龙威4 Live Free or Die Hard"]
+  quark_url: "https://pan.quark.cn/s/28c8db3dd9c4"
+  description: "故事发生在独立日假期前后，资深警探麦卡伦原本只是去接一名年轻黑客，把人交给联邦调查局就算完成任务。他没料到这名黑客写出的代码正被一伙人用来瘫痪全国的交通、金融与通信系统，而对方早已把整座城市当成棋盘，连麦卡伦的女儿也被卷进局中。影片把动作场面放在网络攻击的背景下，爆炸、追车与近身格斗接连出现，主角一边护着毫无实战经验的黑客，一边在层层设局中找出幕后主使。布鲁斯·威利斯延续了这个角色一贯的疲态与硬气，提摩西·欧里芬特饰演的反派则用冷静的语调把威胁感拉到最大。作为系列第四部，它在保留孤胆英雄气质的同时，把对抗从单点犯罪升级为覆盖全国的现代战争。｜TMDB 6.6"
+  date: 2007-06-20
+  added: "2026-11-14 09:20"
+  image: mv-455.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "6.1 GB"
+    format: "MP4"
+    tree: |
+      455-虎胆龙威4.Live.Free.or.Die.Hard.2007.BD1080P.X264.AAC.MandarinEnglish.CHS-ENG/
+      虎胆龙威4.Live.Free.or.Die.Hard.2007.BD1080P.X264.AAC.Mandarin&English.CHS-ENG.mp4

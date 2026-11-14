@@ -1,4 +1,4 @@
-# 电视剧资源（180 条）
+# 电视剧资源（181 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3526,3 +3526,28 @@
       38.mp4
       39.mp4
       40.mp4
+
+- id: tv-150
+  title: "辐射"
+  category: 电视剧
+  tags: ["电视剧", "科幻", "冒险", "剧情", "废土", "辐射 Fallout"]
+  quark_url: "https://pan.quark.cn/s/25d77448b736"
+  description: "【第 1 季 · 共 8 集 · 全剧 2 季】改编自同名经典游戏，故事发生在核战爆发二百年后的美国废土。避难所居民一直在地底过着秩序井然的生活，直到一场变故把她推上地表，才发现阳光下是辐射、变异生物与各自为政的幸存者势力。剧集沿用游戏的世界观设定，动力装甲、避难所科技与废土美学都被完整搬上银幕，同时把视角放在一个从未见过战前世界的普通人身上，用她的困惑与选择带出旧世界的贪婪如何延续到新世界。动作场面与黑色幽默并重，节奏在公路冒险与势力博弈之间切换，第一季铺开世界观，第二季把各方冲突推向更复杂的局面。｜TMDB 8.1"
+  date: 2024-04-10
+  added: "2026-11-14 09:20"
+  image: tv-150.jpg
+  updated: 2026-11-14
+  files:
+    count: 8
+    size: "47.9 GB"
+    format: "MKV×8"
+    tree: |
+      150-辐射 (2024) 4K HDR & Dv/
+      Fallout.S01E01.The.End.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
+      Fallout.S01E02.The.Target.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
+      Fallout.S01E03.The.Head.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
+      Fallout.S01E04.The.Ghouls.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
+      Fallout.S01E05.The.Past.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
+      Fallout.S01E06.The.Trap.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
+      Fallout.S01E07.The.Radio.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
+      Fallout.S01E08.The.Beginning.2160p.AMZN.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-FLUX.mkv
