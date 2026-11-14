@@ -1914,6 +1914,14 @@
   date: 2018-08-24
   added: 2026-09-30
   image: mv-097.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.1 GB"
+    format: "MP4"
+    tree: |
+      097-网络谜踪.Searching (2018).HD1080P.英语中字/
+      网络谜踪.Searching (2018).HD1080P.英语中字.mp4
 
 - id: mv-098
   title: "战争之王"
@@ -1926,6 +1934,14 @@
   date: 2005-09-16
   added: 2026-09-30
   image: mv-098.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "2.6 GB"
+    format: "MP4"
+    tree: |
+      098-战争之王.Lord of War (2005).超清国英双语中英双字/
+      战争之王.Lord of War (2005).超清国英双语中英双字.mp4
 
 - id: mv-099
   title: "阿凡达：水之道"
@@ -1938,6 +1954,14 @@
   date: 2022-12-14
   added: 2026-09-30
   image: mv-099.jpg
+  updated: 2026-11-14
+  files:
+    count: 1
+    size: "6.7 GB"
+    format: "MKV"
+    tree: |
+      099-阿凡达：水之道 (2022) 2160p EAC3/
+      阿凡达：水之道 (2022) 2160p EAC3.mkv
 
 - id: mv-100
   title: "剪刀手爱德华"
