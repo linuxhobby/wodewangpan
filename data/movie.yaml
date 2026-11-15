@@ -2587,6 +2587,16 @@
   date: 2025-04-30
   added: 2026-09-30
   image: mv-132.jpg
+  updated: 2026-11-15
+  files:
+    count: 3
+    size: "2.2 GB"
+    format: "SRT×2 / MKV"
+    tree: |
+      132-雷霆特攻队.2025.BD.1080P.国英双语中字/
+      雷霆特攻队.2025.BD.1080P.国英双语中字_CHS_11413543.srt
+      雷霆特攻队.2025.BD.1080P.国英双语中字_CHS_11413898.srt
+      雷霆特攻队.2025.BD.1080P.国英双语中字.mkv
 
 - id: mv-133
   title: "十二怒汉"
@@ -2599,6 +2609,14 @@
   date: 1957-04-10
   added: 2026-09-30
   image: mv-133.jpg
+  updated: 2026-11-15
+  files:
+    count: 1
+    size: "2.6 GB"
+    format: "MKV"
+    tree: |
+      133-12怒汉.12 Angry Men.1957.BluRay.Criterion.Collection.720p.x264.AC3-CMCT/
+      12怒汉.12 Angry Men.1957.BluRay.Criterion.Collection.720p.x264.AC3-CMCT.mkv
 
 - id: mv-134
   title: "不列颠之战"
@@ -2611,6 +2629,14 @@
   date: 1969-09-15
   added: 2026-09-30
   image: mv-134.jpg
+  updated: 2026-11-15
+  files:
+    count: 1
+    size: "4.2 GB"
+    format: "MKV"
+    tree: |
+      134-不列颠之战.Battle.Of.Britain.1969.BluRay.720p.x264.AC3.2Audios-CMCT/
+      不列颠之战.Battle.Of.Britain.1969.BluRay.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-135
   title: "三岔口"
