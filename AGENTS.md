@@ -98,8 +98,10 @@ TG 推送的 caption 末尾固定一行「查询更多资源请联系 [小艾](h
 
 | 任务 | 节奏 | id |
 |---|---|---|
-| 我的网盘.资源推送 Telegram 频道 | 每 2 小时 `:22` | `4b3c64dc-f994-433d-94f3-dbd606e6aef1` |
-| 我的网盘.资源推送到 Bluesky | 每 2 小时 `:05` | `37f6dfb3-76c2-46d3-9352-8aa4202ba3af` |
+| 我的网盘.资源推送 Telegram 频道 | 每小时第 5 分钟（`BYMINUTE=5`，起点对齐） | `4b3c64dc-f994-433d-94f3-dbd606e6aef1` |
+| 我的网盘.资源推送到 Bluesky | 每小时第 10 分钟（`BYMINUTE=10`，起点对齐） | `37f6dfb3-76c2-46d3-9352-8aa4202ba3af` |
+
+调度口径（2026-11-15 核实，别再按「每 2 小时」描述）：两个任务都是 `FREQ=HOURLY;INTERVAL=1`，各自每小时发 1 条。WorkBuddy 调度器的 HOURLY 分支是「上次运行 + 1 小时」滚动（`computeHourlyNextRunAt` 只加 intervalHours，不按 BYHOUR/BYMINUTE 对齐），所以 `BYMINUTE` 仅用于界面显示和 validFrom 起点对齐，逐轮会随发帖耗时后移几十秒。要长期严格落在固定分钟，只能靠脚本层门控或系统计划任务，不要误以为是 rrule 在保证。
 
 ## 代码权威源
 
