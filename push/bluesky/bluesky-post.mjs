@@ -236,31 +236,6 @@ if (has('audit')) {
   process.exit(0);
 }
 
-// ---------- 单实例锁（防并发写同一份判重状态） ----------
-// 两个进程同时跑本脚本时，会各自读同一 posted.json、各发一条，后保存的覆盖先保存的，
-// 结果是「多发一条 + 丢掉另一条的判重记录」。互斥锁保证同一时刻只有一个发布进程。
-// --dry 不发送、不占锁；补发（--count N）与指定条目（--pick）同样受锁保护。
-const LOCK_FILE = path.join(os.tmpdir(), 'wodewangpan-bluesky-posting.lock'); // 状态目录禁止新建文件（EPERM），锁放临时目录
-const LOCK_STALE_MS = 10 * 60 * 1000; // 锁文件超过 10 分钟视为残留
-function acquireLock() {
-  // 返回 true=拿到锁，false=别的实例正在发，null=锁不可用（不阻断发布）
-  try {
-    if (Date.now() - fs.statSync(LOCK_FILE).mtimeMs < LOCK_STALE_MS) return false;
-    fs.unlinkSync(LOCK_FILE); // 残留锁
-  } catch {}
-  try { fs.writeFileSync(LOCK_FILE, String(process.pid)); return true; }
-  catch {
-    try { if (Date.now() - fs.statSync(LOCK_FILE).mtimeMs < LOCK_STALE_MS) return false; } catch {}
-    return null;
-  }
-}
-const lockState = DRY ? true : acquireLock();
-if (!DRY && lockState === false) {
-  console.log('× 另一个发帖进程正在运行，本次跳过（防并发重复发）');
-  process.exit(0);
-}
-if (!DRY && lockState === true) process.on('exit', () => { try { fs.unlinkSync(LOCK_FILE); } catch {} });
-
 const usedNow = new Set();
 const results = [];
 let sess = null;

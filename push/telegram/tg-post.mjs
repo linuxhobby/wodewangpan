@@ -313,35 +313,6 @@ if (!DRY && has('check') === false && (!TOKEN || !CHAT)) {
   process.exit(1);
 }
 
-// ---------- 单实例锁 ----------
-// posted.json 是唯一权威判重状态：两个进程同时跑会各读到同一份状态、各挑一条再各自写回，
-// 后写的把先写的记录覆盖掉，既重复发又丢判重记录。排他锁保证同一时刻只有一个发布进程。
-// 人工 --pick / --count 补发同样受锁保护；--dry 与 --check 不发送，不占锁。
-const PUSH_DIR = path.dirname(STATE_FILE);
-const LOCK_FILE = path.join(PUSH_DIR, 'tg-post.lock');
-
-function acquireLock() {
-  fs.mkdirSync(PUSH_DIR, { recursive: true });
-  const body = `${process.pid}\n${new Date().toISOString()}\n`;
-  const release = () => { try { fs.unlinkSync(LOCK_FILE); } catch {} };
-  try {
-    fs.writeFileSync(LOCK_FILE, body, { flag: 'wx' });
-  } catch {
-    let stale = true;
-    try { stale = Date.now() - fs.statSync(LOCK_FILE).mtimeMs > 10 * 60 * 1000; } catch { stale = true; }
-    if (!stale) {
-      let pid = '?';
-      try { pid = fs.readFileSync(LOCK_FILE, 'utf8').split('\n')[0].trim() || '?'; } catch {}
-      console.log(`× 另一个推送进程正在运行（pid ${pid}），本次跳过，避免重复发。`);
-      process.exit(0);
-    }
-    fs.writeFileSync(LOCK_FILE, body);
-  }
-  process.on('exit', release);
-}
-
-if (!DRY && !has('check')) acquireLock();
-
 let sess = null;
 if (!DRY) {
   try { sess = await tgCall('getMe', {}); }
