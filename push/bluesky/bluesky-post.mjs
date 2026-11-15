@@ -50,6 +50,8 @@ const WITH_SITE_LINK = !has('no-site-link');
 const EMBED = arg('embed', 'auto');
 // 测试发帖用：照常发送，但不写 posted.json（不计入累计、不影响判重）
 const NO_STATE = has('no-state');
+// 链接卡默认用条目海报当缩略图（thumb），--no-thumb 可关掉
+const NO_THUMB = has('no-thumb');
 
 // [沙箱兼容] 主机仍走 curl（行为完全不变）；沙箱内 curl 无法 spawn(ENOENT) 或 Schannel TLS 失败(exit 35)
 // 时自动退回 Node 内置 fetch。curl 只在传输层出错才非零退出（HTTP 4xx/5xx 仍返回响应体），所以兜底语义一致。
@@ -139,7 +141,7 @@ function tagsOf(it) {
   const extra = (it.tags || []).find((t) => t && t !== it.category);
   return `#网盘资源 #${it.category}${extra ? ` #${extra}` : ''}`;
 }
-function buildText(it) {
+function buildText(it, { compact = false } = {}) {
   const header = headerOf(it);
   const linkLines = [
     it.quark ? `夸克网盘：${it.quark}` : '',
@@ -154,6 +156,9 @@ function buildText(it) {
     const lines = withSite ? [siteLine, tgLine, ...linkLines] : [tgLine, ...linkLines];
     return `${header}\n${desc}${desc ? '\n\n' : '\n'}${lines.join('\n')}\n${tags}`;
   };
+
+  // 链接卡模式（compact）：标题和简介已由卡片展示，正文只留链接区与标签，避免整段重复
+  if (compact) return assemble('', false);
 
   const desc = (it.desc || '').trim();
   // 带详情行的骨架长度（desc 为空时那多出的 1 个换行由 budget 扣掉）
@@ -267,16 +272,17 @@ for (let n = 0; n < COUNT; n++) {
   const imgPathFull = imgPath(REPO, it);
   // [沙箱补丁] 沙箱内 existsSync 对已存在文件会误报 false（statSync 正常），改用 statSync 判定，避免漏发海报
   const hasImg = it.image && (() => { try { return fs.statSync(imgPathFull).isFile(); } catch { return false; } })();
-  const text = buildText(it);
+  const useCard = EMBED === 'external' || (EMBED === 'auto' && !hasImg);
+  // 链接卡模式：标题与简介已经由卡片展示，正文再写一遍就是重复（2026-11-15 指挥官反馈），所以正文只留链接区与标签
+  const text = buildText(it, { compact: useCard });
   const len = [...text].length;
   const alt = `${it.title}${it.category ? `（${it.category}）` : ''} 海报`;
 
   console.log(`\n——— 第 ${n + 1} 条 ———`);
-  const useCard = EMBED === 'external' || (EMBED === 'auto' && !hasImg);
   const card = useCard
     ? { uri: itemUrl(SITE_URL, it.id), title: headerOf(it), description: (it.desc || '').trim().slice(0, 150) }
     : null;
-  console.log(`id: ${it.id} | ${it.category} | ${it.title} | 图: ${hasImg && !useCard ? it.image : (useCard ? '（链接卡，不上传图片）' : '（无海报，纯文本帖）')} | 字数 ${len}/300`);
+  console.log(`id: ${it.id} | ${it.category} | ${it.title} | 图: ${useCard ? (hasImg && !NO_THUMB ? `（链接卡缩略图 ${it.image}）` : '（链接卡，无图）') : (hasImg ? it.image : '（无海报，纯文本帖）')} | 字数 ${len}/300`);
   if (pickedInfo) console.log(pickedInfo);
   console.log(text);
   console.log(`————————`);
@@ -294,8 +300,10 @@ for (let n = 0; n < COUNT; n++) {
   }
   try {
     let blob = null;
-    if (hasImg && !useCard) blob = await uploadBlob(sess.jwt, imgPathFull);
-    const r = await createPost({ did: sess.did, jwt: sess.jwt, text, blob, alt, external: card });
+    // 图片卡：上传海报作为正文大图；链接卡：上传海报作为卡片缩略图（thumb），--no-thumb 时跳过
+    if (hasImg && (!useCard || !NO_THUMB)) blob = await uploadBlob(sess.jwt, imgPathFull);
+    const cardPayload = card && blob ? { ...card, thumb: blob } : card;
+    const r = await createPost({ did: sess.did, jwt: sess.jwt, text, blob: useCard ? null : blob, alt, external: cardPayload });
     const url = bskyUrl(r.uri);
     if (!NO_STATE) {
       state.posted[it.id] = { ...baseRecord(it, text), uri: r.uri, cid: r.cid };
@@ -303,7 +311,7 @@ for (let n = 0; n < COUNT; n++) {
       state.history.push({ id: it.id, at: new Date().toISOString(), uri: r.uri });
     }
     console.log(`✓ 已发送 → ${url}${NO_STATE ? '（--no-state：测试帖，未写入 posted.json）' : ''}`);
-    results.push({ id: it.id, ok: true, url, uri: r.uri, embed: useCard ? 'external' : (blob ? 'images' : 'none'), noState: NO_STATE || undefined });
+    results.push({ id: it.id, ok: true, url, uri: r.uri, embed: useCard ? `external${cardPayload?.thumb ? '+thumb' : ''}` : (blob ? 'images' : 'none'), noState: NO_STATE || undefined });
   } catch (e) {
     console.log(`× 发送失败：${e.message}`);
     results.push({ id: it.id, ok: false, error: String(e.message).slice(0, 200) });
