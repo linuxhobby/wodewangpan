@@ -457,6 +457,13 @@ a.tag:hover { background: var(--brand-soft); }
 .qrbox__img { width: 100%; max-width: 150px; height: auto; aspect-ratio: 1 / 1; display: block; margin: 0 auto; }
 .qrbox__cap { font-size: var(--fs-sm); color: var(--muted); margin-top: 6px; }
 .qrbox__switch { display: flex; gap: 6px; margin-top: 8px; }
+/* 设备分流：二维码只服务「PC→手机」场景；触屏端（手机/平板）扫码是反操作，
+   点「打开转存」直接拉起网盘 App 才是正路，所以整块隐藏，主按钮放大成整行。
+   口径与 app.js 对 .share__hint 的触屏判定一致（hover:none + pointer:coarse） */
+@media (hover: none) and (pointer: coarse) {
+  .detail__media .qrbox { display: none; }
+  .linkrow .btn--primary { flex: 1 1 100%; padding: 10px 16px; font-size: var(--fs-md); text-align: center; }
+}
 
 .detail__main { flex: 1; min-width: 0; }
 /* 详情页同分类翻页：方向词与标题同一行，首尾缺的一侧整块不输出，单条时自然占满整行 */

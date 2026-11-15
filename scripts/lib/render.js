@@ -586,12 +586,18 @@ function linkRow(link) {
   const code = link.code
     ? `<span class="linkrow__code">提取码 <b>${esc(link.code)}</b><button class="btn btn--mini" type="button" data-copy="${esc(link.code)}">复制</button></span>`
     : '';
+  // 主 CTA：「打开转存」是唯一显眼按钮（btn--primary），复制降级为 mini 次级操作。
+  // 有提取码时点主按钮会先自动复制提取码再跳新标签页（app.js 的 data-open-code 分支），
+  // 省掉「点开链接 → 回头找提取码」的断点；data-ev 供转存点击埋点统计
+  const openAttrs =
+    ' data-ev="open"' +
+    (link.code ? ` data-open-code="${esc(link.code)}"` : '');
   return `<div class="linkrow">
   <span class="linkrow__name">${esc(link.name)}</span>
   <code class="linkrow__url">${esc(link.url)}</code>
   ${code}
-  <a class="btn" href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">打开</a>
-  <button class="btn btn--primary" type="button" data-copy="${esc(link.url)}">复制链接</button>
+  <a class="btn btn--primary" href="${esc(link.url)}" target="_blank" rel="noopener noreferrer"${openAttrs}>打开转存</a>
+  <button class="btn btn--mini" type="button" data-copy="${esc(link.url)}">复制链接</button>
 </div>`;
 }
 

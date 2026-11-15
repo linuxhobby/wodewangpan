@@ -213,6 +213,21 @@ import { esc, tileHtml } from './card.js';
   // 拉取浏览量（/stats.json），覆盖首屏静态卡片 + 详情页占位
   loadStats();
 
+  // 转存点击埋点：GET/POST /hit?e=<事件>&id=<资源id>，nginx return 204 并记入 access.log，
+  // sitestats.py 的 /hit?e= 分支落 event 表（与 UV 信标同一个端点，不用加 nginx 配置）。
+  // open=点开转存 / copy=复制链接或提取码 / qr=切换扫码按钮。
+  // 只在详情页有资源 id（#stat-views）时上报；失败静默，绝不影响转存主流程
+  function track(ev) {
+    var el = document.getElementById('stat-views');
+    var id = el && el.getAttribute('data-res-id');
+    if (!id) return;
+    var url = '/hit?e=' + encodeURIComponent(ev) + '&id=' + encodeURIComponent(id);
+    try {
+      if (navigator.sendBeacon) navigator.sendBeacon(url);
+      else fetch(url, { keepalive: true }).catch(function () {});
+    } catch (e) { /* ignore */ }
+  }
+
   // 触屏端只隐藏二维码那一行（扫码分享在手机上没意义）；「复制资源信息」必须留着——
   // 复制粘贴是资源包文本最可靠的落地方式
   if (navigator.share && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
@@ -287,11 +302,24 @@ import { esc, tileHtml } from './card.js';
     var copyBtn = e.target.closest('[data-copy]');
     if (copyBtn) {
       copyPacket(copyBtn, copyBtn.getAttribute('data-copy'), copyBtn.getAttribute('data-poster'));
+      // 只有转存区的复制算「转存意向」；分享面板的「复制资源信息」是传播行为，不混进同一指标
+      if (copyBtn.closest('.linkrow')) track('copy');
       return;
+    }
+
+    // 「打开转存」主按钮（render.js linkRow）：记一次 open 埋点；
+    // 带提取码的链接先在同一手势里自动复制提取码，再放行默认跳转（新标签页）——
+    // 消掉「点开链接 → 回头找提取码」的流失断点。不 preventDefault、不 return，锚点照常跳
+    var openLink = e.target.closest('a[data-ev="open"]');
+    if (openLink) {
+      track('open');
+      var openCode = openLink.getAttribute('data-open-code');
+      if (openCode) plainCopy(openCode, function () { flash(openLink, '提取码已复制'); });
     }
 
     var qrBtn = e.target.closest('.qrbtn');
     if (qrBtn) {
+      track('qr');
       var img = document.getElementById('qrImg');
       var cap = document.getElementById('qrCap');
       if (img) img.src = qrBtn.getAttribute('data-qr');

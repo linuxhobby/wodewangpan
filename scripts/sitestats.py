@@ -40,6 +40,9 @@ SKIP_PATH_RE = re.compile(
 VID_RE = re.compile(r'^[A-Za-z0-9_-]{8,64}$')
 # 资源详情页 /resource/<id>/：仅对这一类做按资源聚合（其余页面不进 page 表）
 RES_RE = re.compile(r'^/resource/([^/]+)/?$')
+# 转存点击埋点：/hit?e=<事件>&id=<资源id>（app.js 的 track() 发出），事件名白名单防日志噪音
+HIT_EV_RE = re.compile(r'^/hit\?e=([a-z]{1,16})&id=([A-Za-z0-9_-]{1,64})$')
+EV_NAMES = {'open', 'copy', 'qr'}
 
 
 def log(msg):
@@ -55,7 +58,8 @@ def connect():
            CREATE TABLE IF NOT EXISTS daily(d TEXT PRIMARY KEY, pv INTEGER DEFAULT 0);
            CREATE TABLE IF NOT EXISTS daily_uv(d TEXT, fp TEXT, PRIMARY KEY(d, fp));
            CREATE TABLE IF NOT EXISTS page_pv(id TEXT, day TEXT, pv INTEGER DEFAULT 0, PRIMARY KEY(id, day));
-           CREATE TABLE IF NOT EXISTS page_uv(id TEXT, day TEXT, fp TEXT, PRIMARY KEY(id, day, fp));'''
+           CREATE TABLE IF NOT EXISTS page_uv(id TEXT, day TEXT, fp TEXT, PRIMARY KEY(id, day, fp));
+           CREATE TABLE IF NOT EXISTS event(ev TEXT, id TEXT, day TEXT, fp TEXT, PRIMARY KEY(ev, id, day, fp));'''
     )
     return c
 
@@ -109,6 +113,8 @@ def parse_raw(line):
         'fp': fingerprint(ip, ua, vid),
         'method': method,
         'path': path.split('?', 1)[0],
+        # 原始请求目标（含 query）：/hit 埋点靠它区分事件
+        'raw': path,
     }
 
 
@@ -120,9 +126,18 @@ def ingest(c, lines):
             continue
         day, ts, fp, method, path = r['day'], r['ts'], r['fp'], r['method'], r['path']
 
-        # /hit：页面 JS 种完 cookie 后回发的确认信标，只用于补记首访 UV，不计入 PV
+        # /hit：页面 JS 种完 cookie 后回发的确认信标，只用于补记首访 UV，不计入 PV。
+        # 带 ?e=<事件>&id=<资源> 的变体是转存点击埋点（open/copy/qr，白名单外的丢弃），
+        # 同样不计 PV，按 (事件, 资源, 日, 访客指纹) 去重进 event 表——
+        # 同一访客一天对同一资源点 100 次也只算 1 人
         if path == '/hit':
             mark_visitor(c, day, fp, ts)
+            m = HIT_EV_RE.match(r.get('raw') or '')
+            if m and m.group(1) in EV_NAMES:
+                c.execute(
+                    'INSERT OR IGNORE INTO event(ev,id,day,fp) VALUES(?,?,?,?)',
+                    (m.group(1), m.group(2), day, fp),
+                )
             continue
 
         if method not in ('GET', 'HEAD') or SKIP_PATH_RE.search(path):
@@ -170,6 +185,13 @@ def write_stats(c):
         key=lambda x: x['pv'], reverse=True,
     )[:20]
 
+    # 转存点击漏斗：ev = 按事件汇总的去重人数；evres = 事件×资源细分。
+    # 与 page_uv 的 pv 相除即「浏览 → 转存」转化率，找瓶颈用
+    ev = {e: n for e, n in c.execute('SELECT ev, COUNT(*) FROM event GROUP BY ev')}
+    evres = {}
+    for e, rid, n in c.execute('SELECT ev, id, COUNT(*) FROM event GROUP BY ev, id'):
+        evres.setdefault(e, {})[rid] = n
+
     data = {
         'pv': pv,
         'uv': uv,
@@ -178,6 +200,8 @@ def write_stats(c):
         'since': since or today,
         'res': res,
         'top': top,
+        'ev': ev,
+        'evres': evres,
         'updated': datetime.now(TZ).isoformat(timespec='seconds'),
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -214,7 +238,7 @@ def main():
 
     c = connect()
     if a.reset:
-        c.executescript('DELETE FROM meta; DELETE FROM visitors; DELETE FROM daily; DELETE FROM daily_uv; DELETE FROM page_pv; DELETE FROM page_uv;')
+        c.executescript('DELETE FROM meta; DELETE FROM visitors; DELETE FROM daily; DELETE FROM daily_uv; DELETE FROM page_pv; DELETE FROM page_uv; DELETE FROM event;')
         log('已清空历史统计')
         # 重置后默认从「此刻」起算：游标直接跳到当前日志末尾，不回填已有日志
         if not a.backfill and os.path.exists(LOG):
