@@ -14,7 +14,7 @@ version: "1.2"
 |---|---|
 | 凭据 | `push/bluesky/wodewangpan-bluesky.env`（`BLUESKY_IDENTIFIER` / `BLUESKY_APP_PASSWORD` / `BLUESKY_PDS` / `REPO` / `SITE_URL`）——**本机专用，绝不进 git，也不要打印到对话**。2026-11-12 随仓库重构迁入 `push/bluesky/`，脚本查找顺序：同目录 → `~/.workbuddy/`（老环境回退） |
 | 已发记录 | `~/.workbuddy/bluesky-posts/posted.json` —— 去重唯一依据，**勿删**，删了会重发 |
-| 数据源 | `C:/Users/marco/Github/wodewangpan` 的 `data/*.yaml`（id / title / category / **quark_url** / **baidu_url + baidu_code** / description / date / image） |
+| 数据源 | `C:/Users/marco/Github/wodewangpan` 的 `data/*.yaml`（id / title / category / **quark_url** / **baidu_url + baidu_pwd** / description / date / image） |
 | 图片 | `static/images/<slug>/<image>`（2026-11-15 起站点配图按分类 slug 分子目录，mv→movie、tv→tv、dc→documentary、an→anime、game→game、app→software、bk→ebook、cs→course、ot→misc；脚本已适配，`common.mjs` 的 `imgPath` 带 flat 回退），全部 < 260KB（Bluesky blob 上限 1MB，目前无压缩需求） |
 
 ## 用法
@@ -44,7 +44,7 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 
 **无海报条目照发**（用户 2026-10-06 要求）：站里有 52 条软件类老条目没有 `image` 字段，默认**照样发**，只是不带图（纯文本帖：文字 + 链接 + 标签）。想只发带图的加 `--require-image`。
 
-- 百度链接覆盖率（2026-10-24 实测）：全站 795 条里 **623 条有** `baidu_url` + `baidu_code`，**172 条没有**（约占 21.6%，主要是 2026-10-19 之后新增的动漫 / 电影 / 电视剧 / 纪录片 / 电子书 / 操作系统 / 其他批次，以及 `mv-335`、`tv-129` 等老条目）。缺 `baidu_url` 的条目**只发夸克行，这是预期行为**，不是脚本 bug；核对前先 `grep baidu_url data/*.yaml` 或直接读该条目，别按「只有 3 条例外」的旧结论判定失败。
+- 百度链接覆盖率（2026-10-24 实测）：全站 795 条里 **623 条有** `baidu_url` + `baidu_pwd`，**172 条没有**（约占 21.6%，主要是 2026-10-19 之后新增的动漫 / 电影 / 电视剧 / 纪录片 / 电子书 / 操作系统 / 其他批次，以及 `mv-335`、`tv-129` 等老条目）。缺 `baidu_url` 的条目**只发夸克行，这是预期行为**，不是脚本 bug；核对前先 `grep baidu_url data/*.yaml` 或直接读该条目，别按「只有 3 条例外」的旧结论判定失败。
 - `--audit` 可打印不可发条目的原因分布，排查用。
 
 **默认 `latest`：最新入库优先**（用户 2026-11-15 要求）。读全站 `data/*.yaml` 的 `added`，按时间倒序取还没发过的第一条；`added` 相同（同一批入库）时按 id 数值倒序。新资源一入库就排到队首、下一轮优先发，不会压在几百条老资源后面。`added` 覆盖率 100%（现 1040 条），格式 `YYYY-MM-DD` 或 `YYYY-MM-DD HH:MM`，字符串倒序即时间倒序。全部发完报「没有新条目可发」并停止。
@@ -87,7 +87,8 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 - 2026-11-12 版式：`订阅TG` 行固定在链接区**第一行**，指向 TG 订阅号 `@myquark`；替换掉 11-10 加的
   `加入TG群组：https://t.me/wodewangpantop`。所有链接统一保留 `https://` 前缀（facet 直接可点）。
 - 上限 300 graphemes。放不下时**只砍简介，绝不动链接**；简介额度被压到 60 字以下（`MIN_DESC`）就先让出「详情」行，把额度还给简介 —— 两条网盘链接、订阅TG 行和标签永远保留，URL 永不截断。
-- 百度行只在条目**有** `baidu_url` 时出现（2026-10-24：795 条里 623 条有，缺的不补发百度行）；有 `baidu_code` 就紧跟一个 `（提取码 xxxx）`，没有就只给链接。
+- 百度行只在条目**有** `baidu_url` 时出现（2026-10-24：795 条里 623 条有，缺的不补发百度行）；有 `baidu_pwd` 就紧跟一个 `（提取码 xxxx）`，没有就只给链接。
+- **字段名坑（2026-11-15 修）**：站点 `data/*.yaml` 里提取码字段叫 `baidu_pwd`（588 条全部如此，没有 `baidu_code`）。`push/common.mjs` 原来只读 `baidu_code`，导致百度行长期丢提取码；现改为 `baidu_code || baidu_pwd`，两个名字都认。核对时以 `baidu_pwd` 为准。
 - 图片走 `app.bsky.embed.images`，**alt 文本**写「标题（分类） 海报」；
 - URL 与话题标签都生成 **richtext facet**（`byteStart/byteEnd` 用 UTF-8 字节算），所以在客户端是可点的蓝链接，不是纯文本；
 - `--dry` 会把每个链接 facet 的 URI 单独打出来，改文案后值得扫一眼，确认没有多吞字符；

@@ -94,7 +94,7 @@ export function parseYaml(file) {
       category: get('category') || '',
       quark: get('quark_url') || '',
       baidu: get('baidu_url') || '',
-      baiduCode: get('baidu_code') || '',
+      baiduCode: get('baidu_code') || get('baidu_pwd') || '', // 站点数据实际用 baidu_pwd（2026-11-15 核对 588 条全部如此）
       desc: get('description') || '',
       date: get('date') || '',
       added: get('added') || '',
