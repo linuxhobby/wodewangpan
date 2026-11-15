@@ -136,10 +136,27 @@ function headerOf(it) {
   const year = (it.date || '').slice(0, 4);
   return `【${it.category}】${it.title}${year ? `（${year}）` : ''}`;
 }
-/** 第三个标签取数据里第一个非分类标签（如 ["电影","动作",…] → 动作），取不到就只留两个标签 */
+/**
+ * 资源名做标签（2026-11-15 指挥官定）：去括号内容 → 砍掉空格连字符/竖线后的副标题 → 砍掉中文逗号后的解释 →
+ * 只留字母数字（含中文）→ 最多 14 个字符。目的：让 `#资源名` 短到能读、能点，又不至于半个词断尾。
+ */
+function tagOfTitle(it) {
+  const s = String(it.title || '')
+    .replace(/[（(][^）)]*[）)]/g, '')
+    .replace(/\s+[-—–|｜]\s+.*$/, '')
+    .replace(/[，。；！？,;!?].*$/, '')
+    .replace(/[^\p{L}\p{N}]/gu, '');
+  return [...s].slice(0, 14).join('');
+}
+/**
+ * 三个标签（2026-11-15 指挥官定）：#资源名 #分类 #网盘。
+ * 资源名取标题清洗后的结果（可与分类重名，重名时自动去重后只剩两个）；网盘标签按条目实际有的链接走。
+ */
 function tagsOf(it) {
-  const extra = (it.tags || []).find((t) => t && t !== it.category);
-  return `#网盘资源 #${it.category}${extra ? ` #${extra}` : ''}`;
+  const cat = String(it.category || '').replace(/[^\p{L}\p{N}]/gu, '');
+  const netTag = it.quark ? '#夸克网盘' : (it.baidu ? '#百度网盘' : '');
+  const parts = [`#${tagOfTitle(it) || cat}`, cat ? `#${cat}` : '', netTag].filter(Boolean);
+  return [...new Set(parts)].join(' ');
 }
 function buildText(it, { compact = false } = {}) {
   const header = headerOf(it);
