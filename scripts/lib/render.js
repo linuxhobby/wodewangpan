@@ -474,10 +474,12 @@ function listDataScript({ indexAll, activeCat, pageSize }) {
 /** 分区而不排一条大列表：否则电影这类大分类占满首屏，小分类永远沉底看不见 */
 function homePage(ctx) {
   const { site, items, categories, total, pageSize, images, baseUrl, indexAll, shareImage, byCat } = ctx;
-  // 首页 SEO 文案取自 site.yaml 的 homeTitle / homeDesc / homeH1，占位符 {total}、{categories}
+  // 首页 SEO 文案取自 site.yaml 的 homeTitle / homeDesc / homeH1；{categories} = 分类列表。
+  // {total} 已废弃并静默丢弃：资源数每天变，写进 title / description / OG 会让分享卡与
+  // 搜索快照长期缓存过期数字（2026-11-15 定）。页面正文里的计数仍实时渲染。
   const homeTitle = site.homeTitle || site.title;
   const homeDesc = String(site.homeDesc || site.description)
-    .replace(/\{total\}/g, total)
+    .replace(/\{total\}/g, '')
     .replace(/\{categories\}/g, (categories || []).join('、'));
   const homeH1 = site.homeH1 || '全部资源';
 
@@ -512,7 +514,7 @@ ${noscriptHome(groups)}
 ${listDataScript({ indexAll, activeCat: '', pageSize })}`;
 
   return {
-    title: `${homeTitle}（${total} 项）`,
+    title: homeTitle,
     description: homeDesc,
     body,
     canonicalPath: '/',
@@ -563,7 +565,7 @@ ${listDataScript({ indexAll, activeCat, pageSize })}`;
 
   return {
     title: activeCat,
-    description: `${activeCat}资源合集，共 ${items.length} 个，夸克/光鸭云盘链接，扫码即存`,
+    description: `${activeCat}资源合集，夸克/光鸭云盘链接，扫码即存`,
     body,
     canonicalPath: catHref(activeCat),
     ogImage: (images.get(items[0]?.id) || {}).og || firstImg,
@@ -1116,8 +1118,8 @@ ${p === 1 ? tagCloudHtml(tags) : ''}
     title,
     description:
       p > 1
-        ? `${site.title}全部资源索引第 ${p} 页（共 ${pages} 页），${total} 个网盘资源按分类排列`
-        : `${site.title}全部 ${total} 个资源的完整索引，按${(categories || []).join('、')}分类分页排列，直达所有资源详情页`,
+        ? `${site.title}全部资源索引第 ${p} 页，网盘资源按分类排列`
+        : `${site.title}全部资源的完整索引，按${(categories || []).join('、')}分类分页排列，直达所有资源详情页`,
     activeCat: '',
     body,
     canonicalPath,
@@ -1255,7 +1257,7 @@ ${tagCloudHtml(tags, key)}`;
     title: pageName,
     description:
       fill(meta?.desc) ||
-      `带「${label}」标签的网盘资源共 ${count} 个${topCats.length ? `，以${topCats.join('、')}为主` : ''}，打开即用，扫码即存`,
+      `带「${label}」标签的网盘资源${topCats.length ? `，以${topCats.join('、')}为主` : ''}，打开即用，扫码即存`,
     activeCat: '',
     body,
     canonicalPath,
@@ -1387,10 +1389,10 @@ ${cards}
   return layout({
     ...ctx,
     title: '标签索引',
-    description: `${site.title}标签索引：${tags.length} 个标签（${tags
+    description: `${site.title}标签索引（${tags
       .slice(0, 6)
       .map((t) => t.label)
-      .join('、')}等），按题材与平台浏览 ${total} 个网盘资源`,
+      .join('、')}等），按题材与平台浏览网盘资源`,
     activeCat: '',
     body,
     canonicalPath: '/tags/',

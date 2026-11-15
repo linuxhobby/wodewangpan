@@ -382,6 +382,10 @@ ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
 - lastmod 优先级 `updated > added > date`，JSON-LD `dateModified` 同口径。
 - 联盟链接已是 `rel="sponsored noopener noreferrer"`，规范状态，不要改成 nofollow。
 - 每日 GSC「请求编入」限额约 10 条，属人工操作，agent 可在日报里提醒，不要代刷。
+- 对外 SEO 文案（`<title>` / meta description / OG / Twitter / RSS description）不写资源总数、
+  标签数这类动态数字：每天入库都会变，站外分享卡与搜索快照会长期缓存过期值（2026-11-15 定）。
+  数量只在页面正文里实时渲染；`config/site.yaml` 的 `{total}` 已废弃，`config/tags.yaml` 的
+  `{count}` 只留给页面可见文案。
 
 ## 8. 配图（海报）获取规范
 

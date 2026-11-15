@@ -481,7 +481,7 @@ for (const cat of categories) {
       categories: [cat],
       feedPath: catFeedHref(cat),
       title: `${site.title} · ${cat}`,
-      description: `${site.title}的${cat}分类，共 ${list.length} 个资源`,
+      description: `${site.title}的${cat}分类，最新入库的网盘资源`,
     })
   );
 }

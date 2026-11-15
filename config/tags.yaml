@@ -22,12 +22,13 @@ tagOverlapMax: 0.8
 tagOverlapMinSize: 10
 
 # 给指定标签单独写文案，用于与分类页高度重合的标签——两页得有各自的切入点，否则会被当成同一份内容只留一个。
-# 支持 {count} 占位符（该标签下的资源数），别手写数字，数据一变就失真。没配的沿用 tagPage() 通用文案。
+# title / desc 是对外 SEO 文案，不写 {count} 也不手写数量：资源数每天变，站外分享卡与搜索快照
+# 会缓存过期数字。{count} 只留给页面可见文案（如 h1）。没配的沿用 tagPage() 通用文案。
 tagMeta:
   macOS:
-    title: Mac 专属软件与游戏资源（{count} 个）
+    title: Mac 专属软件与游戏资源
     h1: Mac 专属资源
-    desc: 按「有没有 Mac 版」筛过的一批：{count} 个 macOS 资源，主要是 Mac 专属软件，另有少量支持 Mac 的游戏。夸克网盘直链，打开即用、扫码即存。
+    desc: 按「有没有 Mac 版」筛过的一批 macOS 资源，主要是 Mac 专属软件，另有少量支持 Mac 的游戏。夸克网盘直链，打开即用、扫码即存。
 
 # 明知与分类页高度重合、但仍要建页的标签：写进来 = 承认这个重合，构建不再为它告警，其余标签继续盯。
 # 与 tagExclude 别混：tagExclude = 不建页（标签不可点）；tagOverlapAllow = 建页，只是不再提醒。
