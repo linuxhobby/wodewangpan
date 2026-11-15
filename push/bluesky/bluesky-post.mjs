@@ -1,19 +1,20 @@
 #!/usr/bin/env node
 // push/bluesky/bluesky-post.mjs —— Bluesky 平台适配层。
-// 把 wodewangpan 资源站的一条资源发到 Bluesky：海报图（embed images）+ 夸克/百度分享链接 + 简介。
+// 把 wodewangpan 资源站的一条资源发到 Bluesky：默认发详情页链接卡（带海报缩略图）+ 夸克/百度分享链接 + 三标签。
 // 素材全部来自仓库：static/images/<image>、data/<分类>.yaml 的 title/description/quark_url/baidu_url。
 // 读数据、判重、选片共用 ../common.mjs；本文件只留文案渲染与 AT Protocol 收发。
 //
 // 用法：
 //   node bluesky-post.mjs --dry            # 只打印待发文案与选中条目，不发帖
-//   node bluesky-post.mjs                  # 发一条（默认 weighted 加权随机选分类，绝不重复已发过的）
+//   node bluesky-post.mjs                  # 发一条（默认 latest 最新入库优先，绝不重复已发过的）
 //   node bluesky-post.mjs --count 3        # 一次发 3 条（补发用）
 //   node bluesky-post.mjs --pick mv-248    # 指定条目（--pick 可重复，忽略已发记录）
 //   node bluesky-post.mjs --strategy latest|weighted|random|rotate   # 默认 latest：按 added 倒序，新入库优先
 //   node bluesky-post.mjs --no-site-link   # 正文不带站点详情页链接
 //   node bluesky-post.mjs --with-site-link # 正文带站点详情页链接（默认带）
-//   node bluesky-post.mjs --embed auto|image|external  # auto（默认）：有海报发图、无海报发详情页链接卡；
-//                                                      # image 强制图片；external 强制链接卡（不发图）
+//   node bluesky-post.mjs --embed external|image|auto  # external（默认）：详情页链接卡 + 海报缩略图；
+//                                                      # image 大图图片卡（旧版式）；auto 有海报发图、无海报发链接卡
+//   node bluesky-post.mjs --no-thumb       # 链接卡不带缩略图（默认带条目海报）
 //   node bluesky-post.mjs --no-state       # 测试用：照常发帖，但不写 posted.json（不计入判重）
 //   node bluesky-post.mjs --audit          # 打印不可发条目的原因分布
 //
@@ -46,8 +47,9 @@ const STRATEGY = arg('strategy', 'latest'); // latest（默认）| weighted | ro
 const PICKS = collectPicks();
 const WITH_SITE_LINK = !has('no-site-link');
 // 2026-11-15 指挥官提问后加：Bluesky 的 PDS 不会自己抓站点 OG，要让帖子出链接卡必须显式发 external embed。
-// auto（默认）：有海报发图片，无海报发详情页链接卡；image：强制图片；external：强制链接卡（测试用）。
-const EMBED = arg('embed', 'auto');
+// external（默认，2026-11-15 指挥官定版）：发详情页链接卡 + 条目海报当缩略图，正文走精简版式；
+// image：强制大图图片卡（旧版式，简介写在正文）；auto：有海报发图片、无海报发链接卡（历史兼容）。
+const EMBED = arg('embed', 'external');
 // 测试发帖用：照常发送，但不写 posted.json（不计入累计、不影响判重）
 const NO_STATE = has('no-state');
 // 链接卡默认用条目海报当缩略图（thumb），--no-thumb 可关掉

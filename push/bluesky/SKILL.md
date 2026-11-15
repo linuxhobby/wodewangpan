@@ -26,7 +26,10 @@ node push/bluesky/bluesky-post.mjs --count 3          # 补发多条
 node push/bluesky/bluesky-post.mjs --pick mv-248      # 指定条目（可重复传，忽略已发记录）
 node push/bluesky/bluesky-post.mjs --strategy latest|weighted|rotate|random   # 默认 latest（按 added 倒序，新入库优先）
 node push/bluesky/bluesky-post.mjs --no-site-link     # 正文不带站点详情页链接
-node push/bluesky/bluesky-post.mjs --require-image    # 只发有海报的（默认无海报也发，纯文本帖）
+node push/bluesky/bluesky-post.mjs --embed image|external|auto   # 默认 external（链接卡）；image 大图；auto 按有无海报
+node push/bluesky/bluesky-post.mjs --no-thumb          # 链接卡不带海报缩略图
+node push/bluesky/bluesky-post.mjs --no-state          # 测试发帖：不发 posted.json
+node push/bluesky/bluesky-post.mjs --require-image    # 只发有海报的（默认无海报也发）
 node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的原因分布，排查去重用
 ```
 
@@ -42,7 +45,7 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 
 发过的每条都在 `~/.workbuddy/bluesky-posts/posted.json` 留标记 `{at, uri, cid, category, title, titleNorm, quark, baidu, text}`；老记录缺字段时脚本启动自动回填（`quark` / `baidu` / `titleNorm` 都会补），不留缺口。
 
-**无海报条目照发**（用户 2026-10-06 要求）：站里有 52 条软件类老条目没有 `image` 字段，默认**照样发**，只是不带图（纯文本帖：文字 + 链接 + 标签）。想只发带图的加 `--require-image`。
+**无海报条目照发**（用户 2026-10-06 要求）：站里有 52 条软件类老条目没有 `image` 字段，默认**照样发**。链接卡模式下就发一张不带缩略图的卡片（标题 + 简介 + 域名），正文版式不变。想只发带图的加 `--require-image`。
 
 - 百度链接覆盖率（2026-10-24 实测）：全站 795 条里 **623 条有** `baidu_url` + `baidu_pwd`，**172 条没有**（约占 21.6%，主要是 2026-10-19 之后新增的动漫 / 电影 / 电视剧 / 纪录片 / 电子书 / 操作系统 / 其他批次，以及 `mv-335`、`tv-129` 等老条目）。缺 `baidu_url` 的条目**只发夸克行，这是预期行为**，不是脚本 bug；核对前先 `grep baidu_url data/*.yaml` 或直接读该条目，别按「只有 3 条例外」的旧结论判定失败。
 - `--audit` 可打印不可发条目的原因分布，排查用。
@@ -91,7 +94,7 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 - 上限 300 graphemes。放不下时**只砍简介，绝不动链接**；简介额度被压到 60 字以下（`MIN_DESC`）就先让出「详情」行，把额度还给简介 —— 两条网盘链接、订阅TG 行和标签永远保留，URL 永不截断。
 - 百度行只在条目**有** `baidu_url` 时出现（2026-10-24：795 条里 623 条有，缺的不补发百度行）；有 `baidu_pwd` 就紧跟一个 `（提取码 xxxx）`，没有就只给链接。
 - **字段名坑（2026-11-15 修）**：站点 `data/*.yaml` 里提取码字段叫 `baidu_pwd`（588 条全部如此，没有 `baidu_code`）。`push/common.mjs` 原来只读 `baidu_code`，导致百度行长期丢提取码；现改为 `baidu_code || baidu_pwd`，两个名字都认。核对时以 `baidu_pwd` 为准。
-- **链接卡（OG 卡）**：Bluesky 的 PDS **不会**自己抓站点 OG，纯文本里的链接不会自动变卡片。要出卡片必须显式发 `app.bsky.embed.external`，`uri/title/description` 全由脚本填。`--embed auto`（默认）有海报发图片卡、无海报发详情页链接卡；`--embed external` 强制链接卡；`--embed image` 强制图片卡。一条帖只能有一个 embed，图片卡与链接卡不能同时要。
+- **链接卡（OG 卡）**：Bluesky 的 PDS **不会**自己抓站点 OG，纯文本里的链接不会自动变卡片。要出卡片必须显式发 `app.bsky.embed.external`，`uri/title/description` 全由脚本填。**`--embed external` 是 2026-11-15 起的默认形态**（每轮自动发布都走这个）；`--embed image` 可切回大图图片卡（旧版式）；`--embed auto` 为历史兼容（有海报发图片、无海报发链接卡）。一条帖只能有一个 embed，图片卡与链接卡不能同时要。
 - **链接卡模式正文会自动精简**（2026-11-15 指挥官第三版，`--embed external` 生效）：标题与简介交给卡片，正文只写
   `【分类】标题，关注更多资源，请加入：` + `TG群` + `TG订阅号` + `夸克/百度网盘（点击保存）` + 三个标签，
   **不写简介、不写详情行**，字数 150~220 之间。两处固定留空行（2026-11-15 指挥官定，把引流区、资源区、标签区分开）：`TG订阅号` 之后、第一条网盘链接之前；最后一条网盘链接之后、标签之前。形如：
