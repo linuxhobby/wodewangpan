@@ -89,24 +89,23 @@ TG 推送的 caption 末尾固定一行「查询更多资源请联系 [小艾](h
 
 判重状态文件在**本机**、不在本仓库，删了会重复发：
 
-- `~/.qwenworkcn/telegram-posts/posted.json`
-- `~/.qwenworkcn/bluesky-posts/posted.json`
+- `~/.workbuddy/telegram-posts/posted.json`
+- `~/.workbuddy/bluesky-posts/posted.json`
 
-定时任务（QwenWork 调度，不在仓库里）：
+定时任务（WorkBuddy 自动化调度，不在仓库里）：
 
 | 任务 | 节奏 | id |
 |---|---|---|
-| 我的网盘.资源推送 Telegram 频道 | 每小时 `:40`，漏跑 `skip` | `21a463d6-ea25-43c1-9c4b-32327b0262ff` |
-| 我的网盘.资源推送到 Bluesky | 每小时 `:10` | `f9355e9c-86ed-424a-a286-2731684d7578` |
+| 我的网盘.资源推送 Telegram 频道 | 每 2 小时 `:22` | `51e21bf5-8b1f-45ca-aa56-522bcda46d40` |
+| 我的网盘.资源推送到 Bluesky | 每小时 `:10` | `25d00687-711a-4667-b156-2baea8ad61c6` |
 
 ## 代码权威源
 
-**本仓库是唯一实现**。定时任务 prompt 若仍指向 `telegram-push/`、`bluesky-push/` 旧路径
-（以及 `~/.qwenworkcn/skills/` 里的转发壳）都已失效，应改成上表的 `push/...` 路径。
+**本仓库是唯一实现**。定时任务 prompt 若仍指向 `telegram-push/`、`bluesky-push/` 旧路径，都已失效，应改成上表的 `push/...` 路径。
 
-- 凭据查找顺序：脚本**同目录**的 `*.env` → `~/.qwenworkcn/*.env` → `~/.workbuddy/*.env`（老环境回退）。
+- 凭据查找顺序：脚本**同目录**的 `*.env` → `~/.workbuddy/*.env`（老环境回退）。
   所以本仓库里的 `push/telegram/wodewangpan-tg.env`、`push/bluesky/wodewangpan-bluesky.env` 是**现役凭据**。
-- `posted.json` 判重记录**永远留在本机** `~/.qwenworkcn/{telegram,bluesky}-posts/`，不进 git、不搬仓库：
+- `posted.json` 判重记录**永远留在本机** `~/.workbuddy/{telegram,bluesky}-posts/`，不进 git、不搬仓库：
   复制或搬走会让已发过的资源重复发布。
 - 飞书反馈凭据在 `bot/config.json` 的 `feishu.tg`（也可用 `FEISHU_TG_APP_ID/APP_SECRET` 或
   `~/.workbuddy/feishu-app-tg.json` 覆盖）；专用通道缺凭据直接判失败，不回退默认应用。

@@ -30,11 +30,10 @@ export const collectPicks = () => process.argv.reduce(
 );
 
 // ---------- 凭据 ----------
-// 查找顺序：调用脚本同目录的 <envName> → ~/.qwenworkcn（迁移前老位置）→ ~/.workbuddy（更老环境回退）。
+// 查找顺序：调用脚本同目录的 <envName> → ~/.workbuddy（唯一权威，2026-11-14 迁移完成）。
 export function findEnvFile(callerUrl, envName) {
   return firstPresent(
     path.join(path.dirname(fileURLToPath(callerUrl)), envName),
-    path.join(HOME, '.qwenworkcn', envName),
     path.join(HOME, '.workbuddy', envName),
   );
 }
@@ -59,7 +58,6 @@ export function loadEnv(callerUrl, envName) {
 // posted.json 是现网判重状态，永远留在本机 home、不进 git、不搬仓库（复制会导致重复发）。
 export function findStateFile(dir, file = 'posted.json') {
   return firstPresent(
-    path.join(HOME, '.qwenworkcn', dir, file),
     path.join(HOME, '.workbuddy', dir, file),
   );
 }

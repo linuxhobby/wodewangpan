@@ -12,8 +12,8 @@ version: "1.2"
 
 | 项 | 位置 |
 |---|---|
-| 凭据 | `push/bluesky/wodewangpan-bluesky.env`（`BLUESKY_IDENTIFIER` / `BLUESKY_APP_PASSWORD` / `BLUESKY_PDS` / `REPO` / `SITE_URL`）——**本机专用，绝不进 git，也不要打印到对话**。2026-11-12 随仓库重构迁入 `push/bluesky/`，脚本查找顺序：同目录 → `~/.qwenworkcn` → `~/.workbuddy`（老环境回退） |
-| 已发记录 | `~/.qwenworkcn/bluesky-posts/posted.json` —— 去重唯一依据，**勿删**，删了会重发（老环境回退 `~/.workbuddy`，脚本自动二选一） |
+| 凭据 | `push/bluesky/wodewangpan-bluesky.env`（`BLUESKY_IDENTIFIER` / `BLUESKY_APP_PASSWORD` / `BLUESKY_PDS` / `REPO` / `SITE_URL`）——**本机专用，绝不进 git，也不要打印到对话**。2026-11-12 随仓库重构迁入 `push/bluesky/`，脚本查找顺序：同目录 → `~/.workbuddy/`（老环境回退） |
+| 已发记录 | `~/.workbuddy/bluesky-posts/posted.json` —— 去重唯一依据，**勿删**，删了会重发 |
 | 数据源 | `C:/Users/marco/Github/wodewangpan` 的 `data/*.yaml`（id / title / category / **quark_url** / **baidu_url + baidu_code** / description / date / image） |
 | 图片 | `static/images/<image>`，全部 < 260KB（Bluesky blob 上限 1MB，目前无压缩需求） |
 
@@ -40,7 +40,7 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 
 不要用标题去重 —— 系列电影、多季剧集标题本来就相近，按标题判重会误杀大量正常资源。
 
-发过的每条都在 `~/.qwenworkcn/bluesky-posts/posted.json` 留标记 `{at, uri, cid, category, title, titleNorm, quark, baidu, text}`；老记录缺字段时脚本启动自动回填（`quark` / `baidu` / `titleNorm` 都会补），不留缺口。
+发过的每条都在 `~/.workbuddy/bluesky-posts/posted.json` 留标记 `{at, uri, cid, category, title, titleNorm, quark, baidu, text}`；老记录缺字段时脚本启动自动回填（`quark` / `baidu` / `titleNorm` 都会补），不留缺口。
 
 **无海报条目照发**（用户 2026-10-06 要求）：站里有 52 条软件类老条目没有 `image` 字段，默认**照样发**，只是不带图（纯文本帖：文字 + 链接 + 标签）。想只发带图的加 `--require-image`。
 
@@ -114,7 +114,7 @@ rrule：`FREQ=HOURLY;INTERVAL=1` —— HOURLY 模式**不要加 BYHOUR/BYMINUTE
 
 - 每次只发 1 条；失败只重试一次，不要连发刷屏。
 - 不改仓库任何文件、不碰 git；发帖内容一律取自 yaml。
-- **沙箱坑（2026-10-30 踩过，脚本已内置三处兼容补丁，别删）**：在 QwenWork 沙箱里跑时
+- **沙箱坑（2026-10-30 踩过，脚本已内置三处兼容补丁，别删）**：在自动化沙箱里跑时
   1. `fs.existsSync()` 会**对真实存在的文件返回 false**（`~/.workbuddy` 整个目录、以及 `static/images/*.jpg` 都中招），而 `readFileSync` / `statSync` 正常。若不改，脚本会以为「已发 0 条」→ 去重全失效，并把 `posted.json` 覆盖成只剩一条（历史全丢）→ 之后必然重复发。补丁：状态文件改成直接 try-read；海报判定 `hasImg` 改用 `statSync().isFile()`。
   2. `curl` 无法 spawn（`ENOENT`），绝对路径的 `curl.exe` 又会 Schannel `exit 35`，但 **Node 内置 `fetch` 到 bsky.social 是通的**。补丁：`curl()` 先走原来的 execFile curl（主机行为完全不变），失败才退回 `curlViaFetch()`（自带 curl 参数解析：`-X/-H/-d/--data-binary @file/-s/--max-time`）。
   3. 沙箱内对 `~/.workbuddy` 的写入能成功但**很慢（>60s）**，会被工具超时打断；而 `writeFileSync` 被打断可能截断 `posted.json`。**定时/批量跑请用后台任务**（`background_bash`），别用前台命令硬等超时。
@@ -122,5 +122,5 @@ rrule：`FREQ=HOURLY;INTERVAL=1` —— HOURLY 模式**不要加 BYHOUR/BYMINUTE
 - App Password 不等于账号密码，泄露可在 Bluesky 设置里单独吊销。
 - **CRLF 坑**：`data/软件.yaml` 是 CRLF 换行，字段值行尾会带上 `\r`，导致 id 匹配不上（`--pick app-010` 报"找不到条目"）、夸克链接发到 Bluesky 变坏链接。`parseYaml` 里已统一 `.replace(/\r/g, '')`，别去掉这行。
 - **facet 全角括号坑**（2026-10-10 踩过）：百度行写成 `链接（提取码 xxxx）`，URL 后面**没有空格**紧跟全角左括号。facet 正则若只写 `[^\s]+`，会把 `（提取码` 一起吞进链接 → 生成打不开的坏链接。现在正则加了 `\u3000-\u303f` 与 `\uff00-\uffef` 两个全角/中日韩标点区间来终止 URL，**别简化回 `[^\s]+`**。
-- **运行时沙箱模式坑**（2026-10-30 踩过、同日修复）：沙箱内 curl 无法 spawn 且 TLS 被拦（HTTP 000），但 **Node fetch 可用**（实测 bsky.social 200）；沙箱里 **existsSync 对存在的文件也返回 false**（statSync/readFileSync 正常），曾致脚本误判 0 条已发、险些覆盖 posted.json。2026-10-30 起数据已迁 `~/.qwenworkcn`（env + posted.json），脚本传输 curl 失败自动退回 fetch、状态 try-read、判图 statSync、路径 statSync 探测——**沙箱内可直接全流程运行，无需宿主机授权**。若报读不到数据，多半是落在只有 `~/.workbuddy` 的老环境，那才需要宿主机执行授权（定时无人值守时授权弹窗会过期 → 当次失败，简报写明即可，别反复诊断）。另：`.workbuddy` 下的读写在沙箱里有凭据钩子、极慢（单文件复制曾 237 秒）且可能被超时打断截断文件——迁移到 `.qwenworkcn` 后已无关。
+- **运行时沙箱模式坑**（2026-10-30 踩过、同日修复）：沙箱内 curl 无法 spawn 且 TLS 被拦（HTTP 000），但 **Node fetch 可用**（实测 bsky.social 200）；沙箱里 **existsSync 对存在的文件也返回 false**（statSync/readFileSync 正常），曾致脚本误判 0 条已发、险些覆盖 posted.json。现数据统一落 `~/.workbuddy`（env + posted.json），脚本传输 curl 失败自动退回 fetch、状态 try-read、判图 statSync、路径 statSync 探测，**沙箱内可直接全流程运行，无需宿主机授权**。若报读不到数据，多半是落在缺少状态目录的老环境，那才需要宿主机执行授权（定时无人值守时授权弹窗会过期 → 当次失败，简报写明即可，别反复诊断）。另：沙箱内对状态目录的写入有凭据钩子、极慢（单文件复制曾 237 秒）且可能被超时打断截断文件，**定时/批量跑请用后台任务**。
 - **并发实例坑**（2026-10-30 踩过）：同一自动化的多个积压运行同时苏醒，会在几十秒内连发多条，并竞争写 posted.json（last-writer-wins 挤丢过一条记录，靠回读 feed 比对后补录修复）。发现并发实例先问用户要不要停掉；发完顺手核对 posted.json 条数与 feed 实际帖数是否一致，缺了按 quark 链接补记录（只增不删，先备份）。

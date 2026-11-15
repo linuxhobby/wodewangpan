@@ -17,13 +17,14 @@
 //   node tg-post.mjs --qr                  # 方案 A 前身：海报+正方形码合并成相册；默认不发
 //   node tg-post.mjs --qr-split            # 方案 C：海报独占一条消息，二维码另发第二条并回复上一条；默认不发
 //   node tg-post.mjs --qr-size 640         # 二维码像素边长（默认 480，仅 --qr / --qr-split 生效）
+//   node tg-post.mjs --cooldown 0          # 关闭「刚发过就跳过」的冷却窗口（默认 180 秒）
 //   node tg-post.mjs --check               # 只校验 token 与 chat 可达（getMe + 目标信息）
 //   node tg-post.mjs --retract <id>        # 撤回之前由本脚本发出去的某条目消息（调试用）
 //   node tg-post.mjs --audit               # 打印不可发条目的原因分布
 //
-// 凭据：同目录 wodewangpan-tg.env（回退 ~/.qwenworkcn → ~/.workbuddy）—— TG_BOT_TOKEN / TG_CHAT / REPO / SITE_URL
+// 凭据：同目录 wodewangpan-tg.env（回退 ~/.workbuddy → ~/.workbuddy）—— TG_BOT_TOKEN / TG_CHAT / REPO / SITE_URL
 //   （TG_CHAT 填 @频道用户名 或 -100 开头的数字 ID；bot 必须是该频道管理员并有「发布消息」权限）
-// 已发记录：~/.qwenworkcn/telegram-posts/posted.json —— 去重唯一依据，勿删，不随仓库搬
+// 已发记录：~/.workbuddy/telegram-posts/posted.json —— 去重唯一依据，勿删，不随仓库搬
 //
 // 传输只用 Node 内置 fetch（本机实测 api.telegram.org 直连 200），不走 curl，避开沙箱里 curl 无法 spawn 的坑。
 import fs from 'node:fs';
@@ -311,6 +312,53 @@ if (has('retract')) {
 if (!DRY && has('check') === false && (!TOKEN || !CHAT)) {
   console.log(`× 凭据不完整：需要 TG_BOT_TOKEN 与 TG_CHAT（写在 ${ENV_FILE}）。\n  想先看文案请跑 --dry（不需要 token）。`);
   process.exit(1);
+}
+
+// ---------- 双触发防护（2026-11-14 加） ----------
+// 现象：频道每轮出现两条，间隔 5 秒左右，而 posted.json 只多一条记录。
+// 原因是同一条命令被两套调度各触发一次（旧 WorkBuddy 自动化 + TRAE 自动化），
+// 两个进程同时读状态、各挑一条、各自写回，后写把前写的记录覆盖掉（41/43/45 三条就这样丢了记录）。
+// 两道闸：① 单实例锁挡住并发进程；② 冷却窗口挡住相隔几秒的第二次触发。人工 --pick/--count 不受冷却限制。
+const PUSH_DIR = path.dirname(STATE_FILE);
+const LOCK_FILE = path.join(PUSH_DIR, 'tg-post.lock');
+const COOLDOWN = parseInt(arg('cooldown', '180'), 10);
+
+function lastPostAt() {
+  const ts = Object.values(state.posted).map((r) => Date.parse(r.at || '')).filter((n) => Number.isFinite(n));
+  const h = state.history.length ? Date.parse(state.history[state.history.length - 1].at || '') : NaN;
+  if (Number.isFinite(h)) ts.push(h);
+  return ts.length ? Math.max(...ts) : 0;
+}
+
+function acquireLock() {
+  fs.mkdirSync(PUSH_DIR, { recursive: true });
+  const body = `${process.pid}\n${new Date().toISOString()}\n`;
+  const release = () => { try { fs.unlinkSync(LOCK_FILE); } catch {} };
+  try {
+    fs.writeFileSync(LOCK_FILE, body, { flag: 'wx' });
+  } catch {
+    let stale = true;
+    try { stale = Date.now() - fs.statSync(LOCK_FILE).mtimeMs > 10 * 60 * 1000; } catch { stale = true; }
+    if (!stale) {
+      let pid = '?';
+      try { pid = fs.readFileSync(LOCK_FILE, 'utf8').split('\n')[0].trim() || '?'; } catch {}
+      console.log(`× 另一个推送进程正在运行（pid ${pid}），本次跳过，避免重复发。`);
+      process.exit(0);
+    }
+    fs.writeFileSync(LOCK_FILE, body);
+  }
+  process.on('exit', release);
+}
+
+if (!DRY && !has('check')) {
+  const manual = PICKS.length > 0;
+  const gapSec = (Date.now() - lastPostAt()) / 1000;
+  if (!manual && gapSec < COOLDOWN) {
+    console.log(`× 冷却中：${Math.round(gapSec)} 秒前刚发过（冷却窗口 ${COOLDOWN}s），本次跳过，避免重复发。`);
+    console.log('  同一时刻被两套调度各触发一次时会走到这里；确需补发请用 --pick <id>。');
+    process.exit(0);
+  }
+  acquireLock();
 }
 
 let sess = null;

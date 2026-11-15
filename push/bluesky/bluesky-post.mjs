@@ -14,9 +14,9 @@
 //   node bluesky-post.mjs --with-site-link # 正文带站点详情页链接（默认带）
 //   node bluesky-post.mjs --audit          # 打印不可发条目的原因分布
 //
-// 凭据：同目录 wodewangpan-bluesky.env（回退 ~/.qwenworkcn → ~/.workbuddy）
+// 凭据：同目录 wodewangpan-bluesky.env（回退 ~/.workbuddy → ~/.workbuddy）
 //   （BLUESKY_IDENTIFIER / BLUESKY_APP_PASSWORD / BLUESKY_PDS / REPO / SITE_URL）
-// 已发记录：~/.qwenworkcn/bluesky-posts/posted.json（去重唯一依据，勿删；见 SKILL.md「沙箱坑」）
+// 已发记录：~/.workbuddy/bluesky-posts/posted.json（去重唯一依据，勿删；见 SKILL.md「沙箱坑」）
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -235,6 +235,58 @@ if (has('audit')) {
   console.log(`可发：${items.filter((x) => !skipReason(x)).length} 条`);
   process.exit(0);
 }
+
+// ---------- 防重复发（2026-11-14） ----------
+// 现象：每小时同一分钟出两条（相隔 7~9 秒）、内容不同，且 posted.json 只记下后发的一条。
+// 原因：两个触发器（Trae 自动化存在两份 / 旧环境任务未停）并发跑本脚本，各自读同一 posted.json、
+// 各发一条，后保存的覆盖先保存的，于是「多发一条 + 丢掉另一条的判重记录」。
+// 对策：同一时刻只允许一个实例发（互斥锁），10 分钟内已成功发过就整体跳过（近期去抖）。
+// 补发（--count N）与指定条目（--pick）不受去抖影响，但仍受锁保护。
+const LOCK_FILE = path.join(os.tmpdir(), 'wodewangpan-bluesky-posting.lock'); // 状态目录禁止新建文件（EPERM），锁放临时目录
+const LOCK_STALE_MS = 10 * 60 * 1000; // 锁文件超过 10 分钟视为残留
+const RECENT_MS = 10 * 60 * 1000;     // 10 分钟内发过就跳过
+function acquireLock() {
+  // 返回 true=拿到锁，false=别的实例正在发，null=锁不可用（不阻断，靠近期去抖兜底）
+  try {
+    if (Date.now() - fs.statSync(LOCK_FILE).mtimeMs < LOCK_STALE_MS) return false;
+    fs.unlinkSync(LOCK_FILE); // 残留锁
+  } catch {}
+  try { fs.writeFileSync(LOCK_FILE, String(process.pid)); return true; }
+  catch {
+    try { if (Date.now() - fs.statSync(LOCK_FILE).mtimeMs < LOCK_STALE_MS) return false; } catch {}
+    return null;
+  }
+}
+const lockState = DRY ? true : acquireLock();
+if (!DRY && lockState === false) {
+  console.log('× 另一个发帖进程正在运行，本次跳过（防并发重复发）');
+  process.exit(0);
+}
+if (!DRY && lockState === true) process.on('exit', () => { try { fs.unlinkSync(LOCK_FILE); } catch {} });
+if (!DRY && PICKS.length === 0 && COUNT === 1) {
+  // 去抖：两个触发器可能先后启动（不重叠，锁拦不到），且另一个触发器可能把状态写到别处。
+  // 所以同时查本地 posted.json 和 Bluesky 已发时间线，任一距现在 <10 分钟就跳过。
+  let lastAt = null;
+  try {
+    const fresh = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    const last = fresh.history[fresh.history.length - 1];
+    if (last) lastAt = Date.parse(last.at);
+  } catch {}
+  try {
+    const feed = await curlJson([`https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${IDENTIFIER}&limit=1&filter=posts_no_replies`]);
+    const top = feed?.feed?.[0]?.post;
+    if (top?.indexedAt) {
+      const t = Date.parse(top.indexedAt);
+      if (!Number.isFinite(lastAt) || t > lastAt) lastAt = t;
+    }
+  } catch {}
+  const age = Number.isFinite(lastAt) ? Date.now() - lastAt : NaN;
+  if (Number.isFinite(age) && age < RECENT_MS) {
+    console.log(`× 距上次发帖仅 ${Math.round(age / 60000)} 分钟，本次跳过：防止两个触发器重复发`);
+    process.exit(0);
+  }
+}
+
 const usedNow = new Set();
 const results = [];
 let sess = null;
@@ -287,6 +339,16 @@ for (let n = 0; n < COUNT; n++) {
 }
 
 if (!DRY) {
+  // 写回前合并磁盘最新状态：另一个并发进程可能已写入新记录，直接覆盖会丢判重记录。
+  try {
+    const disk = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    for (const [id, rec] of Object.entries(disk.posted || {})) {
+      if (!state.posted[id]) state.posted[id] = rec;
+    }
+    const known = new Set(state.history.map((h) => h.id + '@' + h.at));
+    for (const h of disk.history || []) if (!known.has(h.id + '@' + h.at)) state.history.push(h);
+    state.history.sort((a, b) => String(a.at).localeCompare(String(b.at)));
+  } catch {}
   saveState(STATE_FILE, state);
   console.log(`\n已发记录写入：${STATE_FILE}（累计 ${Object.keys(state.posted).length} 条）`);
 }

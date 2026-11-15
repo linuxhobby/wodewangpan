@@ -131,4 +131,4 @@ Telegram 不允许机器人主动私聊从没点过 Start 的人（403）。首�
 6. 同一 message_id 只处理一次，防上报重试刷屏
 7. 白名单 + 单人冷却 + 全局每分钟上限，三层限频
 
-> 定时推送（Telegram 频道 / Bluesky）在 `push/`，由 QwenWork 调度，详见仓库根 `AGENTS.md`。
+> 定时推送（Telegram 频道 / Bluesky）在 `push/`，由 WorkBuddy 自动化调度，详见仓库根 `AGENTS.md`。
