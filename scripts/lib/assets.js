@@ -68,7 +68,7 @@ const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /** 各分类占位海报：配色 + 图标 + 专属底纹 + 英文副标题；未收录的分类按名称派生色相 */
-const CAT_STYLE = {
+export const CAT_STYLE = {
   电影: { c1: '#5138d6', c2: '#a274ff', icon: 'film', en: 'FILM', tex: 'perforation' },
   电视剧: { c1: '#0a6386', c2: '#3fc9f0', icon: 'tv', en: 'TV SERIES', tex: 'scanlines' },
   纪录片: { c1: '#04614a', c2: '#3ddc97', icon: 'globe', en: 'DOCUMENTARY', tex: 'rings' },
@@ -82,7 +82,7 @@ const CAT_STYLE = {
 };
 
 /** 96×96 图标：外层 <g> 给半透明填充 + 白色描边；纯线条元素自行 fill="none" */
-const ICONS = {
+export const ICONS = {
   film: '<rect x="12" y="30" width="72" height="48" rx="6"/><path fill="none" d="M12 30 28 20l12 10 16-10 16 10 12-8"/><path fill="none" d="M28 30v48M56 30v48" stroke-width="3"/>',
   tv: '<rect x="12" y="26" width="72" height="48" rx="6"/><path fill="none" d="M34 74h28M48 74v12M32 86h32"/><path fill="none" d="M30 26 44 12M66 26 52 12"/>',
   globe:

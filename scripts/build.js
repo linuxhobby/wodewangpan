@@ -277,7 +277,10 @@ if (reusedImages && prevDir) console.log(`  · 配图增量复用 ${reusedImages
 if (await writeFavicon(staticDir, outDir)) console.log('  · 已生成 favicon.svg / favicon.ico / apple-touch-icon.png');
 
 const shareSrc = path.join(staticDir, 'share.jpg');
-const shareImage = fs.existsSync(shareSrc) ? '/share.jpg' : '';
+// og:image 带内容 hash：换分享卡时站外平台才会重新抓图，不吃旧缓存
+const shareImage = fs.existsSync(shareSrc)
+  ? `/share.jpg?v=${crypto.createHash('sha1').update(fs.readFileSync(shareSrc)).digest('hex').slice(0, 8)}`
+  : '';
 if (shareImage) {
   fs.copyFileSync(shareSrc, path.join(outDir, 'share.jpg'));
   console.log('  · 已复制首页分享卡 share.jpg');
