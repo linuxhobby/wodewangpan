@@ -73,7 +73,7 @@ npm run check:images                 # 配图盘点（分类目录命中 / 孤�
 - **新增配图一律写 `static/images/<slug>/`**。`scripts/lib/assets.js` 的 `resolveSource()` 保留旧平铺路径
   兼容双读，只作灰度与跨机分批切换的回退，不是长期口径；`npm run check:images` 会把旧平铺命中与孤儿文件报出来。
   跨机 skill 的 `scripts/lib/site-paths.mjs`（Mac 本机 `~/.workbuddy/skills/quark-resource-sync`、
-  Windows 侧两份、群晖中转）里的 `PREFIX_SLUG` 必须与站点 `slugs` 同步。
+  Windows 侧两份；群晖中转已不再维护）里的 `PREFIX_SLUG` 必须与站点 `slugs` 同步。
 - `scripts/sitestats.py` 的 `RES_RE` 里那份分类 slug 白名单与 `slugs` 同步；统计按 id 聚合，
   换 URL 不需要迁移 `stats.db`。
 

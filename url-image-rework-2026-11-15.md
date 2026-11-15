@@ -116,16 +116,19 @@
 
 ## 7. 跨机 / 仓库外同步
 
+> 2026-11-15 收尾：跨机项已由用户分配给对应机器处理，本仓库侧不再跟进；
+> agent 侧唯一的跨机改动是 Mac 本机 skill，已完成。
+
 | 位置 | 状态 | 说明 |
 |---|---|---|
-| Mac `~/.workbuddy/skills/quark-resource-sync` | **已改** | 新增 `scripts/lib/site-paths.mjs`（`PREFIX_SLUG` / `posterDir()` / `itemUrl()`）；`make-entry.mjs`、`process-batch.mjs`、`trending-sync.mjs` 写图路径改为分类子目录并自动 `mkdirSync`；`SKILL.md`、`references/site-schema.md`、`references/troubleshooting.md` 的路径与冒烟 URL 口径同步；`node --check` 全通过 |
-| Windows `C:/Users/marco/.workbuddy/skills/quark-resource-sync` | **待同步** | 按 Mac 的 `site-paths.mjs` 与三处写图路径照改 |
-| Windows `C:/Users/marco/.qwenworkcn/skills/quark-resource-sync` | **待同步** | 同上；仓库内 0 引用，最容易漏 |
-| 群晖中转 `~/Documents/SynologyDrive/sync-skill/wodewangpan/quark-resource-sync` | **待同步** | 同上 |
-| `mybot` 私有仓 | **待同步** | 只读 `/resource/<id>/` GET，现在返回 301；不跟随重定向的 HTTP 客户端会拿不到内容，需改 `/<slug>/<id>/` |
-| Windows 飞书简报脚本 `C:/Users/marco/Scripts/wodewangpan-fillfiles-feishu.mjs` | **待同步** | 按 id 拼详情页链接的地方改成新结构 |
+| Mac `~/.workbuddy/skills/quark-resource-sync` | **已完成（本仓库侧）** | 新增 `scripts/lib/site-paths.mjs`（`PREFIX_SLUG` / `posterDir()` / `itemUrl()`）；`make-entry.mjs`、`process-batch.mjs`、`trending-sync.mjs` 写图路径改为分类子目录并自动 `mkdirSync`；`SKILL.md`、`references/site-schema.md`、`references/troubleshooting.md` 的路径与冒烟 URL 口径同步；`node --check` 全通过 |
+| Windows `C:/Users/marco/.workbuddy/skills/quark-resource-sync` | 用户安排任务机器自行修改 | 按 Mac 的 `site-paths.mjs` 与三处写图路径照改 |
+| Windows `C:/Users/marco/.qwenworkcn/skills/quark-resource-sync` | 用户安排任务机器自行修改 | 同上；仓库内 0 引用，最容易漏 |
+| 群晖中转 `~/Documents/SynologyDrive/sync-skill/wodewangpan/quark-resource-sync` | 用户确认不再维护 | 不需同步，也不再作为写入方 |
+| `mybot` 私有仓 | 用户安排另一台电脑修改 | 只读 `/resource/<id>/` GET，现在返回 301；不跟随重定向的 HTTP 客户端会拿不到内容，需改 `/<slug>/<id>/` |
+| Windows 飞书简报脚本 `C:/Users/marco/Scripts/wodewangpan-fillfiles-feishu.mjs` | 用户安排另一台电脑修改 | 按 id 拼详情页链接的地方改成新结构 |
 
-漏改写入方的后果：新图继续落进 `static/images/` 根目录变成孤儿文件，`npm run check:images` 会报出来。
+这些机器改完前，未同步的写入方仍可能把新图落进 `static/images/` 根目录变成孤儿文件；两边都可用 `npm run check:images` 自检。
 
 **百度普通收录**：`/var/lib/baidu-submitted.txt` 里都是旧 URL，新 sitemap 的 1054 条会进入 pending，按每天 10 条配额由 cron 自动排队，没有手工全量推（避免浪费配额）。IndexNow 已做全量。
 
