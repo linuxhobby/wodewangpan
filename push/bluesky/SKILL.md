@@ -15,7 +15,7 @@ version: "1.2"
 | 凭据 | `push/bluesky/wodewangpan-bluesky.env`（`BLUESKY_IDENTIFIER` / `BLUESKY_APP_PASSWORD` / `BLUESKY_PDS` / `REPO` / `SITE_URL`）——**本机专用，绝不进 git，也不要打印到对话**。2026-11-12 随仓库重构迁入 `push/bluesky/`，脚本查找顺序：同目录 → `~/.workbuddy/`（老环境回退） |
 | 已发记录 | `~/.workbuddy/bluesky-posts/posted.json` —— 去重唯一依据，**勿删**，删了会重发 |
 | 数据源 | `C:/Users/marco/Github/wodewangpan` 的 `data/*.yaml`（id / title / category / **quark_url** / **baidu_url + baidu_code** / description / date / image） |
-| 图片 | `static/images/<image>`，全部 < 260KB（Bluesky blob 上限 1MB，目前无压缩需求） |
+| 图片 | `static/images/<slug>/<image>`（2026-11-15 起站点配图按分类 slug 分子目录，mv→movie、tv→tv、dc→documentary、an→anime、game→game、app→software、bk→ebook、cs→course、ot→misc；脚本已适配，`common.mjs` 的 `imgPath` 带 flat 回退），全部 < 260KB（Bluesky blob 上限 1MB，目前无压缩需求） |
 
 ## 用法
 
@@ -78,7 +78,7 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 订阅TG：https://t.me/myquark ，关注更多资源
 夸克网盘：https://pan.quark.cn/s/xxxx
 百度网盘：https://pan.baidu.com/s/xxxx（提取码 wt7p）
-详情：https://www.wodewangpan.top/resource/mv-075/
+详情：https://www.wodewangpan.top/movie/mv-075/
 #网盘资源 #电影
 ```
 

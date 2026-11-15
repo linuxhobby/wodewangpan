@@ -115,12 +115,42 @@ export function loadItems(repo) {
   return items;
 }
 
-export const imgPath = (repo, image) => path.join(repo, 'static', 'images', image);
+// ---------- 站点路径口径（2026-11-15 全站 URL 与配图目录带分类 slug） ----------
+// 详情页 /<slug>/<id>/、配图 static/images/<slug>/<id>.jpg。这张表与站点仓库
+// scripts/lib/site-paths.mjs、C:/Users/marco/Scripts/ 两个飞书简报脚本共用同一份口径，
+// 任何一侧改动必须三处同步。
+export const PREFIX_SLUG = {
+  mv: 'movie', tv: 'tv', dc: 'documentary', an: 'anime', game: 'game',
+  app: 'software', bk: 'ebook', cs: 'course', ot: 'misc',
+};
+
+export const slugOf = (id) => PREFIX_SLUG[String(id).split('-')[0]] || '';
+
+/** 详情页外链地址（站点侧以 build.js 的 setItemPaths 为准；未知前缀回退旧 /resource/ 路径） */
+export const itemUrl = (siteUrl, id) => {
+  const slug = slugOf(id);
+  return slug ? `${siteUrl}/${slug}/${id}/` : `${siteUrl}/resource/${id}/`;
+};
+
+/**
+ * 配图绝对路径。2026-11-15 起站点配图按分类 slug 分子目录（static/images/<slug>/<id>.jpg）；
+ * 旧 flat 路径保留作回退——站点侧 check:images 已确认平铺目录迁空，这只是防御分支。
+ * 判存在一律 statSync（沙箱里 existsSync 不可靠，见 bluesky SKILL.md 的沙箱坑记录）。
+ */
+export const imgPath = (repo, it) => {
+  const base = path.join(repo, 'static', 'images');
+  const slug = slugOf(it && it.id);
+  if (slug && it.image) {
+    const p = path.join(base, slug, it.image);
+    try { if (fs.statSync(p).isFile()) return p; } catch { /* fall through */ }
+  }
+  return path.join(base, (it && it.image) || '');
+};
 
 // 沙箱里 existsSync 不可靠，判海报一律 statSync().isFile()。
 export const hasImgFile = (repo, it) => {
   if (!it.image) return false;
-  try { return fs.statSync(imgPath(repo, it.image)).isFile(); } catch { return false; }
+  try { return fs.statSync(imgPath(repo, it)).isFile(); } catch { return false; }
 };
 
 // ---------- 判重口径（用户定死）：夸克或百度链接任一相同 = 同一份资源 ----------

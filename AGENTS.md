@@ -69,7 +69,9 @@ Python 侧无第三方依赖（全标准库）。本网络可直连 `api.telegra
 
 ## 社媒推送
 
-各平台互相独立，素材都取自站点仓库 `C:/Users/marco/Github/wodewangpan` 的 `data/*.yaml` 与 `static/images/`，
+各平台互相独立，素材都取自站点仓库 `C:/Users/marco/Github/wodewangpan` 的 `data/*.yaml` 与 `static/images/`
+（2026-11-15 起配图按分类 slug 分子目录 `static/images/<slug>/<id>.jpg`，详情页外链是 `/<slug>/<id>/`；
+口径统一走 `push/common.mjs` 的 `PREFIX_SLUG` / `itemUrl` / `imgPath`，别在各脚本里另拼路径），
 缺字段就整行省略、绝不编造。
 
 ```

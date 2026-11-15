@@ -33,7 +33,7 @@ import { pathToFileURL } from 'node:url';
 import {
   arg, has, collectPicks, loadEnv, findStateFile, loadState, saveState,
   loadItems, imgPath, hasImgFile, makeDeduper, makePicker, baseRecord,
-  countReasons, printSummary, DEFAULT_REPO, DEFAULT_SITE_URL,
+  countReasons, printSummary, DEFAULT_REPO, DEFAULT_SITE_URL, itemUrl,
 } from '../common.mjs';
 
 const { file: ENV_FILE, values: env } = loadEnv(import.meta.url, 'wodewangpan-tg.env');
@@ -129,7 +129,7 @@ function buildCaption(it) {
   if (q) linkLines.push(`<b>夸克：</b><a href="${esc(q)}">${esc(q)}</a>`);
   const baiduLine = b ? `<b>百度：</b><a href="${esc(b)}">${esc(b)}</a>${bc ? `（提取码 ${esc(bc)}）` : ''}` : '';
   const sizeLine = it.size ? `<b>大小：</b>${esc(clean(it.size))}` : '';
-  const siteLine = WITH_SITE_LINK ? `<b>详情：</b><a href="${SITE_URL}/resource/${it.id}/">${SITE_URL}/resource/${it.id}/</a>` : '';
+  const siteLine = WITH_SITE_LINK ? `<b>详情：</b><a href="${itemUrl(SITE_URL, it.id)}">${itemUrl(SITE_URL, it.id)}</a>` : '';
   const tagLine = `<b>标签：</b>${hashTags(it).join(' ')}`;
   const name = clean(it.title) || it.id;
   const year = clean(it.date).slice(0, 4);
@@ -397,7 +397,7 @@ for (let n = 0; n < COUNT; n++) {
   state.lastCategory = it.category;   // 同批次内也轮转，避免一次 --count N 全发同一分类
 
   const caption = buildCaption(it);
-  const imgPathFull = imgPath(REPO, it.image);
+  const imgPathFull = imgPath(REPO, it);
   const imgOk = hasImgFile(REPO, it);
   if (!imgOk && !ALLOW_NO_IMAGE) { console.log(`× ${it.id} 无海报，--require-image 生效，跳过`); continue; }
   const tooBig = imgOk && fs.statSync(imgPathFull).size > PHOTO_MAX_BYTES;

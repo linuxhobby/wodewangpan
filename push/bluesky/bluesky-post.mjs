@@ -24,7 +24,7 @@ import { execFile } from 'node:child_process';
 import {
   arg, has, collectPicks, loadEnv, findStateFile, loadState, saveState,
   loadItems, imgPath, makeDeduper, makePicker, baseRecord, countReasons, printSummary,
-  DEFAULT_REPO, DEFAULT_SITE_URL,
+  DEFAULT_REPO, DEFAULT_SITE_URL, itemUrl,
 } from '../common.mjs';
 
 const { file: ENV_FILE, values: env } = loadEnv(import.meta.url, 'wodewangpan-bluesky.env');
@@ -118,7 +118,7 @@ const MIN_DESC = 60;
  *   订阅TG：https://t.me/myquark ，关注更多资源
  *   夸克网盘：https://pan.quark.cn/s/xxxx
  *   百度网盘：https://pan.baidu.com/s/xxxx（提取码 abcd）
- *   详情：https://www.wodewangpan.top/resource/<id>/
+ *   详情：https://www.wodewangpan.top/<slug>/<id>/（slug 按 id 前缀，如 mv→movie）
  *   #网盘资源 #分类
  * 上限 300 graphemes。放不下时**只砍简介，不动链接**；简介额度被压到 40 字以下时，
  * 先让出「详情」行（两条网盘链接是用户要的重点），网盘链接与标签始终保留，永不截断 URL。
@@ -130,7 +130,7 @@ function buildText(it) {
     it.quark ? `夸克网盘：${it.quark}` : '',
     it.baidu ? `百度网盘：${it.baidu}${it.baiduCode ? `（提取码 ${it.baiduCode}）` : ''}` : '',
   ].filter(Boolean);
-  const siteLine = `详情：${SITE_URL}/resource/${it.id}/`;
+  const siteLine = `详情：${itemUrl(SITE_URL, it.id)}`;
   // 订阅号引导行（2026-11-12 用户定）：替换掉 11-10 加的「加入TG群组：https://t.me/wodewangpantop」，
   // 并移到网盘链接之前；与网盘/详情链接一样永不被截断。
   const tgLine = '订阅TG：https://t.me/myquark ，关注更多资源';
@@ -298,7 +298,7 @@ for (let n = 0; n < COUNT; n++) {
   catch (e) { console.log(`× ${e.message}`); break; }
   usedNow.add(it.id);
   state.lastCategory = it.category; // 同批次内也轮转，避免一次 --count N 全发同一分类
-  const imgPathFull = imgPath(REPO, it.image);
+  const imgPathFull = imgPath(REPO, it);
   // [沙箱补丁] 沙箱内 existsSync 对已存在文件会误报 false（statSync 正常），改用 statSync 判定，避免漏发海报
   const hasImg = it.image && (() => { try { return fs.statSync(imgPathFull).isFile(); } catch { return false; } })();
   const text = buildText(it);
