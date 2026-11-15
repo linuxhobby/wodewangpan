@@ -14,7 +14,8 @@
     "new": "node scripts/new-resource.js",
     "audit:css": "node scripts/audit-css.js",
     "lint": "eslint scripts theme/assets",
-    "list:short": "node scripts/list-short-desc.mjs"
+    "list:short": "node scripts/list-short-desc.mjs",
+    "check:images": "node scripts/check-images.mjs"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",

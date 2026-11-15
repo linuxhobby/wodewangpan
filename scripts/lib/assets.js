@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import QRCode from 'qrcode';
+import { categorySlug } from './data.js';
 
 const IMAGE_EXT = ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif', 'svg'];
 // 详情页海报不再单独出一版：直接复用列表卡片这张 240×360，
@@ -260,16 +261,27 @@ function writeCategoryPlaceholders(outDir, categories = []) {
   return map;
 }
 
-function resolveSource(item, staticDir, rootDir) {
+/** 源配图定位：优先 static/images/<分类 slug>/<id>.jpg（2026-11-15 按分类分目录），
+ *  旧平铺路径 static/images/<id>.jpg 保留兼容双读，供跨机 skill 分批切换与灰度回退。
+ *  产物名只由 item.id 派生，源目录不进任何对外 URL。 */
+export function resolveSource(item, staticDir, rootDir) {
   const candidates = [];
+  const catDir = item.category
+    ? path.join(staticDir, 'images', categorySlug(item.category))
+    : '';
   if (item.image) {
+    const name = path.basename(item.image);
+    if (catDir) candidates.push(path.join(catDir, name));
     candidates.push(
       path.join(staticDir, 'images', item.image),
       path.join(rootDir, item.image),
       path.join(staticDir, item.image)
     );
   } else {
-    for (const ext of IMAGE_EXT) candidates.push(path.join(staticDir, 'images', `${item.id}.${ext}`));
+    for (const ext of IMAGE_EXT) {
+      if (catDir) candidates.push(path.join(catDir, `${item.id}.${ext}`));
+      candidates.push(path.join(staticDir, 'images', `${item.id}.${ext}`));
+    }
   }
   return candidates.find((p) => fs.existsSync(p) && fs.statSync(p).isFile()) || null;
 }

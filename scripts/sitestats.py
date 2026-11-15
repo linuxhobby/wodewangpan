@@ -38,8 +38,13 @@ SKIP_PATH_RE = re.compile(
     re.I,
 )
 VID_RE = re.compile(r'^[A-Za-z0-9_-]{8,64}$')
-# 资源详情页 /resource/<id>/：仅对这一类做按资源聚合（其余页面不进 page 表）
-RES_RE = re.compile(r'^/resource/([^/]+)/?$')
+# 资源详情页 /<slug>/<id>/（2026-11-15 起 URL 带分类）：首段必须是分类 slug，
+# 避免把 /tag/xxx/ 之类算成资源；feed.xml 也排除。旧 /resource/<id>/ 由 nginx 301，不再计入。
+# res 仍按 id 聚合，所以换 URL 后历史浏览数据自然延续，无需迁移 stats.db。
+RES_RE = re.compile(
+    r'^/(?:movie|tv|documentary|anime|game|software|ebook|course|misc)'
+    r'/(?!feed\.xml$)([A-Za-z0-9_-]+)/?$'
+)
 # 转存点击埋点：/hit?e=<事件>&id=<资源id>（app.js 的 track() 发出），事件名白名单防日志噪音
 HIT_EV_RE = re.compile(r'^/hit\?e=([a-z]{1,16})&id=([A-Za-z0-9_-]{1,64})$')
 EV_NAMES = {'open', 'copy', 'qr'}
@@ -149,7 +154,7 @@ def ingest(c, lines):
         mark_visitor(c, day, fp, ts)
         pv += 1
 
-        # 按资源聚合：仅资源详情页 /resource/<id>/ 入库，PV 全量（与 daily 口径一致），
+        # 按资源聚合：仅资源详情页 /<slug>/<id>/ 入库，PV 全量（与 daily 口径一致），
         # UV 同样只认 v: 前缀（与 daily_uv 一致）。其余页面（首页 / 分类 / 标签页）不做细分。
         m = RES_RE.match(path)
         if m:

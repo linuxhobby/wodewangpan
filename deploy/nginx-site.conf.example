@@ -42,31 +42,63 @@ server {
     gzip_types text/plain text/css application/javascript application/json text/xml application/xml application/rss+xml application/atom+xml image/svg+xml;
 
     # 蜘蛛记忆里的残留 URL：app.js 早期用相对路径取 search-index.json，
-    # 在 /resource/<id>/、/category/<slug>/ 下解析成 /resource/<id>/search-index.json 这类不存在的路径。
+    # 在 /<slug>/<id>/、/<slug>/ 下解析成 /<slug>/<id>/search-index.json 这类不存在的路径。
     # 现已改为根绝对路径，但蜘蛛仍会重试旧地址，且每发现一个新资源页就多一条（日志里逐日递增）。
     # 410 Gone 比 404 衰退更快；只匹配「带目录前缀」的，根目录那份要留给 Googlebot 渲染「加载更多」。
     # 必须放在下面静态资源 location 之前：nginx 的正则 location 按出现顺序取第一个命中。
-    # 分类合并残留 URL：2026-11-10「操作系统」并入「软件」，旧分类页与分类 RSS 一律 301（SEO 换路径必配）
-    rewrite ^/category/os/(feed\.xml)?$ /category/software/$1 permanent;
+    # ── 旧 URL → 新 URL（2026-11-15 全站改为 /<分类 slug>/ 与 /<分类 slug>/<id>/）──────────
+    # 顺序要求：具体 id 的历史 301 必须在按前缀的泛化规则之前，否则 ot-007 会被泛化成 /misc/ot-007/。
+    # 中文分类路径（2026-10-08 启用 slugs 时的旧收录地址）
+    rewrite ^/category/电影/(.*)$      /movie/$1 permanent;
+    rewrite ^/category/电影/?$         /movie/ permanent;
+    rewrite ^/category/电视剧/(.*)$    /tv/$1 permanent;
+    rewrite ^/category/电视剧/?$       /tv/ permanent;
+    rewrite ^/category/纪录片/(.*)$    /documentary/$1 permanent;
+    rewrite ^/category/纪录片/?$       /documentary/ permanent;
+    rewrite ^/category/动漫/(.*)$      /anime/$1 permanent;
+    rewrite ^/category/动漫/?$         /anime/ permanent;
+    rewrite ^/category/游戏/(.*)$      /game/$1 permanent;
+    rewrite ^/category/游戏/?$         /game/ permanent;
+    rewrite ^/category/软件/(.*)$      /software/$1 permanent;
+    rewrite ^/category/软件/?$         /software/ permanent;
+    rewrite ^/category/电子书/(.*)$    /ebook/$1 permanent;
+    rewrite ^/category/电子书/?$       /ebook/ permanent;
+    rewrite ^/category/其他/(.*)$      /misc/$1 permanent;
+    rewrite ^/category/其他/?$         /misc/ permanent;
 
-    # 资源换分类残留 URL：2026-11-10 ot-007「Qwen-Image 2.1 Turbo 本地整合包」→ app-141（盘端移到 02应用/141-）。
-    # id 变了就是详情页 URL 变了，旧地址必须 301，否则蜘蛛与外链全部落到 404。
-    # 2026-11-13 撤销 ot-006 → cs-018：ot-006 已作为「拜托了冰箱（韩国综艺）」重新入库，
-    # 旧 301 会把新资源详情页跳到高考押题卷。id 空洞被复用时必须先删该 id 的历史 301。
-    rewrite ^/resource/ot-007(/index\.html|/)?$ /resource/app-141/ permanent;
+    # 分类合并：2026-11-10「操作系统」并入「软件」，旧分类页与分类 RSS 一律 301
+    rewrite ^/category/os/(feed\.xml)?$ /software/$1 permanent;
+    # 旧英文分类页 /category/<slug>/ → /<slug>/（feed.xml、index.html 一并带走）
+    rewrite ^/category/(movie|tv|documentary|anime|game|software|ebook|course|misc)/index\.html$ /$1/ permanent;
+    rewrite ^/category/(movie|tv|documentary|anime|game|software|ebook|course|misc)/(feed\.xml)?$ /$1/$2 permanent;
 
-    # 2026-11-10 前缀统一：原「操作系统」11 条 os-001~011 → app-130~140（尾号对齐 02应用 盘端目录号）
-    rewrite ^/resource/os-001(/index\.html|/)?$ /resource/app-134/ permanent;
-    rewrite ^/resource/os-002(/index\.html|/)?$ /resource/app-135/ permanent;
-    rewrite ^/resource/os-003(/index\.html|/)?$ /resource/app-130/ permanent;
-    rewrite ^/resource/os-004(/index\.html|/)?$ /resource/app-131/ permanent;
-    rewrite ^/resource/os-005(/index\.html|/)?$ /resource/app-132/ permanent;
-    rewrite ^/resource/os-006(/index\.html|/)?$ /resource/app-133/ permanent;
-    rewrite ^/resource/os-007(/index\.html|/)?$ /resource/app-138/ permanent;
-    rewrite ^/resource/os-008(/index\.html|/)?$ /resource/app-139/ permanent;
-    rewrite ^/resource/os-009(/index\.html|/)?$ /resource/app-140/ permanent;
-    rewrite ^/resource/os-010(/index\.html|/)?$ /resource/app-136/ permanent;
-    rewrite ^/resource/os-011(/index\.html|/)?$ /resource/app-137/ permanent;
+    # 资源换分类残留 URL：2026-11-10 ot-007 → app-141，目标地址换成新路径。
+    # 2026-11-13 撤销 ot-006 → cs-018：ot-006 已重新入库，id 空洞复用前必须先删该 id 的历史 301。
+    rewrite ^/resource/ot-007(/index\.html|/)?$ /software/app-141/ permanent;
+    # 2026-11-10 前缀统一：原「操作系统」11 条 os-001~011 → app-130~140
+    rewrite ^/resource/os-001(/index\.html|/)?$ /software/app-134/ permanent;
+    rewrite ^/resource/os-002(/index\.html|/)?$ /software/app-135/ permanent;
+    rewrite ^/resource/os-003(/index\.html|/)?$ /software/app-130/ permanent;
+    rewrite ^/resource/os-004(/index\.html|/)?$ /software/app-131/ permanent;
+    rewrite ^/resource/os-005(/index\.html|/)?$ /software/app-132/ permanent;
+    rewrite ^/resource/os-006(/index\.html|/)?$ /software/app-133/ permanent;
+    rewrite ^/resource/os-007(/index\.html|/)?$ /software/app-138/ permanent;
+    rewrite ^/resource/os-008(/index\.html|/)?$ /software/app-139/ permanent;
+    rewrite ^/resource/os-009(/index\.html|/)?$ /software/app-140/ permanent;
+    rewrite ^/resource/os-010(/index\.html|/)?$ /software/app-136/ permanent;
+    rewrite ^/resource/os-011(/index\.html|/)?$ /software/app-137/ permanent;
+
+    # 旧详情页 /resource/<id>/ → /<slug>/<id>/：9 个 id 前缀与分类一一对应（1040 条实测）。
+    # 新地址由 build.js 的 setItemPaths() 以数据里的 category 为准生成，不依赖前缀约定。
+    rewrite ^/resource/(mv-[^/]+)(/index\.html|/)?$ /movie/$1/ permanent;
+    rewrite ^/resource/(tv-[^/]+)(/index\.html|/)?$ /tv/$1/ permanent;
+    rewrite ^/resource/(dc-[^/]+)(/index\.html|/)?$ /documentary/$1/ permanent;
+    rewrite ^/resource/(an-[^/]+)(/index\.html|/)?$ /anime/$1/ permanent;
+    rewrite ^/resource/(game-[^/]+)(/index\.html|/)?$ /game/$1/ permanent;
+    rewrite ^/resource/(app-[^/]+)(/index\.html|/)?$ /software/$1/ permanent;
+    rewrite ^/resource/(bk-[^/]+)(/index\.html|/)?$ /ebook/$1/ permanent;
+    rewrite ^/resource/(cs-[^/]+)(/index\.html|/)?$ /course/$1/ permanent;
+    rewrite ^/resource/(ot-[^/]+)(/index\.html|/)?$ /misc/$1/ permanent;
 
     # 静态资源长期缓存；HTML 不缓存，更新即时生效
     location ~* \.(css|js|json|svg|webp|png|jpg|jpeg|gif|ico)$ {
@@ -81,7 +113,7 @@ server {
         return 301 $1;
     }
 
-    # 目录式 URL：让 /resource/mv-010/ 命中 resource/mv-010/index.html
+    # 目录式 URL：让 /movie/mv-010/ 命中 movie/mv-010/index.html
     location / {
         try_files $uri $uri/ $uri/index.html =404;
     }

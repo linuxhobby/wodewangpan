@@ -42,7 +42,10 @@ import {
   tagPage,
   tagsPage,
   ALL_PAGE_SIZE,
+  setItemPaths,
+  itemHref,
 } from './lib/render.js';
+import { setCategoryPaths } from './lib/nav.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -140,6 +143,27 @@ if (synced.length) console.log(`  · 条数注释已刷新：${synced.join('、'
 const { items, counts } = normalizeResources(raw);
 const categories = orderCategories(site, counts);
 const total = items.length;
+
+/** 一级目录保留名：分类 slug 撞上这些名字会与静态资源 / 独立页互相覆盖（构建不报错，必须提前拦）。
+ *  slug 必须是英文小写：categorySlug() 未配别名时会回落中文，不能拿它当 URL 目录。 */
+const RESERVED_TOP_DIRS = new Set([
+  'about', 'all', 'assets', 'contact', 'hot', 'img', 'og', 'privacy', 'promo',
+  'qr', 'rss', 'tag', 'tags',
+]);
+{
+  const bad = categories
+    .map(categorySlug)
+    .filter((s) => RESERVED_TOP_DIRS.has(s) || !/^[a-z0-9-]+$/.test(s));
+  if (bad.length) {
+    console.error(`  ! 分类路径非法（撞保留目录或不是英文 slug）：${bad.join('、')}`);
+    process.exit(1);
+  }
+}
+// URL 结构：分类页 /<slug>/、详情页 /<slug>/<id>/；
+// 两处注入让 itemHref() / pageTypeOf() 以数据里的 category 为准，不靠 id 前缀约定
+setItemPaths(items);
+setCategoryPaths(categories.map(categorySlug));
+
 // 全站共用一份判断，免得首页 / 分类页 / 搜索索引各标一套
 const today = todayShanghai();
 const newestIds = newestIdsOf(items, today);
@@ -194,19 +218,43 @@ if (!total) {
 
 fs.mkdirSync(outDir, { recursive: true });
 
-// 只清理已删除资源 / 分类 / 标签的旧目录，其余文件靠 write() 覆盖
-const keepIds = new Set(items.map((i) => i.id));
+// 2026-11-15 起分类页迁到 /<slug>/、详情页迁到 /<slug>/<id>/，
+// 旧的 /resource/ 与 /category/ 整目录不再输出（线上由 nginx 301 接管）。
+const keepIdsByCat = new Map();
+for (const it of items) {
+  const slug = categorySlug(it.category);
+  if (!keepIdsByCat.has(slug)) keepIdsByCat.set(slug, new Set());
+  keepIdsByCat.get(slug).add(it.id);
+}
 const keepCats = new Set(categories.map(categorySlug));
 // 目录名用未编码的真实中文：%E5%89%A7%E6%83%85 会被 nginx 解码成「剧情」再匹配文件系统
 const keepTags = new Set(tags.map((t) => tagSlug(t.label)));
 let staleFailed = 0;
-for (const [sub, keep] of [
-  ['resource', keepIds],
-  ['category', keepCats],
-  ['tag', keepTags],
-]) {
-  staleFailed += prune(path.join(outDir, sub), (name) => keep.has(name)).failed;
+for (const old of ['resource', 'category']) {
+  const dir = path.join(outDir, old);
+  if (!fs.existsSync(dir)) continue;
+  // 逐个删子目录再删空壳：macOS 上对上千个子项一次 rmSync 偶发 ENOTEMPTY
+  staleFailed += prune(dir, () => false).failed;
+  try {
+    fs.rmdirSync(dir);
+  } catch {
+    staleFailed++;
+  }
 }
+// 一级目录：根文件保留，目录只留独立页 / 静态目录与当前分类目录（分类改名后的旧目录自动消失）
+staleFailed += prune(outDir, (name) => {
+  const st = fs.statSync(path.join(outDir, name), { throwIfNoEntry: false });
+  if (st && !st.isDirectory()) return true;
+  return RESERVED_TOP_DIRS.has(name) || keepCats.has(name);
+}).failed;
+// 分类目录内：保留 index.html / feed.xml 与属于本分类的 id 子目录
+for (const slug of keepCats) {
+  const keep = keepIdsByCat.get(slug) || new Set();
+  staleFailed += prune(path.join(outDir, slug), (name) =>
+    name === 'index.html' || name === 'feed.xml' || keep.has(name)
+  ).failed;
+}
+staleFailed += prune(path.join(outDir, 'tag'), (name) => keepTags.has(name)).failed;
 if (staleFailed) {
   console.log(`  ! ${staleFailed} 个旧目录未能清理（不影响访问）；可手动执行 rm -rf ${outDirName} 后重新构建`);
 }
@@ -246,7 +294,7 @@ for (const item of items) {
 // 本页分享二维码（微信扫一扫分享资源页，区别于扫码转存的深链二维码）
 const shareQrMap = new Map();
 for (const item of items) {
-  const pageUrl = `${baseUrl}/resource/${encodeURIComponent(item.id)}/`;
+  const pageUrl = `${baseUrl}${itemHref(item.id)}`;
   shareQrMap.set(item.id, await writeShareQr(pageUrl, item.id, outDir));
 }
 
@@ -260,7 +308,7 @@ const indexAll = items.map((it) => {
     category: it.category,
     tags: it.tags,
     desc: clipDesc(it.description, 40),
-    href: `/resource/${encodeURIComponent(it.id)}/`,
+    href: itemHref(it.id),
     date: it.date,
     thumb: img.thumb || '/img/placeholder.svg',
     card: img.card || '/img/placeholder.svg',
@@ -353,14 +401,14 @@ write(
   listPage({ ...ctxBase, activeCat: '', pageSize: site.pageSize, byCat })
 );
 for (const cat of categories) {
-  const file = path.join(outDir, 'category', categorySlug(cat), 'index.html');
+  const file = path.join(outDir, categorySlug(cat), 'index.html');
   write(file, listPage({ ...ctxBase, items: byCat.get(cat), activeCat: cat, pageSize: site.pageSize }));
 }
 
 console.log('生成详情页…');
 for (const item of items) {
   write(
-    path.join(outDir, 'resource', item.id, 'index.html'),
+    path.join(outDir, categorySlug(item.category), item.id, 'index.html'),
     detailPage({
       ...ctxBase,
       item,
@@ -425,7 +473,7 @@ write(
 for (const cat of categories) {
   const list = feedItems.filter((i) => i.category === cat);
   write(
-    path.join(outDir, 'category', categorySlug(cat), 'feed.xml'),
+    path.join(outDir, categorySlug(cat), 'feed.xml'),
     feedXml({
       site,
       items: list,

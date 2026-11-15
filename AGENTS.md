@@ -18,13 +18,14 @@ node scripts/new-resource.js        # 交互式新增资源条目
 node scripts/fill-files.mjs --limit 3 # 补文件清单（见 §4）
 node scripts/sort-trees.mjs --dry-run # 预览/回填目录树排序（见 §4）
 node scripts/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
+npm run check:images                 # 配图盘点（分类目录命中 / 孤儿文件）
 ```
 
 一次完整构建约 45~130 秒（首次全量偏慢，增量约 40 秒），第二次跑应「重新生成 0 个」。
 
 ## 2. 目录结构
 
-> 2026-11-10 分类合并：「操作系统」并入「软件」，`data/os.yaml` 已删除，11 条系统镜像资源都在 `data/software.yaml`；盘端资源也已从 `09操作系统` 移入 `02应用`。同一轮把原 `os-001~011` 统一重编号为 `app-130~140`（尾号 = 盘端目录号，配图同名改 `app-*.jpg`），所以软件分类只有 `app-` 一种 id 前缀，**不要新建 `os.yaml`、不要再写 `os-` 前缀 id**。旧详情页 `/resource/os-NNN/` 与旧分类页 `/category/os/` 均由线上 nginx 301（改任何已收录路径都必须同步配 301）。
+> 2026-11-10 分类合并：「操作系统」并入「软件」，`data/os.yaml` 已删除，11 条系统镜像资源都在 `data/software.yaml`；盘端资源也已从 `09操作系统` 移入 `02应用`。同一轮把原 `os-001~011` 统一重编号为 `app-130~140`（尾号 = 盘端目录号，配图同名改 `app-*.jpg`），所以软件分类只有 `app-` 一种 id 前缀，**不要新建 `os.yaml`、不要再写 `os-` 前缀 id**。旧详情页 `/resource/os-NNN/` 与旧分类页 `/category/os/` 均由线上 nginx 301 到 `/software/app-XXX/` 与 `/software/`（2026-11-15 URL 改造后规则已同步，见 §2.1；改任何已收录路径都必须同步配 301）。
 
 | 路径 | 说明 |
 |---|---|
@@ -51,6 +52,30 @@ node scripts/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5�
 | `deploy/`（其余） | `submit-indexnow.sh` / `submit-baidu.sh`（收录推送）、`nginx-site.conf.example` 与 `00-*.conf`（站点配置与探针/AI 爬虫拦截）、`enable-stats.sh` + `00-sitestats.conf`（站点统计） |
 
 **不要动**：`scripts/lib/render.js` 的渲染逻辑、`theme/`、`deploy/` 下的 nginx 配置——这些改动影响全站 SEO 与线上可用性，只允许明确的人工指令触发。
+
+### 2.1 URL 与配图目录结构（2026-11-15 定稿，长期契约）
+
+| 对象 | 结构 |
+|---|---|
+| 详情页 | `/<slug>/<id>/`，物理目录 `public/<slug>/<id>/index.html` |
+| 分类页 / 分类 RSS | `/<slug>/`、`/<slug>/feed.xml`，物理目录 `public/<slug>/` |
+| 源配图 | `static/images/<slug>/<id>.jpg`（产物 `/img/<id>-*.webp` 仍按 id 平铺，不受影响） |
+
+- `config/site.yaml` 的 `slugs` 是唯一口径，`categorySlug()` 取别名；`build.js` 在读完
+  `data/*.yaml` 后调 `setItemPaths(items)` / `setCategoryPaths(slugs)`，页面 URL 只从
+  `itemHref()` / `catHref()` 出。**不要靠 id 前缀推分类**：历史上有 `ot-007 → app-141` 换分类重编号。
+- **slugs 只增不改**。新增分类必须配英文小写别名，且不能撞 `build.js` 的 `RESERVED_TOP_DIRS`
+  （`about/all/assets/contact/hot/img/og/privacy/promo/qr/rss/tag/tags`）；构建期校验不通过会直接退出。
+  改一个 slug = 同时换掉该分类页与整类详情页地址，属全量 URL 迁移，必须同步 301。
+- **改任何已收录路径都必须同步配 301**：线上 `/etc/nginx/conf.d/wodewangpan.conf` 与
+  `deploy/nginx-site.conf.example` 必须保持一致。规则顺序是「历史精确 id → 旧分类页 → 按前缀的泛化详情页」，
+  顺序颠倒会让 `ot-007` 被泛化成 `/misc/ot-007/`。换 URL 后 IndexNow 要带 `ALL=1` 全量重推。
+- **新增配图一律写 `static/images/<slug>/`**。`scripts/lib/assets.js` 的 `resolveSource()` 保留旧平铺路径
+  兼容双读，只作灰度与跨机分批切换的回退，不是长期口径；`npm run check:images` 会把旧平铺命中与孤儿文件报出来。
+  跨机 skill 的 `scripts/lib/site-paths.mjs`（Mac 本机 `~/.workbuddy/skills/quark-resource-sync`、
+  Windows 侧两份、群晖中转）里的 `PREFIX_SLUG` 必须与站点 `slugs` 同步。
+- `scripts/sitestats.py` 的 `RES_RE` 里那份分类 slug 白名单与 `slugs` 同步；统计按 id 聚合，
+  换 URL 不需要迁移 `stats.db`。
 
 ## 3. Git 约束（重要）
 
@@ -308,9 +333,9 @@ lastmod），且幂等（复跑打印「重排 0 条」）。
   编造数据会让「独有内容」变成「批量伪造内容」，比没有更糟。
 - 死链处理只有人工核验一条路：确认 → `dead: true` → 构建自动 noindex + 移出 sitemap。
 - **人工点名的「回收」是另一条路**（2026-11-11 首次执行：用户先删夸克编号目录、再点名把对应条目从
-  `data/*.yaml` 整块删除）：删条目块 + 首行 `（N 条）` 注释同步回退 + `static/images/<id>.jpg` 一并回收，
+  `data/*.yaml` 整块删除）：删条目块 + 首行 `（N 条）` 注释同步回退 + `static/images/<slug>/<id>.jpg` 一并回收，
   编号随即变成网盘空洞，下一轮 `trending-sync` 的**空洞优先**会自动复用这个 id（站点已无同 id 条目 → `appended`，
-  不走 `↻ 就地改写`）。`/resource/<id>/` 变 404，不做**新** 301、不加回条目。
+  不走 `↻ 就地改写`）。`/<slug>/<id>/` 变 404，不做**新** 301、不加回条目。
   ⚠ 若该 id 曾因换分类配过旧 301，**复用前必须删掉线上 nginx 与 `deploy/nginx-site.conf.example`
   里指向别处的旧 rewrite**：2026-11-13 的 `ot-006` 事故就是旧规则 `ot-006 → cs-018` 没清，
   新入库的「拜托了冰箱（韩国综艺）」详情页被永久跳到「历年高考押题卷合集」。
@@ -360,7 +385,7 @@ ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
 
 ## 8. 配图（海报）获取规范
 
-海报存放 `static/images/<id>.jpg`（480×720，2:3 竖版，jpg），条目里在 `added:` 之后写
+海报存放 `static/images/<slug>/<id>.jpg`（480×720，2:3 竖版，jpg），条目里在 `added:` 之后写
 `image: <id>.jpg`。**任何来源的图都要先验类型（`file`）再看内容**——下载到 HTML/占位图、
 搜错条目是最高频事故，下面各来源的坑都出自实战。
 
@@ -378,7 +403,7 @@ ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'
 ```bash
 T=~/.workbuddy/skills/quark-resource-sync/scripts/tmdb.mjs
 node $T search --type movie --query "All Quiet on the Western Front" --year 2022   # 先拿 id
-node $T detail --type movie --id 49046 --poster static/images/mv-212.jpg           # 再下海报
+node $T detail --type movie --id 49046 --poster static/images/movie/mv-212.jpg           # 再下海报
 ```
 
 - 中文条目名多为意译/别名，**必须用原名或英文名 + 年份检索**（「鳏夫疑案：至死不渝」=
@@ -391,7 +416,7 @@ node $T detail --type movie --id 49046 --poster static/images/mv-212.jpg        
 ### 图书（bk-）：豆瓣书封
 
 ```bash
-node scripts/poster.mjs douban --title "书名" --author "作者名" --out static/images/bk-xxx.jpg
+node scripts/poster.mjs douban --title "书名" --author "作者名" --out static/images/ebook/bk-xxx.jpg
 ```
 
 - 豆瓣模式**只按标题关键词模糊匹配，误抓高发**（「丝绸之路」抓到过黄自乐谱和大村一朗的
@@ -403,7 +428,7 @@ node scripts/poster.mjs douban --title "书名" --author "作者名" --out stati
 ```bash
 curl -s "https://itunes.apple.com/search?term=tailscale&entity=software&limit=3&country=us"
 # 取 results[].artworkUrl512 下载后：
-node scripts/poster.mjs icon --icon <图> --out static/images/app-xxx.jpg --title "名称" --sub "一句话副题"
+node scripts/poster.mjs icon --icon <图> --out static/images/software/app-xxx.jpg --title "名称" --sub "一句话副题"
 ```
 
 - GitHub 头像接口（`github.com/<org>.png`）可能返回 HTML 而非图片，下载后必须 `file` 验证；
@@ -422,9 +447,9 @@ node scripts/poster.mjs icon --icon <图> --out static/images/app-xxx.jpg --titl
 
 ```bash
 # 兜底：没有文生图结果，或明确要求参数化自绘时
-node scripts/poster.mjs set --title "丝绸之路" --badge "马友友 · 20 周年纪念特辑" --out static/images/ot-xxx.jpg
+node scripts/poster.mjs set --title "丝绸之路" --badge "马友友 · 20 周年纪念特辑" --out static/images/misc/ot-xxx.jpg
 # 编辑式主题版式：saas / arch / silk / dl 四套预设，--title 用 | 分行，--sub / --foot / 配色可覆盖
-node scripts/poster.mjs scene --preset silk --out static/images/ot-xxx.jpg
+node scripts/poster.mjs scene --preset silk --out static/images/misc/ot-xxx.jpg
 ```
 
 `scene` 是 2026-11-13 三张重绘海报（`cs-031` / `cs-032` / `ot-008`）与 `cs-029` 去字样重绘的可复现实现，
@@ -447,7 +472,7 @@ node scripts/poster.mjs scene --preset silk --out static/images/ot-xxx.jpg
 
 ### 完成动作
 
-`image:` 字段写入 → 复扫全库无缺图无坏链 → `npm run build` 两次 → 抽查详情页海报引用。
+`image:` 字段写入 → `npm run check:images`（配图归位与孤儿检查）→ 复扫全库无缺图无坏链 → `npm run build` 两次 → 抽查详情页海报引用。
 （批量改 yaml 时注意行尾混排问题，见 §5。）重绘已有海报同样按本节决策链；若改了
 `poster.mjs`，脚本要和图一起提交，别只推图片。
 

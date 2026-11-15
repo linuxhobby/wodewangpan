@@ -26,13 +26,23 @@ export const FOOT_NAV = [
 /** 底部导航页都是单一页面；其余这几个页面按现状也不出，集中列在这里避免各自判断 */
 const NO_CRUMB_TYPES = new Set([...FOOT_NAV.map((i) => i.type), 'tag', 'hot', '404']);
 
+/** 2026-11-15 起分类页 /<slug>/、详情页 /<slug>/<id>/ 共用一级目录。
+ *  分类 slug 集合由 build.js 注入，页面类型判定只在集合内生效，避免把 /about/ 之类误判成分类页。 */
+let CATEGORY_PATHS = new Set();
+export function setCategoryPaths(slugs) {
+  CATEGORY_PATHS = new Set(slugs.map(String));
+}
+
 /** 页面类型由 URL 判定，集中在这一处；底部导航页直接取 FOOT_NAV 的 type。
  *  未识别的类型返回空串，保守不出面包屑（新增页面不会凭空冒出多余导航）。 */
 export function pageTypeOf({ canonicalPath = '', footNavCurrent = '' } = {}) {
-  if (/^\/resource\/[^/]+\/$/.test(canonicalPath)) return 'detail';
-  if (/^\/category\/[^/]+\/$/.test(canonicalPath)) return 'category';
   const nav = FOOT_NAV.find((i) => i.href === (footNavCurrent || canonicalPath));
   if (nav) return nav.type;
+  const seg = canonicalPath.split('/').filter(Boolean);
+  if (CATEGORY_PATHS.has(seg[0])) {
+    if (seg.length === 2) return 'detail';
+    if (seg.length === 1) return 'category';
+  }
   if (canonicalPath.startsWith('/tag/')) return 'tag';
   if (canonicalPath === '/hot/') return 'hot';
   if (canonicalPath === '/404.html') return '404';

@@ -530,7 +530,7 @@ self_check() {
   probe '/' 200
   probe '/sitemap.xml' 200
   probe '/robots.txt' 200
-  probe '/category/movie/' 200
+  probe '/movie/' 200
   probe '/key.txt' 200
   probe '/nope' 404
 
@@ -771,7 +771,7 @@ jobs:
 
 ```bash
 S=https://你的域名
-for u in / /category/movie/ /all/ /resource/mv-010/ /sitemap.xml \
+for u in / /movie/ /all/ /movie/mv-010/ /sitemap.xml \
          /robots.txt /search-index.json /img/mv-010-240.webp /qr/mv-010-quark.svg \
          /nope; do
   printf '%-38s %s\n' "$u" "$(curl -s -o /dev/null -w '%{http_code}' "$S$u")"
@@ -779,7 +779,7 @@ done
 curl -s $S/ | grep canonical       # 应是你的真实域名
 ```
 
-除 `/nope` 应为 **404**，其余全部 **200**。中文分类页用 curl 要 percent-encoding，浏览器直接访问正常。
+除 `/nope` 应为 **404**，其余全部 **200**。分类页一级目录是英文 slug，无需 percent-encoding；旧 `/category/movie/` 与 `/resource/<id>/` 由 nginx 301 到新地址。
 
 ## 目录结构
 
@@ -800,7 +800,7 @@ config/              # 站点配置，与资源数据分开存放
 static/
   favicon.svg        # 站点图标唯一源文件（换 logo 就改它）；构建时拷到根目录并生成 favicon.ico / apple-touch-icon.png
   share.jpg          # 首页品牌分享卡（1200×630），构建时拷到站点根目录供 og:image 用
-  images/            # 配图，文件名与资源 id 对应：<id>.jpg / .png / .webp / .svg；全部平铺在一个目录，不按分类分桶）
+  images/            # 配图，按分类 slug 分子目录：images/<slug>/<id>.jpg / .png / .webp / .svg（产物 /img/ 仍按 id 平铺）
 theme/assets/        # 前端样式与脚本，构建时拷到 public/assets/
 scripts/             # 站点脚本单目录：构建 / 预览 / 内容运维工具（lib/ 是构建核心：读数据、出图片、渲染页面）
   sitestats.py           # 访问统计脚本（VPS 方案用到）

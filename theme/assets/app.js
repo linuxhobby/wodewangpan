@@ -45,9 +45,8 @@ import { esc, tileHtml } from './card.js';
     return html;
   }
 
-  /** 索引条目 → 卡片入参（索引里已带 href / card / thumb，不必再拼 URL） */
+  /** 索引条目 → 卡片入参（索引里已带 id / href / card / thumb，不必再拼 URL） */
   function tileOf(it, titleHtml, isNew) {
-    var m = it.href && it.href.match(/resource\/([^/]+)/);
     return tileHtml({
       href: it.href,
       src: it.card || it.thumb,
@@ -56,7 +55,8 @@ import { esc, tileHtml } from './card.js';
       category: it.category,
       tags: it.tags,
       isNew: !!isNew,
-      resId: m ? m[1] : '',
+      // 2026-11-15 URL 改成 /<slug>/<id>/ 后不再从路径里抠 id，直接用索引里的 id
+      resId: it.id || '',
     });
   }
 
@@ -194,7 +194,7 @@ import { esc, tileHtml } from './card.js';
   function loadGlobalIndex(cb) {
     if (globalIndex || globalLoading) return cb && cb();
     globalLoading = true;
-    // 必须写根绝对路径：相对写法在 /resource/<id>/ 下会解析成 404，
+    // 必须写根绝对路径：相对写法在 /<slug>/<id>/ 下会解析成 404，
     // 蜘蛛跟着渲染结果去抓就是一批白费抓取预算的硬 404
     fetch(SI_URL)
       .then(function (r) { return r.json(); })
@@ -225,7 +225,7 @@ import { esc, tileHtml } from './card.js';
     try {
       if (navigator.sendBeacon) navigator.sendBeacon(url);
       else fetch(url, { keepalive: true }).catch(function () {});
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
   }
 
   // 触屏端只隐藏二维码那一行（扫码分享在手机上没意义）；「复制资源信息」必须留着——
@@ -459,7 +459,8 @@ import { esc, tileHtml } from './card.js';
         // 不过滤会出现「裸 id 标题 + 详情页 404」
         .filter(function (id) { return !!index[id]; })
         .map(function (id) {
-          var m = index[id] || { title: id, href: '/resource/' + encodeURIComponent(id) + '/', category: '' };
+          // href 由构建期 hotPage 内联（itemHref 已带分类）；filter 保证 index[id] 存在
+          var m = index[id] || { title: id, href: '/', category: '' };
           return { id: id, pv: statsRes[id].pv || 0, uv: statsRes[id].uv || 0, title: m.title, href: m.href, category: m.category };
         })
         .filter(function (x) { return x.pv > 0 || x.uv > 0; })

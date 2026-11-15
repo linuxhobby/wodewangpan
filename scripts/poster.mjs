@@ -2,17 +2,17 @@
 /**
  * 配图 / 封面生成器（2:3 竖版，480×720），五个模式共用一个入口：
  *
- *   node scripts/poster.mjs book   --title "牧羊少年奇幻之旅" --author "[巴西] 保罗·柯艾略" --year 1988 --out static/images/bk-002.jpg
- *   node scripts/poster.mjs icon   --icon <本地文件|图片URL> --out static/images/app-005.jpg --title "AdGuard" --sub "广告拦截 · 隐私保护"
- *   node scripts/poster.mjs set    --title "王牌惊悚套装" --badge "共 17 册" --out static/images/bk-006.jpg
- *   node scripts/poster.mjs scene  --preset dl --out static/images/cs-029.jpg    # 预设还有 saas / arch / silk
- *   node scripts/poster.mjs douban --title "飞越疯人院" --author "肯·克西" --out static/images/bk-001.jpg
+ *   node scripts/poster.mjs book   --title "牧羊少年奇幻之旅" --author "[巴西] 保罗·柯艾略" --year 1988 --out static/images/ebook/bk-002.jpg
+ *   node scripts/poster.mjs icon   --icon <本地文件|图片URL> --out static/images/software/app-005.jpg --title "AdGuard" --sub "广告拦截 · 隐私保护"
+ *   node scripts/poster.mjs set    --title "王牌惊悚套装" --badge "共 17 册" --out static/images/ebook/bk-006.jpg
+ *   node scripts/poster.mjs scene  --preset dl --out static/images/course/cs-029.jpg    # 预设还有 saas / arch / silk
+ *   node scripts/poster.mjs douban --title "飞越疯人院" --author "肯·克西" --out static/images/ebook/bk-001.jpg
  *
  * book / set 是「没封面时自己画一张」，icon 是把现成图标合成竖版，douban 是抓正版封面（优先），
  * scene 是编辑式主题版式（2026-11-13 三张重绘海报 + cs-029 的可复现实现）：细双框 + 眉标 + 矢量主视觉 +
  * 菱形分隔线 + 主/副标题 + 页脚。--title 用 | 分行，--sub / --foot / --badge / --kicker 与配色参数
  * （--bg1 --bg2 --halo --plate --ink --line --accent）可覆盖预设；不带覆盖参数时与当时写进
- * static/images/ 的 jpg 逐字节一致，可用 shasum 核对。新增版式一律在这里加预设，别再写一次性脚本。
+ * static/images/<slug>/ 的 jpg 逐字节一致，可用 shasum 核对。新增版式一律在这里加预设，别再写一次性脚本。
  * icon 模式的标题按估算宽度自适应：放得下用 50px，超了先缩到 34px，仍超则折两行 —— 不要再手改字号（旧 bug：cs-016 被裁掉首尾）。
  * 出图后务必打开看一眼再入库：标题顶边、图标偏小、豆瓣的「封面+封底」展开图，只有看图能发现。
  */
@@ -350,7 +350,7 @@ async function posterSet() {
 // ── scene：编辑式主题版式（2026-11-13 三张重绘海报 + cs-029 的可复现实现）──
 // 统一骨架：细双框 + 眉标 + 矢量主视觉 + 菱形分隔线 + 主/副标题 + 页脚。
 // 四套主视觉（saas 餐饮 POS / arch 分布式拓扑 / silk 丝路金月 / dl 脑网络）与配色都落在下面的
-// SCENES 里；不带覆盖参数时，出图与当时写进 static/images/ 的 jpg 逐字节一致。
+// SCENES 里；不带覆盖参数时，出图与当时写进 static/images/<slug>/ 的 jpg 逐字节一致。
 function sceneSvg(p) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <defs>
@@ -578,7 +578,7 @@ const SCENES = {
 };
 
 // 只有在 --title / --sub / --foot / --badge 覆盖时才重排文字层；默认直接用预设的
-// 原始文本层，保证复现结果与当时写进 static/images/ 的 jpg 完全一致。
+// 原始文本层，保证复现结果与当时写进 static/images/<slug>/ 的 jpg 完全一致。
 function buildText(p, scene) {
   const lay = scene.layout;
   const titles = arg('title', scene.titles.join('|')).split('|').map((s) => s.trim());
@@ -676,7 +676,7 @@ async function posterDouban() {
   const listOnly = process.argv.includes('--list');
   if (!title || (!out && !listOnly)) {
     console.error(
-      '用法：node scripts/poster.mjs douban --title "书名" --out static/images/bk-001.jpg [--author 关键字] [--pick 豆瓣id] [--list]'
+      '用法：node scripts/poster.mjs douban --title "书名" --out static/images/ebook/bk-001.jpg [--author 关键字] [--pick 豆瓣id] [--list]'
     );
     return 1;
   }

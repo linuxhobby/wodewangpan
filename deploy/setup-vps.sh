@@ -462,7 +462,7 @@ self_check() {
   probe '/' 200
   probe '/sitemap.xml' 200
   probe '/robots.txt' 200
-  probe '/category/movie/' 200
+  probe '/movie/' 200
   probe '/key.txt' 200
   probe '/nope' 404
 

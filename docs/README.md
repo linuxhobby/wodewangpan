@@ -10,8 +10,8 @@
 
 （这类错了不报错，只会悄悄丢排名）
 
-- **`id` 就是 URL**（`/resource/mv-046/` 的 `mv-046` 取自 `data/*.yaml` 的 `id`）。改 id = 换地址 = 已收录页 404。**绝不能改**。
-- **分类 slug 改别名 = 换 URL**（`config/site.yaml` 的 `slugs`）。已收录后改 = 丢排名。
+- **`id` 就是 URL 的末段**（`/movie/mv-046/` 的 `mv-046` 取自 `data/*.yaml` 的 `id`）。改 id = 换地址 = 已收录页 404。**绝不能改**。
+- **分类 slug 改别名 = 换 URL**（`config/site.yaml` 的 `slugs`）：分类页 `/<slug>/` 与该分类全部详情页 `/<slug>/<id>/` 一起换，已收录后改 = 丢排名。
 - **标签 slug 三级取值，别名表只增不改**：`scripts/lib/data.js` 的 `tagSlug()` → ① `config/tags.yaml` 手写别名（34 个英文 slug，**永远别动**）② 拼音兜底 ③ 原样。已落到拼音 URL 的标签事后补别名 = 换 URL，所以 `tagSlugs` 只增不改。
 - **`pinyin-pro` 必须在 `dependencies`**：它决定标签 URL，放 devDependencies 会让部署机 `npm i --omit=dev` 时缺席 → 线上退化成 `%E7%A7%91%E5%B9%BB` 编码路径，两边不一致，直接丢排名。
 - **标签 slug 撞车**：两标签算出同 slug 会写进同一 `/tag/xxx/` 且构建**不报错**，撞了就在 `config/tags.yaml` 给其一配别名。
@@ -55,7 +55,7 @@
 - **`robots.txt` 只挡子路径** `Disallow: /*/search-index.json`；根 `/search-index.json` 是 Googlebot 渲染「加载更多」的通道，挡了自断发现路径。
 - 410 规则（`^/.+/search-index\.json$`）**必须排在静态资源 location 之前**（nginx 正则 location 取首个命中）。
 - `gzip_types` 必须带 `text/xml`（`mime.types` 把 `.xml` 映射成 text/xml，只写 application/xml 时 sitemap/feed 完全不压缩）。
-- **nginx 四层策略**（仓库镜像在 `deploy/`）：① `return 410` 已死 URL（`/resource/*/search-index.json`）② `return 444` 漏洞扫描 ③ `return 403` 零回流爬虫 ④ robots.txt 礼貌层。
+- **nginx 四层策略**（仓库镜像在 `deploy/`）：① `return 410` 已死 URL（`/<slug>/*/search-index.json`）② `return 444` 漏洞扫描 ③ `return 403` 零回流爬虫 ④ robots.txt 礼貌层。
   - 410 而非 404：让蜘蛛衰减更快（子路径从 80→2 次/天）。
   - `if ... return` 放 server 块最前（先于 http→https 的 if，避免探测白吃 301）；server-rewrite 阶段早于 preaccess，故优先于 `limit_req`。
   - 444 绕开 `key.txt`/`baidu_verify_*.html`/`.well-known/acme-challenge/`/根 `search-index.json`。
@@ -113,8 +113,8 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 ### 下架一条要清四处
 
 1. `data/*.yaml` 删条目（改头部条数注释；**别用「按 `- id:` 切块重写」脚本删**——会吃掉文件头 `# XX资源（N 条）` 注释，用 js-yaml 校验）。
-2. `static/images/<id>.jpg` 删海报。
-3. `public/` 删 `resource/<id>/`、`img/<id>-*.webp`、`qr/<id>-*.svg`。
+2. `static/images/<slug>/<id>.jpg` 删海报。
+3. `public/` 删 `<slug>/<id>/`、`img/<id>-*.webp`、`qr/<id>-*.svg`。
 4. 重新构建 + 冒烟（首页 200、已下架详情页 404）→ 提交推送。
 
 > **SEO 视角**：下架是 SEO 动作。构建期输出下架清单 + nginx 410/301（见第五/六节），把 Googlebot 重试从 33 次/天压下来。
@@ -130,7 +130,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 配图：图源与兜底
 
-- 放 `static/images/`，全站平铺，文件名 = id。卡片 240×360 `fit:cover`，源图宽 ≥240 即达标（维基 ~256×364 够用）。
+- 放 `static/images/<slug>/`（按分类分目录），文件名 = id；产物 `/img/<id>-*.webp` 仍按 id 平铺，不受影响。卡片 240×360 `fit:cover`，源图宽 ≥240 即达标（维基 ~256×364 够用）。
 - **真实素材优先**：Wikimedia ✅首选（带浏览器 UA）／ TMDB 海报 ✅ ／ iTunes 512 ✅ ／ simple-icons ✅ ／ 豆瓣图书 ✅（电子书主力）／ weserv 代理 ✅；Fandom／MobyGames／Google Books ❌。课程无 TMDB 海报：官方图→维基→`scripts/poster.mjs icon` 合成。
 - **假图识别**：下载完 `file` 看 image/JPEG/PNG 且宽 ≥200；出图必须打开看一眼（`app.js` 取图、图标偏小、identicon 假头像只有看图能发现）。
 - **自绘兜底** `scripts/poster.mjs`（douban/book/icon/set 四模式）+ `scripts/share-poster.mjs`（首页品牌分享卡 `static/share.jpg`，改站名/分类后重跑）。
@@ -199,7 +199,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 - **2026-11-12 起机器人代码不在本站仓库**：QQ/TG 机器人整体迁至私有仓 `mybot`（原站内 `bot/`，更早是独立目录 `wodewangpan-bot`），部署、配置、NapCat 与 OneBot 的运维细节和踩坑记录都在那边的 `bot/README.md`，本文只保留与站点有关的事实。
 - **与站点构建从来互不影响**：`npm run lint` 只扫 `scripts theme/assets`，`scripts/build.js` 只从 `theme/`、`static/`、`share.jpg` 等显式路径取文件、从不扫描仓库根目录，所以机器人代码既不参与构建、也不会被打进 `public/` 上线。
 - 链路：群消息 → NapCat（QQ 号与群号等真实参数只存私有仓，公开文档不再重复）→ OneBot HTTP 上报本机端口 → 查 `www.wodewangpan.top` → 回群。
-- **只读线上站**：数据源只有 `/search-index.json` 与 `/resource/<id>/` 两个 HTTP GET，不读 `data/*.yaml`，不依赖仓库，也不写任何本地资源。
+- **只读线上站**：数据源只有 `/search-index.json` 与 `/<slug>/<id>/` 两个 HTTP GET（mybot 私有仓需同步该口径），不读 `data/*.yaml`，不依赖仓库，也不写任何本地资源。
 - 群里以 `/` 开头**免 @** 直接执行；裸关键词仍需 @（否则正常群聊会被当搜索，刷屏且招风控）。开关 `config.json` 的 `group_no_at_slash`。
 
 | 指令 | 作用 |
@@ -317,10 +317,10 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 配图/封面：
 
 ```bash
-node scripts/poster.mjs douban --title "书名" --out static/images/bk-001.jpg   # 抓豆瓣正版封面（电子书优先）
-node scripts/poster.mjs book   --title "书名" --out static/images/bk-002.jpg   # 豆瓣查无此书时生成兜底
-node scripts/poster.mjs icon   --icon <图标> --out static/images/app-001.png   # 图标合成竖版
-node scripts/poster.mjs set    --title "套装名" --out static/images/bk-006.jpg # 套装深色封面
+node scripts/poster.mjs douban --title "书名" --out static/images/ebook/bk-001.jpg   # 抓豆瓣正版封面（电子书优先）
+node scripts/poster.mjs book   --title "书名" --out static/images/ebook/bk-002.jpg   # 豆瓣查无此书时生成兜底
+node scripts/poster.mjs icon   --icon <图标> --out static/images/software/app-001.png   # 图标合成竖版
+node scripts/poster.mjs set    --title "套装名" --out static/images/ebook/bk-006.jpg # 套装深色封面
 node scripts/share-poster.mjs  # 改完站点配置后重跑，刷新 static/share.jpg
 ```
 

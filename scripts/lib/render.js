@@ -157,12 +157,21 @@ const contactHtml = (contact, groupName = '') => {
   return `<p class="foot__contact">${links}</p>`;
 };
 
+/** 2026-11-15 起 URL 带分类：分类页 /<slug>/，详情页 /<slug>/<id>/。
+ *  id → 分类 slug 由 build.js 在读完 data/*.yaml 后注入一次，itemHref(id) 的调用点不用改签名，
+ *  且路径以数据里的 category 为准（不靠 id 前缀约定，换分类重编号也不会指错目录）。 */
+let ITEM_PATHS = new Map();
+export function setItemPaths(items) {
+  ITEM_PATHS = new Map(items.map((it) => [it.id, categorySlug(it.category)]));
+}
 /** 详情页链接：id 一律 encodeURIComponent，中文 / 特殊字符 id 才不会破坏 URL */
 export function itemHref(id) {
-  return `/resource/${encodeURIComponent(id)}/`;
+  const slug = ITEM_PATHS.get(id);
+  if (!slug) throw new Error(`itemHref: 未注册的资源 id ${id}（build.js 需先调用 setItemPaths）`);
+  return `/${encodeURIComponent(slug)}/${encodeURIComponent(id)}/`;
 }
 export function catHref(category) {
-  return `/category/${encodeURIComponent(categorySlug(category))}/`;
+  return `/${encodeURIComponent(categorySlug(category))}/`;
 }
 /** 分类 RSS 地址：分类页路径后面直接接 feed.xml */
 export function catFeedHref(category) {
@@ -1162,7 +1171,7 @@ export function hotPage(ctx) {
   for (const it of items) {
     hotIndex[it.id] = {
       title: it.title,
-      href: `/resource/${encodeURIComponent(it.id)}/`,
+      href: itemHref(it.id),
       category: it.category,
     };
   }
