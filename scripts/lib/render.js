@@ -582,13 +582,28 @@ export function listPage(ctx) {
   return layout({ ...ctx, ...(ctx.activeCat ? catPage(ctx) : homePage(ctx)) });
 }
 
+/** 「打开转存」实际跳转地址。百度分享链接带官方 ?pwd= 参数：访客在百度账号里开了
+    「分享链接自动填充提取码」（网盘设置项）就自动填充，没开通常也会预填输入框——
+    提取码随 URL 走，不依赖剪贴板，微信内置浏览器这类魔改环境也更稳。
+    展示用的 <code> 与「复制链接」仍给原始短链；URL 里已有 pwd 参数或无提取码时原样返回。
+    锚点（#）必须保持在末尾，query 插在它前面 */
+function openHref(link) {
+  const url = String(link.url || '').trim();
+  if (link.kind !== 'baidu' || !link.code || /[?&]pwd=/.test(url)) return url;
+  const hashAt = url.indexOf('#');
+  const base = hashAt === -1 ? url : url.slice(0, hashAt);
+  const frag = hashAt === -1 ? '' : url.slice(hashAt);
+  return `${base}${base.includes('?') ? '&' : '?'}pwd=${encodeURIComponent(link.code)}${frag}`;
+}
+
 function linkRow(link) {
   const code = link.code
     ? `<span class="linkrow__code">提取码 <b>${esc(link.code)}</b><button class="btn btn--mini" type="button" data-copy="${esc(link.code)}">复制</button></span>`
     : '';
   // 主 CTA：「打开转存」是唯一显眼按钮（btn--primary），复制降级为 mini 次级操作。
   // 有提取码时点主按钮会先自动复制提取码再跳新标签页（app.js 的 data-open-code 分支），
-  // 省掉「点开链接 → 回头找提取码」的断点；data-ev 供转存点击埋点统计
+  // 省掉「点开链接 → 回头找提取码」的断点；百度链接另带 ?pwd= 自动填充（openHref），双保险；
+  // data-ev 供转存点击埋点统计
   const openAttrs =
     ' data-ev="open"' +
     (link.code ? ` data-open-code="${esc(link.code)}"` : '');
@@ -596,7 +611,7 @@ function linkRow(link) {
   <span class="linkrow__name">${esc(link.name)}</span>
   <code class="linkrow__url">${esc(link.url)}</code>
   ${code}
-  <a class="btn btn--primary" href="${esc(link.url)}" target="_blank" rel="noopener noreferrer"${openAttrs}>打开转存</a>
+  <a class="btn btn--primary" href="${esc(openHref(link))}" target="_blank" rel="noopener noreferrer"${openAttrs}>打开转存</a>
   <button class="btn btn--mini" type="button" data-copy="${esc(link.url)}">复制链接</button>
 </div>`;
 }
