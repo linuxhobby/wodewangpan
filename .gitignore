@@ -13,3 +13,6 @@ bot/**/qr-*.png
 # Telegram / Bluesky 判重记录：现网状态，只留本机（删了会重复发）
 posted.json
 *.state.json
+
+# WorkBuddy 自动化在本目录留下的本地运行态（memory/automations 等），不进 git
+.workbuddy/
