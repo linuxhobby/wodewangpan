@@ -206,8 +206,8 @@ export const baseRecord = (it, text) => ({
 
 // ---------- 选片 ----------
 /**
- * 选片器：latest（最新优先）/ random / rotate（按分类固定轮转）/ weighted（默认，
- * 按各分类剩余可发条数加权随机选分类，再在分类内随机挑一条）。
+ * 选片器：latest（默认，全站按 added 倒序取最新入库的一条）/ random / rotate（按分类固定轮转）
+ * / weighted（按各分类剩余可发条数加权随机选分类，再在分类内随机挑一条）。
  * pickOne(usedNow) 返回 { item, info }，info 是给人看的选片说明（可能为空串）。
  */
 export function makePicker({ items, state, picks, strategy, skipReason, catOrder = CAT_ORDER }) {
@@ -227,7 +227,10 @@ export function makePicker({ items, state, picks, strategy, skipReason, catOrder
     const unseen = items.filter((x) => !usedNow.has(x.id) && !skipReason(x));
     if (!unseen.length) throw new Error('没有新条目可发（全部重复或已被筛选条件排除）');
     if (strategy === 'latest') {
-      return unseen.sort((a, b) => String(b.added).localeCompare(String(a.added)) || b.id.localeCompare(a.id))[0];
+      // added 形如「2026-11-15」或「2026-11-15 06:37」，字符串倒序即时间倒序；
+      // 同一批入库（added 相同）按 id 数值倒序，numeric 避免 mv-99 排到 mv-457 前面。
+      return unseen.sort((a, b) => String(b.added).localeCompare(String(a.added))
+        || b.id.localeCompare(a.id, 'en', { numeric: true }))[0];
     }
     if (strategy === 'random') return unseen[Math.floor(Math.random() * unseen.length)];
     if (strategy === 'rotate') {

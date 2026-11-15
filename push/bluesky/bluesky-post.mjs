@@ -9,7 +9,7 @@
 //   node bluesky-post.mjs                  # 发一条（默认 weighted 加权随机选分类，绝不重复已发过的）
 //   node bluesky-post.mjs --count 3        # 一次发 3 条（补发用）
 //   node bluesky-post.mjs --pick mv-248    # 指定条目（--pick 可重复，忽略已发记录）
-//   node bluesky-post.mjs --strategy latest|random|rotate   # 默认 weighted
+//   node bluesky-post.mjs --strategy latest|weighted|random|rotate   # 默认 latest：按 added 倒序，新入库优先
 //   node bluesky-post.mjs --no-site-link   # 正文不带站点详情页链接
 //   node bluesky-post.mjs --with-site-link # 正文带站点详情页链接（默认带）
 //   node bluesky-post.mjs --audit          # 打印不可发条目的原因分布
@@ -39,7 +39,7 @@ const DRY = has('dry');
 // 想只发带图的就加 --require-image。
 const ALLOW_NO_IMAGE = !has('require-image');
 const COUNT = parseInt(arg('count', '1'), 10);
-const STRATEGY = arg('strategy', 'weighted'); // weighted（默认）| rotate | random
+const STRATEGY = arg('strategy', 'latest'); // latest（默认）| weighted | rotate | random
 const PICKS = collectPicks();
 const WITH_SITE_LINK = !has('no-site-link');
 

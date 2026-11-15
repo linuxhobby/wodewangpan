@@ -24,7 +24,7 @@ node push/bluesky/bluesky-post.mjs --dry   # 只打印文案与选中条目，�
 node push/bluesky/bluesky-post.mjs         # 发一条
 node push/bluesky/bluesky-post.mjs --count 3          # 补发多条
 node push/bluesky/bluesky-post.mjs --pick mv-248      # 指定条目（可重复传，忽略已发记录）
-node push/bluesky/bluesky-post.mjs --strategy weighted|rotate|random|latest   # 默认 weighted（按分类剩余量加权随机选分类）
+node push/bluesky/bluesky-post.mjs --strategy latest|weighted|rotate|random   # 默认 latest（按 added 倒序，新入库优先）
 node push/bluesky/bluesky-post.mjs --no-site-link     # 正文不带站点详情页链接
 node push/bluesky/bluesky-post.mjs --require-image    # 只发有海报的（默认无海报也发，纯文本帖）
 node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的原因分布，排查去重用
@@ -47,7 +47,9 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 - 百度链接覆盖率（2026-10-24 实测）：全站 795 条里 **623 条有** `baidu_url` + `baidu_code`，**172 条没有**（约占 21.6%，主要是 2026-10-19 之后新增的动漫 / 电影 / 电视剧 / 纪录片 / 电子书 / 操作系统 / 其他批次，以及 `mv-335`、`tv-129` 等老条目）。缺 `baidu_url` 的条目**只发夸克行，这是预期行为**，不是脚本 bug；核对前先 `grep baidu_url data/*.yaml` 或直接读该条目，别按「只有 3 条例外」的旧结论判定失败。
 - `--audit` 可打印不可发条目的原因分布，排查用。
 
-**默认 `weighted`：随机选分类发送**（用户 2026-10-06 要求，因为各分类库存差得太远）。做法是**按各分类剩余可发条数加权随机**选一个分类，再在该分类内随机挑一条：
+**默认 `latest`：最新入库优先**（用户 2026-11-15 要求）。读全站 `data/*.yaml` 的 `added`，按时间倒序取还没发过的第一条；`added` 相同（同一批入库）时按 id 数值倒序。新资源一入库就排到队首、下一轮优先发，不会压在几百条老资源后面。`added` 覆盖率 100%（现 1040 条），格式 `YYYY-MM-DD` 或 `YYYY-MM-DD HH:MM`，字符串倒序即时间倒序。全部发完报「没有新条目可发」并停止。
+
+**备选 `weighted`：按分类剩余量加权随机**（`--strategy weighted`，2026-11-15 之前是默认）。做法是**按各分类剩余可发条数加权随机**选一个分类，再在该分类内随机挑一条：
 
 | 分类 | 库存 | 占比 |
 |---|---|---|
@@ -61,13 +63,13 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 | 其他 | 3 | 0.5% |
 | 动漫 | 1 | 0.2% |
 
-（2026-10-10 数据，已发 40 / 剩余 649 / 全站 689；数字会随发帖和入库漂移，脚本实时算，不用手改。）
+（2026-10-10 历史数据，已发 40 / 剩余 649 / 全站 689；数字会随发帖和入库漂移，脚本实时算，不用手改。）
 
-效果：库存多的分类出现得多，小分类也始终有机会露脸；某个分类发完权重自动归零、不再被选中；全部发完报「没有新条目可发」并停止。运行时会打印 `随机选中分类：电视剧（剩余 121 条，权重 18.6%）`，方便核对。
+效果：库存多的分类出现得多，小分类也始终有机会露脸；某个分类发完权重自动归零、不再被选中。运行时会打印 `随机选中分类：电视剧（剩余 121 条，权重 18.6%）`，方便核对。
 
 分类不写死：以数据里实际出现的 `category` 为准，`CAT_ORDER` 只决定展示顺序，站里新增分类（如「操作系统」）会自动纳入，不用回来改代码。
 
-另外两种策略：`rotate`（固定顺序轮转 电影→电视剧→纪录片→动漫→游戏→软件→电子书→其他，取该分类编号最小的一条）、`random`（不分分类，直接在全部未发条目里均匀随机，效果接近 weighted）。`latest` 为最新入库优先。`--pick <id>` 可强制指定（此时忽略去重，仅用于补发特定条目）。
+其余策略：`rotate`（固定顺序轮转 电影→电视剧→纪录片→动漫→游戏→软件→电子书→其他，取该分类编号最小的一条）、`random`（不分分类，直接在全部未发条目里均匀随机）。`--pick <id>` 可强制指定（此时忽略去重，仅用于补发特定条目）。
 
 ## 帖子结构
 

@@ -9,7 +9,7 @@
 //   node tg-post.mjs                       # 发一条
 //   node tg-post.mjs --count 3             # 连发 3 条（补发用）
 //   node tg-post.mjs --pick game-012       # 指定条目（可重复传，忽略已发记录）
-//   node tg-post.mjs --strategy weighted|rotate|random|latest
+//   node tg-post.mjs --strategy latest|weighted|rotate|random   # 默认 latest：按 added 倒序，新入库优先
 //   node tg-post.mjs --desc-len 200        # 描述目标字数（默认 200）
 //   node tg-post.mjs --require-size        # 只发有 files.size 的条目（默认缺大小就省略该行）
 //   node tg-post.mjs --require-image       # 只发有海报的（默认无海报退回纯文本 sendMessage）
@@ -46,7 +46,7 @@ const DRY = has('dry');
 const PICKS = collectPicks();
 // 传了 --pick 就按指定条数发，不用额外记 --count
 const COUNT = Math.max(parseInt(arg('count', '1'), 10), PICKS.length);
-const STRATEGY = arg('strategy', 'weighted');
+const STRATEGY = arg('strategy', 'latest'); // 默认最新入库优先，可用 --strategy 覆盖
 const DESC_LEN = parseInt(arg('desc-len', '200'), 10);
 const ALLOW_NO_IMAGE = !has('require-image');
 const REQUIRE_SIZE = has('require-size');
