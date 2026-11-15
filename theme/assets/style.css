@@ -457,11 +457,11 @@ a.tag:hover { background: var(--brand-soft); }
 .qrbox__img { width: 100%; max-width: 150px; height: auto; aspect-ratio: 1 / 1; display: block; margin: 0 auto; }
 .qrbox__cap { font-size: var(--fs-sm); color: var(--muted); margin-top: 6px; }
 .qrbox__switch { display: flex; gap: 6px; margin-top: 8px; }
-/* 设备分流：二维码只服务「PC→手机」场景；触屏端（手机/平板）扫码是反操作，
-   点「打开转存」直接拉起网盘 App 才是正路，所以整块隐藏，主按钮放大成整行。
-   口径与 app.js 对 .share__hint 的触屏判定一致（hover:none + pointer:coarse） */
+/* 触屏端把「打开转存」放大成整行，方便直接拉起网盘 App。
+   海报旁的二维码在手机/平板上也保留：用户会用另一台设备扫码（2026-11-16 按人工指令恢复，
+   撤销 f3f9cde 的 display:none）。窄屏横排布局见下方媒体查询的「海报 | 二维码」。
+   下方分享区 .share__hint 的微信分享码仍由 app.js 按触屏判定隐藏，口径不变 */
 @media (hover: none) and (pointer: coarse) {
-  .detail__media .qrbox { display: none; }
   .linkrow .btn--primary { flex: 1 1 100%; padding: 10px 16px; font-size: var(--fs-md); text-align: center; }
 }
 
