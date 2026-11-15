@@ -64,7 +64,8 @@ export function findStateFile(dir, file = 'posted.json') {
 
 export function loadState(stateFile) {
   let state = { posted: {}, lastCategory: null, history: [] };
-  try { state = JSON.parse(fs.readFileSync(stateFile, 'utf8')); }
+  // 人工用记事本/PowerShell 重写 posted.json 常带 UTF-8 BOM，JSON.parse 会直接抛错、判重被当成空状态。
+  try { state = JSON.parse(fs.readFileSync(stateFile, 'utf8').replace(/^\uFEFF/, '')); }
   catch (e) { if (e.code !== 'ENOENT') console.log('状态读取警告：', String(e.message).slice(0, 120)); }
   state.posted = state.posted || {};
   state.history = state.history || [];

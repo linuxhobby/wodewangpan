@@ -17,7 +17,6 @@
 //   node tg-post.mjs --qr                  # 方案 A 前身：海报+正方形码合并成相册；默认不发
 //   node tg-post.mjs --qr-split            # 方案 C：海报独占一条消息，二维码另发第二条并回复上一条；默认不发
 //   node tg-post.mjs --qr-size 640         # 二维码像素边长（默认 480，仅 --qr / --qr-split 生效）
-//   node tg-post.mjs --cooldown 0          # 关闭「刚发过就跳过」的冷却窗口（默认 180 秒）
 //   node tg-post.mjs --check               # 只校验 token 与 chat 可达（getMe + 目标信息）
 //   node tg-post.mjs --retract <id>        # 撤回之前由本脚本发出去的某条目消息（调试用）
 //   node tg-post.mjs --audit               # 打印不可发条目的原因分布
@@ -314,21 +313,12 @@ if (!DRY && has('check') === false && (!TOKEN || !CHAT)) {
   process.exit(1);
 }
 
-// ---------- 双触发防护（2026-11-14 加） ----------
-// 现象：频道每轮出现两条，间隔 5 秒左右，而 posted.json 只多一条记录。
-// 原因是同一条命令被两套调度各触发一次（旧 WorkBuddy 自动化 + TRAE 自动化），
-// 两个进程同时读状态、各挑一条、各自写回，后写把前写的记录覆盖掉（41/43/45 三条就这样丢了记录）。
-// 两道闸：① 单实例锁挡住并发进程；② 冷却窗口挡住相隔几秒的第二次触发。人工 --pick/--count 不受冷却限制。
+// ---------- 单实例锁 ----------
+// posted.json 是唯一权威判重状态：两个进程同时跑会各读到同一份状态、各挑一条再各自写回，
+// 后写的把先写的记录覆盖掉，既重复发又丢判重记录。排他锁保证同一时刻只有一个发布进程。
+// 人工 --pick / --count 补发同样受锁保护；--dry 与 --check 不发送，不占锁。
 const PUSH_DIR = path.dirname(STATE_FILE);
 const LOCK_FILE = path.join(PUSH_DIR, 'tg-post.lock');
-const COOLDOWN = parseInt(arg('cooldown', '180'), 10);
-
-function lastPostAt() {
-  const ts = Object.values(state.posted).map((r) => Date.parse(r.at || '')).filter((n) => Number.isFinite(n));
-  const h = state.history.length ? Date.parse(state.history[state.history.length - 1].at || '') : NaN;
-  if (Number.isFinite(h)) ts.push(h);
-  return ts.length ? Math.max(...ts) : 0;
-}
 
 function acquireLock() {
   fs.mkdirSync(PUSH_DIR, { recursive: true });
@@ -350,16 +340,7 @@ function acquireLock() {
   process.on('exit', release);
 }
 
-if (!DRY && !has('check')) {
-  const manual = PICKS.length > 0;
-  const gapSec = (Date.now() - lastPostAt()) / 1000;
-  if (!manual && gapSec < COOLDOWN) {
-    console.log(`× 冷却中：${Math.round(gapSec)} 秒前刚发过（冷却窗口 ${COOLDOWN}s），本次跳过，避免重复发。`);
-    console.log('  同一时刻被两套调度各触发一次时会走到这里；确需补发请用 --pick <id>。');
-    process.exit(0);
-  }
-  acquireLock();
-}
+if (!DRY && !has('check')) acquireLock();
 
 let sess = null;
 if (!DRY) {

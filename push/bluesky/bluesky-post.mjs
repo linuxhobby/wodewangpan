@@ -236,17 +236,14 @@ if (has('audit')) {
   process.exit(0);
 }
 
-// ---------- 防重复发（2026-11-14） ----------
-// 现象：每小时同一分钟出两条（相隔 7~9 秒）、内容不同，且 posted.json 只记下后发的一条。
-// 原因：两个触发器（Trae 自动化存在两份 / 旧环境任务未停）并发跑本脚本，各自读同一 posted.json、
-// 各发一条，后保存的覆盖先保存的，于是「多发一条 + 丢掉另一条的判重记录」。
-// 对策：同一时刻只允许一个实例发（互斥锁），10 分钟内已成功发过就整体跳过（近期去抖）。
-// 补发（--count N）与指定条目（--pick）不受去抖影响，但仍受锁保护。
+// ---------- 单实例锁（防并发写同一份判重状态） ----------
+// 两个进程同时跑本脚本时，会各自读同一 posted.json、各发一条，后保存的覆盖先保存的，
+// 结果是「多发一条 + 丢掉另一条的判重记录」。互斥锁保证同一时刻只有一个发布进程。
+// --dry 不发送、不占锁；补发（--count N）与指定条目（--pick）同样受锁保护。
 const LOCK_FILE = path.join(os.tmpdir(), 'wodewangpan-bluesky-posting.lock'); // 状态目录禁止新建文件（EPERM），锁放临时目录
 const LOCK_STALE_MS = 10 * 60 * 1000; // 锁文件超过 10 分钟视为残留
-const RECENT_MS = 10 * 60 * 1000;     // 10 分钟内发过就跳过
 function acquireLock() {
-  // 返回 true=拿到锁，false=别的实例正在发，null=锁不可用（不阻断，靠近期去抖兜底）
+  // 返回 true=拿到锁，false=别的实例正在发，null=锁不可用（不阻断发布）
   try {
     if (Date.now() - fs.statSync(LOCK_FILE).mtimeMs < LOCK_STALE_MS) return false;
     fs.unlinkSync(LOCK_FILE); // 残留锁
@@ -263,29 +260,6 @@ if (!DRY && lockState === false) {
   process.exit(0);
 }
 if (!DRY && lockState === true) process.on('exit', () => { try { fs.unlinkSync(LOCK_FILE); } catch {} });
-if (!DRY && PICKS.length === 0 && COUNT === 1) {
-  // 去抖：两个触发器可能先后启动（不重叠，锁拦不到），且另一个触发器可能把状态写到别处。
-  // 所以同时查本地 posted.json 和 Bluesky 已发时间线，任一距现在 <10 分钟就跳过。
-  let lastAt = null;
-  try {
-    const fresh = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
-    const last = fresh.history[fresh.history.length - 1];
-    if (last) lastAt = Date.parse(last.at);
-  } catch {}
-  try {
-    const feed = await curlJson([`https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${IDENTIFIER}&limit=1&filter=posts_no_replies`]);
-    const top = feed?.feed?.[0]?.post;
-    if (top?.indexedAt) {
-      const t = Date.parse(top.indexedAt);
-      if (!Number.isFinite(lastAt) || t > lastAt) lastAt = t;
-    }
-  } catch {}
-  const age = Number.isFinite(lastAt) ? Date.now() - lastAt : NaN;
-  if (Number.isFinite(age) && age < RECENT_MS) {
-    console.log(`× 距上次发帖仅 ${Math.round(age / 60000)} 分钟，本次跳过：防止两个触发器重复发`);
-    process.exit(0);
-  }
-}
 
 const usedNow = new Set();
 const results = [];
