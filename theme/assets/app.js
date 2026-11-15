@@ -332,7 +332,8 @@ import { esc, tileHtml } from './card.js';
     // 移动端唤起系统分享面板；不支持 share 时退化为复制资源包文本（卡片长什么样由平台决定）。
     // 只有点到「分享」按钮才走这里，面板内的复制按钮走上面的 [data-copy] 分支
     var shareBtn = e.target.closest('[data-share]');
-    if (shareBtn && e.target === shareBtn) {
+    // 按钮内带图标时 e.target 可能是 <svg>/<path>，closest 已确认落在按钮内，不再要求等于按钮本身
+    if (shareBtn) {
       var url = shareBtn.getAttribute('data-url') || location.href;
       var packet = shareBtn.getAttribute('data-text') || url;
       if (navigator.share) {
@@ -349,9 +350,10 @@ import { esc, tileHtml } from './card.js';
 
   /** 按钮临时反馈文字，1.5s 后复原 */
   function flash(btn, msg) {
-    var old = btn.textContent;
+    // 用 innerHTML 存/还原：按钮里带图标 SVG，textContent 会把图标抹掉且恢复不回来
+    var old = btn.innerHTML;
     btn.textContent = msg;
-    setTimeout(function () { btn.textContent = old; }, 1500);
+    setTimeout(function () { btn.innerHTML = old; }, 1500);
   }
 
   /** 资源包文本 → 带海报的富文本：海报在最前当视觉锚点，其后逐行排。

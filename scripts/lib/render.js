@@ -40,11 +40,23 @@ const ICONS = {
     '<path d="M22 21v-2a4 4 0 0 0-3-3.87"/>' +
     '<path d="M16 3.13a4 4 0 0 1 0 7.75"/>' +
     '</g>',
-  // 复制：Lucide copy（ISC），反馈条「复制夸克群口令」用
+  // 复制：Lucide copy（ISC），反馈条「复制夸克群口令」与分享区「复制资源信息」共用
   copy:
     '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
     '<rect x="8" y="8" width="14" height="14" rx="2"/>' +
     '<path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/>' +
+    '</g>',
+  // 分享：Lucide share-2（ISC）三节点连线，分享区「分享」用
+  share:
+    '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+    '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>' +
+    '<path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/>' +
+    '</g>',
+  // 图片：Lucide image（ISC），分享区「复制海报」用
+  image:
+    '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+    '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/>' +
+    '<path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>' +
     '</g>',
   // QQ：官方品牌图标（企鹅剪影），取自 Simple Icons（CC0 协议），24×24 视口实心路径
   qq:
@@ -921,13 +933,13 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
       <button class="btn btn--mini" type="button" data-share
         data-url="${esc(shareUrl)}"
         data-title="${esc(item.title)}"
-        data-text="${esc(shareText)}"${posterAttr}>分享</button>
+        data-text="${esc(shareText)}"${posterAttr}>${iconSvg('share', 'share__icon')}分享</button>
       <div class="share__panel">
-        <button class="btn btn--mini" type="button" data-copy="${esc(shareText)}"${posterAttr}>复制资源信息</button>${
+        <button class="btn btn--mini" type="button" data-copy="${esc(shareText)}"${posterAttr}>${iconSvg('copy', 'share__icon')}复制资源信息</button>${
           // 复制海报：给微博这类「只认剪贴板图片文件、会剥掉 HTML 里 <img>」的编辑器单独留的口子。
           // 只写图片、不带 data-copy，不与上面的资源包文本混在一起；需要文字时另点「复制资源信息」。
           sharePoster
-            ? `\n        <button class="btn btn--mini" type="button" data-copy-poster="${esc(sharePoster)}" title="只复制海报图片（不含文字）：微博等只认图片的地方用；需要文字请另点「复制资源信息」">复制海报</button>`
+            ? `\n        <button class="btn btn--mini" type="button" data-copy-poster="${esc(sharePoster)}" title="只复制海报图片（不含文字）：微博等只认图片的地方用；需要文字请另点「复制资源信息」">${iconSvg('image', 'share__icon')}复制海报</button>`
             : ''
         }
         <p class="share__hint">${shareQr ? `<img class="share__qr" src="${esc(shareQr)}" width="96" height="96" alt="本页分享二维码">` : ''}微信：扫一扫，把本页分享给好友</p>

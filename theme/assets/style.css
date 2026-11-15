@@ -482,7 +482,7 @@ a.tag:hover { background: var(--brand-soft); }
 .detail__share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
 .share__panel { display: contents; }
 /* 分享区内按钮字号放大（覆盖全局 chip 的 .btn--mini），更易读 */
-.detail__share .btn--mini { font-size: var(--fs-base); padding: 6px 12px; line-height: var(--lh-body); }
+.detail__share .btn--mini { display: inline-flex; align-items: center; gap: 5px; font-size: var(--fs-base); padding: 6px 12px; line-height: var(--lh-body); }
 .share__hint { margin: 0; font-size: var(--fs-base); color: var(--muted); display: flex; align-items: center; gap: 10px; flex-basis: 100%; }
 /* hidden 属性挡不住 display:flex，要显式压掉（移动端只藏二维码这行，复制按钮留着） */
 .share__hint[hidden] { display: none !important; }
@@ -552,7 +552,8 @@ a.tag:hover { background: var(--brand-soft); }
 .feedback__hint { margin: 0; font-size: var(--fs-sm); color: var(--muted); }
 .feedback__row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .feedback__row .btn { display: inline-flex; align-items: center; gap: 5px; }
-.feedback__icon { display: block; width: 15px; height: 15px; color: var(--contact-icon); }
+/* 反馈条与分享区共用同一套按钮图标规格 */
+.feedback__icon, .share__icon { display: block; width: 15px; height: 15px; color: var(--contact-icon); }
 
 /* ── 按钮 ────────────────────────────── */
 /* 普通按钮与二维码切换按钮同规格，只在下面各留一点差异 */
