@@ -182,9 +182,11 @@ function buildText(it, { compact = false } = {}) {
       it.quark ? `夸克网盘：${it.quark} （点击保存）` : '',
       it.baidu ? `百度网盘：${it.baidu}${it.baiduCode ? `（提取码 ${it.baiduCode}）` : ''} （点击保存）` : '',
     ].filter(Boolean);
+    // 空行分隔（2026-11-15 指挥官定）：引流区（TG群 / 订阅号）与网盘链接区分开，视觉上不挤成一团。
     const lines = [
       'TG群：https://t.me/wodewangpantop',
       'TG订阅号：https://t.me/myquark',
+      '',
       ...compactLinks,
     ];
     return `${header}，关注更多资源，请加入：\n${lines.join('\n')}\n${tags}`;
