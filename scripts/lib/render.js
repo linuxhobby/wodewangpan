@@ -663,7 +663,8 @@ function shareTextOf(item) {
 
 /** 详情页反馈条：紧跟转存链接下面——用户刚发现链接打不开，此刻正需要出口。
     不放二维码（海报旁 qrbox 已是转存码，同屏再放会被扫错）、不用实底按钮（兜底动作不抢主操作），
-    主路径纯 <a> 零 JS，noscript 可用；夸克群入群按钮排在 QQ 群前面 */
+    主路径纯 <a> 零 JS；口令复制按钮是渐进增强（复用 app.js 的 data-copy），
+    noscript 时口令仍以文本露出可手选。夸克群入群与口令按钮排在 QQ 群前面 */
 function feedbackBar({ site, item, baseUrl }) {
   if (site.detailFeedback === false) return '';
   const qq = qqLinkOf(site.contact);
@@ -693,6 +694,9 @@ function feedbackBar({ site, item, baseUrl }) {
       ? `<a class="btn" href="${esc(quark.url)}" target="_blank" rel="noopener noreferrer" aria-label="加入${esc(
           quark.name
         )}夸克网盘群">加入夸克群</a>`
+      : '',
+    showQuark && quark.code
+      ? `<button class="btn" type="button" data-copy="${esc(quark.code)}">复制群口令</button>`
       : '',
     qq
       ? `<a class="btn" href="${esc(qq)}" target="_blank" rel="noopener noreferrer" aria-label="加入${
