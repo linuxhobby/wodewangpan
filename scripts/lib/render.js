@@ -518,7 +518,7 @@ ${listDataScript({ indexAll, activeCat: '', pageSize })}`;
         collectionPageJsonLd({ baseUrl, path: '/', name: homeTitle, items: shown }),
       ],
     },
-    keywords: (categories || []).join(','),
+    keywords: `光鸭云盘,${(categories || []).join(',')}`,
     rssHref: '/feed.xml',
   };
 }
@@ -554,7 +554,7 @@ ${listDataScript({ indexAll, activeCat, pageSize })}`;
 
   return {
     title: activeCat,
-    description: `${activeCat}资源合集，共 ${items.length} 个，夸克网盘链接，扫码即存`,
+    description: `${activeCat}资源合集，共 ${items.length} 个，夸克/光鸭云盘链接，扫码即存`,
     body,
     canonicalPath: catHref(activeCat),
     ogImage: (images.get(items[0]?.id) || {}).og || firstImg,
@@ -994,12 +994,13 @@ export function notFoundPage(ctx) {
 /** /all/ 每页多少条：单页扛近千条链接权重摊薄，拆成分页后每页 50 条 */
 export const ALL_PAGE_SIZE = 50;
 
-/** /all/ 每行标题后直接给出的网盘入口：只列夸克 / 百度两类，用同行分隔符隔开。
+/** /all/ 每行标题后直接给出的网盘入口：只列夸克 / 百度 / 光鸭三类，用同行分隔符隔开。
     没有对应链接的条目不显示该项；提取码放进 title，其它网盘与复制入口仍走详情页。
     .pan-link 用另一种颜色，避免和紫色资源详情链接混在一起分不清主次 */
 const ALL_PAN_LINKS = [
   { kind: 'quark', label: '夸克网盘' },
   { kind: 'baidu', label: '百度网盘' },
+  { kind: 'guangya', label: '光鸭云盘' },
 ];
 
 function allPanLinks(item) {
@@ -1051,7 +1052,7 @@ ${p < pages ? `<a class="pager__item pager__item--next" href="${pageHref(p + 1)}
 
   const body = `<h1 class="page__title page__title--doc">${esc(title)}<span class="page__n">${total} 个资源</span></h1>
 <div class="card-page">
-  <p>这一页列出本站全部 <strong>${total}</strong> 个资源，按分类分页排列，点标题进入详情页，也可直接用标题后的夸克 / 百度网盘入口转存。</p>
+  <p>这一页列出本站全部 <strong>${total}</strong> 个资源，按分类分页排列，点标题进入详情页，也可直接用标题后的夸克 / 百度 / 光鸭云盘入口转存。</p>
 ${groups
   .map(
     (g) => `<h2>${esc(g.cat)}<span class="muted"> · ${g.list.length} 个</span></h2>
@@ -1076,7 +1077,7 @@ ${p === 1 ? tagCloudHtml(tags) : ''}
     body,
     canonicalPath,
     footNavCurrent: '/all/',
-    keywords: `全部资源,资源索引,${(categories || []).join(',')},网盘资源`,
+    keywords: `全部资源,资源索引,${(categories || []).join(',')},网盘资源,光鸭云盘`,
     // 与列表页共用 CollectionPage：结构化数据里只列本页条目，其余链接靠正文的 <a> 给蜘蛛
     jsonLd: {
       '@context': 'https://schema.org',
@@ -1437,7 +1438,7 @@ export function aboutPage(ctx) {
   ${qqGroupBlock({ qqName, qqLink, contactEmail, aside: qqAside, footer: false })}
 
   <h2>站点概况</h2>
-  <p><strong>${esc(site.title)}</strong> 是一个纯静态的网盘资源索引站：把散落在各处的夸克 / 百度 / 阿里云盘资源整理成条目，
+  <p><strong>${esc(site.title)}</strong> 是一个纯静态的网盘资源索引站：把散落在各处的夸克 / 百度 / 光鸭 / 阿里云盘资源整理成条目，
   统一给出海报、简介、标签和转存链接，打开网页即可直接使用，无需注册登录。</p>
   <ul>
     <li>已收录资源：<strong>${total}</strong> 个</li>

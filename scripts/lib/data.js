@@ -5,6 +5,7 @@ import yaml from 'js-yaml';
 const NETDISK_PRESETS = [
   { key: 'quark_url', code: 'quark_code', kind: 'quark', name: '夸克网盘' },
   { key: 'baidu_url', code: 'baidu_code', kind: 'baidu', name: '百度网盘' },
+  { key: 'guangya_url', code: 'guangya_code', kind: 'guangya', name: '光鸭云盘' },
   { key: 'aliyun_url', code: 'aliyun_code', kind: 'aliyun', name: '阿里云盘' },
   { key: 'tianyi_url', code: 'tianyi_code', kind: 'tianyi', name: '天翼云盘' },
   { key: 'uc_url', code: 'uc_code', kind: 'uc', name: 'UC网盘' },

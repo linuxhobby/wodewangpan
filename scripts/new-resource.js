@@ -58,6 +58,7 @@ const tags = await get('标签（逗号分隔）');
 const quark = await get('夸克链接');
 const baidu = await get('百度链接');
 const code = baidu ? await get('百度提取码') : '';
+const guangya = await get('光鸭链接');
 const description = await get('一句话介绍');
 const date = await get('日期', new Date().toISOString().slice(0, 10));
 const id = await get('ID（对应配图文件名，留空自动生成）');
@@ -69,6 +70,7 @@ if (tags) entry.push(`  tags: [${tags.split(/[,，]/).map((t) => t.trim()).join(
 if (quark) entry.push(`  quark_url: "${quark}"`);
 if (baidu) entry.push(`  baidu_url: "${baidu}"`);
 if (code) entry.push(`  baidu_pwd: "${code}"`);
+if (guangya) entry.push(`  guangya_url: "${guangya}"`);
 if (description) entry.push(`  description: "${description.replace(/"/g, '\\"')}"`);
 entry.push(`  date: ${date}`);
 // 文件清单模板（注释形态）：从夸克网盘目录抄真实数据，字段全可留空；有独有数据才有收录竞争力
