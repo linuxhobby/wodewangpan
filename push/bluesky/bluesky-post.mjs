@@ -189,7 +189,8 @@ function buildText(it, { compact = false } = {}) {
       '',
       ...compactLinks,
     ];
-    return `${header}，关注更多资源，请加入：\n${lines.join('\n')}\n${tags}`;
+    // 标签前也留一个空行（2026-11-15 指挥官定），把标签从链接堆里独立出来。
+    return `${header}，关注更多资源，请加入：\n${lines.join('\n')}\n\n${tags}`;
   }
 
   const desc = (it.desc || '').trim();
