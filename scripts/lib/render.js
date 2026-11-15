@@ -663,12 +663,14 @@ function shareTextOf(item) {
 
 /** 详情页反馈条：紧跟转存链接下面——用户刚发现链接打不开，此刻正需要出口。
     不放二维码（海报旁 qrbox 已是转存码，同屏再放会被扫错）、不用实底按钮（兜底动作不抢主操作），
-    纯 <a> 零 JS，noscript 可用 */
+    主路径纯 <a> 零 JS，noscript 可用；夸克群入群按钮排在 QQ 群前面 */
 function feedbackBar({ site, item, baseUrl }) {
   if (site.detailFeedback === false) return '';
   const qq = qqLinkOf(site.contact);
   const email = emailOf(site.contact);
-  if (!qq && !email) return '';
+  const quark = quarkGroupOf(site);
+  const showQuark = quark && quark.detail;
+  if (!qq && !email && !showQuark) return '';
 
   const group = String(site.qqGroup || '').trim();
   const pageUrl = `${baseUrl}${itemHref(item.id)}`;
@@ -681,8 +683,17 @@ function feedbackBar({ site, item, baseUrl }) {
     `说明：（请描述；选「想找的资源」请写清名称、年份或版本）`,
   ].join('\n');
 
-  const hint = item.links.length ? '资源许愿、链接打不开或资源有误？' : '暂无可用链接？';
+  const hint =
+    (item.links.length ? '资源许愿、链接打不开或资源有误？' : '暂无可用链接？') +
+    (showQuark && quark.code
+      ? ` 夸克群口令 <code>${esc(quark.code)}</code>（复制后打开夸克 App 可加群）。`
+      : '');
   const btns = [
+    showQuark
+      ? `<a class="btn" href="${esc(quark.url)}" target="_blank" rel="noopener noreferrer" aria-label="加入${esc(
+          quark.name
+        )}夸克网盘群">加入夸克群</a>`
+      : '',
     qq
       ? `<a class="btn" href="${esc(qq)}" target="_blank" rel="noopener noreferrer" aria-label="加入${
           group ? `${esc(group)}QQ群` : 'QQ群'
@@ -1398,6 +1409,52 @@ ${cards}
   });
 }
 
+/** 夸克网盘群配置（site.yaml 的 quarkGroup）：enabled: false 一键关闭，缺群链接就整块不输出。
+    与 QQ 群并存，页面顺序由调用方控制在 QQ 群之前。 */
+function quarkGroupOf(site) {
+  const g = site && typeof site === 'object' ? site.quarkGroup : null;
+  if (!g || typeof g !== 'object' || g.enabled === false) return null;
+  const url = String(g.url || '').trim();
+  if (!url) return null;
+  return {
+    name: String(g.name || '夸克网盘群').trim(),
+    groupId: String(g.groupId || '').trim(),
+    url,
+    code: String(g.code || '').trim(),
+    qr: String(g.qr || '/quark-group.png').trim(),
+    detail: g.detail !== false,
+  };
+}
+
+/** 加入夸克网盘群区块：关于本站与联系我们两页共用，二维码 + 群链接 + 群口令。
+    复用 .qq-layout / .qq-qr 与 app.js 的 data-copy 全局委托，不新增 CSS 与 JS。 */
+function quarkGroupBlock(site) {
+  const g = quarkGroupOf(site);
+  if (!g) return '';
+  const name = esc(g.name);
+  const codeLine = g.code
+    ? `<p>群口令：<code class="linkrow__url">${esc(g.code)}</code> <button class="btn btn--mini" type="button" data-copy="${esc(
+        g.code
+      )}">复制群口令</button><br><span class="muted">复制整段口令后打开夸克 App，会自动提示加入群聊。</span></p>`
+    : '';
+  return `<h2 id="quark-group">加入「${name}」夸克网盘群</h2>
+  <p>本站的夸克网盘群，资源更新、补链通知与问题反馈都在这里。${g.groupId ? `群 ID：<strong>${esc(g.groupId)}</strong>。` : ''}</p>
+  <div class="qq-layout">
+    <div class="qq-layout__main">
+      <div class="qq-qr">
+        <a href="${esc(g.url)}" target="_blank" rel="noopener noreferrer">
+        <img src="${esc(g.qr)}" alt="「${name}」夸克网盘群二维码" width="260" height="260" loading="lazy">
+        </a>
+        <p class="muted">保存二维码，用夸克 App 扫码加入</p>
+      </div>
+    </div>
+    <div class="qq-layout__aside">
+      <p>也可直接 <a href="${esc(g.url)}" target="_blank" rel="noopener noreferrer">点击群链接加入</a>：<br><code class="linkrow__url">${esc(g.url)}</code></p>
+      ${codeLine}
+    </div>
+  </div>`;
+}
+
 /** 加入 QQ 群区块：关于本站与联系我们两页共用，改群名 / 群链接 / 邮箱只需动这一处。
  *  aside 可选：关于本站页把机器人指令传进来排在二维码右侧；联系我们页不传，保持单栏。
  *  footer 控制两栏下方的两行联系方式；关于本站页把它们并入右栏，传 false 关掉。 */
@@ -1456,6 +1513,7 @@ export function aboutPage(ctx) {
 
   const body = `<h1 class="page__title page__title--doc">关于本站</h1>
 <div class="card-page">
+  ${quarkGroupBlock(site)}
   ${qqGroupBlock({ qqName, qqLink, contactEmail, aside: qqAside, footer: false })}
 
   <h2>站点概况</h2>
@@ -1507,7 +1565,7 @@ ${newest
   return layout({
     ...ctx,
     title: '关于本站',
-    description: `关于${site.title}：站点概况、分类浏览与转存方法、QQ 群机器人指令及最新入库`,
+    description: `关于${site.title}：站点概况、分类浏览与转存方法、夸克网盘群与 QQ 群入群方式、机器人指令及最新入库`,
     activeCat: '',
     body,
     canonicalPath: '/about/',
@@ -1600,6 +1658,7 @@ export function contactPage(ctx) {
   <p>资源条目由人工整理与索引，版权归原作者或相应权利人所有。本站只提供索引，不托管文件；
   站点说明见 <a href="/about/">关于本站</a>，数据处理见 <a href="/privacy/">隐私政策</a>。</p>
 
+  ${quarkGroupBlock(site)}
   ${qqGroupBlock({ qqName, qqLink, contactEmail })}
 
   <p>群里还有查询机器人，发 <code>/帮助</code> 可看指令表；完整说明见 <a href="/about/#qq-bot">关于本站 · QQ群机器人指令</a>。</p>
@@ -1609,12 +1668,12 @@ export function contactPage(ctx) {
   return layout({
     ...ctx,
     title: '联系我们',
-    description: `${site.title}反馈通道：链接失效、内容纠错与版权下架的处理方式，附 QQ 群与邮箱`,
+    description: `${site.title}反馈通道：链接失效、内容纠错与版权下架的处理方式，附夸克网盘群、QQ 群与邮箱`,
     activeCat: '',
     body,
     canonicalPath: '/contact/',
     footNavCurrent: '/contact/',
-    keywords: `联系我们,${site.title},链接失效反馈,版权下架`,
+    keywords: `联系我们,${site.title},链接失效反馈,版权下架,夸克网盘群`,
   });
 }
 

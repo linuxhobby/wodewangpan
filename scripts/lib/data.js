@@ -280,6 +280,8 @@ export function loadSite(configDir) {
     disclaimer: cfg.disclaimer || '',
     categories: Array.isArray(cfg.categories) ? cfg.categories.map(String) : [],
     icp: cfg.icp || '',
+    // 夸克网盘群：链接 / 群口令 / 二维码，详情页与关于本站、联系我们页共用
+    quarkGroup: cfg.quarkGroup && typeof cfg.quarkGroup === 'object' ? cfg.quarkGroup : null,
     contact: cfg.contact && typeof cfg.contact === 'object' ? cfg.contact : null,
     qqGroup: cfg.qqGroup || '',
     maintainer: cfg.maintainer || '',

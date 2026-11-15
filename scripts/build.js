@@ -483,6 +483,13 @@ if (fs.existsSync(qqGroupSrc)) {
 } else {
   console.log('  ! 未找到 static/qq-group.png，关于本站页将不显示 QQ 群二维码');
 }
+const quarkGroupSrc = path.join(staticDir, 'quark-group.png');
+const quarkGroupDest = path.join(outDir, 'quark-group.png');
+if (fs.existsSync(quarkGroupSrc)) {
+  fs.copyFileSync(quarkGroupSrc, quarkGroupDest);
+} else {
+  console.log('  ! 未找到 static/quark-group.png，关于本站 / 联系我们页将不显示夸克网盘群二维码');
+}
 // IndexNow 验证文件：static/indexnow-key.txt -> public/indexnow-key.txt（Bing/Yandex 等推送前需可访问）
 const inKey = path.join(staticDir, 'indexnow-key.txt');
 if (fs.existsSync(inKey)) {

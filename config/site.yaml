@@ -51,6 +51,17 @@ slugs:
 # 页脚访问统计：local = 本地统计（VPS 解析 nginx 日志生成 /stats.json，不依赖第三方）；
 #              留空则不显示
 stats: local
+# 夸克网盘群（可选）：资源详情页的入群按钮、关于本站 / 联系我们页的二维码区块共用。
+# 与 QQ 群并存，页面上夸克群排在前面。enabled: false 一键关闭；detail: false 只关详情页按钮。
+# code 里的 # 必须加引号，否则 YAML 会当成注释；二维码换新只需替换 static/quark-group.png
+quarkGroup:
+  enabled: true
+  name: 我的网盘资源索引群
+  groupId: "1872376782"
+  url: https://pan.quark.cn/g/ee6b28d3ef
+  code: "#72183cJQ3v#:/"
+  qr: /quark-group.png
+  detail: true
 # 页脚联系方式（可选，留空整段则不显示）：页面上只显示图标，地址写进 title / aria-label 不直接露出
 contact:
   QQ群: https://qm.qq.com/q/UkO8hrPaQ
