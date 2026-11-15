@@ -164,6 +164,265 @@
 
 ---
 
+## 10. Windows 侧补丁清单（可直接照抄）
+
+> 面向用户安排的两台机器：**任务机器**（两份 Windows skill）与**另一台电脑**（`mybot`、飞书简报脚本）。
+> 4 项：① `C:/Users/marco/.workbuddy/skills/quark-resource-sync`
+> ② `C:/Users/marco/.qwenworkcn/skills/quark-resource-sync`
+> ③ `mybot` 私有仓 ④ `C:/Users/marco/Scripts/wodewangpan-fillfiles-feishu.mjs`
+> 前提：站点仓库已 `git pull` 到当前 HEAD、Node 可用（skill 本来就需要）。
+> 群晖中转已确认停用，不在清单内。
+
+### 10.1 公共文件全文：`site-paths.mjs`
+
+两份 skill **各放一份**，路径 `<skill>/scripts/lib/site-paths.mjs`：
+
+```js
+/** 站点路径口径（2026-11-15 全站 URL 与配图目录带分类后，Mac / Windows 两侧共用）。
+ *  站点：详情页 /<slug>/<id>/、分类页 /<slug>/；配图 static/images/<slug>/<id>.jpg。
+ *  前缀 → slug 与 config/site.yaml 的 slugs 一一对应；站点构建会校验 slug 合法性与保留目录撞名。
+ *  ⚠ 新增分类或改别名时，这张表必须和站点 config/site.yaml 同步改，别再往 static/images/ 根目录写图。
+ */
+import path from 'node:path';
+
+export const PREFIX_SLUG = {
+  mv: 'movie',
+  tv: 'tv',
+  dc: 'documentary',
+  an: 'anime',
+  game: 'game',
+  app: 'software',
+  bk: 'ebook',
+  cs: 'course',
+  ot: 'misc',
+};
+
+export function slugOf(idOrPrefix) {
+  const p = String(idOrPrefix).split('-')[0];
+  const slug = PREFIX_SLUG[p];
+  if (!slug) throw new Error(`未知 id 前缀：${idOrPrefix}（请同步 PREFIX_SLUG 与站点 slugs）`);
+  return slug;
+}
+
+/** 某个资源配图应放的目录（调用方负责 mkdirSync recursive） */
+export function posterDir(repo, id) {
+  return path.join(repo, 'static', 'images', slugOf(id));
+}
+
+/** 详情页 URL（仅用于文档 / 冒烟提示，站点侧以 build.js 的 setItemPaths 为准） */
+export function itemUrl(id) {
+  return `/${slugOf(id)}/${id}/`;
+}
+```
+
+### 10.2 两份 skill 的脚本改动（每份都做一遍）
+
+| 文件 | 改动 |
+|---|---|
+| `scripts/make-entry.mjs` | 在 `import { cfg } from './lib/config.mjs';` 后加一行 `import { posterDir } from './lib/site-paths.mjs';`；海报校验路径改成 `path.join(posterDir(cfg.REPO, d.id), d.image)` |
+| `scripts/process-batch.mjs` | 同样加 import；删掉平铺的 `const imgDir = path.join(REPO, 'static/images');`，改成按 `p.id` 取 `destDir = posterDir(REPO, p.id)` → `fs.mkdirSync(destDir, { recursive: true })` → `dest = path.join(destDir, 文件名)`（文件名仍是 `` `${p.id}.jpg` `` 这个模板字符串） |
+| `scripts/trending-sync.mjs` | 同样加 import；海报 `dest` 改成 `path.join(posterDir(REPO, id), 文件名)`（文件名仍是 `` `${id}.jpg` ``；下面原有的 `mkdirSync(path.dirname(dest), ...)` 会自动建分类目录） |
+
+- `git add data/ static/images/` 不用改：子目录仍被 `static/images/` 递归覆盖。
+- 文档口径（`SKILL.md`、`references/site-schema.md`、`references/troubleshooting.md`）建议同步，但不影响运行；关键是**别再往 `static/images/` 根目录写图**。
+- ⚠ Windows 侧版本可能比 Mac 旧（例如还带着 `os.yaml` 操作系统映射）。精确字符串对不上时按上表的**目标语义**手工改，不要照搬行号；旧映射属于另一件事，本次不必顺手改，但新增分类必须配英文 slug，站点构建期会校验。
+- 10.3 的一键脚本里 `PATCHES` 就是这三处改动的精确字符串，可直接对照。
+
+### 10.3 一键补丁脚本（推荐）
+
+保存为任意目录的 `apply-windows-patch.mjs`，在 PowerShell 执行：
+
+```powershell
+node apply-windows-patch.mjs
+```
+
+会自动在两份 skill 下创建 `site-paths.mjs`、做上面的三处替换、按 CRLF/LF 自动适配行尾、幂等跳过已改文件，并逐个 `node --check`。
+
+```js
+// apply-windows-patch.mjs —— Windows 任务机器执行一次即可；已改过再跑不会重复改
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { execFileSync } from 'node:child_process';
+
+const ROOTS = [
+  path.join(os.homedir(), '.workbuddy', 'skills', 'quark-resource-sync'),
+  path.join(os.homedir(), '.qwenworkcn', 'skills', 'quark-resource-sync'),
+];
+
+// 与 10.1 全文等价；用数组拼接是为了能安全内联含反引号、${} 的原文
+const SITE_PATHS = [
+  '/** 站点路径口径（2026-11-15 全站 URL 与配图目录带分类后，Mac / Windows 两侧共用）。',
+  " *  站点：详情页 /<slug>/<id>/、分类页 /<slug>/；配图 static/images/<slug>/<id>.jpg。",
+  ' *  前缀 → slug 与 config/site.yaml 的 slugs 一一对应；站点构建会校验 slug 合法性与保留目录撞名。',
+  ' *  ⚠ 新增分类或改别名时，这张表必须和站点 config/site.yaml 同步改，别再往 static/images/ 根目录写图。',
+  ' */',
+  "import path from 'node:path';",
+  '',
+  'export const PREFIX_SLUG = {',
+  "  mv: 'movie',",
+  "  tv: 'tv',",
+  "  dc: 'documentary',",
+  "  an: 'anime',",
+  "  game: 'game',",
+  "  app: 'software',",
+  "  bk: 'ebook',",
+  "  cs: 'course',",
+  "  ot: 'misc',",
+  '};',
+  '',
+  'export function slugOf(idOrPrefix) {',
+  "  const p = String(idOrPrefix).split('-')[0];",
+  '  const slug = PREFIX_SLUG[p];',
+  '  if (!slug) throw new Error(`未知 id 前缀：${idOrPrefix}（请同步 PREFIX_SLUG 与站点 slugs）`);',
+  '  return slug;',
+  '}',
+  '',
+  '/** 某个资源配图应放的目录（调用方负责 mkdirSync recursive） */',
+  'export function posterDir(repo, id) {',
+  "  return path.join(repo, 'static', 'images', slugOf(id));",
+  '}',
+  '',
+  '/** 详情页 URL（仅用于文档 / 冒烟提示，站点侧以 build.js 的 setItemPaths 为准） */',
+  'export function itemUrl(id) {',
+  '  return `/${slugOf(id)}/${id}/`;',
+  '}',
+  '',
+].join('\n');
+
+const CFG_MAKE = "import { cfg } from './lib/config.mjs';";
+const CFG_BATCH = "import { cfg, requireCfg, SKILL, CACHE, TMP, QUARK_TASK_DIR } from './lib/config.mjs';";
+const IMPORT = "import { posterDir } from './lib/site-paths.mjs';";
+
+const PATCHES = {
+  'scripts/make-entry.mjs': [
+    [CFG_MAKE, CFG_MAKE + '\n' + IMPORT],
+    ["const img = d.image ? path.join(cfg.REPO, 'static/images', d.image) : null;",
+     "const img = d.image ? path.join(posterDir(cfg.REPO, d.id), d.image) : null;"],
+  ],
+  'scripts/process-batch.mjs': [
+    [CFG_BATCH, CFG_BATCH + '\n' + IMPORT],
+    ["const imgDir = path.join(REPO, 'static/images');",
+     '// 配图按分类 slug 分目录（2026-11-15 起），见 scripts/lib/site-paths.mjs'],
+    ["    const dest = path.join(imgDir, `${p.id}.jpg`);",
+     "    const destDir = posterDir(REPO, p.id);\n" +
+     '    fs.mkdirSync(destDir, { recursive: true });\n' +
+     "    const dest = path.join(destDir, `${p.id}.jpg`);"],
+  ],
+  'scripts/trending-sync.mjs': [
+    [CFG_BATCH, CFG_BATCH + '\n' + IMPORT],
+    ["        const dest = path.join(REPO, 'static', 'images', `${id}.jpg`);",
+     "        const dest = path.join(posterDir(REPO, id), `${id}.jpg`);"],
+  ],
+};
+
+function check(file) {
+  try {
+    execFileSync(process.execPath, ['--check', file], { stdio: 'pipe' });
+  } catch (e) {
+    console.log('  ! node --check 失败：', file, String(e.stderr || e.message).slice(0, 140));
+  }
+}
+
+function patchFile(root, rel, pairs) {
+  const p = path.join(root, rel);
+  if (!fs.existsSync(p)) {
+    console.log('  跳过（文件不存在）', rel);
+    return;
+  }
+  let t = fs.readFileSync(p, 'utf8');
+  const eol = t.includes('\r\n') ? '\r\n' : '\n';
+  const norm = (s) => s.replace(/\n/g, eol);
+  let n = 0;
+  let warn = 0;
+  for (const [oldStr, newStr] of pairs) {
+    const o = norm(oldStr);
+    const nn = norm(newStr);
+    if (t.includes(nn)) continue; // 已改，幂等
+    if (!t.includes(o)) {
+      console.log('  ! 需手工核对（找不到）：', oldStr.slice(0, 70));
+      warn++;
+      continue;
+    }
+    t = t.replace(o, nn);
+    n++;
+  }
+  fs.writeFileSync(p, t);
+  console.log('  ', rel, `改 ${n} 处${warn ? `，${warn} 处需手工核对` : ''}`);
+  check(p);
+}
+
+for (const root of ROOTS) {
+  console.log('\n===', root, '===');
+  if (!fs.existsSync(root)) {
+    console.log('  跳过（目录不存在）');
+    continue;
+  }
+  const lib = path.join(root, 'scripts', 'lib');
+  fs.mkdirSync(lib, { recursive: true });
+  const sp = path.join(lib, 'site-paths.mjs');
+  fs.writeFileSync(sp, SITE_PATHS);
+  console.log('  已写入 scripts/lib/site-paths.mjs');
+  check(sp);
+  for (const [rel, pairs] of Object.entries(PATCHES)) patchFile(root, rel, pairs);
+}
+console.log('\n完成。随后到站点仓库执行 npm run check:images 自检。');
+```
+
+### 10.4 `mybot` 私有仓
+
+- 搜索这些写法：`/resource/`、`'/resource/' + id + '/'`，以及模板字符串 `` `/resource/${id}/` ``，还有任何按 id 拼详情页地址的地方。
+- 换成 `detailUrl(id)`；把下面这段贴进工具模块（Node 版）：
+
+```js
+const PREFIX_SLUG = {
+  mv: 'movie', tv: 'tv', dc: 'documentary', an: 'anime', game: 'game',
+  app: 'software', bk: 'ebook', cs: 'course', ot: 'misc',
+};
+function detailUrl(id) {
+  const slug = PREFIX_SLUG[String(id).split('-')[0]];
+  if (!slug) throw new Error('未知 id 前缀：' + id);
+  return `/${slug}/${id}/`;
+}
+```
+
+若 `mybot` 是 Python，等价写法：
+
+```python
+PREFIX_SLUG = {
+    'mv': 'movie', 'tv': 'tv', 'dc': 'documentary', 'an': 'anime', 'game': 'game',
+    'app': 'software', 'bk': 'ebook', 'cs': 'course', 'ot': 'misc',
+}
+
+def detail_url(rid):
+    slug = PREFIX_SLUG.get(str(rid).split('-')[0])
+    if not slug:
+        raise ValueError('未知 id 前缀：' + str(rid))
+    return f'/{slug}/{rid}/'
+```
+
+线上 nginx 已经 301，跟随重定向的客户端暂时可用但多一跳；不跟随重定向的 HTTP 客户端会直接拿不到内容，所以这项必须改。
+
+### 10.5 Windows 飞书简报脚本
+
+`C:/Users/marco/Scripts/wodewangpan-fillfiles-feishu.mjs`：
+
+- 找到按 id 拼详情页链接的地方（通常是 `'/resource/' + id + '/'` 或 `` `/resource/${id}/` ``），改成 10.4 的 `detailUrl(id)`，并把那段映射表贴到脚本顶部。
+- 其它逻辑不动：脚本按 id 回查 `data/*.yaml` 拼标题、站点详情页与夸克链接，不要自己写链接或排版；`--follow` 里的死链候选 / 待加资源 / 追更提醒段落不受影响。
+
+### 10.6 自检（贴完补丁后）
+
+```powershell
+cd <站点仓库>
+npm run check:images     # 应输出「命中 1040 · 旧平铺 0 · 孤儿文件 0」
+```
+
+- 两份 skill 的 `node --check` 由一键脚本自动做；若出现「需手工核对」提示，按 10.2 的目标语义改完再跑一次（脚本幂等）。
+- 下一轮定时任务入库后，确认新图落在 `static/images/<slug>/` 而不是根目录。
+- `mybot` / 飞书脚本各打印一条拼出的 URL，应形如 `/movie/mv-457/`。
+
+---
+
 ## 附：本次涉及的关键命令
 
 ```bash
