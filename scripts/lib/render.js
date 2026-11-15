@@ -32,6 +32,20 @@ const ICONS = {
     '<rect x="2" y="4" width="20" height="16" rx="2"/>' +
     '<path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/>' +
     '</g>',
+  // 用户组 / 群聊：Lucide users（ISC），反馈条「加入夸克群」用
+  users:
+    '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>' +
+    '<circle cx="9" cy="7" r="4"/>' +
+    '<path d="M22 21v-2a4 4 0 0 0-3-3.87"/>' +
+    '<path d="M16 3.13a4 4 0 0 1 0 7.75"/>' +
+    '</g>',
+  // 复制：Lucide copy（ISC），反馈条「复制夸克群口令」用
+  copy:
+    '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+    '<rect x="8" y="8" width="14" height="14" rx="2"/>' +
+    '<path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/>' +
+    '</g>',
   // QQ：官方品牌图标（企鹅剪影），取自 Simple Icons（CC0 协议），24×24 视口实心路径
   qq:
     '<path d="M21.395 15.035a40 40 0 0 0-.803-2.264l-1.079-2.695c.001-.032.014-.562.014-.836C19.526 4.632 17.351 0 12 0S4.474 4.632 4.474 9.241c0 .274.013.804.014.836l-1.08 2.695a39 39 0 0 0-.802 2.264c-1.021 3.283-.69 4.643-.438 4.673.54.065 2.103-2.472 2.103-2.472 0 1.469.756 3.387 2.394 4.771-.612.188-1.363.479-1.845.835-.434.32-.379.646-.301.778.343.578 5.883.369 7.482.189 1.6.18 7.14.389 7.483-.189.078-.132.132-.458-.301-.778-.483-.356-1.233-.646-1.846-.836 1.637-1.384 2.393-3.302 2.393-4.771 0 0 1.563 2.537 2.103 2.472.251-.03.581-1.39-.438-4.673"/>',
@@ -700,14 +714,15 @@ function feedbackBar({ site, item, baseUrl }) {
     (showQuark && quark.code
       ? ` 夸克群口令 <code>${esc(quark.code)}</code>（复制后打开夸克 App 可加群）。`
       : '');
+  // 四个按钮统一带图标：同一份 ICONS + .feedback__icon，颜色与尺寸由 CSS 统一收口
   const btns = [
     showQuark
       ? `<a class="btn" href="${esc(quark.url)}" target="_blank" rel="noopener noreferrer" aria-label="加入${esc(
           quark.name
-        )}夸克网盘群">加入夸克群</a>`
+        )}夸克网盘群">${iconSvg('users', 'feedback__icon')}加入夸克群</a>`
       : '',
     showQuark && quark.code
-      ? `<button class="btn" type="button" data-copy="${esc(quark.code)}">复制群口令</button>`
+      ? `<button class="btn" type="button" data-copy="${esc(quark.code)}">${iconSvg('copy', 'feedback__icon')}复制夸克群口令</button>`
       : '',
     qq
       ? `<a class="btn" href="${esc(qq)}" target="_blank" rel="noopener noreferrer" aria-label="加入${
@@ -717,7 +732,7 @@ function feedbackBar({ site, item, baseUrl }) {
     email
       ? `<a class="btn" href="mailto:${email}?subject=${encodeURIComponent(
           `[资源反馈] ${item.title}`
-        )}&amp;body=${encodeURIComponent(body)}">邮件反馈</a>`
+        )}&amp;body=${encodeURIComponent(body)}">${iconSvg('email', 'feedback__icon')}邮件反馈</a>`
       : '',
   ]
     .filter(Boolean)
@@ -1450,7 +1465,7 @@ function quarkGroupBlock(site) {
   const codeLine = g.code
     ? `<p>群口令：<code class="linkrow__url">${esc(g.code)}</code> <button class="btn btn--mini" type="button" data-copy="${esc(
         g.code
-      )}">复制群口令</button><br><span class="muted">复制整段口令后打开夸克 App，会自动提示加入群聊。</span></p>`
+      )}">复制夸克群口令</button><br><span class="muted">复制整段口令后打开夸克 App，会自动提示加入群聊。</span></p>`
     : '';
   return `<h2 id="quark-group">加入「${name}」夸克网盘群</h2>
   <p>本站的夸克网盘群，资源更新、补链通知与问题反馈都在这里。${g.groupId ? `群 ID：<strong>${esc(g.groupId)}</strong>。` : ''}</p>
