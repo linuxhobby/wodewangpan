@@ -70,9 +70,9 @@ import {
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
 // 夸克官方 skill 的 CLI（share-detail 支持客态，不需要网盘授权）。
-// 客户端目录按新旧依次探测：.workbuddy（现役）→ .trae-cn / .codebuddy（历史目录回退）。
+// 客户端目录按新旧依次探测：.workbuddy（现役）→ .codebuddy（历史目录回退）。
 const CLI =
-  ['.workbuddy', '.trae-cn', '.codebuddy']
+  ['.workbuddy', '.codebuddy']
     .map((dir) =>
       path.join(process.env.HOME || process.env.USERPROFILE || '', dir, 'skills/quarkclouddrive/scripts/quark-drive.cjs')
     )
