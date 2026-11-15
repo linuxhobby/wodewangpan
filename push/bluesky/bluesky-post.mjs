@@ -132,9 +132,9 @@ const MIN_DESC = 60;
  * 上限 300 graphemes。放不下时**只砍简介，不动链接**；简介额度被压到 40 字以下时，
  * 先让出「详情」行（两条网盘链接是用户要的重点），网盘链接与标签始终保留，永不截断 URL。
  */
+// 标题行（2026-11-15 指挥官定：不带年份，`日期` 仍在数据里，只是不上屏）
 function headerOf(it) {
-  const year = (it.date || '').slice(0, 4);
-  return `【${it.category}】${it.title}${year ? `（${year}）` : ''}`;
+  return `【${it.category}】${it.title}`;
 }
 /**
  * 资源名做标签（2026-11-15 指挥官定）：去括号内容 → 砍掉空格连字符/竖线后的副标题 → 砍掉中文逗号后的解释 →
