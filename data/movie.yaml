@@ -6211,25 +6211,14 @@
   image: mv-429.jpg
   updated: 2026-11-15
   files:
-    count: 12
-    size: 1.44 GB
-    format: MKV
-    resolution: 1080P
-    packed: false
+    count: 2
+    size: "5.8 GB"
+    format: "ZIP / MD"
+    packed: true
     tree: |
-      429-奥德赛（2026）/
-       1080P.mkv (1.44 GB)
-       The Odyssey (2026) - 2160p BluRay REMUX HDR10 H265 DTS-HD MA 5.1.nfo
-       clearart.png
-       poster.jpg
-       disc.png
-       landscape.jpg
-       logo.png
-       fanart.jpg
-       banner.jpg
-       movie4kbackground.jpg
-       thumb.jpg
-       backdrop.jpg
+      429-奥ao德de赛sai（2026年）/
+      wodewangpan解压密码.md
+      你需要的资源是这个-下载后解压即可.zip
 
 - id: mv-430
   title: "生化危机：爆发夜"
