@@ -2769,6 +2769,14 @@
   date: 2003-09-26
   added: 2026-09-30
   image: mv-141.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "2.8 GB"
+    format: "MKV"
+    tree: |
+      141-丛林奇兵(国英双语).The.Rundown.2003.BluRay.720p.x264.AC3.2Audios-CMCT/
+      丛林奇兵(国英双语).The.Rundown.2003.BluRay.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-142
   title: "东方快车谋杀案"
@@ -2781,6 +2789,14 @@
   date: 1974-11-22
   added: 2026-09-30
   image: mv-142.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "4.0 GB"
+    format: "MKV"
+    tree: |
+      142-东方快车谋杀案.Murder.On.The.Orient.Express.1974.BluRay.720p.x264.AC3.3Audios-CMCT/
+      东方快车谋杀案.Murder.On.The.Orient.Express.1974.BluRay.720p.x264.AC3.3Audios-CMCT.mkv
 
 - id: mv-143
   title: "两杆大烟枪"
@@ -2793,6 +2809,14 @@
   date: 1998-08-28
   added: 2026-09-30
   image: mv-143.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "3.0 GB"
+    format: "MKV"
+    tree: |
+      143-两杆大烟枪.Lock.Stock.and.Two.Smoking.Barrels.1998.BluRay.720p.x264.AC3-CMCT/
+      两杆大烟枪.Lock.Stock.and.Two.Smoking.Barrels.1998.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-144
   title: "中途岛之战"
