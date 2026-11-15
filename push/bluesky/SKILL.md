@@ -77,18 +77,21 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 【电影】搏击俱乐部（1999）
 <description，超长自动截断加 …>
 
+详情：https://www.wodewangpan.top/movie/mv-075/
 订阅TG：https://t.me/myquark ，关注更多资源
 夸克网盘：https://pan.quark.cn/s/xxxx
 百度网盘：https://pan.baidu.com/s/xxxx（提取码 wt7p）
-详情：https://www.wodewangpan.top/movie/mv-075/
-#网盘资源 #电影
+#网盘资源 #电影 #动作
 ```
 
-- 2026-11-12 版式：`订阅TG` 行固定在链接区**第一行**，指向 TG 订阅号 `@myquark`；替换掉 11-10 加的
+- 2026-11-15 版式（指挥官定）：**详情行提到链接区第一行**，其后订阅TG、夸克、百度；标签固定 `#网盘资源 #分类`，数据里还有业务标签（`tags` 里第一个非分类项，如 `["电影","动作",…]` → `动作`）就补成第三个，取不到就只留两个。
+- 2026-11-12 版式来源：`订阅TG` 行指向 TG 订阅号 `@myquark`，替换掉 11-10 加的
   `加入TG群组：https://t.me/wodewangpantop`。所有链接统一保留 `https://` 前缀（facet 直接可点）。
 - 上限 300 graphemes。放不下时**只砍简介，绝不动链接**；简介额度被压到 60 字以下（`MIN_DESC`）就先让出「详情」行，把额度还给简介 —— 两条网盘链接、订阅TG 行和标签永远保留，URL 永不截断。
 - 百度行只在条目**有** `baidu_url` 时出现（2026-10-24：795 条里 623 条有，缺的不补发百度行）；有 `baidu_pwd` 就紧跟一个 `（提取码 xxxx）`，没有就只给链接。
 - **字段名坑（2026-11-15 修）**：站点 `data/*.yaml` 里提取码字段叫 `baidu_pwd`（588 条全部如此，没有 `baidu_code`）。`push/common.mjs` 原来只读 `baidu_code`，导致百度行长期丢提取码；现改为 `baidu_code || baidu_pwd`，两个名字都认。核对时以 `baidu_pwd` 为准。
+- **链接卡（OG 卡）**：Bluesky 的 PDS **不会**自己抓站点 OG，纯文本里的链接不会自动变卡片。要出卡片必须显式发 `app.bsky.embed.external`，`uri/title/description` 全由脚本填（不给 `thumb` 就是无图卡片）。`--embed auto`（默认）有海报发图片、无海报发详情页链接卡；`--embed external` 强制链接卡（不发图）；`--embed image` 强制图片。一条帖只能有一个 embed，图片卡与链接卡不能同时要。
+- `--no-state`：照常发帖但不写 `posted.json`，用于测试发帖效果（日志会标「测试帖，未写入 posted.json」）。
 - 图片走 `app.bsky.embed.images`，**alt 文本**写「标题（分类） 海报」；
 - URL 与话题标签都生成 **richtext facet**（`byteStart/byteEnd` 用 UTF-8 字节算），所以在客户端是可点的蓝链接，不是纯文本；
 - `--dry` 会把每个链接 facet 的 URI 单独打出来，改文案后值得扫一眼，确认没有多吞字符；

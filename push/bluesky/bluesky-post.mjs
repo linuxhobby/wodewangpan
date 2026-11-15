@@ -12,6 +12,9 @@
 //   node bluesky-post.mjs --strategy latest|weighted|random|rotate   # 默认 latest：按 added 倒序，新入库优先
 //   node bluesky-post.mjs --no-site-link   # 正文不带站点详情页链接
 //   node bluesky-post.mjs --with-site-link # 正文带站点详情页链接（默认带）
+//   node bluesky-post.mjs --embed auto|image|external  # auto（默认）：有海报发图、无海报发详情页链接卡；
+//                                                      # image 强制图片；external 强制链接卡（不发图）
+//   node bluesky-post.mjs --no-state       # 测试用：照常发帖，但不写 posted.json（不计入判重）
 //   node bluesky-post.mjs --audit          # 打印不可发条目的原因分布
 //
 // 凭据：同目录 wodewangpan-bluesky.env（回退 ~/.workbuddy → ~/.workbuddy）
@@ -42,6 +45,11 @@ const COUNT = parseInt(arg('count', '1'), 10);
 const STRATEGY = arg('strategy', 'latest'); // latest（默认）| weighted | rotate | random
 const PICKS = collectPicks();
 const WITH_SITE_LINK = !has('no-site-link');
+// 2026-11-15 指挥官提问后加：Bluesky 的 PDS 不会自己抓站点 OG，要让帖子出链接卡必须显式发 external embed。
+// auto（默认）：有海报发图片，无海报发详情页链接卡；image：强制图片；external：强制链接卡（测试用）。
+const EMBED = arg('embed', 'auto');
+// 测试发帖用：照常发送，但不写 posted.json（不计入累计、不影响判重）
+const NO_STATE = has('no-state');
 
 // [沙箱兼容] 主机仍走 curl（行为完全不变）；沙箱内 curl 无法 spawn(ENOENT) 或 Schannel TLS 失败(exit 35)
 // 时自动退回 Node 内置 fetch。curl 只在传输层出错才非零退出（HTTP 4xx/5xx 仍返回响应体），所以兜底语义一致。
@@ -110,34 +118,40 @@ const MAX = 300;
 /** 简介的保底字数：低于这个值就让出「详情」行（见 buildText） */
 const MIN_DESC = 60;
 /**
- * 帖子结构（2026-11-12 改版式：订阅TG 引导行移到网盘链接之前，替换掉原「加入TG群组」行；
- * 百度链接仍按 2026-10-10 的口径，条目有就一起放上）：
+ * 帖子结构（2026-11-15 指挥官定版：详情行提到订阅行之前，标签加第三个业务标签）：
  *   【分类】标题（年份）
  *   简介…
  *
+ *   详情：https://www.wodewangpan.top/<slug>/<id>/（slug 按 id 前缀，如 mv→movie）
  *   订阅TG：https://t.me/myquark ，关注更多资源
  *   夸克网盘：https://pan.quark.cn/s/xxxx
  *   百度网盘：https://pan.baidu.com/s/xxxx（提取码 abcd）
- *   详情：https://www.wodewangpan.top/<slug>/<id>/（slug 按 id 前缀，如 mv→movie）
- *   #网盘资源 #分类
+ *   #网盘资源 #分类 #业务标签
  * 上限 300 graphemes。放不下时**只砍简介，不动链接**；简介额度被压到 40 字以下时，
  * 先让出「详情」行（两条网盘链接是用户要的重点），网盘链接与标签始终保留，永不截断 URL。
  */
-function buildText(it) {
+function headerOf(it) {
   const year = (it.date || '').slice(0, 4);
-  const header = `【${it.category}】${it.title}${year ? `（${year}）` : ''}`;
+  return `【${it.category}】${it.title}${year ? `（${year}）` : ''}`;
+}
+/** 第三个标签取数据里第一个非分类标签（如 ["电影","动作",…] → 动作），取不到就只留两个标签 */
+function tagsOf(it) {
+  const extra = (it.tags || []).find((t) => t && t !== it.category);
+  return `#网盘资源 #${it.category}${extra ? ` #${extra}` : ''}`;
+}
+function buildText(it) {
+  const header = headerOf(it);
   const linkLines = [
     it.quark ? `夸克网盘：${it.quark}` : '',
     it.baidu ? `百度网盘：${it.baidu}${it.baiduCode ? `（提取码 ${it.baiduCode}）` : ''}` : '',
   ].filter(Boolean);
   const siteLine = `详情：${itemUrl(SITE_URL, it.id)}`;
-  // 订阅号引导行（2026-11-12 用户定）：替换掉 11-10 加的「加入TG群组：https://t.me/wodewangpantop」，
-  // 并移到网盘链接之前；与网盘/详情链接一样永不被截断。
+  // 订阅号引导行（2026-11-12 用户定）：替换掉 11-10 加的「加入TG群组：https://t.me/wodewangpantop」；
+  // 2026-11-15 指挥官定版：详情行提到最前，其后订阅行、网盘链接，末尾三个标签。
   const tgLine = '订阅TG：https://t.me/myquark ，关注更多资源';
-  const tags = `#网盘资源 #${it.category}`;
+  const tags = tagsOf(it);
   const assemble = (desc, withSite) => {
-    const lines = [tgLine, ...linkLines];
-    if (withSite) lines.push(siteLine);
+    const lines = withSite ? [siteLine, tgLine, ...linkLines] : [tgLine, ...linkLines];
     return `${header}\n${desc}${desc ? '\n\n' : '\n'}${lines.join('\n')}\n${tags}`;
   };
 
@@ -200,7 +214,7 @@ async function uploadBlob(jwt, file) {
   return j.blob;
 }
 
-async function createPost({ did, jwt, text, blob, alt }) {
+async function createPost({ did, jwt, text, blob, alt, external }) {
   const record = {
     $type: 'app.bsky.feed.post',
     text,
@@ -210,6 +224,9 @@ async function createPost({ did, jwt, text, blob, alt }) {
   };
   if (blob) {
     record.embed = { $type: 'app.bsky.embed.images', images: [{ alt: alt.slice(0, 300), image: blob }] };
+  } else if (external) {
+    // 链接卡（external embed）：PDS 不会自己抓 OG，卡片内容全靠这里显式给，不给 thumb 就是无图卡片
+    record.embed = { $type: 'app.bsky.embed.external', external };
   }
   const payloadFile = path.join(os.tmpdir(), `bsky-post-${Date.now()}.json`);
   fs.writeFileSync(payloadFile, JSON.stringify({ repo: did, collection: 'app.bsky.feed.post', record }), 'utf8');
@@ -255,7 +272,11 @@ for (let n = 0; n < COUNT; n++) {
   const alt = `${it.title}${it.category ? `（${it.category}）` : ''} 海报`;
 
   console.log(`\n——— 第 ${n + 1} 条 ———`);
-  console.log(`id: ${it.id} | ${it.category} | ${it.title} | 图: ${hasImg ? it.image : '（无海报，纯文本帖）'} | 字数 ${len}/300`);
+  const useCard = EMBED === 'external' || (EMBED === 'auto' && !hasImg);
+  const card = useCard
+    ? { uri: itemUrl(SITE_URL, it.id), title: headerOf(it), description: (it.desc || '').trim().slice(0, 150) }
+    : null;
+  console.log(`id: ${it.id} | ${it.category} | ${it.title} | 图: ${hasImg && !useCard ? it.image : (useCard ? '（链接卡，不上传图片）' : '（无海报，纯文本帖）')} | 字数 ${len}/300`);
   if (pickedInfo) console.log(pickedInfo);
   console.log(text);
   console.log(`————————`);
@@ -273,21 +294,23 @@ for (let n = 0; n < COUNT; n++) {
   }
   try {
     let blob = null;
-    if (hasImg) blob = await uploadBlob(sess.jwt, imgPathFull);
-    const r = await createPost({ did: sess.did, jwt: sess.jwt, text, blob, alt });
+    if (hasImg && !useCard) blob = await uploadBlob(sess.jwt, imgPathFull);
+    const r = await createPost({ did: sess.did, jwt: sess.jwt, text, blob, alt, external: card });
     const url = bskyUrl(r.uri);
-    state.posted[it.id] = { ...baseRecord(it, text), uri: r.uri, cid: r.cid };
-    noteSeen(it);
-    state.history.push({ id: it.id, at: new Date().toISOString(), uri: r.uri });
-    console.log(`✓ 已发送 → ${url}`);
-    results.push({ id: it.id, ok: true, url, uri: r.uri });
+    if (!NO_STATE) {
+      state.posted[it.id] = { ...baseRecord(it, text), uri: r.uri, cid: r.cid };
+      noteSeen(it);
+      state.history.push({ id: it.id, at: new Date().toISOString(), uri: r.uri });
+    }
+    console.log(`✓ 已发送 → ${url}${NO_STATE ? '（--no-state：测试帖，未写入 posted.json）' : ''}`);
+    results.push({ id: it.id, ok: true, url, uri: r.uri, embed: useCard ? 'external' : (blob ? 'images' : 'none'), noState: NO_STATE || undefined });
   } catch (e) {
     console.log(`× 发送失败：${e.message}`);
     results.push({ id: it.id, ok: false, error: String(e.message).slice(0, 200) });
   }
 }
 
-if (!DRY) {
+if (!DRY && !NO_STATE) {
   // 写回前合并磁盘最新状态：另一个并发进程可能已写入新记录，直接覆盖会丢判重记录。
   try {
     const disk = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
@@ -300,6 +323,8 @@ if (!DRY) {
   } catch {}
   saveState(STATE_FILE, state);
   console.log(`\n已发记录写入：${STATE_FILE}（累计 ${Object.keys(state.posted).length} 条）`);
+} else if (NO_STATE) {
+  console.log(`\n--no-state：本次未写 ${STATE_FILE}（测试帖不计入判重）`);
 }
 printSummary(results, { state, items, skipReason });
 console.log(JSON.stringify(results, null, 1));
