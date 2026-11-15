@@ -157,8 +157,21 @@ function buildText(it, { compact = false } = {}) {
     return `${header}\n${desc}${desc ? '\n\n' : '\n'}${lines.join('\n')}\n${tags}`;
   };
 
-  // 链接卡模式（compact）：标题和简介已由卡片展示，正文只留链接区与标签，避免整段重复
-  if (compact) return assemble('', false);
+  // 链接卡模式（compact，2026-11-15 第三版，指挥官定）：
+  // 标题与简介由卡片承担，正文只写「标题+引流语 / TG群 / TG订阅号 / 网盘（点击保存） / 标签」，
+  // 不再写详情行（卡片本身就是详情链接）。
+  if (compact) {
+    const compactLinks = [
+      it.quark ? `夸克网盘：${it.quark} （点击保存）` : '',
+      it.baidu ? `百度网盘：${it.baidu}${it.baiduCode ? `（提取码 ${it.baiduCode}）` : ''} （点击保存）` : '',
+    ].filter(Boolean);
+    const lines = [
+      'TG群：https://t.me/wodewangpantop',
+      'TG订阅号：https://t.me/myquark',
+      ...compactLinks,
+    ];
+    return `${header}，关注更多资源，请加入：\n${lines.join('\n')}\n${tags}`;
+  }
 
   const desc = (it.desc || '').trim();
   // 带详情行的骨架长度（desc 为空时那多出的 1 个换行由 budget 扣掉）
