@@ -50,7 +50,7 @@
 
 ## 五、部署与 Nginx
 
-- 推 `main` 后 VPS **每 6 小时自动拉取重建**（`0 */6`）；急发：`ssh <host> 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'`（约 30 秒，无新提交直接 `exit 0`，频率只决定上线延迟上限）。
+- 推 `main` 后 VPS **每 2 小时的 :30 自动拉取重建**（`30 */2`，与 `setup-vps.sh` 装的一致）；急发：`ssh <host> 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'`（约 30 秒，无新提交直接 `exit 0`，频率只决定上线延迟上限）。
 - `wdwp-autoupdate.sh` 不覆盖 nginx conf，线上直改 nginx 安全，但**记得回写 `deploy/` 镜像**。
 - **`robots.txt` 只挡子路径** `Disallow: /*/search-index.json`；根 `/search-index.json` 是 Googlebot 渲染「加载更多」的通道，挡了自断发现路径。
 - 410 规则（`^/.+/search-index\.json$`）**必须排在静态资源 location 之前**（nginx 正则 location 取首个命中）。

@@ -697,7 +697,7 @@ BASE_URL=https://你的域名
 EOF
 sudo crontab -e
 # 加入一行：
-0 */6 * * * /usr/local/bin/wdwp-autoupdate >> /var/log/wdwp-autoupdate.log 2>&1
+30 */2 * * * /usr/local/bin/wdwp-autoupdate >> /var/log/wdwp-autoupdate.log 2>&1
 ```
 
 看运行结果：`tail -20 /var/log/wdwp-autoupdate.log`。
