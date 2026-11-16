@@ -1433,7 +1433,7 @@
   image: app-130.jpg
 
 - id: app-131
-  title: "Debian 13.7 - DVD 安装盘的 torrent 种子"
+  title: "Debian 13.7 - DVD 安装盘iso镜像以及torrent 种子"
   category: 软件
   tags: ["操作系统", "Linux", "Debian", "trixie", "amd64", "Debian 13.7 Debian 13.7"]
   quark_url: "https://pan.quark.cn/s/62c7fb6ec445"
