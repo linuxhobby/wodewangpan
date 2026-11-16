@@ -3,7 +3,7 @@ import readline from 'node:readline/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // 分类 → data 文件映射与副标口径收口在 lib/data.js（fill-title.mjs 同源），勿另抄
-import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, todayShanghai } from './lib/data.js';
+import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, isLongTitle, todayShanghai } from './lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -33,10 +33,10 @@ const base = known ? known[1] : category.replace(/[\\/]/g, '-');
 const file = path.join(root, 'data', `${base}.yaml`);
 
 // 副标从简介/标签里提炼，脚本不替人编造；入库时就按 fill-title.mjs 的同一套标准把关，
-// 写进来的标题直接是终态，省掉后续批量补副标。中文长名（片名本身自解释）豁免。
+// 写进来的标题直接是终态，省掉后续批量补副标。长标题（本身自解释）豁免：
+// 电影/电视剧/动漫不适用副标（SUBTITLE_CATS 不含）；主标题已很长也可不用（isLongTitle）。
 let fullTitle = title;
-const longCnTitle = /[\u4e00-\u9fff]/.test(title) && [...title].length >= 10;
-if (SUBTITLE_CATS.has(categoryCn) && !HAS_SUBTITLE_RE.test(title) && !longCnTitle) {
+if (SUBTITLE_CATS.has(categoryCn) && !HAS_SUBTITLE_RE.test(title) && !isLongTitle(title)) {
   for (;;) {
     const subtitle = await get('副标（客观功能描述，留空则保持原名）');
     if (!subtitle) {

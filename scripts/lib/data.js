@@ -332,6 +332,14 @@ export const HAS_SUBTITLE_RE = /\s-\s|:\s|：|\(|（|•|—|\s·\s/;
 /** 标题/副标一律禁用的绝对化与主观用语（SEO 与编辑口径双重原因） */
 export const BANNED_TITLE_RE = /最好|最佳|最强|第一|必备|最便捷|排第二/;
 
+/** 标题已经很长、本身自解释，可不加副标（指挥官口径：电影/电视剧/动漫不用副标；主标题
+ *  已经很长的前提下也可以不用）。中文名≥10字 或 任意字符总长≥18（覆盖英文长标题）即视为长标题。
+ *  new-resource.js / fill-title.mjs / skill make-entry.mjs 共用此口径。 */
+export function isLongTitle(title) {
+  const s = String(title || '');
+  return (/[\u4e00-\u9fff]/.test(s) ? [...s].length >= 10 : false) || [...s].length >= 18;
+}
+
 export function loadResources(dataDir) {
   if (!fs.existsSync(dataDir)) return [];
   const files = fs.readdirSync(dataDir).filter(isResourceFile).sort();

@@ -32,7 +32,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE } from './lib/data.js';
+import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, isLongTitle } from './lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -47,8 +47,6 @@ const has = (k) => process.argv.includes(`--${k}`);
 const CAT_BY_FILE = Object.fromEntries(
   Object.entries(CATEGORY_FILES).map(([cn, en]) => [`${en}.yaml`, cn])
 );
-const LONG_CN_RE = /[\u4e00-\u9fff]/;
-
 const field = (block, key) => {
   const m = block.match(new RegExp(`^  ${key}: (.+)$`, 'm'));
   return m ? m[1].trim().replace(/^"|"$/g, '') : '';
@@ -77,11 +75,11 @@ function collect() {
   return rows;
 }
 
-/** 是否还需要补副标：分类适用 + 标题里还没有副标 + 不是中文长名 */
+/** 是否还需要补副标：分类适用 + 标题里还没有副标 + 不是长标题（长标题本身自解释，可不用副标） */
 function needsSubtitle(row) {
   if (!SUBTITLE_CATS.has(row.category)) return false;
   if (HAS_SUBTITLE_RE.test(row.title)) return false;
-  if (LONG_CN_RE.test(row.title) && [...row.title].length >= 10) return false;
+  if (isLongTitle(row.title)) return false;
   return true;
 }
 
