@@ -1,4 +1,4 @@
-# 游戏资源（48 条）
+# 游戏资源（49 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -979,3 +979,24 @@
       048-超级马里奥3D世界+狂怒世界 Super Mario 3D World + Bowser s Fury/
       升级档v1.2.2/
       nsz本体/
+
+- id: game-049
+  title: "终极街头霸王4 Ultra Street Fighter IV"
+  category: 游戏
+  tags: ["游戏", "格斗", "动作", "CAPCOM", "终极街头霸王4 Ultra Street Fighter IV"]
+  quark_url: "https://pan.quark.cn/s/f5c81ca0e030"
+  description: "终极街头霸王4 是卡普空为经典格斗游戏街头霸王4推出的最终加强版，也是这一代作品集大成的一作。游戏在原有基础上新增了五位可操作角色和六个全新场景，并对整体战斗平衡进行了重新调整，让对战节奏与招式判定更趋成熟。作为格斗游戏史上的重要里程碑，它既保留了系列标志性的必杀技系统、连段与EX 槽机制，也通过追加内容把可玩性提升到新的高度，深受竞技玩家与格斗爱好者的喜爱。本资源为 Xbox360 平台移植版本，让更多玩家能够在熟悉的主机环境中体验这部作品。需要说明的是，资源内语言版本尚待确认，下载前请留意实际内容。"
+  date: 2014-08-07
+  added: 2026-11-15
+  image: game-049.jpg
+  updated: 2026-11-16
+  files:
+    count: 4
+    format: "ZIP×2 / TXT"
+    packed: true
+    tree: |
+      049-终极街头霸王4 Ultra Street Fighter IV - Xbox360移植 - 语言待确认/
+      历史版本[不用下载]/
+      解压后用读卡器覆盖到卡根目录.zip
+      数据包.zip
+      安装说明.txt

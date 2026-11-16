@@ -1,4 +1,4 @@
-# 电视剧资源（185 条）
+# 电视剧资源（188 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3620,3 +3620,72 @@
   date: 2019-04-21
   added: "2026-11-16 03:52"
   image: tv-185.jpg
+
+- id: tv-186
+  title: "重生密码"
+  category: 电视剧
+  tags: ["电视剧", "Sci-Fi & Fantasy", "动作冒险", "重生密码 重生密碼"]
+  quark_url: "https://pan.quark.cn/s/aba1d96ffa79"
+  description: "【第 1 季 · 共 24 集】一场海底火山爆发，让尘封多年的休眠舱浮出海面，舱中沉睡的周亦白就此醒来，记忆却停留在1955年。当他循着旧日地址回到周宅大院，眼前早已物是人非，一场与孙子周末的意外相遇，反倒引来重重杀机。祖孙二人性格迥异，彼此试探，是敌是友难以分辨。另一条线上，车祸之后昏迷不醒的拳王陆霏，脑海里总浮现一个陌生男子的身影，伴随熟悉的琴声，冰封的记忆正一点点重启。两段错位的时空、一段深埋海底的往事交织推进，悬念层层揭开，科幻设定与悬疑叙事相互咬合，构成这部剧最吸引人的看点。｜TMDB 7.0"
+  date: 2026-11-13
+  added: 2026-11-15
+  image: tv-186.jpg
+  updated: 2026-11-16
+  files:
+    count: 7
+    size: "26.3 GB"
+    format: "MP4×7"
+    tree: |
+      186-重.生.密.码（2026）/
+      S01E01.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+      S01E02.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+      S01E03.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+      S01E04.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+      S01E05.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+      S01E06.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+      S01E07.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+
+- id: tv-187
+  title: "文武"
+  category: 电视剧
+  tags: ["电视剧", "动作冒险", "War & Politics", "文武 문무"]
+  quark_url: "https://pan.quark.cn/s/6c59e9e204ac"
+  description: "【第 1 季 · 共 28 集】这是一部气势宏大的历史正剧，把镜头对准朝鲜半岛三国归一的动荡年代。故事以高句丽与百济的兴衰为经，以与唐朝的角力为纬，铺陈出一段波澜壮阔的统一之路。剧中不仅重现了当年诸国并立、征战不休的格局，也着力刻画那些推动历史走向的人物，他们在权力与信念之间抉择，在兄弟与家国之间取舍。宏大的战争场面与细腻的人物命运相互映衬，让这段以弱胜强、完成三国统一的往事有了温度。对历史题材感兴趣的观众，能从中看到小国在大国夹缝中求生存、谋发展的韧性与智慧。｜TMDB 7.5"
+  date: 2026-11-14
+  added: 2026-11-15
+  image: tv-187.jpg
+  updated: 2026-11-16
+  files:
+    count: 2
+    size: "5.8 GB"
+    format: "MKV×2"
+    tree: |
+      187-文.武（2026）/
+      S01/
+      Sword.and.Silence.S01E01.2026.1080p.NF.WEB-DL.x264.AAC.mkv
+      Sword.and.Silence.S01E02.2026.1080p.NF.WEB-DL.x264.AAC.mkv
+
+- id: tv-188
+  title: "库比蒂诺"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "库比蒂诺 Cupertino"]
+  quark_url: "https://pan.quark.cn/s/8b878746cabf"
+  description: "【第 1 季 · 共 11 集】故事发生在科技巨头盘踞的硅谷腹地库比蒂诺。一名律师被前雇主、一家科技初创公司侵吞了本该属于他的股票期权，面对强势的资本方，他拒绝忍气吞声。走投无路之际，他与另一位同样刚被解雇的律师一拍即合，干脆自己创办了一家小律所。两人从替被大公司侵害的普通人维权做起，一桩桩看似不起眼的案子，逐渐把他们推向与硅谷巨头的正面较量。剧集把职场不公、资本博弈与法律维权编织在一起，既有小人物抱团反击的爽快，也抛出一个现实追问：当规则的制定者本身就是受害者要对抗的对象，公平究竟该如何伸张。｜TMDB 5.8"
+  date: 2026-10-08
+  added: 2026-11-15
+  image: tv-188.jpg
+  updated: 2026-11-16
+  files:
+    count: 7
+    size: "3.7 GB"
+    format: "MKV×7"
+    tree: |
+      188-库.比.蒂.诺（2026）/
+      S01/
+      Cupertino.S01E01.2026.1080p.HMAX.WEB-DL.H.265.DDP.5.1.mkv
+      Cupertino.S01E02.2026.1080p.HMAX.WEB-DL.H.265.DDP.5.1.mkv
+      Cupertino.S01E03.2026.1080p.HMAX.WEB-DL.H.265.DDP.5.1.mkv
+      Cupertino.S01E04.2026.1080p.HMAX.WEB-DL.H.265.DDP.5.1.mkv
+      Cupertino.S01E05.2026.1080p.HMAX.WEB-DL.H.265.DDP.5.1.mkv
+      Cupertino.S01E06.2026.1080p.HMAX.WEB-DL.H.265.DDP.5.1.mkv
+      Cupertino.S01E07.2026.1080p.HMAX.WEB-DL.H.265.DDP.5.1.mkv
