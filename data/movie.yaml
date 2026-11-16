@@ -3009,6 +3009,14 @@
   date: 2014-09-24
   added: 2026-09-30
   image: mv-153.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "3.6 GB"
+    format: "MKV"
+    tree: |
+      153-伸冤人.The.Equalizer.2014.BluRay.720p.x264.AC3-CMCT/
+      伸冤人.The.Equalizer.2014.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-154
   title: "偷心贼"
@@ -3021,6 +3029,14 @@
   date: 2013-12-18
   added: 2026-09-30
   image: mv-154.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "3.4 GB"
+    format: "MKV"
+    tree: |
+      154-偷心贼.Steal.My.Heart.2013.BluRay.720p.x264.AC3-CMCT/
+      偷心贼.Steal.My.Heart.2013.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-155
   title: "大内幕"
@@ -3033,6 +3049,14 @@
   date: 1953-10-14
   added: 2026-09-30
   image: mv-155.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "2.2 GB"
+    format: "MKV"
+    tree: |
+      155-伟大的警察.The.Big.Heat.1953.BluRay.720p.x264.AC3-CMCT/
+      伟大的警察.The.Big.Heat.1953.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-156
   title: "侠盗魅影"
