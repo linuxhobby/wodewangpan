@@ -19,18 +19,12 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import yaml from 'js-yaml';
+import { loadResources } from './lib/data.js';
+import { QUARK_CLI as CLI } from './lib/quark-cli.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
 const outFile = path.join(root, 'config', 'drive-fids.json');
-const CLI =
-  ['.workbuddy', '.codebuddy']
-    .map((dir) =>
-      path.join(process.env.HOME || process.env.USERPROFILE || '', dir, 'skills/quarkclouddrive/scripts/quark-drive.cjs')
-    )
-    .find((p) => fs.existsSync(p)) ||
-  path.join(process.env.HOME || process.env.USERPROFILE || '', '.workbuddy/skills/quarkclouddrive/scripts/quark-drive.cjs');
 const args = process.argv.slice(2);
 const getArg = (name, def) => {
   const i = args.indexOf(`--${name}`);
@@ -103,16 +97,9 @@ function browse(fid) {
   throw new Error('browse 无 result 输出（夸克 CLI 未授权或版本过旧？）');
 }
 
-/** 站内 id 全集，用来校验盘端编号目录是否都对得上条目 */
+/** 站内 id 全集，用来校验盘端编号目录是否都对得上条目（走 data.js 的资源文件口径，配置文件不会误入） */
 function siteIds() {
-  const set = new Set();
-  for (const f of fs.readdirSync(dataDir)) {
-    if (!f.endsWith('.yaml')) continue;
-    const items = yaml.load(fs.readFileSync(path.join(dataDir, f), 'utf8'));
-    if (!Array.isArray(items)) continue;
-    for (const it of items) if (it && it.id) set.add(it.id);
-  }
-  return set;
+  return new Set(loadResources(dataDir).map((it) => it && it.id).filter(Boolean));
 }
 
 const known = siteIds();

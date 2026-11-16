@@ -208,7 +208,7 @@ export function tagHref(tag) {
   return `/tag/${encodeURIComponent(tagSlug(tag))}/`;
 }
 
-function catNav(categories, counts, activeCat, total, _hotOn = false) {
+function catNav(categories, counts, activeCat, total) {
   const items = [
     `<a class="cat${activeCat ? '' : ' is-on'}" href="/">全部<span class="cat__n">${total}</span></a>`,
     ...categories.map(
@@ -318,7 +318,6 @@ function layout({
   title,
   description,
   activeCat,
-  hotOn = false,
   categories,
   counts,
   total,
@@ -419,7 +418,7 @@ ${finalJsonLd ? jsonLdBlock(finalJsonLd) : ''}
     </form>
   </div>
 </header>
-${catNav(categories, counts, activeCat, total, hotOn)}
+${catNav(categories, counts, activeCat, total)}
 <main class="wrap">
 ${crumb}${body}
 </main>
@@ -988,7 +987,8 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
         name: item.title,
         url: `${baseUrl}${canonicalPath}`,
         description: descLong,
-        genre: item.tags.filter((t) => t !== item.category),
+        // 与正文标签胶囊同一口径（tagKey 归一化），避免大小写/空白变体漏滤
+        genre: item.tags.filter((t) => tagKey(t) !== tagKey(item.category)),
         keywords: (item.tags || []).join(' '),
         ...(img.detail ? { image: `${baseUrl}${img.detail}` } : {}),
         // dateModified 用入库日：与发布（作品年份）区分，也确实是页面内容的真实变化时间

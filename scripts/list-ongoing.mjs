@@ -12,9 +12,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SERIAL_FILES, IDLE_DAYS, parseSerialFile, itemState } from './lib/serials.mjs';
+import { todayShanghai } from './lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const today = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
+const today = todayShanghai();
 const showAll = process.argv.includes('--all');
 
 const totals = { active: 0, settled: 0, dead: 0 };

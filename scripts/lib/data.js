@@ -83,14 +83,14 @@ export function tagSlug(tag) {
   return TAG_SLUGS.get(key) || (SLUG_FALLBACK && SLUG_FALLBACK(key)) || key;
 }
 
-/** 标签聚合页的最低资源数：低于这个数不出页 */
-export const MIN_TAG_ITEMS = 3;
+/** 标签聚合页的最低资源数：低于这个数不出页（口径常量，仅本文件与 loadSite 消费，不外发） */
+const MIN_TAG_ITEMS = 3;
 
 /** 标签页与分类页的近重复阈值（Jaccard），超过就认为两页对搜索引擎是同一份内容 */
-export const DEFAULT_TAG_OVERLAP_MAX = 0.8;
+const DEFAULT_TAG_OVERLAP_MAX = 0.8;
 
 /** 近重复检测的最小条数门槛：小集合 Jaccard 极不稳定（4 条 vs 6 条就有 67%），配 0 表示不设门槛 */
-export const DEFAULT_TAG_OVERLAP_MIN_SIZE = 10;
+const DEFAULT_TAG_OVERLAP_MIN_SIZE = 10;
 
 /** 标签归一键：大小写与空格不影响同一性，"Sci-Fi & Fantasy" 与 "sci-fi&fantasy" 算同一个 */
 export function tagKey(text) {
@@ -217,6 +217,25 @@ const NON_RESOURCE_FILES = new Set(['site.yaml', 'tags.yaml']);
 function isResourceFile(f) {
   return /\.ya?ml$/i.test(f) && !NON_RESOURCE_FILES.has(f);
 }
+
+/** 分类 → data 文件名（不含扩展名）唯一映射：new-resource.js / fill-title.mjs 共用这一份，勿另抄。
+ *  数据文件统一用英文/缩写命名（中文文件名在命令行、Git 与部分工具里容易变成转义串）；
+ *  未列出的分类按同名文件落到 data/<分类>.yaml */
+export const CATEGORY_FILES = {
+  电影: 'movie',
+  电视剧: 'tv',
+  纪录片: 'documentary',
+  动漫: 'anime',
+  游戏: 'game',
+  软件: 'software',
+  电子书: 'ebook',
+  课程: 'course',
+  其他: 'misc',
+};
+
+/** 标题副标口径：工具/资料类写「原名 - 客观功能描述」，影视类保持纯片名——影视片名会被
+ *  scripts/lib/tmdb.mjs 用于剧名检索与季号识别，加副标会打断追更提醒 */
+export const SUBTITLE_CATS = new Set(['游戏', '软件', '电子书', '课程', '其他']);
 
 export function loadResources(dataDir) {
   if (!fs.existsSync(dataDir)) return [];

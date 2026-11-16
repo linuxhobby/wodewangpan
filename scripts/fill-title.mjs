@@ -28,6 +28,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CATEGORY_FILES, SUBTITLE_CATS } from './lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -38,18 +39,10 @@ const arg = (k, d) => {
 };
 const has = (k) => process.argv.includes(`--${k}`);
 
-const CAT_BY_FILE = {
-  'movie.yaml': '电影',
-  'tv.yaml': '电视剧',
-  'documentary.yaml': '纪录片',
-  'anime.yaml': '动漫',
-  'game.yaml': '游戏',
-  'software.yaml': '软件',
-  'ebook.yaml': '电子书',
-  'course.yaml': '课程',
-  'misc.yaml': '其他',
-};
-const SUBTITLE_CATS = new Set(['游戏', '软件', '电子书', '课程', '其他']);
+// file → category 反查表：正表在 lib/data.js 的 CATEGORY_FILES，这里只做键值翻转，勿另抄
+const CAT_BY_FILE = Object.fromEntries(
+  Object.entries(CATEGORY_FILES).map(([cn, en]) => [`${en}.yaml`, cn])
+);
 const HAS_SUB_RE = /\s-\s|:\s|：|\(|（|•|—|\s·\s/;
 const LONG_CN_RE = /[\u4e00-\u9fff]/;
 const BANNED_RE = /最好|最佳|最强|第一|必备|最便捷|排第二/;

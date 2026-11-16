@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import QRCode from 'qrcode';
 import { categorySlug } from './data.js';
+// esc 与卡片模板（card.js）同一份：含 &#39;，比本地旧副本转义更全
+import { esc } from '../../theme/assets/card.js';
 
 const IMAGE_EXT = ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif', 'svg'];
 // 详情页海报不再单独出一版：直接复用列表卡片这张 240×360，
@@ -64,8 +66,6 @@ export async function writeFavicon(staticDir, outDir) {
 const FONT = 'PingFang SC,Microsoft YaHei,Hiragino Sans GB,sans-serif';
 const PW = CARD.w;
 const PH = CARD.h;
-const esc = (s) =>
-  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /** 各分类占位海报：配色 + 图标 + 专属底纹 + 英文副标题；未收录的分类按名称派生色相 */
 export const CAT_STYLE = {
@@ -76,7 +76,6 @@ export const CAT_STYLE = {
   游戏: { c1: '#511ec2', c2: '#f0569c', icon: 'pad', en: 'GAME', tex: 'pixels' },
   软件: { c1: '#22344c', c2: '#5b7ba6', icon: 'window', en: 'SOFTWARE', tex: 'grid' },
   电子书: { c1: '#8a5a33', c2: '#e3b98f', icon: 'book', en: 'E-BOOK', tex: 'pages' },
-  操作系统: { c1: '#123b5e', c2: '#57c7e8', icon: 'disc', en: 'OPERATING SYSTEM', tex: 'disc' },
   课程: { c1: '#7d4b00', c2: '#ffc857', icon: 'cap', en: 'COURSE', tex: 'pages' },
   其他: { c1: '#6a5a4d', c2: '#b09881', icon: 'folder', en: 'MISC', tex: 'waves' },
 };
@@ -98,9 +97,6 @@ export const ICONS = {
   // 电子书：摊开的书（两页 + 书脊）
   book:
     '<path d="M10 26c14-8 24-8 38 0v46c-14-8-24-8-38 0z"/><path d="M86 26c-14-8-24-8-38 0v46c14-8 24-8 38 0z"/><path fill="none" d="M48 26v46" stroke-width="4"/>',
-  // 操作系统：光盘（镜像文件），中心孔 + 一道高光弧
-  disc:
-    '<circle cx="48" cy="48" r="34"/><circle cx="48" cy="48" r="12" fill="#fff" stroke="none"/><path fill="none" d="M24 24A34 34 0 0 1 77 31" stroke-width="4"/>',
   // 课程：学士帽（帽顶菱形 + 帽筒 + 右侧垂下的流苏）
   cap:
     '<path d="M48 12 88 34 48 56 8 34z"/><path d="M24 46v10c0 7 11 12 24 12s24-5 24-12V46z"/><path fill="none" d="M88 34v16" stroke-width="4"/><circle cx="88" cy="56" r="5" fill="#fff" stroke="none"/>',
@@ -173,17 +169,6 @@ const TEX = {
     let s = '';
     for (let k = 0; k < 5; k++)
       s += `<path fill="none" d="M-20 ${46 + k * 64}q30 -22 60 0t60 0t60 0t60 0t60 0" stroke-width="3"/>`;
-    return s;
-  },
-  // 操作系统：光盘同心纹 + 一圈点位
-  disc() {
-    let s = '';
-    for (const r of [70, 120, 170])
-      s += `<circle cx="${PW / 2}" cy="148" r="${r}" fill="none" stroke-width="2"/>`;
-    for (let i = 0; i < 8; i++) {
-      const a = (i * 45 * Math.PI) / 180;
-      s += `<circle cx="${(PW / 2 + Math.cos(a) * 145).toFixed(1)}" cy="${(148 + Math.sin(a) * 145).toFixed(1)}" r="4" stroke="none"/>`;
-    }
     return s;
   },
 };

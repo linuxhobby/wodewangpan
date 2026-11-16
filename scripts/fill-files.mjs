@@ -50,8 +50,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sortTree } from './lib/tree-sort.mjs';
+import { todayShanghai } from './lib/data.js';
+import { QUARK_CLI as CLI } from './lib/quark-cli.mjs';
 import {
   SERIAL_FILES,
+  splitLines,
   parseSerialFile,
   pickSerials,
   signatureOf,
@@ -69,15 +72,6 @@ import {
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
-// 夸克官方 skill 的 CLI（share-detail 支持客态，不需要网盘授权）。
-// 客户端目录按新旧依次探测：.workbuddy（现役）→ .codebuddy（历史目录回退）。
-const CLI =
-  ['.workbuddy', '.codebuddy']
-    .map((dir) =>
-      path.join(process.env.HOME || process.env.USERPROFILE || '', dir, 'skills/quarkclouddrive/scripts/quark-drive.cjs')
-    )
-    .find((p) => fs.existsSync(p)) ||
-  path.join(process.env.HOME || process.env.USERPROFILE || '', '.workbuddy/skills/quarkclouddrive/scripts/quark-drive.cjs');
 
 // 网盘目录里的「占位说明文件」是同步任务自建（或人工放过）的工作流产物，不是资源内容。
 // 2026-11-08 起 trending-sync / mirror-baidu 预置三份：更新通知、QQ 群缺失反馈、站点导流；
@@ -180,7 +174,7 @@ function useDrive(id) {
 }
 
 // 北京时间今天，写进条目的 updated 字段（sitemap lastmod 依此真实更新）
-const today = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
+const today = todayShanghai();
 // 夸克 skill 要求的追踪参数
 const SESSION_ID = `${Math.floor(Date.now() / 1000)}-${Math.random().toString(36).slice(2, 8)}`;
 const SESSION_INPUT = '批量抓取分享链接的文件清单';
@@ -421,14 +415,9 @@ function collectPending() {
   const pending = [];
   for (const name of targets) {
     const file = path.join(dataDir, name);
-    // data/*.yaml 是「CRLF 为主 + 夹少量裸 LF」的混排文件：逐行保留各自的行尾。
+    // data/*.yaml 逐行保留各自的行尾（serials.mjs 的 splitLines 唯一实现）：
     // 若统一成一种行尾，没动过的行也会进 diff，并与并行提交 data/ 的任务互相整体覆盖。
-    const raw = fs.readFileSync(file, 'utf8');
-    const parts = raw.split(/(\r\n|\r|\n)/);
-    const lines = [];
-    for (let i = 0; i < parts.length; i += 2) {
-      lines.push(i + 1 < parts.length ? parts[i] + parts[i + 1] : parts[i]);
-    }
+    const lines = splitLines(fs.readFileSync(file, 'utf8'));
     const starts = [];
     lines.forEach((l, i) => {
       if (/^- /.test(l)) starts.push(i);

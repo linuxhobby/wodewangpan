@@ -89,7 +89,8 @@
 | `08电子书` | 电子书 | `bk-` | `ebook.yaml` |
 | `07课程` | 课程 | `cs-` | `course.yaml` |
 | `010其他` | 其他 | `ot-` | `misc.yaml` |
-| `09操作系统` | 操作系统 | `os-` | `os.yaml` |
+
+> 「09操作系统」分类已于 2026-11-10 并入「软件」（os-001~011 重编号为 app-130~140，`data/os.yaml` 已删除）。
 
 - 按扫描顺序编号，别按年份/系列重排（排序是 `added`→`id`→日期倒序，重排让系列在页面上倒过来）。
 - `id` 是 URL 绝不能改；页面标题不带编号；`added` 带时刻（`"2026-10-11 16:30"`，要引号）排序更准。
@@ -121,11 +122,11 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 简介文案规范
 
-- 字数：`scripts/lib/data.js` 的 `MIN_DESC = 300`（标签 `【…】` 与结尾 `｜TMDB x.x` 署名不计入），建议写 **320–400**；上限 `MAX_DESC = 1200` 截断。自查 `npm run list:short -- --max=320`。
+- 字数：`scripts/lib/data.js` 的 `MIN_DESC = 150`（2026-11-12 校正；标签 `【…】` 与结尾 `｜TMDB x.x` 署名不计入），建议写 **320–400**；上限 `MAX_DESC = 1200` 截断。自查 `npm run list:short -- --max=320`。
 - 必须：原创改写、写具体（类型/年代/看点/适合谁）、每条有区分度。
 - 禁止：关键词堆砌、编造事实、空洞形容词、复用同段、**正文用破折号**（改逗号/冒号）。
 - 特殊字段别自己写：`【第 N 季 · 共 M 集】` 与 `｜TMDB 8.5` 由 `fill-desc.mjs` 接回。
-- 各分类侧重：软件（干什么/痛点/差异）、电子书（作者与体裁/主张/读者）、OS·其他（版本，非影视 `date` 填版本发布日）、纪录片（题材/视角）、电视剧（题材/主线）、课程（内容/节数/基础/学完能做）。
+- 各分类侧重：软件（干什么/痛点/差异；系统镜像等写版本，非影视 `date` 填版本发布日）、电子书（作者与体裁/主张/读者）、游戏（版本/平台/内容）、纪录片（题材/视角）、电视剧（题材/主线）、课程（内容/节数/基础/学完能做）。
 - 批量补写工具链：正文放 `.tmp/desc-draft.json`（`{ "id": "新正文" }`）→ `node scripts/fill-desc.mjs`（空跑）→ `--apply` 落盘（只改 description，自动接回头尾）。
 
 ### 配图：图源与兜底
@@ -133,7 +134,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 - 放 `static/images/<slug>/`（按分类分目录），文件名 = id；产物 `/img/<id>-*.webp` 仍按 id 平铺，不受影响。卡片 240×360 `fit:cover`，源图宽 ≥240 即达标（维基 ~256×364 够用）。
 - **真实素材优先**：Wikimedia ✅首选（带浏览器 UA）／ TMDB 海报 ✅ ／ iTunes 512 ✅ ／ simple-icons ✅ ／ 豆瓣图书 ✅（电子书主力）／ weserv 代理 ✅；Fandom／MobyGames／Google Books ❌。课程无 TMDB 海报：官方图→维基→`scripts/poster.mjs icon` 合成。
 - **假图识别**：下载完 `file` 看 image/JPEG/PNG 且宽 ≥200；出图必须打开看一眼（`app.js` 取图、图标偏小、identicon 假头像只有看图能发现）。
-- **自绘兜底** `scripts/poster.mjs`（douban/book/icon/set 四模式）+ `scripts/share-poster.mjs`（首页品牌分享卡 `static/share.jpg`，改站名/分类后重跑）。
+- **自绘兜底** `scripts/poster.mjs`（douban/book/icon/set/scene 五模式）+ `scripts/share-poster.mjs`（首页品牌分享卡 `static/share.jpg`，改站名/分类后重跑）。
 
 ### 三个 skill
 
@@ -145,7 +146,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 - 真身只在 `~/.workbuddy/skills/`（现役客户端目录；`~/.codebuddy` 为历史遗留，仍被脚本回退探测）。**别放进客户端 builtin/**（更新会清空）。
 - 升级 `quarkclouddrive` 用 `bash scripts/install.sh`，不用 `quark-drive.cjs update`。
-- 两台机经 `~/Documents/SynologyDrive/sync-skill/` 中转，`config.env` 含凭据不同步。
+- ~~两台机经 `~/Documents/SynologyDrive/sync-skill/` 中转~~（2026-11-15 起中转已停用不再维护）；`config.env` 含凭据不同步。
 - 脚本清单（`quark-resource-sync/scripts/`）：`scan-new` / `tmdb` / `make-entry` / `check-desc` / `check-drive-sync` / `check-share-links` / `reshare-batch` / `backfill-*` / `placeholder-fill` / `trending-sync` / `install` / `lib/config`。
 
 ---
@@ -298,7 +299,6 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 | 线上 | https://www.wodewangpan.top |
 | 技能真身 | `~/.workbuddy/skills/`（`quark-resource-sync` / `quarkclouddrive` / `quark-upload-share`）；`~/.codebuddy` 为历史目录 |
 | 凭据 | `~/.workbuddy/skills/quark-resource-sync/config.env`（含凭据，不写进文档） |
-| 中转 | `~/Documents/SynologyDrive/sync-skill/`（不含 `config.env`） |
 | VPS autoupdate | `/usr/local/bin/wdwp-autoupdate`（拉取→npm ci→构建→原子替换 public→reload nginx） |
 
 > 凭据真实值一律不写进文档，只记「在哪、叫什么」。
@@ -322,6 +322,7 @@ node scripts/poster.mjs douban --title "书名" --out static/images/ebook/bk-001
 node scripts/poster.mjs book   --title "书名" --out static/images/ebook/bk-002.jpg   # 豆瓣查无此书时生成兜底
 node scripts/poster.mjs icon   --icon <图标> --out static/images/software/app-001.png   # 图标合成竖版
 node scripts/poster.mjs set    --title "套装名" --out static/images/ebook/bk-006.jpg # 套装深色封面
+node scripts/poster.mjs scene  --preset silk --out static/images/misc/ot-xxx.jpg     # 编辑式主题版式
 node scripts/share-poster.mjs  # 改完站点配置后重跑，刷新 static/share.jpg
 ```
 
@@ -339,7 +340,7 @@ node $S/trending-sync.mjs --dry-run --no-build --no-push
 
 - Node（管理版）v22.22.2；系统 macOS(zsh)/Windows。依赖 `js-yaml`/`sharp`/`pinyin-pro`（必须 `dependencies`）。
 - 写脚本：Node 只用内置模块；临时文件走 `os.tmpdir()`，别写死 `/tmp/`（Windows 无效）。
-- Windows 坑：`data/*.yaml` 是 CRLF（正则整块匹配失效，用位置切片）；沙箱 `spawnSync` 调 CLI 会 EBUSY（改 bash 脚本）。
+- Windows 坑：`data/*.yaml` 已由 `.gitattributes` 锁 LF（勿再按 CRLF 假设写整块正则；逐行保留行尾仍是惯例）；沙箱 `spawnSync` 调 CLI 会 EBUSY（改 bash 脚本）。
 
 ### 改完自检
 

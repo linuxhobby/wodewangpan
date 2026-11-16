@@ -18,14 +18,14 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+// esc 与卡片模板（card.js）同一份：构建端 render.js 也从这里取
+import { esc } from '../theme/assets/card.js';
 
 const mode = process.argv[2];
 const arg = (k, d) => {
   const i = process.argv.indexOf(`--${k}`);
   return i >= 0 ? process.argv[i + 1] : d;
 };
-const esc = (s) =>
-  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const W = 480;
 const H = 720;
@@ -160,7 +160,7 @@ async function posterBook() {
   return 0;
 }
 
-// ── icon：把方形图标合成竖版海报（软件 / 操作系统 / 音频等无 TMDB 海报的资源）──
+// ── icon：把方形图标合成竖版海报（软件 / 音频等无 TMDB 海报的资源）──
 async function posterIcon() {
   const icon = arg('icon');
   const out = arg('out');

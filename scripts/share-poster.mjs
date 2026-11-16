@@ -9,8 +9,10 @@
 //   node scripts/share-poster.mjs --title "…" --tag "…" --slogan "…" --domain www.wodewangpan.top
 import fs from 'node:fs';
 import path from 'node:path';
-import sharp from 'sharp';
+// sharp 是 optionalDependencies，装不上时只影响本工具出图（与 poster.mjs 同款动态加载）
+const sharpOf = async () => (await import('sharp')).default;
 import yaml from 'js-yaml';
+import { esc } from '../theme/assets/card.js';
 import { CAT_STYLE, ICONS } from './lib/assets.js';
 
 const W = 1200;
@@ -22,9 +24,6 @@ const arg = (k, d) => {
   const i = process.argv.indexOf(`--${k}`);
   return i >= 0 ? process.argv[i + 1] : d;
 };
-const esc = (s) =>
-  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
 let cfg = {};
 try {
   cfg = yaml.load(fs.readFileSync('config/site.yaml', 'utf8')) || {};
@@ -43,7 +42,7 @@ const logo = arg('logo', 'static/favicon.svg');
 /** 卡片配色 / 图标 / 英文副标与站内占位海报同源，避免两处口径漂移 */
 const cats = (Array.isArray(cfg.categories) && cfg.categories.length
   ? cfg.categories
-  : Object.keys(CAT_STYLE).filter((c) => c !== '操作系统')
+  : Object.keys(CAT_STYLE)
 ).map(String);
 const styleOf = (name) => CAT_STYLE[name] || { c1: '#4f46e5', c2: '#a274ff', icon: 'folder', en: '' };
 const iconOf = (name) => ICONS[styleOf(name).icon] || ICONS.folder;
@@ -141,6 +140,7 @@ ${cards}
 ${band}
 </svg>`;
 
+const sharp = await sharpOf();
 const logoPng = await sharp(logo).resize(92, 92).png().toBuffer();
 
 fs.mkdirSync(path.dirname(out), { recursive: true });

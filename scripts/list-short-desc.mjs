@@ -17,7 +17,7 @@
  *
  * 结果同时写入 .tmp/short-desc.md（已 gitignore）。补写走 fill-desc.mjs：
  * 把新正文放进 .tmp/desc-draft.json（{ "id": "正文" }），node scripts/fill-desc.mjs --apply，
- * 脚本会自动接回【…】标签与 ｜… 后缀，并检查新正文是否达到 300 字。
+ * 脚本会自动接回【…】标签与 ｜… 后缀，并检查新正文是否达到 150 字。
  */
 import fs from 'node:fs';
 import path from 'node:path';

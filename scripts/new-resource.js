@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import readline from 'node:readline/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+// 分类 → data 文件映射与副标口径收口在 lib/data.js（fill-title.mjs 同源），勿另抄
+import { CATEGORY_FILES, SUBTITLE_CATS, todayShanghai } from './lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -18,28 +20,12 @@ if (!title) {
   process.exit(1);
 }
 
-// 数据文件统一用英文/缩写命名（中文文件名在命令行、Git 与部分工具里容易变成转义串）
-// 分类 → data/<file>.yaml；未列出的分类按同名文件落到 data/<分类>.yaml
-const DATA_FILE = {
-  电影: 'movie',
-  电视剧: 'tv',
-  纪录片: 'documentary',
-  动漫: 'anime',
-  游戏: 'game',
-  软件: 'software',
-  电子书: 'ebook',
-  课程: 'course',
-  其他: 'misc',
-};
-
-// 标题口径：工具/资料类写「原名 - 客观功能描述」，影视类保持纯片名。
-// 影视片名会被 scripts/lib/tmdb.mjs 用于剧名检索与季号识别，加副标会打断追更提醒；
-// 与 scripts/fill-title.mjs 的 SUBTITLE_CATS 保持同一口径，改这里要同步改那边。
-const SUBTITLE_CATS = new Set(['游戏', '软件', '电子书', '课程', '其他']);
-
-const category = await get('分类', '影视');
+// 数据文件统一用英文/缩写命名（中文文件名在命令行、Git 与部分工具里容易变成转义串）。
+// 分类 → data/<file>.yaml 的映射（CATEGORY_FILES）与副标口径（SUBTITLE_CATS）收口在 lib/data.js，
+// 未列出的分类按同名文件落到 data/<分类>.yaml
+const category = await get('分类', '电影');
 // 反查：输入的是文件名或英文缩写时也能落到已存在的文件
-const known = Object.entries(DATA_FILE).find(
+const known = Object.entries(CATEGORY_FILES).find(
   ([cn, en]) => category === cn || String(category).toLowerCase() === en
 );
 const categoryCn = known ? known[0] : category;
@@ -60,7 +46,7 @@ const baidu = await get('百度链接');
 const code = baidu ? await get('百度提取码') : '';
 const guangya = await get('光鸭链接');
 const description = await get('一句话介绍');
-const date = await get('日期', new Date().toISOString().slice(0, 10));
+const date = await get('日期', todayShanghai());
 const id = await get('ID（对应配图文件名，留空自动生成）');
 
 const entry = [`- title: "${fullTitle.replace(/"/g, '\\"')}"`];
