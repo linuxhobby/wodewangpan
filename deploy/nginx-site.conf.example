@@ -100,6 +100,18 @@ server {
     rewrite ^/resource/(cs-[^/]+)(/index\.html|/)?$ /course/$1/ permanent;
     rewrite ^/resource/(ot-[^/]+)(/index\.html|/)?$ /misc/$1/ permanent;
 
+    # 标签词表治理（2026-11-16）：同义标签合并 / 作品名标签删除后，旧聚合页 301 到合并后的地址。
+    # 标签页不在 sitemap 内，但站内历史链接与已抓取快照仍会命中，别让它们落到 404。
+    # jilu 原为「纪录」（已并入分类「纪录片」）、yijifangchengshi… 与 taersazhiwang… 是作品名标签，归各自分类页。
+    rewrite ^/tag/x64(/index\.html|/)?$ /tag/x86-64/ permanent;
+    rewrite ^/tag/war-politics(/index\.html|/)?$ /tag/zhengzhi/ permanent;
+    rewrite ^/tag/foreign-literature(/index\.html|/)?$ /tag/literature/ permanent;
+    rewrite ^/tag/jilu(/index\.html|/)?$ /documentary/ permanent;
+    rewrite ^/tag/openai-codex(/index\.html|/)?$ /tag/aibiancheng/ permanent;
+    rewrite ^/tag/yasi(/index\.html|/)?$ /tag/yingyukaoshi/ permanent;
+    rewrite ^/tag/yijifangchengshi-jisuzhengsheng-formula-1-drive-to-survive(/index\.html|/)?$ /documentary/ permanent;
+    rewrite ^/tag/taersazhiwang-tulsa-king(/index\.html|/)?$ /tv/ permanent;
+
     # 静态资源长期缓存；HTML 不缓存，更新即时生效
     location ~* \.(css|js|json|svg|webp|png|jpg|jpeg|gif|ico)$ {
         expires 30d;
