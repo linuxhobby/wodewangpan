@@ -2829,6 +2829,14 @@
   date: 1976-06-18
   added: 2026-09-30
   image: mv-144.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "4.2 GB"
+    format: "MKV"
+    tree: |
+      144-中途岛海战.Midway.1976.BluRay.720p.x264.AC3.2Audios-CMCT/
+      中途岛海战.Midway.1976.BluRay.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-145
   title: "人工智能"
@@ -2841,6 +2849,14 @@
   date: 2001-06-29
   added: 2026-09-30
   image: mv-145.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "3.8 GB"
+    format: "MKV"
+    tree: |
+      145-人工智能.Artificial.Intelligence.AI.2001.Bluray.720p.x264.AC3-CMCT/
+      人工智能.Artificial.Intelligence.AI.2001.Bluray.720p.x264.AC3-CMCT.mkv
 
 - id: mv-146
   title: "亡命驾驶"
@@ -2853,6 +2869,14 @@
   date: 2011-09-15
   added: 2026-09-30
   image: mv-146.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "2.8 GB"
+    format: "MKV"
+    tree: |
+      146-亡命驾驶.Drive.2011.BluRay.720p.x264.AC3-CMCT/
+      亡命驾驶.Drive.2011.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-147
   title: "亡命天涯"
