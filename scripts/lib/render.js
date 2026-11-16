@@ -758,6 +758,11 @@ function feedbackBar({ site, item, baseUrl }) {
 
 // 详情页之间原本零互链，蜘蛛爬进来出不去；这段静态输出给它们一条向深处走的路（理由见 docs/README.md）。
 // 取 10 条 = 宫格一行 5 列排满两行，窄屏由 .grid--fit 藏掉末行零头
+// 2026-11-16：前 RELATED_RESERVE 个主位仍按「标签交集 + 最新」保证相关，末 4 个保底位做同分类
+// 老条目轮换——原逻辑在交集为 0 时退化成「全站最新优先」，近千个详情页都在推同一批新条目，
+// 老页只剩相邻翻页两条入链（实测 1040 页里 503 页详情间入链 <5，docs「详情页孤岛」）。轮换用
+// 条目 id 尾号做确定性偏移：同一条目永远取到同一批保底（构建幂等），全站合起来入链自然铺匀。
+const RELATED_RESERVE = 4;
 function relatedOf(item, all, n = 10) {
   const tags = new Set(item.tags || []);
   const score = (it) => (it.tags || []).filter((t) => tags.has(t)).length;
@@ -767,9 +772,27 @@ function relatedOf(item, all, n = 10) {
     // !it.dead：死链详情页是 noindex，相关推荐把蜘蛛往 noindex 页引，白耗抓取预算
     .filter((it) => it.id !== item.id && !it.dead && it.category === item.category)
     .sort((a, b) => score(b) - score(a) || newer(a, b))
-    .slice(0, n);
+    .slice(0, n - RELATED_RESERVE);
+  // 保底轮换位：候选 = 同分类活链、主位未占用的，按入库时间倒序排池；偏移量取 id 尾号，
+  // 等距步长跨全池取 RELATED_RESERVE 条——推荐分散到不同入库批次，而不是连着同一批
+  const seen = new Set([item.id, ...picked.map((it) => it.id)]);
+  const pool = all
+    .filter((it) => !seen.has(it.id) && !it.dead && it.category === item.category)
+    .sort(newer);
+  if (pool.length) {
+    const tail = parseInt(String(item.id).split('-')[1], 10) || 0;
+    const offset = tail % pool.length;
+    const step = Math.max(1, Math.floor(pool.length / RELATED_RESERVE));
+    for (let j = 0; picked.length < n && j < pool.length; j++) {
+      const it = pool[(offset + j * step) % pool.length];
+      if (!seen.has(it.id)) {
+        picked.push(it);
+        seen.add(it.id);
+      }
+    }
+  }
+  // 同分类不够 10 条时才跨分类补：只补有标签交集的，硬凑无关条目没有推荐价值
   if (picked.length < n) {
-    const seen = new Set([item.id, ...picked.map((it) => it.id)]);
     picked.push(
       ...all
         .filter((it) => !seen.has(it.id) && !it.dead && score(it) > 0)
