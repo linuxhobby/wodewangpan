@@ -529,7 +529,46 @@ const dlText = `
   ${text(240, 612, '进击 AI 算法工程师 · PyTorch 实战', 20, '#ffffff', { opacity: 0.9 })}
   ${text(240, 668, '梗直哥瞿炜  ·  100 讲  ·  3.7 GB', 13, '#ffffff', { opacity: 0.62, spacing: 1.6 })}`;
 
+// ecom：抖音全域带货（cs-034 重绘）—— 亮粉橙底 + 成交闭环 / 购物袋主视觉
+const ecomArt = `
+  <circle cx="240" cy="274" r="150" fill="#ffffff" fill-opacity=".4"/>
+  <circle cx="240" cy="274" r="150" fill="none" stroke="#ffffff" stroke-opacity=".9" stroke-width="1.6"/>
+  <circle cx="240" cy="274" r="120" fill="none" stroke="#a83a55" stroke-opacity=".26" stroke-width="1.4" stroke-dasharray="3 9"/>
+  <g fill="none" stroke="#d62a4d" stroke-opacity=".5" stroke-width="3.4" stroke-linecap="round">
+    <path d="M240 124 A150 150 0 0 1 390 274"/>
+    <path d="M390 274 A150 150 0 0 1 240 424"/>
+    <path d="M240 424 A150 150 0 0 1 90 274"/>
+    <path d="M90 274 A150 150 0 0 1 240 124"/>
+  </g>
+  <g fill="#ffffff"><circle cx="240" cy="124" r="12"/><circle cx="390" cy="274" r="12"/><circle cx="240" cy="424" r="12"/><circle cx="90" cy="274" r="12"/></g>
+  <g fill="#e6294f"><circle cx="240" cy="124" r="6"/><circle cx="390" cy="274" r="6"/><circle cx="240" cy="424" r="6"/><circle cx="90" cy="274" r="6"/></g>
+  <circle cx="240" cy="274" r="72" fill="#ffffff" fill-opacity=".97"/>
+  <circle cx="240" cy="274" r="72" fill="none" stroke="#e6294f" stroke-opacity=".35" stroke-width="1.6"/>
+  <path d="M224 264 L224 250 Q224 236 240 236 Q256 236 256 250 L256 264" fill="none" stroke="#a81f3f" stroke-width="4" stroke-linecap="round"/>
+  <path d="M211 262 L216 313 Q216 319 222 319 L258 319 Q264 319 264 313 L269 262 Z" fill="#e6294f" fill-opacity=".93"/>
+  <path d="M231 286 L238 293 L250 279" fill="none" stroke="#ffffff" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="none" stroke="#ffffff" stroke-opacity=".45" stroke-width="1.6" stroke-linecap="round">
+    <path d="M318 372 L326 372 M334 366 L342 366 M350 360 L358 360"/>
+  </g>`;
+
+const ecomText = `
+  ${text(240, 548, '抖音全域', 40, '#5a1428', { weight: 700 })}
+  ${text(240, 606, '带货实操课', 50, '#5a1428', { weight: 700 })}
+  ${text(240, 650, '快速打通全域成交闭环', 19, '#5a1428', { opacity: 0.78 })}
+  ${text(240, 692, '电商运营  ·  短视频  ·  直播带货', 13, '#5a1428', { opacity: 0.6, spacing: 1.6 })}`;
+
 const SCENES = {
+  ecom: {
+    bg1: '#fff0f2', bg2: '#ffb08c', halo: '#ffffff', plate: '#ffffff', plateOpacity: '.46',
+    line: '#8a2740', ink: '#5a1428', accent: '#e6294f', kicker: 'DOUYIN E-COMMERCE  /  COURSE 034',
+    art: ecomArt, text: ecomText,
+    titles: ['抖音全域', '带货实操课'],
+    subText: '快速打通全域成交闭环', footText: '电商运营  ·  短视频  ·  直播带货',
+    layout: {
+      lines: [{ y: 548, size: 40, weight: 700 }, { y: 606, size: 50, weight: 700 }],
+      sub: { y: 650, size: 19, opacity: 0.78 }, foot: { y: 692, size: 13, opacity: 0.6, spacing: 1.6 },
+    },
+  },
   saas: {
     bg1: '#fff2df', bg2: '#ffb877', halo: '#ffffff', plate: '#ffffff', plateOpacity: '.42',
     line: '#7a3a22', ink: '#5a2a18', accent: '#ef6b3c', kicker: 'BOXUEGU  /  COURSE 031',
