@@ -2,7 +2,11 @@
 /**
  * 批量补/改资源标题副标（口径与 data/software.yaml 已改的 95 条一致：`原名 - 客观功能描述`）。
  *
- * 分类口径（改任何一侧都要同步 new-resource.js 的 SUBTITLE_CATS）：
+ * 分类与正则口径收口在 scripts/lib/data.js（SUBTITLE_CATS / HAS_SUBTITLE_RE / BANNED_TITLE_RE），
+ * new-resource.js（入库问询）与 skill 侧 make-entry.mjs（自动入库强校验）同一份，本脚本不另抄。
+ * 副标已在入库时把关，本脚本只兜存量：盘点 + 批量修正。
+ *
+ * 分类口径：
  *  - 适用副标：游戏 / 软件 / 电子书 / 课程 / 其他 —— 工具、资料类，一句话说清「是什么/干什么用」。
  *  - 不适用副标：电影 / 电视剧 / 动漫 / 纪录片 —— 标题就是作品名，
  *    scripts/lib/tmdb.mjs 的剧名检索、季号识别、追更提醒与 TMDB 热门同步都按精确片名匹配，
@@ -28,7 +32,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CATEGORY_FILES, SUBTITLE_CATS } from './lib/data.js';
+import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE } from './lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -43,9 +47,7 @@ const has = (k) => process.argv.includes(`--${k}`);
 const CAT_BY_FILE = Object.fromEntries(
   Object.entries(CATEGORY_FILES).map(([cn, en]) => [`${en}.yaml`, cn])
 );
-const HAS_SUB_RE = /\s-\s|:\s|：|\(|（|•|—|\s·\s/;
 const LONG_CN_RE = /[\u4e00-\u9fff]/;
-const BANNED_RE = /最好|最佳|最强|第一|必备|最便捷|排第二/;
 
 const field = (block, key) => {
   const m = block.match(new RegExp(`^  ${key}: (.+)$`, 'm'));
@@ -78,7 +80,7 @@ function collect() {
 /** 是否还需要补副标：分类适用 + 标题里还没有副标 + 不是中文长名 */
 function needsSubtitle(row) {
   if (!SUBTITLE_CATS.has(row.category)) return false;
-  if (HAS_SUB_RE.test(row.title)) return false;
+  if (HAS_SUBTITLE_RE.test(row.title)) return false;
   if (LONG_CN_RE.test(row.title) && [...row.title].length >= 10) return false;
   return true;
 }
@@ -109,7 +111,7 @@ function validate(map, rows) {
     if (!row) errors.push(`${id}：data/*.yaml 里找不到`);
     else if (!SUBTITLE_CATS.has(row.category)) errors.push(`${id}：${row.category} 不适用副标（影视片名要保持精确）`);
     if (typeof title !== 'string' || !/\s-\s/.test(title)) errors.push(`${id}：新标题必须含「 - 」分隔`);
-    if (BANNED_RE.test(String(title))) errors.push(`${id}：含绝对化/主观用语，改为客观功能描述`);
+    if (BANNED_TITLE_RE.test(String(title))) errors.push(`${id}：含绝对化/主观用语，改为客观功能描述`);
     if ([...String(title)].length > 48) errors.push(`${id}：标题超过 48 字，副标建议 8~12 字`);
     if (String(title).includes('"')) errors.push(`${id}：标题不要含双引号`);
   }

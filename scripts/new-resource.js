@@ -3,7 +3,7 @@ import readline from 'node:readline/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // 分类 → data 文件映射与副标口径收口在 lib/data.js（fill-title.mjs 同源），勿另抄
-import { CATEGORY_FILES, SUBTITLE_CATS, todayShanghai } from './lib/data.js';
+import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, todayShanghai } from './lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -32,12 +32,28 @@ const categoryCn = known ? known[0] : category;
 const base = known ? known[1] : category.replace(/[\\/]/g, '-');
 const file = path.join(root, 'data', `${base}.yaml`);
 
-// 副标从简介/标签里提炼，脚本不替人编造；直接回车留空就保持原名
+// 副标从简介/标签里提炼，脚本不替人编造；入库时就按 fill-title.mjs 的同一套标准把关，
+// 写进来的标题直接是终态，省掉后续批量补副标。中文长名（片名本身自解释）豁免。
 let fullTitle = title;
-if (SUBTITLE_CATS.has(categoryCn) && !/\s-\s/.test(title)) {
-  const subtitle = await get('副标（客观功能描述，留空则保持原名）');
-  if (subtitle) fullTitle = `${title} - ${subtitle}`;
-  else console.log('提示：工具/资料类建议写「原名 - 客观功能描述」，别用「最好/第一/必备」等主观词。');
+const longCnTitle = /[\u4e00-\u9fff]/.test(title) && [...title].length >= 10;
+if (SUBTITLE_CATS.has(categoryCn) && !HAS_SUBTITLE_RE.test(title) && !longCnTitle) {
+  for (;;) {
+    const subtitle = await get('副标（客观功能描述，留空则保持原名）');
+    if (!subtitle) {
+      console.log('提示：工具/资料类建议写「原名 - 客观功能描述」，别用「最好/第一/必备」等主观词。');
+      break;
+    }
+    if (BANNED_TITLE_RE.test(subtitle)) {
+      console.log('副标含「最好/第一/必备」等主观词，请改为客观功能描述');
+      continue;
+    }
+    if ([...`${title} - ${subtitle}`].length > 48) {
+      console.log('标题合计超过 48 字，副标建议 8~12 字');
+      continue;
+    }
+    fullTitle = `${title} - ${subtitle}`;
+    break;
+  }
 }
 
 const tags = await get('标签（逗号分隔）');

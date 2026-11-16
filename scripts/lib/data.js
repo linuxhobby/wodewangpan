@@ -237,6 +237,13 @@ export const CATEGORY_FILES = {
  *  scripts/lib/tmdb.mjs 用于剧名检索与季号识别，加副标会打断追更提醒 */
 export const SUBTITLE_CATS = new Set(['游戏', '软件', '电子书', '课程', '其他']);
 
+/** 标题已自带副标的形态（分隔符/括号/圆点/破折号），不再叠加第二段副标：
+ *  new-resource.js（入库问询）、skill make-entry.mjs（自动入库强校验）、fill-title.mjs（存量盘点）共用这一份 */
+export const HAS_SUBTITLE_RE = /\s-\s|:\s|：|\(|（|•|—|\s·\s/;
+
+/** 标题/副标一律禁用的绝对化与主观用语（SEO 与编辑口径双重原因） */
+export const BANNED_TITLE_RE = /最好|最佳|最强|第一|必备|最便捷|排第二/;
+
 export function loadResources(dataDir) {
   if (!fs.existsSync(dataDir)) return [];
   const files = fs.readdirSync(dataDir).filter(isResourceFile).sort();

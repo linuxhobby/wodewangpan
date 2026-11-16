@@ -72,7 +72,7 @@
 3. **先 rename 再出链**（顺序反了链接作废）。
 4. 重新 browse 取新 fid → `share`（公开/无码/永久）。
 5. 抓 TMDB 信息（`api.tmdb.org`，代理优先）。
-6. `make-entry.mjs` 写入，**简介不照抄 TMDB 原文**。
+6. `make-entry.mjs` 写入（**工具/资料类标题带强校验**：必须「原名 - 客观功能描述」副标、禁主观词、≤48 字，不合格直接报错退回；影视类保持纯片名。副标入库时一次到位，`fill-title.mjs --audit` 只兜历史存量），**简介不照抄 TMDB 原文**。
 7. `npm run build` + 抽查详情页。
 8. 提交推送（`git status` 查别的会话改动，只 `git add` 自己文件，别 `-A`）。
 
