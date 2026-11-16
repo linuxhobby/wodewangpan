@@ -500,7 +500,7 @@
 - id: tv-019
   title: "哥谭"
   category: 电视剧
-  tags: ["电视剧", "剧情", "犯罪", "Sci-Fi & Fantasy", "Gotham.哥谭"]
+  tags: ["电视剧", "剧情", "犯罪", "科幻奇幻", "Gotham.哥谭"]
   quark_url: "https://pan.quark.cn/s/1f7edb6efd41"
   baidu_url: "https://pan.baidu.com/s/19rg8RXY10gLA8SLl_1kX1A"
   baidu_pwd: "jw8s"
@@ -523,7 +523,7 @@
 - id: tv-020
   title: "海豹六队"
   category: 电视剧
-  tags: ["电视剧", "War & Politics", "剧情", "犯罪", "动作冒险", "six.海豹六队.1-2季合集"]
+  tags: ["电视剧", "政治", "剧情", "犯罪", "动作冒险", "six.海豹六队.1-2季合集"]
   quark_url: "https://pan.quark.cn/s/2670efea5575"
   baidu_url: "https://pan.baidu.com/s/15ft7hlSOTBX3gMzwYnnxEA"
   baidu_pwd: "1q8b"
@@ -566,7 +566,7 @@
 - id: tv-022
   title: "和平使者"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "Sci-Fi & Fantasy", "喜剧", "和平使者S1"]
+  tags: ["电视剧", "动作冒险", "科幻奇幻", "喜剧", "和平使者S1"]
   quark_url: "https://pan.quark.cn/s/17eaf2471a4f"
   baidu_url: "https://pan.baidu.com/s/18JFKooPMS_-l0Z4JR2wGqw"
   baidu_pwd: "wojo"
@@ -725,7 +725,7 @@
 - id: tv-030
   title: "卡特特工"
   category: 电视剧
-  tags: ["电视剧", "剧情", "Sci-Fi & Fantasy", "特工卡特"]
+  tags: ["电视剧", "剧情", "科幻奇幻", "特工卡特"]
   quark_url: "https://pan.quark.cn/s/2b8dca1c0ba3"
   baidu_url: "https://pan.baidu.com/s/1zVfti_yl72KMIsDhYWCkZw"
   baidu_pwd: "fwea"
@@ -1105,7 +1105,7 @@
 - id: tv-043
   title: "末日骑士"
   category: 电视剧
-  tags: ["电视剧", "剧情", "动作冒险", "Sci-Fi & Fantasy", "末日骑士.Black.Knight"]
+  tags: ["电视剧", "剧情", "动作冒险", "科幻奇幻", "末日骑士.Black.Knight"]
   quark_url: "https://pan.quark.cn/s/c5304ef08277"
   baidu_url: "https://pan.baidu.com/s/1lT67g5pkon_b1txbvf074A"
   baidu_pwd: "dsuj"
@@ -1215,7 +1215,7 @@
 - id: tv-047
   title: "地狱担保人"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "Sci-Fi & Fantasy", "喜剧", "地狱担保人The.Bondsman"]
+  tags: ["电视剧", "动作冒险", "科幻奇幻", "喜剧", "地狱担保人The.Bondsman"]
   quark_url: "https://pan.quark.cn/s/577cfba8a846"
   baidu_url: "https://pan.baidu.com/s/1FdnH3esCcZEpuPFofdXrjw"
   baidu_pwd: "da17"
@@ -1304,7 +1304,7 @@
 - id: tv-050
   title: "光环 第二季"
   category: 电视剧
-  tags: ["电视剧", "Sci-Fi & Fantasy", "动作冒险", "光环 第二季.Halo.S02.1080p.Paramoun"]
+  tags: ["电视剧", "科幻奇幻", "动作冒险", "光环 第二季.Halo.S02.1080p.Paramoun"]
   quark_url: "https://pan.quark.cn/s/5c21575a0e21"
   baidu_url: "https://pan.baidu.com/s/1B7C0HKp9CpoT49wtDhzMTA"
   baidu_pwd: "x7cs"
@@ -1419,7 +1419,7 @@
 - id: tv-054
   title: "安多 第二季"
   category: 电视剧
-  tags: ["电视剧", "Sci-Fi & Fantasy", "动作冒险", "剧情", "Star.Wars.Andor.S2安多S2"]
+  tags: ["电视剧", "科幻奇幻", "动作冒险", "剧情", "Star.Wars.Andor.S2安多S2"]
   quark_url: "https://pan.quark.cn/s/f5abf7a24ea4"
   baidu_url: "https://pan.baidu.com/s/1n2LklUUnx_ntOxb2U0RQcg"
   baidu_pwd: "h6c8"
@@ -1450,7 +1450,7 @@
 - id: tv-055
   title: "安多 第一季"
   category: 电视剧
-  tags: ["电视剧", "Sci-Fi & Fantasy", "动作冒险", "剧情", "Star.Wars.Andor.S1安多S1"]
+  tags: ["电视剧", "科幻奇幻", "动作冒险", "剧情", "Star.Wars.Andor.S1安多S1"]
   quark_url: "https://pan.quark.cn/s/1fd16dbbf637"
   baidu_url: "https://pan.baidu.com/s/1FEofb1kqCGYx93ZlJ7HiFg"
   baidu_pwd: "qm0s"
@@ -1481,7 +1481,7 @@
 - id: tv-056
   title: "特别行动：母狮"
   category: 电视剧
-  tags: ["电视剧", "剧情", "War & Politics", "Special.Ops.Lioness.S01.COMPLE"]
+  tags: ["电视剧", "剧情", "政治", "Special.Ops.Lioness.S01.COMPLE"]
   quark_url: "https://pan.quark.cn/s/81410dc99b69"
   baidu_url: "https://pan.baidu.com/s/1MqtzSWVccWQ7_BX7pDaXoA"
   baidu_pwd: "0yb2"
@@ -1937,7 +1937,7 @@
 - id: tv-073
   title: "母狮 第三季"
   category: 电视剧
-  tags: ["电视剧", "剧情", "War & Politics", "母狮 第三季 Lioness"]
+  tags: ["电视剧", "剧情", "政治", "母狮 第三季 Lioness"]
   quark_url: "https://pan.quark.cn/s/89fa642f466e"
   baidu_url: "https://pan.baidu.com/s/1V5o1ppzNvwWG1e6_TxatAQ"
   baidu_pwd: "pva9"
@@ -1949,7 +1949,7 @@
 - id: tv-109
   title: "绿灯军团"
   category: 电视剧
-  tags: ["电视剧", "剧情", "悬疑", "Sci-Fi & Fantasy", "绿灯军团 Lanterns"]
+  tags: ["电视剧", "剧情", "悬疑", "科幻奇幻", "绿灯军团 Lanterns"]
   quark_url: "https://pan.quark.cn/s/57ff561213ad"
   baidu_url: "https://pan.baidu.com/s/172lvaZZ0EZWp7_4CO50iGw"
   baidu_pwd: "pdx2"
@@ -1995,7 +1995,7 @@
 - id: tv-114
   title: "良药苦口 第二季"
   category: 电视剧
-  tags: ["电视剧", "喜剧", "剧情", "良药苦口 Best Medicine"]
+  tags: ["电视剧", "喜剧", "剧情"]
   quark_url: "https://pan.quark.cn/s/99371e08b083"
   baidu_url: "https://pan.baidu.com/s/1XCjdQ5HpWfJWx3sARTjpSA"
   baidu_pwd: "l36q"
@@ -2007,7 +2007,7 @@
 - id: tv-115
   title: "良药苦口 第一季"
   category: 电视剧
-  tags: ["电视剧", "喜剧", "剧情", "良药苦口 Best Medicine"]
+  tags: ["电视剧", "喜剧", "剧情"]
   quark_url: "https://pan.quark.cn/s/4d82f8d942bd"
   baidu_url: "https://pan.baidu.com/s/1J1Aaem682S6_fg-vWYQ5YA"
   baidu_pwd: "tqhg"
@@ -2188,7 +2188,7 @@
 - id: tv-129
   title: "恋爱充电中"
   category: 电视剧
-  tags: ["电视剧", "Sci-Fi & Fantasy", "喜剧", "恋爱充电中 나를 충전해줘"]
+  tags: ["电视剧", "科幻奇幻", "喜剧", "恋爱充电中 나를 충전해줘"]
   quark_url: "https://pan.quark.cn/s/e23e059884c8"
   baidu_url: "https://pan.baidu.com/s/1aPAMO-ppe-ax4MPghZ09rA"
   baidu_pwd: "f8n4"
@@ -2320,7 +2320,7 @@
 - id: tv-141
   title: "消失的丹麦女孩：这位朋友，那位凶手"
   category: 电视剧
-  tags: ["电视剧", "纪录", "犯罪", "消失的丹麦女孩 En ven, en morder"]
+  tags: ["电视剧", "纪录片", "犯罪", "消失的丹麦女孩 En ven, en morder"]
   quark_url: "https://pan.quark.cn/s/e37c9164904c"
   description: "【第 1 季 · 共 3 集】这是一部来自丹麦的真实犯罪纪录片，2026 年 3 月上线，全季 3 集，以受害者朋友的视角切入一桩震动丹麦的连环案件。故事发生在丹麦的一座小镇，八年时间里，连环袭击与恶性案件接连发生，恐慌像雾一样罩在街区上空，居民夜里不敢独行，警方却始终抓不到那个来去无踪的作案者。直到凶手终于落网，三位当事人阿曼达、尼古拉斯和基里才发现，这个让全镇寝食难安的人，竟然是从小与他们相识的好友。更让人脊背发凉的是，回溯彼此相处的那些年，对方的袭击、绑架乃至谋杀罪行，就藏在一次次聚会、闲聊与结伴出行的日常之间。本片没有走快节奏办案的路子，而是大量采用当事人的口述与档案影像，把「身边人作恶」这件事拆开细讲：他们什么时候开始起疑，哪些反常细节被当成了玩笑，友情与愧疚如何互相撕扯，都是叙述的重点。对喜欢真实案件与犯罪心理题材的观众来说，它的价值不在悬疑反转，而在于诚实呈现了信任被辜负的全过程。资源为 Netflix 1080p WEB-DL 版，全 3 集收录，杜比音轨。｜TMDB 7.3"
   date: 2026-03-05
@@ -2469,7 +2469,7 @@
 - id: tv-162
   title: "幻视任务"
   category: 电视剧
-  tags: ["电视剧","科幻","奇幻","剧情","漫威","幻视任务 VisionQuest"]
+  tags: ["电视剧", "科幻", "奇幻", "剧情", "漫威", "幻视任务 VisionQuest"]
   quark_url: "https://pan.quark.cn/s/979b74138dd5"
   description: "【第 1 季 · 共 8 集】漫威影业出品的科幻剧集，也是《旺达幻视》之后幻视个人故事的延续。白幻视在基地重启苏醒后选择隐姓埋名，混进人群里过起了低调日子。但他体内并不太平：系统里同时驻留着星期五、伊迪丝、贾维斯等多段人工智能意识，甚至连恶名昭彰的奥创也藏在其中。为了弄清自己究竟算什么，他开始逐个与这些AI对话，试图在机器与人的夹缝里找到生命的新意义。平静很快被一笔悬赏令打破，赏金猎人与各方势力闻风而动，幻视不得不带着神秘少年托马斯·谢泼德踏上逃亡之路。这个少年身上的秘密远比看上去复杂，他的身世可能与幻视的过去有着直接关联。一路逃亡，一路自省，幻视既要躲开四面八方的追捕，又要抵抗体内奥创的低语与侵蚀，还要解开身边这位年轻同伴的谜团。剧集把科幻设定与公路冒险的气质揉在一起，在追问何以为人的老命题里，给出属于幻视自己的答案。保罗·贝坦尼回归出演，为这台白色人形机器注入了近乎人的脆弱与温度，让整部剧在动作与悬念之外多了一层沉静的思考感。｜TMDB 8.8"
   date: 2026-10-13
@@ -2509,7 +2509,7 @@
 - id: tv-166
   title: "雅嘎疑云"
   category: 电视剧
-  tags: ["电视剧", "剧情", "Sci-Fi & Fantasy", "雅嘎疑云 YAGA"]
+  tags: ["电视剧", "剧情", "科幻奇幻", "雅嘎疑云 YAGA"]
   quark_url: "https://pan.quark.cn/s/c1a52b258fe9"
   description: "【第 1 季 · 共 8 集】改编自凯特·桑德勒创作的同名舞台剧，并重新演绎巴巴雅嘎的民间传说。私家侦探拉普来到一座海滨小镇，调查大型渔业企业继承人亨利·朴的失踪案。随着调查深入，他与当地警探卡森及迷人的大学教授凯瑟琳发生冲突，并逐渐陷入充满神秘嫌疑人、隐秘生活与古老魔法的迷局。本剧类型：剧情 / Sci-Fi & Fantasy。2026 年首播，已获续订，仍在播出，全剧 1 季，累计 8 集。播出平台：Crave。制片国家/地区：加拿大。｜TMDB 7.5"
   date: 2026-10-23
@@ -2560,7 +2560,7 @@
 - id: tv-171
   title: "马修·派瑞：老友最后的传记"
   category: 电视剧
-  tags: ["电视剧", "纪录", "马修·派瑞：老友最后的传记 The One About Matthew Perry"]
+  tags: ["电视剧", "纪录片", "马修·派瑞：老友最后的传记 The One About Matthew Perry"]
   quark_url: "https://pan.quark.cn/s/f101495ab409"
   description: "【第 1 季 · 共 3 集】这部纪录片剧集通过圈内亲友的讲述，记录了这位备受喜爱的《老友记》演员在好莱坞取得的成功、其直言不讳的倡议，以及令人痛心的离世。本剧类型：纪录。2026 年首播，已获续订，仍在播出，全剧 1 季，累计 3 集。播出平台：Netflix。制片国家/地区：美国。主演：马修·派瑞。出品方：Maxine Productions。对白语言：英语。本条目由 TMDB 每日热门榜单自动同步入库，剧情与演职员资料均以 TMDB 官方数据为准，评分会随投票实时变动，资源链接见页面网盘地址。｜TMDB 7.0"
   date: 2026-10-27
@@ -2635,7 +2635,7 @@
 - id: tv-178
   title: "末路兼职 第一季"
   category: 电视剧
-  tags: ["电视剧", "悬疑", "Sci-Fi & Fantasy", "末路兼职 第一季 꿀알바"]
+  tags: ["电视剧", "悬疑", "科幻奇幻", "末路兼职 第一季 꿀알바"]
   quark_url: "https://pan.quark.cn/s/7d6eacaf6863"
   baidu_url: "https://pan.baidu.com/s/1qEDuTWxy9mBu8hKfdIsHYQ"
   baidu_pwd: "7844"
@@ -2708,7 +2708,7 @@
 - id: tv-184
   title: "再婚皇后 第一季"
   category: 电视剧
-  tags: ["电视剧", "剧情", "Sci-Fi & Fantasy", "再婚皇后 第一季 재혼 황후"]
+  tags: ["电视剧", "剧情", "科幻奇幻", "再婚皇后 第一季 재혼 황후"]
   quark_url: "https://pan.quark.cn/s/3b67be6a9e8e"
   baidu_url: "https://pan.baidu.com/s/1T-5Ks4soCWXnijNDtyjCAQ"
   baidu_pwd: "529x"
@@ -2756,7 +2756,7 @@
 - id: tv-076
   title: "特工卡特 第二季"
   category: 电视剧
-  tags: ["电视剧", "剧情", "Sci-Fi & Fantasy", "特工卡特 Marvel's Agent Carter S02"]
+  tags: ["电视剧", "剧情", "科幻奇幻", "特工卡特 Marvel's Agent Carter S02"]
   quark_url: "https://pan.quark.cn/s/61c3b3255d0e"
   baidu_url: "https://pan.baidu.com/s/1FBysJBpY2ZIkH0BUMR8TRw"
   baidu_pwd: "q255"
@@ -2922,7 +2922,7 @@
 - id: tv-089
   title: "塔尔萨之王 第一季"
   category: "电视剧"
-  tags: [电视剧, 犯罪, 剧情, 喜剧, 塔尔萨之王 Tulsa King]
+  tags: [电视剧, 犯罪, 剧情, 喜剧]
   quark_url: "https://pan.quark.cn/s/59b0a6684f3d"
   baidu_url: "https://pan.baidu.com/s/1x9xTlov8VtteGbuf-qBbew"
   baidu_pwd: "pzfn"
@@ -2950,7 +2950,7 @@
 - id: tv-090
   title: "塔尔萨之王 第二季"
   category: "电视剧"
-  tags: [电视剧, 犯罪, 剧情, 喜剧, 塔尔萨之王 Tulsa King]
+  tags: [电视剧, 犯罪, 剧情, 喜剧]
   quark_url: "https://pan.quark.cn/s/41d37820388b"
   baidu_url: "https://pan.baidu.com/s/1wVTGznG9tqjLhCtKl1diuA"
   baidu_pwd: "nvf3"
@@ -2979,7 +2979,7 @@
 - id: tv-091
   title: "塔尔萨之王 第三季"
   category: "电视剧"
-  tags: [电视剧, 犯罪, 剧情, 喜剧, 塔尔萨之王 Tulsa King]
+  tags: [电视剧, 犯罪, 剧情, 喜剧]
   quark_url: "https://pan.quark.cn/s/21fc18972467"
   baidu_url: "https://pan.baidu.com/s/1iE2EncVWXJnHoaWO-g4aAg"
   baidu_pwd: "cr6t"
@@ -3008,7 +3008,7 @@
 - id: tv-092
   title: "塔尔萨之王 第四季"
   category: "电视剧"
-  tags: [电视剧, 犯罪, 剧情, 喜剧, 塔尔萨之王 Tulsa King]
+  tags: [电视剧, 犯罪, 剧情, 喜剧]
   quark_url: "https://pan.quark.cn/s/5241fd530bd0"
   baidu_url: "https://pan.baidu.com/s/1LjY2KHo_K4yhYriyXSAXhQ"
   baidu_pwd: "z09e"
@@ -3207,7 +3207,7 @@
 - id: tv-100
   title: "研究院 第二季"
   category: 电视剧
-  tags: ["电视剧", "悬疑", "Sci-Fi & Fantasy", "研究院 第二季 The Institute"]
+  tags: ["电视剧", "悬疑", "科幻奇幻", "研究院 第二季 The Institute"]
   quark_url: "https://pan.quark.cn/s/0abc159342a5"
   description: "【第 2 季 · 共 8 集 · 全剧 2 季】《迷失》导演杰克·本德与《大小谎言》)编剧大卫·E·凯利将把史蒂芬·金最新小说《研究院》打造为限定剧。本剧将由本德执导，凯利执笔剧本，据悉小说被描述为“自《小丑回魂》问世以来，有关孩子战胜邪恶的最令人揪心的故事”。本剧类型：悬疑 / Sci-Fi & Fantasy。2025 年首播，已获续订，仍在播出，全剧 2 季，累计 16 集，单集约 58 分钟。播出平台：MGM+。制片国家/地区：美国。主创：Benjamin Cavell。｜TMDB 7.5"
   date: 2025-07-13
@@ -3268,7 +3268,7 @@
 - id: tv-088
   title: "指环王：力量之戒 第三季"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "Sci-Fi & Fantasy", "指环王：力量之戒 第三季 The Lord of the Rings: The Rings of Power"]
+  tags: ["电视剧", "动作冒险", "科幻奇幻", "指环王：力量之戒 第三季 The Lord of the Rings: The Rings of Power"]
   quark_url: "https://pan.quark.cn/s/1cb897841aab"
   description: "【第 3 季 · 共 8 集 · 全剧 3 季】强大的力量锻造成型，王国辉煌崛起又陨落成尘，让人意想不到的英雄遭受考验，而强大的反派势要让整个世界蒙上黑暗。 一组为人熟悉的人物和全新的角色，他们必须对抗邪恶势力在中土世界再度崛起。从迷雾山脉的最深处、林顿壮丽的森林、努曼诺尔的海岛王国到地图的最边缘，这些领土和角色将联手创造传奇，即使他们不在人世后仍流芳百世。 本剧设定在托尔金的《霍比特人》和《指环王》事件前的数千年，将带领观众回到那个年代。本剧类型：动作冒险 / Sci-Fi & Fantasy。｜TMDB 7.2"
   date: 2022-09-01
@@ -3329,7 +3329,7 @@
 - id: tv-105
   title: "青春共体"
   category: 电视剧
-  tags: ["电视剧", "剧情", "Sci-Fi & Fantasy", "青春共体 The Body"]
+  tags: ["电视剧", "剧情", "科幻奇幻", "青春共体 The Body"]
   quark_url: "https://pan.quark.cn/s/f2a2cf65b271"
   description: "【第 1 季 · 共 8 集】舞蹈队的入队仪式出了岔子后，一群行为不端的天主教学校女生开始出现预言性幻象，在镇上引发了集体恐慌。本剧类型：剧情 / Sci-Fi & Fantasy。2026 年首播，已完结，全剧 1 季，累计 8 集。播出平台：Netflix。制片国家/地区：美国。主创：奎恩·谢法德。出品方：Felix Culpa、The North Road Company、Chernin Entertainment。｜TMDB 7.7"
   date: 2026-11-11

@@ -1283,7 +1283,7 @@
 - id: app-134
   title: "Windows 10 企业版 LTSC 2019"
   category: 软件
-  tags: ["操作系统", "Windows", "微软", "长期服务通道", "x64", "Windows 10 企业版 LTSC 2019 Windows 10 Enterprise LTSC 2019"]
+  tags: ["操作系统", "Windows", "微软", "长期服务通道", "x86_64", "Windows 10 企业版 LTSC 2019 Windows 10 Enterprise LTSC 2019"]
   quark_url: "https://pan.quark.cn/s/48ccdfd6ef0d"
   disk_dir: "134-windows10"
   description: "资源是微软 Windows 10 企业版 LTSC 2019 的简体中文 x64 官方镜像，文件名 cn_windows_10_enterprise_ltsc_2019_x64_dvd，底层版本 1809，2018 年 11 月面向企业长期服务通道发布。LTSC 与常见的家庭版、专业版差别主要在更新策略：它只推安全补丁，不强制升级功能版本，也不预装应用商店、小娜这类消费级组件，桌面干净、后台进程少，因此在办公机、收银机、工控设备和虚拟机模板里一直很受欢迎，也是给老电脑装机的常见选择。安装时把 ISO 写入 U 盘（Rufus、Ventoy 都支持）或者挂载后从系统内执行升级，LTSC 走企业批量授权，需要自备密钥或自建 KMS 服务。系统装完占用约 15 GB，硬件要求与普通 Windows 10 一致。该版本主流支持已经结束，扩展支持到 2029 年 1 月，长期使用要留意补丁窗口。｜微软"
@@ -1294,7 +1294,7 @@
 - id: app-135
   title: "Windows 11 26H2 中文版"
   category: 软件
-  tags: ["操作系统", "Windows", "微软", "26H2", "x64", "Windows 11 26H2 Windows 11 26H2"]
+  tags: ["操作系统", "Windows", "微软", "26H2", "x86_64", "Windows 11 26H2 Windows 11 26H2"]
   quark_url: "https://pan.quark.cn/s/f4d66c01f60f"
   disk_dir: "135-windows11"
   description: "资源是微软官方放出的 Windows 11 26H2 简体中文客户端版 ISO，版本号 26300.9457，映像生成于 2026 年 9 月，属于 2026 年度的功能更新。Client 版镜像里含家庭版、专业版、教育版、专业工作站版等多个 SKU，安装时按密钥或引导选择决定实际装成哪一个版本。26H2 与 25H2 共用同一底层平台，新功能通过启用包开启，改动集中在任务栏、开始菜单、文件资源管理器与 AI 相关组件上，内核与驱动则是例行更新。系统要求与 Windows 11 首发时一致：支持 UEFI 安全启动、TPM 2.0、8 代酷睿或锐龙 2000 系以上的处理器、4 GB 内存与 64 GB 存储，老机器安装通常要借助 Rufus 一类工具跳过 TPM 与联网账户检查。写盘启动后按向导安装即可，过程中会要求联网与微软账户。适合想直接装最新正式版，或者在虚拟机里做兼容性测试的用户。｜微软"
@@ -1327,7 +1327,7 @@
 - id: app-132
   title: "Ubuntu - 26.04.1 桌面版安装镜像"
   category: 软件
-  tags: ["操作系统", "Linux", "Ubuntu", "x86_64", "Ubuntu"]
+  tags: ["操作系统", "Linux", "Ubuntu", "x86_64"]
   quark_url: "https://pan.quark.cn/s/79c0f3c4f5ff"
   disk_dir: "132-ubuntu"
   description: "资源是 Ubuntu 26.04.1 桌面版 amd64 安装镜像，文件名 ubuntu-26.04.1-desktop-amd64.iso，约 6.0 GB，写入 U 盘或挂载到虚拟机即可启动安装，也能先进 Live 桌面体验硬件兼容情况。Ubuntu 由 Canonical 维护，是最流行的 Linux 发行版之一，基于 Debian 的不稳定分支定期冻结发布，每年 4 月与 10 月各出一个版本，其中逢偶数年份的 4 月版是 LTS 长期支持版，提供五年安全更新，普通版本的支持期只有九个月。桌面默认 GNOME，配色、图标与字体做了自家定制，近年的安装器换成了基于 Flutter 的新界面，向导式分区比老版本直观不少。软件侧 snap 与 deb 两套包格式并存，主流开发工具链、服务器组件基本都能直接用 apt 装好，中文文档与社区问答的数量也远多于小众发行版，新手遇到问题比较容易搜到答案。适合第一次接触 Linux，或者需要长期稳定的桌面与服务器环境的用户。｜Canonical"
@@ -1422,7 +1422,7 @@
 - id: app-137
   title: "Windows 11 TINY 2311 x64 精简版"
   category: 软件
-  tags: ["操作系统", "Windows", "微软", "TINY11", "23H2", "x64", "精简版", "Windows 11 TINY-2311-x64版 windows11-tiny2311x64.iso"]
+  tags: ["操作系统", "Windows", "微软", "TINY11", "23H2", "x86_64", "精简版", "Windows 11 TINY-2311-x64版 windows11-tiny2311x64.iso"]
   quark_url: "https://pan.quark.cn/s/2674a62ed81a"
   disk_dir: "137-windows11-TINY-2311-x64版"
   description: "同样是社区 TINY11 定制出来的 Windows 11 精简镜像，这一份是 x64 架构，文件名里的 2311 一般对应微软 23H2 那一批构建（22631 系），具体构建号目录里没有再标注，这一点装完可以用 winver 自己核。和前面官方 26H2 中文版是两条不同的东西：官方镜像走完整组件加常规更新，这份走裁剪路线，体积更小、后台更干净，老机器、虚拟机、演示环境、不想开机被推广和预装应用刷屏的用户会比较喜欢。TINY11 的工作方式是把官方镜像和一份裁剪清单交给脚本，去掉 OneDrive 客户端、Teams、Edge、Copilot、Xbox、Cortana 这类预装包与开机首启推广，重新打包成可直接安装的 ISO；精简之后磁盘占用和内存底噪都会降下来，装完首启速度快很多，虚拟机里跑尤其明显。x64 是绝大多数台式机和笔记本的架构，普通装机直接选它，驱动、PE 工具和教程也最全，出问题好排查。要提醒的仍是定制版的共性风险：被裁掉的组件补装不一定顺利，个别功能比如商店应用、部分依赖 Edge WebView2 的软件可能受影响，Windows Update 的行为和官方镜像未必一致，生产环境、需要入域或 BitLocker 的机器建议直接用官方镜像；文件名只给了 2311 这个时间标识，没有更精确的版本号。目录内就一个 windows11-tiny2311x64.iso，3.5 GB，x64 架构，写 U 盘、Ventoy 或挂进虚拟机都能装。｜NTDEV TINY11 社区"
