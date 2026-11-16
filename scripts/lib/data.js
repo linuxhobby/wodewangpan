@@ -193,17 +193,30 @@ export function newestIdsOf(items, today = todayShanghai()) {
   return ids;
 }
 
-/** 排序键 'YYYY-MM-DDTHH:mm'（字典序即时间序）；added 只写日期的按当天 00:00 */
+/** 排序键 'YYYY-MM-DDTHH:mm'（字典序即时间序）。
+ *  约定：YAML 中 `added` 优先为 Date/时间字符串；推荐写法 `YYYY-MM-DD` 或 `YYYY-MM-DD HH:mm`（本地/站点按构建环境解释，项目惯例按北京时间语义维护）。
+ *  仅日期按 00:00；无法解析则返回空串（调用方会回退为最旧/兜底排序，视具体逻辑而定）。 */
 function formatDateTime(value) {
   if (!value) return '';
   const p = (n) => String(n).padStart(2, '0');
-  const d = value instanceof Date ? value : new Date(String(value).trim().replace(' ', 'T'));
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) return '';
+    return `${value.getFullYear()}-${p(value.getMonth() + 1)}-${p(value.getDate())}T${p(value.getHours())}:${p(value.getMinutes())}`;
+  }
+  const raw = String(value).trim();
+  // 严格偏好项目常用格式，避免隐式 Date 解析带来的时区/格式歧义
+  const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{1,2}):(\d{2}))?$/);
+  if (m) {
+    const hh = Math.min(23, Math.max(0, Number(m[4] || 0)));
+    const mm = Math.min(59, Math.max(0, Number(m[5] || 0)));
+    return `${m[1]}-${m[2]}-${m[3]}T${p(hh)}:${p(mm)}`;
+  }
+  // 兼容历史上被 JS Date 能解析的少量格式（最后兜底）
+  const d = new Date(raw.replace(' ', 'T'));
   if (!Number.isNaN(d.getTime())) {
     return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
   }
-  const m = String(value).match(/(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?/);
-  if (!m) return '';
-  return `${m[1]}T${p(m[2] || 0)}:${m[3] || '00'}`;
+  return '';
 }
 
 function toTags(value) {
@@ -216,6 +229,36 @@ function toTags(value) {
 const NON_RESOURCE_FILES = new Set(['site.yaml', 'tags.yaml']);
 function isResourceFile(f) {
   return /\.ya?ml$/i.test(f) && !NON_RESOURCE_FILES.has(f);
+}
+
+/** 文件清单（files.*）：从网盘目录抄来的真实规格，是别站复制不了的内容。
+    全字段可选，有什么收什么；一个字段都没有就返回 null（详情页整块不渲染）。
+    tree 是多行目录结构文本，限制 40 行防止单页被超长目录撑爆 */
+function parseFiles(raw) {
+  const f = raw.files;
+  if (!f || typeof f !== 'object' || Array.isArray(f)) return null;
+  const str = (v) => (v === undefined || v === null ? '' : String(v).trim());
+  const out = {};
+  for (const k of ['episodes', 'size', 'format', 'resolution', 'audio', 'subtitle']) {
+    if (str(f[k])) out[k] = str(f[k]);
+  }
+  if (f.count !== undefined && f.count !== null && str(f.count)) {
+    out.count = /^\d+$/.test(str(f.count)) ? `${str(f.count)} 个文件` : str(f.count);
+  }
+  if (typeof f.packed === 'boolean') {
+    out.packed = f.packed ? '压缩包，需解压后使用' : '散装文件，免解压直接用';
+  } else if (str(f.packed)) {
+    out.packed = str(f.packed);
+  }
+  const tree = str(f.tree)
+    .replace(/\r/g, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .split('\n')
+    .slice(0, 40)
+    .join('\n')
+    .trim();
+  if (tree) out.tree = tree;
+  return Object.keys(out).length ? out : null;
 }
 
 /** 分类 → data 文件名（不含扩展名）唯一映射：new-resource.js / fill-title.mjs 共用这一份，勿另抄。
@@ -448,37 +491,6 @@ export function normalizeResources(rawList) {
   function idNum(id) {
     const m = String(id).match(/(\d+)$/);
     return m ? Number(m[1]) : -1;
-  }
-
-  /** 文件清单（files.*）：从网盘目录抄来的真实规格，是别站复制不了的内容。
-      全字段可选，有什么收什么；一个字段都没有就返回 null（详情页整块不渲染）。
-      tree 是多行目录结构文本，限制 40 行防止单页被超长目录撑爆 */
-  function parseFiles(raw) {
-    const f = raw.files;
-    if (!f || typeof f !== 'object' || Array.isArray(f)) return null;
-    const str = (v) => (v === undefined || v === null ? '' : String(v).trim());
-    const out = {};
-    for (const k of ['episodes', 'size', 'format', 'resolution', 'audio', 'subtitle']) {
-      if (str(f[k])) out[k] = str(f[k]);
-    }
-    if (f.count !== undefined && f.count !== null && str(f.count)) {
-      out.count = /^\d+$/.test(str(f.count)) ? `${str(f.count)} 个文件` : str(f.count);
-    }
-    // packed 布尔直译成一句话；写了字符串就按字符串收（如「分卷压缩」）
-    if (typeof f.packed === 'boolean') {
-      out.packed = f.packed ? '压缩包，需解压后使用' : '散装文件，免解压直接用';
-    } else if (str(f.packed)) {
-      out.packed = str(f.packed);
-    }
-    const tree = str(f.tree)
-      .replace(/\r/g, '')
-      .replace(/\n{3,}/g, '\n\n')
-      .split('\n')
-      .slice(0, 40)
-      .join('\n')
-      .trim();
-    if (tree) out.tree = tree;
-    return Object.keys(out).length ? out : null;
   }
 
   // 入库时刻倒序（同一天的按实际先后）→ 同刻按编号倒序 → 上映日期倒序 → 文件内原序

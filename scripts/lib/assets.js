@@ -251,17 +251,22 @@ function writeCategoryPlaceholders(outDir, categories = []) {
  *  产物名只由 item.id 派生，源目录不进任何对外 URL。 */
 export function resolveSource(item, staticDir, rootDir) {
   const candidates = [];
-  const catDir = item.category
-    ? path.join(staticDir, 'images', categorySlug(item.category))
-    : '';
+  const catDir = item.category ? path.join(staticDir, 'images', categorySlug(item.category)) : '';
   if (item.image) {
     const name = path.basename(item.image);
-    if (catDir) candidates.push(path.join(catDir, name));
-    candidates.push(
-      path.join(staticDir, 'images', item.image),
-      path.join(rootDir, item.image),
-      path.join(staticDir, item.image)
-    );
+    const seen = new Set();
+    const add = (p) => {
+      if (!p || seen.has(p)) return;
+      seen.add(p);
+      candidates.push(p);
+    };
+    if (catDir) add(path.join(catDir, name));
+    // 兼容旧平铺：static/images/<image>；以及历史上写在仓库根/静态根的相对路径
+    add(path.join(staticDir, 'images', item.image));
+    add(path.join(rootDir, item.image));
+    if (!path.isAbsolute(item.image) && path.dirname(item.image) !== '.') {
+      add(path.join(staticDir, item.image));
+    }
   } else {
     for (const ext of IMAGE_EXT) {
       if (catDir) candidates.push(path.join(catDir, `${item.id}.${ext}`));
@@ -356,7 +361,7 @@ async function renderVariants(sharp, src, destBase, { outDir, prevDir, reused })
 const OG = { w: 1200, h: 630 };
 // 改 OG 版式时换这个目录名：新路径下没有旧产物，能让全站 og 图重生成，
 // 同时换掉图片 URL，破掉 Telegram / CDN 对旧图的缓存（复用逻辑见 reuseImage）
-const OG_VERSION = 'v2';
+export const OG_VERSION = 'v2';
 
 /** 取分类配色（与 categorySvg 同源），供 OG 图渐变底使用 */
 function catColors(name) {

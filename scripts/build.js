@@ -25,6 +25,7 @@ import {
   writeFavicon,
   copyThemeAssets,
   POSTER_WIDTHS,
+  OG_VERSION,
 } from './lib/assets.js';
 import {
   listPage,
@@ -46,6 +47,8 @@ import {
   itemHref,
 } from './lib/render.js';
 import { setCategoryPaths } from './lib/nav.js';
+import { createWriter, prune } from './lib/buildfs.js';
+import { patchAppCardVersion, copyExtraStaticFiles, pruneOldOgVersions } from './lib/postprocess.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -59,58 +62,7 @@ const outDir = path.join(root, outDirName);
 const prevDirName = outDirName === 'public' ? '' : process.env.PREV_DIR || 'public';
 const prevDir = prevDirName ? path.join(root, prevDirName) : '';
 
-const reused = { kept: 0, copied: 0, written: 0 };
-
-/** 写文件，但内容没变就不覆盖：全量重写会让蜘蛛每次都拿 200，304 永远落空、抓取预算白烧。
-    只比对文本产物，图片有 sharp 缓存不必管 */
-function write(file, content) {
-  const rel = path.relative(outDir, file);
-  const candidates = [file];
-  if (prevDir && !rel.startsWith('..')) candidates.push(path.join(prevDir, rel));
-
-  for (const target of candidates) {
-    let old;
-    try {
-      old = fs.readFileSync(target, 'utf8');
-    } catch {
-      continue;
-    }
-    if (old !== content) continue;
-
-    // 内容一致：已经在 outDir 里的直接不动，在上一版里的拷过来并沿用原 mtime
-    if (target !== file) {
-      fs.mkdirSync(path.dirname(file), { recursive: true });
-      fs.copyFileSync(target, file);
-      const st = fs.statSync(target);
-      fs.utimesSync(file, st.atime, st.mtime);
-      reused.copied++;
-    } else {
-      reused.kept++;
-    }
-    return;
-  }
-
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, content);
-  reused.written++;
-}
-
-// 清理遗留文件：keep(name) 返回 true 的保留，其余删掉。失败只计数不抛出，目录残留不该中断构建
-function prune(dir, keep) {
-  let removed = 0;
-  let failed = 0;
-  if (!fs.existsSync(dir)) return { removed, failed };
-  for (const name of fs.readdirSync(dir)) {
-    if (keep(name)) continue;
-    try {
-      fs.rmSync(path.join(dir, name), { recursive: true, force: true });
-      removed++;
-    } catch {
-      failed++;
-    }
-  }
-  return { removed, failed };
-}
+const { write, reused } = createWriter({ outDir, prevDir });
 
 // 图标版本号：图片缓存 30 天，内容一变 URL 就得变，否则换了 logo 浏览器不回源
 function iconVersionOf(file) {
@@ -195,8 +147,7 @@ const tags = collectTags(items, { categories, min: tagCfg.min, exclude: tagCfg.e
 /** 标签 key → 聚合信息：详情页据此决定标签给不给链接 */
 const tagIndex = new Map(tags.map((t) => [t.key, t]));
 
-// slug 撞车的两个标签会写进同一个目录互相覆盖，构建不报错、肉眼看不出，每次构建查一遍
-{
+function checkTagSlugClashes(tags) {
   const seen = new Map();
   const clash = [];
   for (const t of tags) {
@@ -210,54 +161,51 @@ const tagIndex = new Map(tags.map((t) => [t.key, t]));
     console.log('      在 config/tags.yaml 的 tagSlugs 里给其中一个配个别名');
   }
 }
+checkTagSlugClashes(tags);
 
 if (!total) {
   console.error('! data/ 目录下没有解析到任何资源，请检查 YAML');
   process.exit(1);
 }
 
-fs.mkdirSync(outDir, { recursive: true });
-
-// 2026-11-15 起分类页迁到 /<slug>/、详情页迁到 /<slug>/<id>/，
-// 旧的 /resource/ 与 /category/ 整目录不再输出（线上由 nginx 301 接管）。
-const keepIdsByCat = new Map();
-for (const it of items) {
-  const slug = categorySlug(it.category);
-  if (!keepIdsByCat.has(slug)) keepIdsByCat.set(slug, new Set());
-  keepIdsByCat.get(slug).add(it.id);
-}
-const keepCats = new Set(categories.map(categorySlug));
-// 目录名用未编码的真实中文：%E5%89%A7%E6%83%85 会被 nginx 解码成「剧情」再匹配文件系统
-const keepTags = new Set(tags.map((t) => tagSlug(t.label)));
-let staleFailed = 0;
-for (const old of ['resource', 'category']) {
-  const dir = path.join(outDir, old);
-  if (!fs.existsSync(dir)) continue;
-  // 逐个删子目录再删空壳：macOS 上对上千个子项一次 rmSync 偶发 ENOTEMPTY
-  staleFailed += prune(dir, () => false).failed;
-  try {
-    fs.rmdirSync(dir);
-  } catch {
-    staleFailed++;
+function cleanupStaleOutputs({ outDir, outDirName, categories, items, tags }) {
+  fs.mkdirSync(outDir, { recursive: true });
+  const keepIdsByCat = new Map();
+  for (const it of items) {
+    const slug = categorySlug(it.category);
+    if (!keepIdsByCat.has(slug)) keepIdsByCat.set(slug, new Set());
+    keepIdsByCat.get(slug).add(it.id);
+  }
+  const keepCats = new Set(categories.map(categorySlug));
+  const keepTags = new Set(tags.map((t) => tagSlug(t.label)));
+  let staleFailed = 0;
+  for (const old of ['resource', 'category']) {
+    const dir = path.join(outDir, old);
+    if (!fs.existsSync(dir)) continue;
+    staleFailed += prune(dir, () => false).failed;
+    try {
+      fs.rmdirSync(dir);
+    } catch {
+      staleFailed++;
+    }
+  }
+  staleFailed += prune(outDir, (name) => {
+    const st = fs.statSync(path.join(outDir, name), { throwIfNoEntry: false });
+    if (st && !st.isDirectory()) return true;
+    return RESERVED_TOP_DIRS.has(name) || keepCats.has(name);
+  }).failed;
+  for (const slug of keepCats) {
+    const keep = keepIdsByCat.get(slug) || new Set();
+    staleFailed += prune(path.join(outDir, slug), (name) =>
+      name === 'index.html' || name === 'feed.xml' || keep.has(name)
+    ).failed;
+  }
+  staleFailed += prune(path.join(outDir, 'tag'), (name) => keepTags.has(name)).failed;
+  if (staleFailed) {
+    console.log(`  ! ${staleFailed} 个旧目录未能清理（不影响访问）；可手动执行 rm -rf ${outDirName} 后重新构建`);
   }
 }
-// 一级目录：根文件保留，目录只留独立页 / 静态目录与当前分类目录（分类改名后的旧目录自动消失）
-staleFailed += prune(outDir, (name) => {
-  const st = fs.statSync(path.join(outDir, name), { throwIfNoEntry: false });
-  if (st && !st.isDirectory()) return true;
-  return RESERVED_TOP_DIRS.has(name) || keepCats.has(name);
-}).failed;
-// 分类目录内：保留 index.html / feed.xml 与属于本分类的 id 子目录
-for (const slug of keepCats) {
-  const keep = keepIdsByCat.get(slug) || new Set();
-  staleFailed += prune(path.join(outDir, slug), (name) =>
-    name === 'index.html' || name === 'feed.xml' || keep.has(name)
-  ).failed;
-}
-staleFailed += prune(path.join(outDir, 'tag'), (name) => keepTags.has(name)).failed;
-if (staleFailed) {
-  console.log(`  ! ${staleFailed} 个旧目录未能清理（不影响访问）；可手动执行 rm -rf ${outDirName} 后重新构建`);
-}
+cleanupStaleOutputs({ outDir, outDirName, categories, items, tags });
 
 console.log(`处理配图（${total} 条）…`);
 const { map: images, missing, reused: reusedImages } = await prepareImages(items, { staticDir, rootDir: root, outDir, prevDir });
@@ -273,6 +221,8 @@ if (reusedImages && prevDir) console.log(`  · 配图增量复用 ${reusedImages
   });
   if (staleImg) console.log(`  · 已清理 ${staleImg} 个旧尺寸配图（当前生成宽度：${POSTER_WIDTHS.join('/')}）`);
 }
+// 清理旧 OG 版本目录（只保留当前 OG_VERSION），避免产物堆积
+pruneOldOgVersions(outDir, OG_VERSION);
 
 if (await writeFavicon(staticDir, outDir)) console.log('  · 已生成 favicon.svg / favicon.ico / apple-touch-icon.png');
 
@@ -519,69 +469,13 @@ write(
 copyThemeAssets(themeDir, outDir);
 
 // card.js 是 app.js 的二级请求，同样缓存 30 天，也得带版本号
-{
-  const appFile = path.join(outDir, 'assets', 'app.js');
-  const src = fs.readFileSync(appFile, 'utf8');
-  const patched = src.replace("'./card.js'", `'./card.js?v=${assetVersion}'`);
-  if (patched === src) console.log('  ! app.js 里没找到 ./card.js 的 import，卡片模板改版后不会破缓存');
-  fs.writeFileSync(appFile, patched);
-}
-
-const qqGroupSrc = path.join(staticDir, 'qq-group.png');
-const qqGroupDest = path.join(outDir, 'qq-group.png');
-if (fs.existsSync(qqGroupSrc)) {
-  fs.copyFileSync(qqGroupSrc, qqGroupDest);
-} else {
-  console.log('  ! 未找到 static/qq-group.png，关于本站页将不显示 QQ 群二维码');
-}
-const quarkGroupSrc = path.join(staticDir, 'quark-group.png');
-const quarkGroupDest = path.join(outDir, 'quark-group.png');
-if (fs.existsSync(quarkGroupSrc)) {
-  fs.copyFileSync(quarkGroupSrc, quarkGroupDest);
-} else {
-  console.log('  ! 未找到 static/quark-group.png，关于本站 / 联系我们页将不显示夸克网盘群二维码');
-}
-// IndexNow 验证文件：static/indexnow-key.txt -> public/indexnow-key.txt（Bing/Yandex 等推送前需可访问）
-const inKey = path.join(staticDir, 'indexnow-key.txt');
-if (fs.existsSync(inKey)) {
-  fs.copyFileSync(inKey, path.join(outDir, 'indexnow-key.txt'));
-  console.log('  · 已复制 IndexNow key 文件');
-} else {
-  console.log('  ! 未找到 static/indexnow-key.txt，IndexNow 推送所需的验证文件缺失');
-}
-// AdSense 授权文件：static/ads.txt -> public/ads.txt（AdSense「ads.txt 片段」验证要求根目录可直接访问）
-const adsTxt = path.join(staticDir, 'ads.txt');
-if (fs.existsSync(adsTxt)) {
-  write(path.join(outDir, 'ads.txt'), fs.readFileSync(adsTxt, 'utf8'));
-  console.log('  · 已生成 ads.txt');
-} else {
-  console.log('  ! 未找到 static/ads.txt，AdSense 的 ads.txt 验证与程序化广告将失效');
-}
-// 联盟推广素材：static/promo/** -> public/promo/**（构建不会整体复制 static/，需显式拷贝）
-{
-  const promoSrc = path.join(staticDir, 'promo');
-  if (fs.existsSync(promoSrc)) {
-    const copyDir = (src, dest) => {
-      fs.mkdirSync(dest, { recursive: true });
-      for (const name of fs.readdirSync(src)) {
-        const s = path.join(src, name);
-        const d = path.join(dest, name);
-        if (fs.statSync(s).isDirectory()) copyDir(s, d);
-        else fs.copyFileSync(s, d);
-      }
-    };
-    copyDir(promoSrc, path.join(outDir, 'promo'));
-    console.log('  · 已复制联盟推广素材 static/promo -> public/promo');
-  } else {
-    console.log('  ! 未找到 static/promo，推广位图片将 404（站点的 promo.enabled 应设为 false）');
-  }
-}
+patchAppCardVersion(outDir, assetVersion);
+copyExtraStaticFiles({ staticDir, outDir, write });
 
 /** SEO 自检：只提醒「页面能打开、肉眼看不出」的隐患；已有专门命令管的事（正文长度）不重复报 */
-{
+function printSeoWarnings({ missing, toPinyin, tags, tagSlug, tagCfg, items }) {
   const warns = [];
   if (missing) warns.push(`${missing} 条资源缺配图，详情页结构化数据与图片 sitemap 里都没有图`);
-  // 拼音兜底没生效时，新增标签的 URL 会退化成 /tag/%E5%89%A7%E6%83%85/ 这种编码形式，肉眼发现不了
   if (!toPinyin) {
     const coded = tags.filter((t) => /[^\x00-\x7F]/.test(tagSlug(t.label)));
     if (coded.length) {
@@ -592,8 +486,6 @@ if (fs.existsSync(adsTxt)) {
       );
     }
   }
-  // 标签页 vs 分类页近重复：判据用 Jaccard（重合数 / 并集），而不是「标签里几成属于该分类」
-  // ——后者会误报一大片：冒险 / 科幻本来就 100% 属于电影，可只占电影的一两成，内容差得远
   {
     const idsByCat = new Map();
     for (const it of items) {
@@ -603,10 +495,8 @@ if (fs.existsSync(adsTxt)) {
     }
     const nearDup = [];
     for (const t of tags) {
-      // tagOverlapAllow 里的是已决定保留的近重复，不是待办，不再提醒
       if (tagCfg.overlapAllow.includes(t.label)) continue;
       const ids = new Set(t.items.map((x) => x.id));
-      // 小样本跳过：几条内容的页面 Jaccard 极不稳定，重不重复的危害也都有限
       if (ids.size < tagCfg.overlapMinSize) continue;
       let worst = null;
       for (const [cat, set] of idsByCat) {
@@ -620,14 +510,10 @@ if (fs.existsSync(adsTxt)) {
       }
     }
     if (nearDup.length) {
-      warns.push(
-        `${nearDup.length} 个标签页与分类页内容高度重合（Jaccard ≥ ${tagCfg.overlapMax}），会被判近重复：`
-      );
+      warns.push(`${nearDup.length} 个标签页与分类页内容高度重合（Jaccard ≥ ${tagCfg.overlapMax}），会被判近重复：`);
       for (const d of nearDup.sort((a, b) => b.jac - a.jac)) {
         warns.push(
-          `「${d.label}」${d.size} 条 vs 「${d.cat}」${d.catSize} 条，重合 ${d.shared} 条（${(
-            d.jac * 100
-          ).toFixed(0)}%）→ 确认没保留价值就加进 config/tags.yaml 的 tagExclude`
+          `「${d.label}」${d.size} 条 vs 「${d.cat}」${d.catSize} 条，重合 ${d.shared} 条（${(d.jac * 100).toFixed(0)}%）→ 确认没保留价值就加进 config/tags.yaml 的 tagExclude`
         );
       }
     }
@@ -637,6 +523,7 @@ if (fs.existsSync(adsTxt)) {
     for (const w of warns) console.log(`    ! ${w}`);
   }
 }
+printSeoWarnings({ missing, toPinyin, tags, tagSlug, tagCfg, items });
 
 const reusedTotal = reused.kept + reused.copied;
 if (reusedTotal) {

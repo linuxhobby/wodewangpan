@@ -368,47 +368,51 @@ function layout({
   const crumbAside = trail && trail.aside ? titleAsideLinks({ site }) : '';
   const crumb = crumbHtml(trail, crumbAside);
   const finalJsonLd = withBreadcrumb(jsonLd, breadcrumbJsonLd(trail, baseUrl), trail ? trail.at : -1);
-  return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="/favicon.svg${iv}" type="image/svg+xml">
-<link rel="alternate icon" href="/favicon.ico${iv}" sizes="any">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png${iv}">
-${
-  rssHref
-    ? `<link rel="alternate" type="application/rss+xml" title="${esc(site.title)} RSS" href="/${rssHref.replace(/^\//, '')}">\n`
-    : ''
-}<title>${esc(fullTitle)}</title>
-<meta name="description" content="${esc(description || site.description)}">
-${keywords ? `<meta name="keywords" content="${esc(keywords)}">\n` : ''}<meta name="robots" content="${noindex ? 'noindex,follow' : 'index,follow'}">
-${verificationMeta(site)}<link rel="canonical" href="${esc(canonical)}">
-<meta name="theme-color" content="#4B3FE3">
-<meta property="og:type" content="${esc(ogType)}">
-<meta property="og:site_name" content="${esc(site.title)}">
-<meta property="og:title" content="${esc(ogTitle || fullTitle)}">
-<meta property="og:description" content="${esc(ogDescription || description || site.description)}">
-<meta property="og:url" content="${esc(canonical)}">
-<meta property="og:locale" content="zh_CN">
-${ogImg ? `<meta property="og:image" content="${esc(ogImg)}">\n` : ''}${ogImg && ogImageSize ? `<meta property="og:image:width" content="${ogImageSize.w}">\n<meta property="og:image:height" content="${ogImageSize.h}">\n` : ''}<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(ogTitle || fullTitle)}">
-<meta name="twitter:description" content="${esc(ogDescription || description || site.description)}">
-${ogImg ? `<meta name="twitter:image" content="${esc(ogImg)}">\n` : ''}<link rel="stylesheet" href="/assets/style.css${v}">
-<meta name="search-index-url" content="${esc(searchIndexUrl)}">
-<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
-<link rel="preconnect" href="https://www.clarity.ms" crossorigin>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5363695594162175" crossorigin="anonymous"></script>
-<script type="text/javascript">
+  const headInner =
+    `<meta charset="utf-8">\n` +
+    `<meta name="viewport" content="width=device-width, initial-scale=1">\n` +
+    `<link rel="icon" href="/favicon.svg${iv}" type="image/svg+xml">\n` +
+    `<link rel="alternate icon" href="/favicon.ico${iv}" sizes="any">\n` +
+    `<link rel="apple-touch-icon" href="/apple-touch-icon.png${iv}">\n` +
+    (rssHref ? `<link rel="alternate" type="application/rss+xml" title="${esc(site.title)} RSS" href="/${rssHref.replace(/^\//, '')}">\n` : '') +
+    `<title>${esc(fullTitle)}</title>\n` +
+    `<meta name="description" content="${esc(description || site.description)}">\n` +
+    (keywords ? `<meta name="keywords" content="${esc(keywords)}">\n` : '') +
+    `<meta name="robots" content="${noindex ? 'noindex,follow' : 'index,follow'}">\n` +
+    verificationMeta(site) +
+    `<link rel="canonical" href="${esc(canonical)}">\n` +
+    `<meta name="theme-color" content="#4B3FE3">\n` +
+    `<meta property="og:type" content="${esc(ogType)}">\n` +
+    `<meta property="og:site_name" content="${esc(site.title)}">\n` +
+    `<meta property="og:title" content="${esc(ogTitle || fullTitle)}">\n` +
+    `<meta property="og:description" content="${esc(ogDescription || description || site.description)}">\n` +
+    `<meta property="og:url" content="${esc(canonical)}">\n` +
+    `<meta property="og:locale" content="zh_CN">\n` +
+    (ogImg ? `<meta property="og:image" content="${esc(ogImg)}">\n` : '') +
+    (ogImg && ogImageSize ? `<meta property="og:image:width" content="${ogImageSize.w}">\n<meta property="og:image:height" content="${ogImageSize.h}">\n` : '') +
+    `<meta name="twitter:card" content="summary_large_image">\n` +
+    `<meta name="twitter:title" content="${esc(ogTitle || fullTitle)}">\n` +
+    `<meta name="twitter:description" content="${esc(ogDescription || description || site.description)}">\n` +
+    (ogImg ? `<meta name="twitter:image" content="${esc(ogImg)}">\n` : '') +
+    `<link rel="stylesheet" href="/assets/style.css${v}">\n` +
+    `<meta name="search-index-url" content="${esc(searchIndexUrl)}">\n` +
+    `<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>\n` +
+    `<link rel="preconnect" href="https://www.clarity.ms" crossorigin>\n` +
+    `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5363695594162175" crossorigin="anonymous"></script>\n` +
+    `<script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "z8v06ndwwd");
-</script>
-${head}
-${finalJsonLd ? jsonLdBlock(finalJsonLd) : ''}
-</head>
+</script>\n` +
+    head +
+    (finalJsonLd ? jsonLdBlock(finalJsonLd) : '');
+
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+${headInner}</head>
 <body${wide ? ' class="page--wide"' : ''}>
 <header class="top">
   <div class="wrap top__inner">
@@ -986,12 +990,11 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
         '@id': `${baseUrl}${canonicalPath}#resource`,
         name: item.title,
         url: `${baseUrl}${canonicalPath}`,
+        mainEntityOfPage: `${baseUrl}${canonicalPath}`,
         description: descLong,
-        // 与正文标签胶囊同一口径（tagKey 归一化），避免大小写/空白变体漏滤
         genre: item.tags.filter((t) => tagKey(t) !== tagKey(item.category)),
         keywords: (item.tags || []).join(' '),
         ...(img.detail ? { image: `${baseUrl}${img.detail}` } : {}),
-        // dateModified 用入库日：与发布（作品年份）区分，也确实是页面内容的真实变化时间
         ...(item.date
           ? { datePublished: item.date, dateModified: item.updated || item.added || item.date }
           : {}),

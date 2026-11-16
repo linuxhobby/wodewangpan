@@ -31,7 +31,7 @@ export function tileHtml({
   return `<li class="tile-item">
   <a class="tile" href="${esc(href)}">
     <span class="tile__poster">
-      <img class="tile__img" src="${esc(src)}" width="240" height="360" alt="${esc(title)}" loading="${loading}" decoding="async">
+      <img class="tile__img" src="${esc(src)}" width="240" height="360" alt="${esc(title)} 资源封面" loading="${loading}" decoding="async">
       ${isNew ? '<span class="tile__new">最新</span>' : ''}
     </span>
     <span class="tile__title">${titleHtml || esc(title)}</span>

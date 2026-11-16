@@ -29,8 +29,15 @@ if (!fs.existsSync(root)) {
 
 http
   .createServer((req, res) => {
-    const url = decodeURIComponent((req.url || '/').split('?')[0]);
-    let file = path.join(root, url);
+    const rawPath = (req.url || '/').split('?')[0];
+    let decoded;
+    try {
+      decoded = decodeURIComponent(rawPath);
+    } catch {
+      res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' }).end('Bad Request');
+      return;
+    }
+    let file = path.join(root, decoded);
 
     if (!file.startsWith(root)) {
       res.writeHead(403).end('Forbidden');
