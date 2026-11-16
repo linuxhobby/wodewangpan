@@ -1,4 +1,4 @@
-# 软件资源（134 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
+# 软件资源（135 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
 - id: app-001
   title: "Parallels Desktop 18 - macOS 虚拟机软件"
   category: 软件
@@ -1713,3 +1713,23 @@
       Git-2.56.1-arm64.exe
       PortableGit-2.56.1-64-bit.7z.exe
       PortableGit-2.56.1-arm64.7z.exe
+
+- id: app-106
+  title: "7-Zip 26.06 - 开源文件压缩解压工具"
+  category: 软件
+  tags: ["软件", "压缩解压", "文件管理", "7-Zip"]
+  quark_url: "https://pan.quark.cn/s/0c4f258d899c"
+  description: "7-Zip 是一款免费开源的文件压缩与解压工具，由 Igor Pavlov 开发，以高压缩比著称。它主打自研的 7z 归档格式，采用 LZMA 与 LZMA2 算法，压缩率明显高于常见的 ZIP 格式，对 ZIP 和 GZIP 的处理也比多数同类工具更省空间。它支持打包与解压 7z、XZ、BZIP2、GZIP、TAR、ZIP 和 WIM，还能读取 RAR、ISO、CAB、DMG、NTFS 等数十种格式，并提供 AES-256 强加密、分卷压缩、自解压包制作等能力，深度集成 Windows 资源管理器右键菜单，同时带有功能完整的命令行版本。本目录收录 2026 年 11 月发布的 26.06 正式版，内含 Windows x64、32 位 x86 与 ARM64 三种架构的安装包，可按机器选择对应版本。｜Igor Pavlov"
+  date: 2026-11-06
+  added: "2026-11-17 01:05"
+  image: app-106.jpg
+  updated: 2026-11-17
+  files:
+    count: 3
+    size: "4.4 MB"
+    format: "EXE×3"
+    tree: |
+      106-解压缩7-Zip/
+      7z-2606-Windows 32-bit x86.exe
+      7z-2606-Windows ARM64.exe
+      7z-2606-Windows x64 .exe
