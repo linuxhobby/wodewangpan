@@ -2949,6 +2949,14 @@
   date: 2010-02-04
   added: 2026-09-30
   image: mv-150.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "2.4 GB"
+    format: "MKV"
+    tree: |
+      150-义兄弟.The.Secret.Reunion.2010.720p.BluRay.x264.AC3-CMCT/
+      义兄弟.The.Secret.Reunion.2010.720p.BluRay.x264.AC3-CMCT.mkv
 
 - id: mv-151
   title: "何处是我家"
@@ -2961,6 +2969,14 @@
   date: 2001-12-11
   added: 2026-09-30
   image: mv-151.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "4.2 GB"
+    format: "MKV"
+    tree: |
+      151-何处是我家.Nirgendwo.in.Afrika.2001.GER.BluRay.720p.x264.AC3-CMCT/
+      何处是我家.Nirgendwo.in.Afrika.2001.GER.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-152
   title: "你丫闭嘴！"
@@ -2973,6 +2989,14 @@
   date: 2003-10-22
   added: 2026-09-30
   image: mv-152.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "3.2 GB"
+    format: "MKV"
+    tree: |
+      152-你丫闭嘴(五音轨).Tais.Toi!.2003.BluRay.720p.x264.AC3.5Audios-CMCT/
+      你丫闭嘴(五音轨).Tais.Toi!.2003.BluRay.720p.x264.AC3.5Audios-CMCT.mkv
 
 - id: mv-153
   title: "伸冤人"
