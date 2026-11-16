@@ -103,15 +103,60 @@ export function tagKey(text) {
 const NON_CJK = /[^\u4e00-\u9fff\u3400-\u4dbf\u3040-\u30ff\uac00-\ud7af]/g;
 const cjkOf = (text) => String(text || '').replace(NON_CJK, '');
 
-/** 很多标签其实是作品原名（「权力的游戏 第二季 …」），只属于单个资源，建聚合页就是空壳页 */
+/** 标题尾部的季号：「第七季」「第 3 季」「Season 2」——去掉它才能认出「同一部剧的各季」 */
+const SEASON_SUFFIX_RE = /\s*(?:第\s*[〇零一二三四五六七八九十百\d]+\s*季|season\s*\d+)\s*$/i;
+
+/** 片源名里的发布标记：出现在标签里说明是把种子名整条抄进了 tags */
+const RELEASE_MARK_RE = /(?:web-?dl|webrip|bluray|bdrip|hdtv|remux|x26[45]|h26[45]|hevc|ddp\d?|atmos)/i;
+
+const CN_DIGIT = { 零: 0, 〇: 0, 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9 };
+
+/** 季号解析：「第七季」「第 12 季」「Season 3」→ 7 / 12 / 3；认不出来返回 0（排序时排最前） */
+function parseSeasonNo(text) {
+  const s = String(text || '');
+  const en = s.match(/season\s*(\d+)/i);
+  if (en) return Number(en[1]);
+  const body = s.replace(/[^\u4e00-\u9fa5\d]/g, '').replace(/^第/, '').replace(/季$/, '');
+  if (!body) return 0;
+  if (/^\d+$/.test(body)) return Number(body);
+  let total = 0;
+  let current = 0;
+  for (const ch of body) {
+    if (ch === '十') {
+      total += (current || 1) * 10;
+      current = 0;
+    } else if (ch === '百') {
+      total += (current || 1) * 100;
+      current = 0;
+    } else if (ch in CN_DIGIT) {
+      current = CN_DIGIT[ch];
+    } else {
+      return 0;
+    }
+  }
+  return total + current;
+}
+
+/** 标签其实是作品名（「权力的游戏 第二季 …」）——只属于单个资源，建聚合页就是空壳页。
+    判定三档：与标题完全同名 / 剥掉英文原名后同名 / 剥掉季号后同名；外加「种子名当标签」。
+    ⚠ 不要再加「标签是标题前缀就剔」这类比例规则：标题「Parallels Desktop 18 - macOS 虚拟机软件」
+    会把正常标签「虚拟机」误判成作品名。 */
 function isTitleNoise(tag, title) {
   const t = tagKey(tag);
   const ti = tagKey(title);
   if (!t || !ti) return false;
   if (t === ti) return true;
-  const ct = cjkOf(t);
-  const ci = cjkOf(ti);
-  return ct !== '' && ct === ci;
+  const ct = cjkOf(tag);
+  const ci = cjkOf(title);
+  if (ct && ct === ci) return true;
+  // 多季剧：标签是「剧名」、标题是「剧名 第 N 季」，两边剥掉季号后同名
+  const tb = cjkOf(String(tag).replace(SEASON_SUFFIX_RE, ''));
+  const titleBase = cjkOf(String(title).replace(SEASON_SUFFIX_RE, ''));
+  if (tb.length >= 2 && tb === titleBase) return true;
+  // 种子名当标签：「…S01.2160p.NF.WEB-DL…」这类只有编码信息，没有标签价值
+  if (RELEASE_MARK_RE.test(String(tag))) return true;
+  if (/\d{3,4}p/i.test(String(tag)) && String(tag).length > 8) return true;
+  return false;
 }
 
 /**
@@ -467,11 +512,23 @@ export function normalizeResources(rawList) {
     const updated = formatDate(raw.verified || raw.updated || '');
     // 排序键带时间：只写日期的按当天 00:00，写了时分的可精确到入库时刻
     const sortKey = formatDateTime(addedRaw) || '9999-12-31T00:00';
+    // 标签只留「属性词」：作品名 / 种子名当标签的（「一级方程式：疾速争胜 Formula 1: …」这类）
+    // 在卡片和详情页都是一整行噪音，还够格建出一个与分类页重复的聚合页。
+    // 但英文原名对站内搜索有用（「Zootopia」搜「疯狂动物城」），所以原始标签另存 keywords 供搜索索引使用。
+    const allTags = toTags(raw.tags);
+    const tags = allTags.filter((t) => !isTitleNoise(t, title));
+    // 多季剧的「同系列」：标题去掉季号即系列名，season 存季号。数据里不写、也不靠标签维护
+    const seriesBase = String(title).replace(SEASON_SUFFIX_RE, '').trim();
+    const hasSeason = seriesBase !== title;
+    const season = hasSeason ? parseSeasonNo(String(title).slice(seriesBase.length)) : 0;
     items.push({
       id,
       title,
       category: String(raw.category || '未分类').trim(),
-      tags: toTags(raw.tags),
+      tags,
+      keywords: allTags.join(' '),
+      series: hasSeason && seriesBase.length >= 2 ? seriesBase : '',
+      season,
       description: clipDesc(raw.description || raw.desc || ''),
       files: parseFiles(raw),
       image: raw.image ? String(raw.image) : '',

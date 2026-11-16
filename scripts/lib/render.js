@@ -806,6 +806,26 @@ function relatedOf(item, all, n = 10) {
   return picked;
 }
 
+/** 同系列：标题去掉季号后相同、且本身带季号的条目。多季剧自动成组，数据里不用再靠「剧名标签」维护 */
+function seriesOf(item, all) {
+  if (!item.series) return [];
+  return (all || [])
+    .filter((it) => it.id !== item.id && !it.dead && it.series === item.series)
+    .sort((a, b) => (a.season || 0) - (b.season || 0) || String(a.id).localeCompare(String(b.id)));
+}
+
+/** 「同系列」区块：按季号列全同一部剧的其它季，缺哪季一眼能看出来 */
+function seriesBlockOf(item, series) {
+  if (!series.length) return '';
+  return `<section class="series">
+<h2>同系列</h2>
+<p class="muted">「${esc(item.series)}」在本站还有 ${series.length} 季，按季号排列：</p>
+<div class="tags">${series
+    .map((it) => `<a class="tag" href="${itemHref(it.id)}">${it.season ? `第 ${it.season} 季` : esc(it.title)}</a>`)
+    .join('')}</div>
+</section>`;
+}
+
 /** 相关推荐整段：够一行才交给 CSS 修掉末行零头，不足一行就不干预（本来就只有一行） */
 function relatedBlock(related, images) {
   const fit = related.length >= 5 ? ' grid--fit' : '';
@@ -918,6 +938,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
   const posterAttr = sharePoster ? ` data-poster="${esc(sharePoster)}"` : '';
 
   const related = relatedOf(item, items || []);
+  const series = seriesOf(item, items || []);
 
   // 面包屑与同一行右侧的公告 / 热榜链接组由 layout 按 nav.js 规则统一注入，这里不再写
   // 搜索结果容器：顶部搜索框是共享布局，详情页也得有 #results，否则 app.js 拿到 null 直接抛错，搜索静默失效
@@ -972,7 +993,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
       </div>
     </div>
   </div>
-</article>${pagerBlockOf(pager)}${related.length ? relatedBlock(related, images) : ''}`;
+</article>${pagerBlockOf(pager)}${seriesBlockOf(item, series)}${related.length ? relatedBlock(related, images) : ''}`;
 
   const canonicalPath = itemHref(item.id);
   const schemaType = SCHEMA_TYPE[item.category] || 'CreativeWork';
@@ -1193,24 +1214,35 @@ ${p === 1 ? tagCloudHtml(tags) : ''}
 
 /* ── 标签聚合页 /tag/xxx/ ─────── */
 
-/** 「热门标签」区块里最多列多少个 */
-const TAG_CLOUD_MAX = 20;
+/** 相关标签：与当前标签「同时挂在同一批资源上」的标签，按重合条数排序。
+    只留已经建了聚合页的（没建页的链过去就是 404），比每页都一样的全站热门标签更有信息量 */
+function relatedTagsOf(tag, tags, max = 12) {
+  const pageable = new Map((tags || []).map((t) => [t.key, t]));
+  const shared = new Map();
+  for (const it of tag.items) {
+    for (const raw of it.tags || []) {
+      const key = tagKey(raw);
+      if (!key || key === tag.key || !pageable.has(key)) continue;
+      shared.set(key, (shared.get(key) || 0) + 1);
+    }
+  }
+  return [...shared.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, max)
+    .map(([key, n]) => ({ tag: pageable.get(key), shared: n }));
+}
 
-/** 只取前 20 个：没它标签页站内任何导航都到不了，只能等蜘蛛从 sitemap 挖（见 docs/README.md） */
-function tagCloudHtml(tags, currentKey = '') {
-  const all = tags || [];
-  const others = all.filter((t) => t.key !== currentKey).slice(0, TAG_CLOUD_MAX);
-  if (!others.length) return '';
-  // 云里只放前 20 个，剩下的标签站内就断了路，补一条去总览页的出口
-  const more =
-    all.length > TAG_CLOUD_MAX
-      ? `<p class="tagcloud__more"><a href="/tags/">查看全部 ${all.length} 个标签 →</a></p>`
-      : '';
-  return `<h2>热门标签</h2>
-<ul class="tagcloud">${others
+/** 相关标签区块：每个标签页列的是「常和它一起出现」的标签，不再是全站同一份热门榜 */
+function relatedTagsHtml(tag, tags) {
+  const related = relatedTagsOf(tag, tags);
+  const more = `<p class="tagcloud__more"><a href="/tags/">查看全部 ${(tags || []).length} 个标签 →</a></p>`;
+  if (!related.length) return more;
+  return `<h2>相关标签</h2>
+<p class="muted">这些标签常和「${esc(tag.label)}」出现在同一批资源上，括号里是重合的资源数：</p>
+<ul class="tagcloud">${related
     .map(
-      (t) =>
-        `<li><a class="tag" href="${tagHref(t.label)}">${esc(t.label)}<span class="tag__n">${t.count}</span></a></li>`
+      ({ tag: t, shared }) =>
+        `<li><a class="tag" href="${tagHref(t.label)}">${esc(t.label)}<span class="tag__n">${shared}</span></a></li>`
     )
     .join('')}</ul>
 ${more}`;
@@ -1286,24 +1318,67 @@ ${rows.map(row).join('\n')}
   });
 }
 
+/** /all/ 页底部的标签出口：那一页没有「当前标签」，用全站资源数最多的前 20 个当导航 */
+const TAG_CLOUD_MAX = 20;
+function tagCloudHtml(tags) {
+  const all = tags || [];
+  const top = all.slice(0, TAG_CLOUD_MAX);
+  if (!top.length) return '';
+  const more =
+    all.length > TAG_CLOUD_MAX
+      ? `<p class="tagcloud__more"><a href="/tags/">查看全部 ${all.length} 个标签 →</a></p>`
+      : '';
+  return `<h2>热门标签</h2>
+<ul class="tagcloud">${top
+    .map(
+      (t) =>
+        `<li><a class="tag" href="${tagHref(t.label)}">${esc(t.label)}<span class="tag__n">${t.count}</span></a></li>`
+    )
+    .join('')}</ul>
+${more}`;
+}
+
 export function tagPage(ctx) {
   const { site, tag, images, baseUrl, tags } = ctx;
-  const { key, label, count, items } = tag;
+  const { label, count, items } = tag;
   const canonicalPath = tagHref(label);
-  // 该标签下的分类分布：写进 description，让搜索结果里的摘要有实际信息
-  const catCount = new Map();
-  for (const it of items) catCount.set(it.category, (catCount.get(it.category) || 0) + 1);
-  const topCats = [...catCount].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([c]) => c);
   // 定制文案（config/tags.yaml 的 tagMeta）：给与分类页重合的标签换一个视角
   const meta = (ctx.tagMeta || new Map()).get(label);
   const fill = (s) => String(s || '').replace(/\{count\}/g, count);
   const pageName = fill(meta?.title) || `${label}相关资源`;
 
-  const body = `<h1 class="page__title">${esc(fill(meta?.h1) || label)}<span class="page__n">${count} 个资源</span></h1>
-<ul class="grid">
-${items.map((it, i) => cardHtml(it, images, false, i < 5)).join('\n')}
-</ul>
-${tagCloudHtml(tags, key)}`;
+  // 分类分布：一个标签天然横跨几个分类（「动作」下既有电影也有动漫），
+  // 三百多张卡片平铺没法用，按分类分块、每块给一个分类页入口，页面才有结构
+  const byCat = new Map();
+  for (const it of items) {
+    if (!byCat.has(it.category)) byCat.set(it.category, []);
+    byCat.get(it.category).push(it);
+  }
+  const groups = [...byCat].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], 'zh'));
+  const topCats = groups.slice(0, 3).map(([c]) => c);
+  // 导语用这一页的真实分布拼出来（条数 / 分类数 / 每类几条），不是换个词的模板句
+  const spread =
+    groups.length > 1
+      ? `分布在 ${groups.length} 个分类里：${groups.map(([c, list]) => `${c} ${list.length} 个`).join('、')}`
+      : `全部属于「${groups[0][0]}」分类`;
+  const lead = `带「${label}」标签的资源共 ${count} 个，${spread}。标签是跨分类聚合的——同一题材的电影、剧集、动漫会一起出现在这一页，比在单个分类里一页页翻更快。`;
+
+  const grid = (list) => `<ul class="grid">
+${list.map((it, i) => cardHtml(it, images, false, i < 5)).join('\n')}
+</ul>`;
+  const body = `<h1 class="page__title">${esc(fill(meta?.h1) || `「${label}」资源`)}<span class="page__n">${count} 个</span></h1>
+<p class="tag-lead">${esc(lead)}</p>
+${
+  groups.length > 1
+    ? groups
+        .map(
+          ([cat, list]) => `<h2 class="tag-group"><a href="${catHref(cat)}">${esc(cat)}</a><span class="muted"> · ${list.length} 个</span></h2>
+${grid(list)}`
+        )
+        .join('\n')
+    : grid(items)
+}
+${relatedTagsHtml(tag, tags)}`;
 
   return layout({
     ...ctx,

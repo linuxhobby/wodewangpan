@@ -254,7 +254,9 @@ for (const item of items) {
 // 全站索引：列表页内联（首屏离线可用）+ search-index.json（搜索全站）
 const indexAll = items.map((it) => {
   const img = images.get(it.id) || {};
-  const py = toPinyin ? toPinyin(`${it.title}${it.tags.join('')}`) : null;
+  // 站内搜索的拼音索引带上 keywords（原始标签，含被展示层隐掉的作品英文原名）：
+  // 搜「Zootopia」仍能命中「疯狂动物城」，但卡片上不会再出现整条作品名标签
+  const py = toPinyin ? toPinyin(`${it.title}${it.keywords || it.tags.join('')}`) : null;
   return {
     id: it.id,
     title: it.title,

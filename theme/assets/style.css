@@ -312,6 +312,14 @@ a.tag:hover { background: var(--brand-soft); }
 .tagcard__cats { font-size: var(--fs-sm); color: var(--muted); }
 .tagcloud__more { margin: 12px 0 0; font-size: var(--fs-base); }
 
+/* 标签聚合页：导语 + 按分类分块。卡片本身沿用 .grid，这里只管标题与段落 */
+.tag-lead { margin: 0 0 4px; font-size: var(--fs-lg); line-height: var(--lh-body); color: var(--muted); }
+.tag-group { font-size: var(--fs-h2); margin: 26px 0 12px; }
+.tag-group a { color: inherit; }
+/* 详情页「同系列」：多季剧的其它季，紧跟在正文之后 */
+.series { margin-top: 26px; }
+.series h2 { font-size: var(--fs-h2); margin: 0 0 8px; }
+
 /* ── 通用小件 ────────────────────────── */
 .muted { color: var(--muted); }
 .empty { padding: 40px 0; text-align: center; color: var(--muted); }
