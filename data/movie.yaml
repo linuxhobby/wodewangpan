@@ -3369,6 +3369,14 @@
   date: 2003-12-24
   added: 2026-09-30
   image: mv-171.jpg
+  updated: 2026-11-17
+  files:
+    count: 1
+    size: "4.8 GB"
+    format: "MKV"
+    tree: |
+      171-冷山.Cold.Mountain.2003.BluRay.720p.x264.AC3.3Audios-CMCT/
+      冷山.Cold.Mountain.2003.BluRay.720p.x264.AC3.3Audios-CMCT.mkv
 
 - id: mv-172
   title: "判我有罪"
@@ -3381,6 +3389,14 @@
   date: 2006-03-16
   added: 2026-09-30
   image: mv-172.jpg
+  updated: 2026-11-17
+  files:
+    count: 1
+    size: "3.6 GB"
+    format: "MKV"
+    tree: |
+      172-判我有罪.Find.Me.Guilty.2006.BluRay.720p.x264.AC3-CMCT/
+      判我有罪.Find.Me.Guilty.2006.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-173
   title: "通缉令"
@@ -3393,6 +3409,14 @@
   date: 2008-06-19
   added: 2026-09-30
   image: mv-173.jpg
+  updated: 2026-11-17
+  files:
+    count: 1
+    size: "3.0 GB"
+    format: "MKV"
+    tree: |
+      173-刺客联盟.Wanted.2008.BluRay.720p.x264.AC3-CMCT/
+      刺客联盟.Wanted.2008.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-174
   title: "刺杀游戏"
