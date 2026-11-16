@@ -2889,6 +2889,14 @@
   date: 1993-08-06
   added: 2026-09-30
   image: mv-147.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "4.3 GB"
+    format: "MKV"
+    tree: |
+      147-亡命天涯.The.Fugitive.1993.BluRray.720p.x264.AC3.2Audios-CMCT/
+      亡命天涯.The.Fugitive.1993.BluRray.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-148
   title: "为奴十二年"
@@ -2901,6 +2909,14 @@
   date: 2013-10-18
   added: 2026-09-30
   image: mv-148.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "4.0 GB"
+    format: "MKV"
+    tree: |
+      148-为奴十二年.12.Years.A.Slave.2013.BluRay.720p.x264.AC3-CMCT/
+      为奴十二年.12.Years.A.Slave.2013.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-149
   title: "亚特兰蒂斯：世界的终结，传奇的诞生"
@@ -2913,6 +2929,14 @@
   date: 2011-01-01
   added: 2026-09-30
   image: mv-149.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "2.8 GB"
+    format: "MKV"
+    tree: |
+      149-亚特兰蒂斯.Atlantis.End.of.a.World.Birth.of.a.Legend.2011.BluRay.720p.x264.AC3-CMCT/
+      亚特兰蒂斯.Atlantis.End.of.a.World.Birth.of.a.Legend.2011.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-150
   title: "义兄弟"
