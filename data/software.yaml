@@ -1697,6 +1697,7 @@
   category: 软件
   tags: ["软件", "开发工具", "版本控制", "Git for Windows"]
   quark_url: "https://pan.quark.cn/s/d01868e3ae3d"
+  guangya_url: "https://www.guangyapan.com/s/1969399777726447699_avljRRMihbsI49Uo"
   description: "Git for Windows 是 Git 分布式版本控制系统在 Windows 平台的官方发行版，把原本诞生于 Linux 的 Git 完整带到 Windows 桌面环境。它不只提供命令行工具，还打包了 Git Bash、Git GUI 等图形与终端组件，让用户无需另行配置就能在 Windows 上使用完整的 Git 工作流。安装包内含 MSYS2 运行环境，兼容 Windows 10 及更高版本，并随官方节奏持续更新，2026 年 11 月发布的 2.56.1 版本即为当前稳定分支。对于需要在 Windows 上做代码管理、协作开发或学习版本控制的开发者来说，这是最省心的入门选择，装好即用，不必再折腾环境变量与依赖。"
   date: 2026-11-10
   added: 2026-11-15
