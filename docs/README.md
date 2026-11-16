@@ -12,7 +12,7 @@
 
 - **`id` 就是 URL 的末段**（`/movie/mv-046/` 的 `mv-046` 取自 `data/*.yaml` 的 `id`）。改 id = 换地址 = 已收录页 404。**绝不能改**。
 - **分类 slug 改别名 = 换 URL**（`config/site.yaml` 的 `slugs`）：分类页 `/<slug>/` 与该分类全部详情页 `/<slug>/<id>/` 一起换，已收录后改 = 丢排名。
-- **标签 slug 三级取值，别名表只增不改**：`scripts/lib/data.js` 的 `tagSlug()` → ① `config/tags.yaml` 手写别名（34 个英文 slug，**永远别动**）② 拼音兜底 ③ 原样。已落到拼音 URL 的标签事后补别名 = 换 URL，所以 `tagSlugs` 只增不改。
+- **标签 slug 三级取值，别名只增不改**：`scripts/lib/data.js` 的 `tagSlug()` → ① `config/tags.yaml` 手写别名（**已落库的永不变动**）② 拼音兜底 ③ 原样。已落到拼音 URL 的标签事后补别名 = 换 URL，所以 `tagSlugs` 只增不改。
 - **`pinyin-pro` 必须在 `dependencies`**：它决定标签 URL，放 devDependencies 会让部署机 `npm i --omit=dev` 时缺席 → 线上退化成 `%E7%A7%91%E5%B9%BB` 编码路径，两边不一致，直接丢排名。
 - **标签 slug 撞车**：两标签算出同 slug 会写进同一 `/tag/xxx/` 且构建**不报错**，撞了就在 `config/tags.yaml` 给其一配别名。
 
@@ -38,13 +38,13 @@
 
 ## 四、构建与产物
 
-- **内容未变不覆盖**，为的是让蜘蛛命中 304：`scripts/build.js` 的 `write()` 写盘前比对，相同则沿用旧文件并 `utimes` 保留 mtime。实测二次构建 722 文件全沿用（58.7s → 34.9s）。
+- **内容未变不覆盖**，为的是让蜘蛛命中 304：`scripts/build.js` 的 `write()` 写盘前比对，相同则沿用旧文件并 `utimes` 保留 mtime。
 - **静态资源版本号用内容哈希，不用 commit**：用 commit 会让每次提交改写所有页面的 CSS/JS 链接，mtime 全刷，304 落空。
 - **改完数据必须 `npm run build`**：`public/` 不热更新。
 - `syncHeaderCounts` 会改 YAML 头部条数注释（正常）。
 - **下架条目 `public/` 不自动回收**，见第六节「清四处」。
 - `robots.txt` 与 `sitemap.xml` 是 `build.js` 生成产物，手改线上文件下次构建会被覆盖——要改规则改 `build.js` 模板字符串。
-- **`ads.txt` 源文件在 `static/ads.txt`**（当前一行：`google.com, pub-5363695594162175, DIRECT, f08c47fec0942fa0`），由 `build.js` 复制到 `public/` 根目录，用于 AdSense「ads.txt 片段」验证。构建**不整体复制 `static/`**，新增根目录静态文件必须在 `build.js` 里显式拷贝。
+- **`ads.txt` 源文件在 `static/ads.txt`**（AdSense 发布商 `pub-5363695594162175` 一行 DIRECT），由 `build.js` 复制到 `public/` 根目录，用于 AdSense「ads.txt 片段」验证。构建**不整体复制 `static/`**，新增根目录静态文件必须在 `build.js` 里显式拷贝。
 
 ---
 
@@ -138,11 +138,11 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 三个 skill
 
-| skill | 版本 | 职责 |
-|---|---|---|
-| `quark-resource-sync` | v1.11 | 同步编排：扫描/编号/出链/抓 TMDB/写 YAML/热门反向同步/合集拆分 |
-| `quarkclouddrive` | 1.0.24（官方，自动更新） | 夸克 CLI：`browse`/`rename`/`share`/`search`/`upload` |
-| `quark-upload-share` | — | 上传本地文件并生成公开分享链接 |
+| skill | 职责 |
+|---|---|
+| `quark-resource-sync` | 同步编排：扫描/编号/出链/抓 TMDB/写 YAML/热门反向同步/合集拆分 |
+| `quarkclouddrive`（官方，自动更新） | 夸克 CLI：`browse`/`rename`/`share`/`search`/`upload` |
+| `quark-upload-share` | 上传本地文件并生成公开分享链接 |
 
 - 真身只在 `~/.workbuddy/skills/`（现役客户端目录；`~/.codebuddy` 为历史遗留，仍被脚本回退探测）。**别放进客户端 builtin/**（更新会清空）。
 - 升级 `quarkclouddrive` 用 `bash scripts/install.sh`，不用 `quark-drive.cjs update`。
@@ -162,9 +162,9 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 判断准则：值不值得放行
 
-**看 referer 真人回流，不看抓取量**。零回流的 SEO/AI 爬虫（Semrush/Ahrefs/MJ12 + ShapBot/KeenableBot 等）403；会带流量的（Google/Yandex/Bing/百度 + Perplexity/OAI/Claude-SearchBot）保留。全站真人 UV 九天仅 186，三家 AI+四家 SEO 工具合计 7,723 次请求。
+**看 referer 真人回流，不看抓取量**。零回流的 SEO/AI 爬虫（Semrush/Ahrefs/MJ12 + ShapBot/KeenableBot 等）403；会带流量的（Google/Yandex/Bing/百度 + Perplexity/OAI/Claude-SearchBot）保留。
 
-- **引擎策略（2026-11-05 定，当日修正）**：站点无法 ICP 备案，**放弃 360/搜狗等境内引擎**；百度**站长验证保留**（已验证、无害），但**不再关注其收录、不做百度专项 SEO 推送**。主动 SEO 只面向 **Google + Bing**（Bing 靠已接好的 IndexNow 实时推送，全量 935 条已推，2026-11-05）。Yandex 仍保留（IndexNow 覆盖）。
+- **引擎策略（2026-11-05 定）**：站点无法 ICP 备案，**放弃 360/搜狗等境内引擎**；百度**站长验证保留**（已验证、无害），但**不再关注其收录、不做百度专项 SEO 推送**。主动 SEO 只面向 **Google + Bing**（Bing 走 IndexNow 发布钩子实时推送）；Yandex 保留（IndexNow 覆盖）。
 
 ### 抓取预算结论
 
@@ -181,8 +181,8 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 真人流量估算
 
-- 下界（可信）：`vid` cookie + `/hit` 信标 → UV 186/9天 ≈ 20/天。
-- 上界（宽）：浏览器 UA + 真实路由 + 剔单 IP>30 次 → 944 IP。
+- 下界（可信）：`vid` cookie + `/hit` 信标的 UV 统计。
+- 上界（宽）：浏览器 UA + 真实路由 + 剔单 IP 高频。
 - 识别伪装脚本：固定过时 UA / 请求-IP 比高 / 云厂商 IP / 扫描路径占比高（命中两条即非人）。
 
 ### 复核方法
@@ -195,32 +195,13 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ## 八、功能模块
 
-### QQ 群查询机器人（2026-11-10 上线）
+### QQ/TG 群查询机器人（2026-11-10 上线，2026-11-12 代码迁出）
 
-- **2026-11-12 起机器人代码不在本站仓库**：QQ/TG 机器人整体迁至私有仓 `mybot`（原站内 `bot/`，更早是独立目录 `wodewangpan-bot`），部署、配置、NapCat 与 OneBot 的运维细节和踩坑记录都在那边的 `bot/README.md`，本文只保留与站点有关的事实。
-- **与站点构建从来互不影响**：`npm run lint` 只扫 `scripts theme/assets`，`scripts/build.js` 只从 `theme/`、`static/`、`share.jpg` 等显式路径取文件、从不扫描仓库根目录，所以机器人代码既不参与构建、也不会被打进 `public/` 上线。
-- 链路：群消息 → NapCat（QQ 号与群号等真实参数只存私有仓，公开文档不再重复）→ OneBot HTTP 上报本机端口 → 查 `www.wodewangpan.top` → 回群。
-- **只读线上站**：数据源只有 `/search-index.json` 与 `/<slug>/<id>/` 两个 HTTP GET（mybot 私有仓需同步该口径），不读 `data/*.yaml`，不依赖仓库，也不写任何本地资源。
-- 群里以 `/` 开头**免 @** 直接执行；裸关键词仍需 @（否则正常群聊会被当搜索，刷屏且招风控）。开关 `config.json` 的 `group_no_at_slash`。
-
-| 指令 | 作用 |
-|---|---|
-| `/搜索 关键词`（`/s` `/搜` `/找` `/查` `/so`） | 回资源名、类型与网盘链接，按最新排，一次最多 10 条 |
-| `/更多`（`/more` `/下一页` `/next`） | 接着看下一批 10 条 |
-| `/最新` | 最近上架 8 条 |
-| `/今日` | 今天更新，无则退到最近一次更新日 |
-| `/分类` | 各分类条数 |
-| `/随机` | 随机一条 |
-| `/帮助` | 指令表 |
-
-回复版式（2026-11-10 二次调整）：资源名单独一行「名称 ｜ 类型」，下面一行一个网盘「网盘名 + 制表符 + 链接」，带提取码的写在网盘名后面（`百度网盘（提取码 fw1j）`）；资源与资源之间**不空行**；末尾固定两行：`更多资源访问：<站点>`、`/帮助 — 查看指令表`。提取码从详情页 `.linkrow__code > b` 读，链接顺序按页面（夸克在前、百度在后）。
-
-**命中太多怎么办**：一次最多回 10 条，命中按上架日期从新到旧排，先给最新的 10 条；命中数超过 10 时末尾补一句「命中 N 条，先给 10 条，发 /更多 看下一批」。`/更多` 以「群号 / 私聊用户」为键记住上一次的关键词与偏移量，只翻同一批结果，5 分钟过期，避免群友之间互相串页；翻到底提示「结果已经到底了」。另外限制单条消息 900 字，超了按行拆条，固定尾巴只挂在最后一条上，不会被切散。
-
-- 拼音直接命中：索引自带 `py`/`py1`（全拼 + 首字母），`qingzhixiang`、`qzx` 都能搜——**这是搜索索引的设计，机器人只是消费方**。
-- QQ 侧回复走纯文本、靠客户端自动识别 URL：OneBot 的 `markdown` 段被 QQ 内核拒绝（普通 QQ 号无签名能力），Ark 卡片能发出去但多数客户端提示版本过低。TG 侧支持 HTML，网盘名是可点超链接、正文不出现裸链，命令名因 TG 只认拉丁字符而用 `/s` `/more` `/latest` `/today` `/cats` `/random` `/help` `/id`。
-- 机器人查询用的就是本站 `/search-index.json` 与详情页，与站点同源；**站内页面上的指令说明见 `/about/#qq-bot`**（`scripts/lib/render.js` 的 `qqBotBlock` 与 `theme/assets/style.css` 的 `.cmd-box`），那属于站点内容，不因机器人代码迁出而删除。
-- 部署、NapCat 版本与端口、OneBot 上报协议坑、白名单与限频、开机自启、双实例锁等，全部在私有仓 `mybot` 的 `bot/README.md`。
+- **机器人代码不在本站仓库**：QQ/TG 机器人整体迁至私有仓 `mybot`（原站内 `bot/`），部署、配置、NapCat 与 OneBot 的运维细节和踩坑记录都在那边的 `bot/README.md`，本文只保留与站点有关的事实。
+- **与站点构建从来互不影响**：`npm run lint` 只扫 `scripts theme/assets`，`scripts/build.js` 只从显式路径取文件、从不扫描仓库根目录，所以机器人代码既不参与构建、也不会被打进 `public/` 上线。
+- **只读线上站**：数据源只有 `/search-index.json` 与 `/<slug>/<id>/` 两个 HTTP GET（mybot 私有仓需同步该口径），不读 `data/*.yaml`，不依赖仓库。
+- 站内面向用户的指令说明在 `/about/#qq-bot`（`scripts/lib/render.js` 的 `qqBotBlock` 与 `theme/assets/style.css` 的 `.cmd-box`），那属于站点内容，不因机器人代码迁出而删除。
+- 指令清单、回复版式、翻页与限频、QQ/TG 双进程架构等细节以私有仓 `mybot` 的 `bot/README.md` 为准，此处不再重复。
 
 ### 热门榜 `/hot/`
 
@@ -249,15 +230,12 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 当前待办（仍有效）
 
-- 补 `verification`：Google ✅已配；Bing 待 msvalidate 码；百度验证保留（不关注收录）；360/搜狗 放弃
-- ~~百度收录专项~~ → 百度验证保留但不关注收录，不投专项 SEO；360/搜狗 已放弃（站点不备案）
 - 新引擎破零：字节/华为 提交 sitemap（搜狗随境内引擎放弃）
-- IndexNow 主动推送 ✅已接发布钩子 + 全量推送 935 条（2026-11-05）
-- 首页瘦身（noscript 收敛 9 分类 + `/all/`）
 - 重合标签差异化（仅 macOS 配了 `tagMeta`）
 - 核对 360 的 301 是否单跳
 - 重建爬虫限速（per-UA 方案，放进 `deploy/` + `deploy/nginx-site.conf.example` 补 `limit_req`）
-- 补百度网盘链接（2026-10-28 清空 623 条，补链时按原字段写回）
+- 补百度网盘链接（按原字段写回）
+- 其余见第七节「当前未闭环问题」（verification / 百度 / 下架尾巴 / 首页瘦身等）
 
 ### 功能与内容规划（待评审，只排序未决定）
 
@@ -273,17 +251,11 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ### 变更记录（压缩）
 
-- 2026-11-12 机器人代码整体迁出本站仓库至**私有仓 `mybot`**（站内 `bot/` 目录先整体移入回收站、再由 git 记录 22 个文件的删除，可恢复）：QQ/TG 机器人本体、启动器与运维文档随仓库走，社媒推送脚本（Telegram 频道 / Bluesky）也一并收进该仓。站内面向用户的机器人说明（README、`/about/#qq-bot`、导出脚本 note）保留——服务没停，只是代码换了户口。真实 QQ 号与群号不再出现在公开文档里（**历史提交里仍可见，属已发生的暴露，如需彻底抹除要重写公开仓历史**）。
-- 2026-11-16 详情页相关推荐改「6 主位 + 4 保底轮换」（`render.js` 的 `relatedOf`）：主位仍按标签交集+最新，保底位从同分类活链按 id 尾号做确定性偏移等距轮换取老条目——修「详情页孤岛」：原选样在交集为 0 时退化成最新优先，全站详情页都推同一批新条目，实测 1040 页里 503 页详情间入链 <5；改后降到 54 页、中位 5→8。构建幂等（复跑重新生成 0 个）。
-- 2026-11-10 新增 Telegram 群通道（`telegram_bot.py`，长轮询，与 QQ 共用查询逻辑）；TG 侧网盘名为可点超链接，命令名改拉丁字符。
-- 2026-11-10 TG 与 QQ 拆成两个独立进程：TG 单独跑 `app/telegram_bot.py`，各有各的启停脚本与开机自启，一边重启不影响另一边；`logs/tg.lock` 作单实例锁，避免自启与手动启动双开抢消息。
-- 2026-11-10 新增 QQ 群查询机器人（当时代码在本站仓库 `bot/`，2026-11-12 已迁至私有仓 `mybot`；NapCat + OneBot，群里 `/` 开头免 @ 查资源回夸克链接）；回复版式两次调整，定稿为「名称 ｜ 类型」+ 每网盘一行「网盘名<TAB>链接」、末尾固定「更多资源访问 + /帮助」，并加 `/更多` 翻页处理命中过多；详见第八节。
-- 2026-11-06 加 `static/ads.txt`（AdSense 发布商 `pub-5363695594162175`），构建复制到根目录供 AdSense「ads.txt 片段」验证。
-- 2026-11-02 robots 放开 `/stats.json`（前端 fetch 取数 + Googlebot 渲染需要；`/hit`/`/*/search-index.json`/`/*?q=` 保留）；取消全站阿里云联盟链接。
-- 2026-10-30 复制改富文本 + 复制海报按钮；2026-10-28 清空 623 条百度链接、反馈条扩到许愿。
-- 2026-10-22 分享从页面链接改资源包文本、删四平台按钮；2026-10-21 详情页反馈条/A1 落地。
-- 2026-10-13 docs 多篇合并为单篇总览；2026-10-12 多批下架使全站 676→673→729→671 条、薄内容补写 387 条全达标。
-- 2026-10-10~11 构建改「内容未变不覆盖」+ 内容哈希版本号；标签页宽度归位；7 家零回流爬虫 403；Bing/360 全量推送；相关推荐 6→10。
+- 2026-11-16 详情页相关推荐改「6 主位 + 4 保底轮换」（`render.js` 的 `relatedOf`）：保底位从同分类活链按 id 尾号做确定性偏移等距轮换取老条目，修「详情页孤岛」——详情间入链 <5 的页从 503 降到 54、中位 5→8，构建幂等。
+- 2026-11-12 机器人代码整体迁出本站仓库至**私有仓 `mybot`**：QQ/TG 本体与社媒推送脚本（Telegram 频道 / Bluesky）随仓走，站内 `/about/#qq-bot` 说明保留（服务没停，只是代码换了户口）；真实 QQ 号与群号不再出现在公开文档（**历史提交里仍可见，属已发生的暴露，如需彻底抹除要重写公开仓历史**）。
+- 2026-11-06 加 `static/ads.txt`（AdSense 发布商验证），构建复制到根目录。
+- 2026-11-02 robots 放开 `/stats.json`（前端 fetch 取数 + Googlebot 渲染需要）；取消全站阿里云联盟链接。
+- 2026-10 月：分享改资源包文本与富文本复制、复制海报按钮、反馈条落地、docs 合并单篇、构建「内容未变不覆盖」+ 内容哈希版本号、7 家零回流爬虫 403、Bing/360 全量推送、百度链接清空等——细节见 Git 历史。
 
 ---
 

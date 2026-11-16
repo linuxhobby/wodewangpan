@@ -31,7 +31,6 @@
 # 与 deploy/nginx-site.conf.example 的关系：本脚本按同一套口径（目录式 URL、错误页、
 # gzip、静态缓存、扫描器/AI 爬虫拦截、http 与裸域单跳 301 到 www）自行生成配置，
 # 但不含本站历史改版留下的 301 规则——复制站点用不上那些旧 URL。
-# README.md「方案 A · 一键部署」里有本文件的全文副本，改这里记得同步改那一段。
 set -euo pipefail
 
 readonly DEFAULT_REPO='https://github.com/linuxhobby/wodewangpan.git'
