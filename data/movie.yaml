@@ -3069,6 +3069,14 @@
   date: 2006-01-18
   added: 2026-09-30
   image: mv-156.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "3.0 GB"
+    format: "MKV"
+    tree: |
+      156-侠盗魅影.Bandidas.2006.BluRay.720p.x264.AC3.2Audios-CMCT/
+      侠盗魅影.Bandidas.2006.BluRay.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-157
   title: "穿越火线"
@@ -3081,6 +3089,14 @@
   date: 2012-02-22
   added: 2026-09-30
   image: mv-157.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "3.6 GB"
+    format: "MKV"
+    tree: |
+      157-八月八日.August.8th.2012.BluRay.720p.x264.AC3-CMCT/
+      八月八日.August.8th.2012.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-158
   title: "五日战争"
@@ -3093,6 +3109,14 @@
   date: 2011-06-06
   added: 2026-09-30
   image: mv-158.jpg
+  updated: 2026-11-16
+  files:
+    count: 1
+    size: "2.6 GB"
+    format: "MKV"
+    tree: |
+      158-八月战事.5.Days.of.August.2011.BluRay.720p.x264.AC3-CMCT/
+      八月战事.5.Days.of.August.2011.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-159
   title: "公司职员"
