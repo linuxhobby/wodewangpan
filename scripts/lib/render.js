@@ -345,6 +345,7 @@ function layout({
   rssHref = '/feed.xml',
   iconVersion = '',
   crumbData = {},
+  buildVersion = '',
 }) {
   // 静态资源带版本号：nginx 对 css/js/图片设了 30 天缓存，改了必须换 URL 才会被重新拉取
   const v = assetVersion ? `?v=${assetVersion}` : '';
@@ -430,6 +431,7 @@ ${promoFooter(site)}
 <footer class="foot wrap">
   ${footNav(footNavCurrent, baseUrl)}
   <p>共 ${total} 个资源 · ${esc(site.disclaimer)}</p>
+  ${buildVersion ? `<p class="foot__ver">版本 ${esc(buildVersion)}</p>` : ''}
   ${site.icp ? `<p class="foot__icp">${esc(site.icp)}</p>` : ''}
   ${contactHtml(site.contact, site.qqGroup)}
 </footer>

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
   loadSite,
@@ -297,6 +298,17 @@ const assetVersion = (() => {
 const iconVersion = iconVersionOf(path.join(staticDir, 'favicon.svg'));
 console.log(`  · 图标版本：${iconVersion || '未取到（回退到构建版本号）'}`);
 
+// 站点版本号：取当前提交短哈希，页脚展示；git 不可用（如打包环境）时回退到包版本
+const buildVersion = (() => {
+  try {
+    const hash = execSync('git rev-parse --short HEAD', { cwd: root, encoding: 'utf8' }).trim();
+    if (hash) return hash;
+  } catch {
+    /* 非 git 环境时静默回退 */
+  }
+  return 'v1.0.0';
+})();
+
 const ctxBase = {
   site,
   categories,
@@ -314,6 +326,7 @@ const ctxBase = {
   tagIndex,
   tagMeta: tagCfg.meta,
   newestIds,
+  buildVersion,
 };
 
 // 热门榜快照：stats.json 由服务器 sitestats 每 10 分钟生成、不归构建管；

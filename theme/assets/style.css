@@ -621,6 +621,7 @@ a.tag:hover { background: var(--brand-soft); }
 .foot p { margin: 0; font-size: var(--fs-base); color: var(--muted); line-height: var(--lh-body); }
 /* .foot p 把 margin 归零了，这里补标签名把特异性提到持平、靠后来者取胜，不用 !important */
 p.foot__icp { margin-top: 4px; }
+p.foot__ver { margin-top: 2px; font-size: var(--fs-xs); opacity: .75; }
 p.foot__contact { margin-top: 8px; display: flex; justify-content: center; align-items: center; gap: 14px; }
 .foot__contact a, .foot__contact span { display: inline-flex; align-items: center; padding: 3px; border-radius: var(--r-tag); color: var(--contact-icon); text-decoration: none; }
 .foot__contact a:hover { color: var(--contact-icon-hover); background: var(--fill-hover); }
