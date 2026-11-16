@@ -70,6 +70,9 @@ npm run check:images                 # 配图盘点（分类目录命中 / 孤�
 - **改任何已收录路径都必须同步配 301**：线上 `/etc/nginx/conf.d/wodewangpan.conf` 与
   `deploy/nginx-site.conf.example` 必须保持一致。规则顺序是「历史精确 id → 旧分类页 → 按前缀的泛化详情页」，
   顺序颠倒会让 `ot-007` 被泛化成 `/misc/ot-007/`。换 URL 后 IndexNow 要带 `ALL=1` 全量重推。
+- **标签合并 / 删除同样要配 301**（2026-11-16 首次执行）：旧 `/tag/<slug>/` 要 301 到合并后的标签页，
+  标签若并入分类（如「纪录」并入分类「纪录片」）或整个是作品名，就 301 到对应分类页。
+  规则位置看 `deploy/nginx-site.conf.example` 的「标签词表治理」段，线上同名规则与它保持一致。
 - **新增配图一律写 `static/images/<slug>/`**。`scripts/lib/assets.js` 的 `resolveSource()` 保留旧平铺路径
   兼容双读，只作灰度与跨机分批切换的回退，不是长期口径；`npm run check:images` 会把旧平铺命中与孤儿文件报出来。
   跨机 skill 的 `scripts/lib/site-paths.mjs`（Mac 本机 `~/.workbuddy/skills/quark-resource-sync`、
