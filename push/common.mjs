@@ -77,6 +77,62 @@ export function saveState(stateFile, state) {
   fs.writeFileSync(stateFile, JSON.stringify(state, null, 1));
 }
 
+// ---------- 网盘分享链接（2026-11-16 指挥官定：有什么链接就发什么链接） ----------
+// 顺序即展示顺序，口径与站点 scripts/lib/data.js 的 NETDISK_PRESETS 一致。
+// 此前推送链路只认 quark_url / baidu_url，光鸭等链接被整行丢掉；这里改成通用读取：
+// 预设表覆盖已知网盘，数据里额外出现的任意 *_url 字段（值为 http 链接）也会自动带上，
+// 以后站点新增网盘类型不必再改推送脚本。
+export const NETDISK_PRESETS = [
+  { key: 'quark_url',   code: ['quark_code', 'quark_pwd'],     kind: 'quark',   label: '夸克网盘', short: '夸克' },
+  { key: 'baidu_url',   code: ['baidu_code', 'baidu_pwd'],     kind: 'baidu',   label: '百度网盘', short: '百度' },
+  { key: 'guangya_url', code: ['guangya_code', 'guangya_pwd'], kind: 'guangya', label: '光鸭云盘', short: '光鸭' },
+  { key: 'aliyun_url',  code: ['aliyun_code', 'aliyun_pwd'],   kind: 'aliyun',  label: '阿里云盘', short: '阿里' },
+  { key: 'tianyi_url',  code: ['tianyi_code', 'tianyi_pwd'],   kind: 'tianyi',  label: '天翼云盘', short: '天翼' },
+  { key: 'uc_url',      code: ['uc_code', 'uc_pwd'],           kind: 'uc',      label: 'UC网盘',   short: 'UC' },
+  { key: 'xunlei_url',  code: ['xunlei_code', 'xunlei_pwd'],   kind: 'xunlei',  label: '迅雷网盘', short: '迅雷' },
+  { key: '115_url',     code: ['115_code', '115_pwd'],         kind: '115',     label: '115网盘',  short: '115' },
+  { key: 'mobile_url',  code: ['mobile_code', 'mobile_pwd'],   kind: 'mobile',  label: '移动云盘', short: '移动' },
+];
+
+// 非分享链接字段（海报 / 详情 / 官链 / 资料页等）不进网盘链接区
+const NOT_SHARE_URL = new Set([
+  'image_url', 'poster_url', 'cover_url', 'thumb_url', 'site_url', 'detail_url',
+  'official_url', 'source_url', 'homepage_url', 'tmdb_url', 'douban_url', 'imdb_url',
+]);
+
+/** 从单个 YAML 条目块里抽出全部网盘分享链接（按预设表顺序，未知 *_url 兜底追加）。 */
+function shareLinksOf(part, get) {
+  const out = [];
+  const used = new Set();
+  const cleanUrl = (v) => String(v || '').replace(/^["']|["']$/g, '').trim();
+  const push = (key, preset) => {
+    if (used.has(key)) return;
+    const url = cleanUrl(get(key));
+    if (!/^https?:\/\//i.test(url)) return;   // 只认真实链接，空值/占位不进正文
+    used.add(key);
+    const kind = preset?.kind || key.replace(/_url$/, '');
+    let code = '';
+    for (const c of preset?.code || [`${kind}_code`, `${kind}_pwd`]) {
+      const v = cleanUrl(get(c));
+      if (v) { code = v; break; }
+    }
+    out.push({
+      kind,
+      label: preset?.label || `${kind}网盘`,
+      short: preset?.short || kind,
+      url,
+      code,
+    });
+  };
+  for (const p of NETDISK_PRESETS) push(p.key, p);
+  for (const m of part.matchAll(/^\s*([a-z0-9_]+_url):\s*(.+)$/gmi)) {
+    const key = m[1].toLowerCase();
+    if (NOT_SHARE_URL.has(key)) continue;
+    push(key, NETDISK_PRESETS.find((p) => p.key === key));
+  }
+  return out;
+}
+
 // ---------- 读站点数据 ----------
 // data/*.yaml 是手写 YAML 子集，正则按行抽字段就够，别引入 YAML 解析库。
 export function parseYaml(file) {
@@ -88,13 +144,16 @@ export function parseYaml(file) {
     if (!id) continue;
     const get = (k) => part.match(new RegExp(`^\\s*${k}:\\s*"([\\s\\S]*?)"\\s*$`, 'm'))?.[1]
       ?? part.match(new RegExp(`^\\s*${k}:\\s*([^\\n]+)`, 'm'))?.[1];
+    const links = shareLinksOf(part, get);
     out.push({
       id,
       title: get('title') || '',
       category: get('category') || '',
-      quark: get('quark_url') || '',
-      baidu: get('baidu_url') || '',
-      baiduCode: get('baidu_code') || get('baidu_pwd') || '', // 站点数据实际用 baidu_pwd（2026-11-15 核对 588 条全部如此）
+      // 兼容字段继续保留（二维码 / 判重 / 网盘标签仍会用到），值与 links 同源，不会两边不一致
+      quark: links.find((l) => l.kind === 'quark')?.url || '',
+      baidu: links.find((l) => l.kind === 'baidu')?.url || '',
+      baiduCode: links.find((l) => l.kind === 'baidu')?.code || '', // 站点数据实际用 baidu_pwd（588 条全部如此）
+      links,                         // 平台文案一律按这个数组逐条输出：有什么链接就发什么链接
       desc: get('description') || '',
       date: get('date') || '',
       added: get('added') || '',

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // push/bluesky/bluesky-post.mjs —— Bluesky 平台适配层。
-// 把 wodewangpan 资源站的一条资源发到 Bluesky：默认发详情页链接卡（带海报缩略图）+ 夸克/百度分享链接 + 三标签。
-// 素材全部来自仓库：static/images/<image>、data/<分类>.yaml 的 title/description/quark_url/baidu_url。
+// 把 wodewangpan 资源站的一条资源发到 Bluesky：默认发详情页链接卡（带海报缩略图）+ 全部网盘分享链接 + 三标签。
+// 素材全部来自仓库：static/images/<image>、data/<分类>.yaml 的 title/description/*_url。
+// 2026-11-16 指挥官定：有什么资源链接就发什么链接（夸克 / 百度 / 光鸭 / …），不再只认夸克与百度。
 // 读数据、判重、选片共用 ../common.mjs；本文件只留文案渲染与 AT Protocol 收发。
 //
 // 用法：
@@ -156,16 +157,20 @@ function tagOfTitle(it) {
  */
 function tagsOf(it) {
   const cat = String(it.category || '').replace(/[^\p{L}\p{N}]/gu, '');
-  const netTag = it.quark ? '#夸克网盘' : (it.baidu ? '#百度网盘' : '');
+  // 网盘标签按条目实际发出的第一条链接走（只有光鸭时就是 #光鸭云盘）
+  const netTag = it.links?.length ? `#${it.links[0].label}` : '';
   const parts = [`#${tagOfTitle(it) || cat}`, cat ? `#${cat}` : '', netTag].filter(Boolean);
   return [...new Set(parts)].join(' ');
 }
+/** 网盘链接行：common.mjs 的 links 数组有什么就列什么，不预设只有夸克/百度。 */
+function linkLinesOf(it, suffix = '') {
+  const tail = suffix ? ` ${suffix}` : '';
+  return (it.links || []).map((l) =>
+    `${l.label}：${l.url}${l.code ? `（提取码 ${l.code}）` : ''}${tail}`);
+}
 function buildText(it, { compact = false } = {}) {
   const header = headerOf(it);
-  const linkLines = [
-    it.quark ? `夸克网盘：${it.quark}` : '',
-    it.baidu ? `百度网盘：${it.baidu}${it.baiduCode ? `（提取码 ${it.baiduCode}）` : ''}` : '',
-  ].filter(Boolean);
+  const linkLines = linkLinesOf(it);
   const siteLine = `详情：${itemUrl(SITE_URL, it.id)}`;
   // 订阅号引导行（2026-11-12 用户定）：替换掉 11-10 加的「加入TG群组：https://t.me/wodewangpantop」；
   // 2026-11-15 指挥官定版：详情行提到最前，其后订阅行、网盘链接，末尾三个标签。
@@ -180,19 +185,27 @@ function buildText(it, { compact = false } = {}) {
   // 标题与简介由卡片承担，正文只写「标题+引流语 / TG群 / TG订阅号 / 网盘（点击保存） / 标签」，
   // 不再写详情行（卡片本身就是详情链接）。
   if (compact) {
-    const compactLinks = [
-      it.quark ? `夸克网盘：${it.quark} （点击保存）` : '',
-      it.baidu ? `百度网盘：${it.baidu}${it.baiduCode ? `（提取码 ${it.baiduCode}）` : ''} （点击保存）` : '',
-    ].filter(Boolean);
+    const compactLinks = linkLinesOf(it, '（点击保存）');
     // 空行分隔（2026-11-15 指挥官定）：引流区（TG群 / 订阅号）与网盘链接区分开，视觉上不挤成一团。
-    const lines = [
+    let lines = [
       'TG群：https://t.me/wodewangpantop',
       'TG订阅号：https://t.me/myquark',
       '',
       ...compactLinks,
     ];
     // 标签前也留一个空行（2026-11-15 指挥官定），把标签从链接堆里独立出来。
-    return `${header}，关注更多资源，请加入：\n${lines.join('\n')}\n\n${tags}`;
+    const build = (ls, tgText) =>
+      `${header}，关注更多资源，请加入：\n${ls.join('\n')}${tgText ? `\n\n${tgText}` : ''}`;
+    let out = build(lines, tags);
+    // 300 字硬上限：条目同时有夸克/百度/光鸭时链接区变长，链接行永不砍，
+    // 依次让出引流区两行、再让出标签，保证所有网盘链接都能完整发出去。
+    for (const drop of [/^TG群：/, /^TG订阅号：/]) {
+      if ([...out].length <= MAX) break;
+      lines = lines.filter((l) => !drop.test(l));
+      out = build(lines, tags);
+    }
+    if ([...out].length > MAX) out = build(lines, '');
+    return out;
   }
 
   const desc = (it.desc || '').trim();
@@ -207,7 +220,13 @@ function buildText(it, { compact = false } = {}) {
   }
   const chars = [...desc];
   const body = chars.length <= budget ? desc : chars.slice(0, Math.max(budget - 1, 0)).join('').trim() + '…';
-  return assemble(body, withSite);
+  let out = assemble(body, withSite);
+  // 极端兜底：多条网盘链接把正文顶过 300 字时，依次让出订阅行 / 详情行 / 标签，链接行一条不砍
+  for (const line of [tgLine, siteLine, tags]) {
+    if ([...out].length <= MAX) break;
+    if (line) out = out.replace(line, '');
+  }
+  return out;
 }
 
 function facetsFor(text) {

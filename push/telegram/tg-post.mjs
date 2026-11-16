@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // push/telegram/tg-post.mjs —— Telegram 平台适配层。
 // 把 wodewangpan 资源站的一条资源发到 Telegram 订阅号/频道：
-//   sendPhoto（海报）+ caption（名称 / 描述 / 链接 / 大小 / 标签）
+//   sendPhoto（海报）+ caption（名称 / 描述 / 全部网盘链接 / 大小 / 标签）
+// 2026-11-16 指挥官定：有什么资源链接就发什么链接（夸克 / 百度 / 光鸭 / …），
+// 链接按 data/*.yaml 里实际有的 *_url 逐条输出，不再只认夸克与百度。
 // 读数据、判重、选片共用 ../common.mjs；本文件只留文案渲染与 TG API 收发。
 //
 // 用法：
@@ -111,22 +113,24 @@ function cutDesc(desc) {
 }
 
 /**
- * caption 结构（用户 2026-11-12 定的样例，同日改口径：不写「链接」，明确标网盘名）：
+ * caption 结构（用户 2026-11-12 定的样例；2026-11-16 改：网盘链接按条目实际有的逐条输出）：
  *   名称：…
  *   描述：…（默认 200 字）
  *
- *   夸克：<a href=quark>quark</a>                 ← 条目有 quark_url 才有
- *   百度：<a href=baidu>baidu</a>（提取码 abcd）   ← 条目有 baidu_url 才有
+ *   夸克：<a href=quark>quark</a>                 ← 有 quark_url 才有
+ *   百度：<a href=baidu>baidu</a>（提取码 abcd）   ← 有 baidu_url 才有
+ *   光鸭：<a href=guangya>guangya</a>             ← 有 guangya_url 才有
+ *   …（common.mjs 里 links 数组有什么就列什么，新增网盘类型自动带上）
  *   大小：1.2 GB                                  ← 缺 files.size 整行省略
  *   标签：#游戏 #动作角色扮演 …
  *   查询更多资源请联系 小艾（小艾指向 t.me/wodewangpantop）
- * 超预算时只砍描述；描述压到 MIN_DESC 仍不够就让出百度行；链接、标签、联系行永不截断。
+ * 超预算时只砍描述，再让出站点详情 / 大小，最后才按从后往前让出**非首要**网盘链接；
+ * 第一条网盘链接、标签、联系行永不截断。
  */
 function buildCaption(it) {
-  const q = clean(it.quark), b = clean(it.baidu), bc = clean(it.baiduCode);
-  const linkLines = [];
-  if (q) linkLines.push(`<b>夸克：</b><a href="${esc(q)}">${esc(q)}</a>`);
-  const baiduLine = b ? `<b>百度：</b><a href="${esc(b)}">${esc(b)}</a>${bc ? `（提取码 ${esc(bc)}）` : ''}` : '';
+  const links = it.links || [];
+  const linkLines = links.map((l) =>
+    `<b>${esc(l.short)}：</b><a href="${esc(l.url)}">${esc(l.url)}</a>${l.code ? `（提取码 ${esc(l.code)}）` : ''}`);
   const sizeLine = it.size ? `<b>大小：</b>${esc(clean(it.size))}` : '';
   const siteLine = WITH_SITE_LINK ? `<b>详情：</b><a href="${itemUrl(SITE_URL, it.id)}">${itemUrl(SITE_URL, it.id)}</a>` : '';
   const tagLine = `<b>标签：</b>${hashTags(it).join(' ')}`;
@@ -138,8 +142,7 @@ function buildCaption(it) {
     const lines = [head];
     if (desc) lines.push(`<b>描述：</b>${esc(desc)}`);
     lines.push('');
-    if (q) lines.push(linkLines[0]);
-    if (extra.baidu && baiduLine) lines.push(baiduLine);
+    for (let i = 0; i < extra.linkCount; i++) lines.push(linkLines[i]);
     if (extra.site && siteLine) lines.push(siteLine);
     if (extra.size && sizeLine) lines.push(sizeLine);
     lines.push(tagLine);
@@ -147,21 +150,22 @@ function buildCaption(it) {
     return lines.join('\n');
   };
 
+  const full = { linkCount: linkLines.length, site: !!siteLine, size: !!sizeLine };
+  const extra = { ...full };
+  const cost = (d) => [...assemble(d, extra)].length;
   let desc = cutDesc(clean(it.desc));
-  const cost = (d) => [...assemble(d, { baidu: !!b, site: !!siteLine, size: !!sizeLine })].length;
   if (cost(desc) > MAX_CAPTION) {
     // 从 DESC_LEN 往下一档档退让，先退到 MIN_DESC
-    let n = Math.min(DESC_LEN, MIN_DESC);
-    for (; n >= 20; n -= 10) {
+    for (let n = Math.min(DESC_LEN, MIN_DESC); n >= 20; n -= 10) {
       desc = cutDesc([...clean(it.desc)].slice(0, n).join('') + (clean(it.desc).length > n ? '。' : ''));
       if (cost(desc) <= MAX_CAPTION) break;
     }
-    // 还不够就丢可选行，顺序：站点详情 → 大小 → 百度（网盘链接和标签死保）
-    if (cost(desc) > MAX_CAPTION && siteLine) return assemble(desc, { baidu: !!b, site: false, size: !!sizeLine });
-    if (cost(desc) > MAX_CAPTION && sizeLine) return assemble(desc, { baidu: !!b, site: false, size: false });
-    if (cost(desc) > MAX_CAPTION && baiduLine) return assemble(desc, { baidu: false, site: false, size: false });
   }
-  return assemble(desc, { baidu: !!b, site: !!siteLine, size: !!sizeLine });
+  // 还不够就依次让出可选行：站点详情 → 大小 → 末尾的非首要网盘链接（至少保住第一条）
+  if (cost(desc) > MAX_CAPTION && extra.site) extra.site = false;
+  if (cost(desc) > MAX_CAPTION && extra.size) extra.size = false;
+  while (cost(desc) > MAX_CAPTION && extra.linkCount > 1) extra.linkCount -= 1;
+  return assemble(desc, extra);
 }
 
 // 可见长度（去掉 HTML 标记后 TG 实际计入 1024 的字符数），用于打印核对
@@ -274,9 +278,9 @@ const sendAlbum = (caption, posterPath, qrBuf, id) => {
  * 方案 C 的第二条消息：只发二维码、回复上一条资源卡，让码落在标签**下面**且完全不与海报抢宽度。
  * 广播频道对 reply_parameters 的支持不如群和私聊确定，所以 400 时退化成独立的第二条，不整轮失败。
  */
-async function sendQrFollow(qrBuf, id, replyTo) {
-  const files = [{ field: 'photo', buffer: qrBuf, filename: `${id}-quark-qr.png`, mime: 'image/png' }];
-  const caption = '扫码转存 · 夸克网盘';
+async function sendQrFollow(qrBuf, id, replyTo, label = '夸克网盘') {
+  const files = [{ field: 'photo', buffer: qrBuf, filename: `${id}-netdisk-qr.png`, mime: 'image/png' }];
+  const caption = `扫码转存 · ${label}`;
   try {
     return await tgCall('sendPhoto', { chat_id: CHAT, caption, reply_parameters: { message_id: replyTo } }, files);
   } catch (e) {
@@ -353,7 +357,8 @@ for (let n = 0; n < COUNT; n++) {
   const imgOk = hasImgFile(REPO, it);
   if (!imgOk && !ALLOW_NO_IMAGE) { console.log(`× ${it.id} 无海报，--require-image 生效，跳过`); continue; }
   const tooBig = imgOk && fs.statSync(imgPathFull).size > PHOTO_MAX_BYTES;
-  const qrBuf = NO_QR ? null : await qrPng(clean(it.quark));
+  // 二维码按第一条实际发出的网盘链接生成（没有夸克但有光鸭等条目也照样有码）
+  const qrBuf = NO_QR ? null : await qrPng(it.links?.[0]?.url || clean(it.quark));
 
   console.log(`\n——— 第 ${n + 1} 条 ———`);
   console.log(`id ${it.id} | ${it.category} | 大小 ${it.size || '（缺）'} | 海报 ${imgOk && !tooBig ? it.image : '（无/过大，纯文本）'} | 二维码 ${qrBuf ? `${(qrBuf.length / 1024).toFixed(1)}KB` : '（不发）'}`);
@@ -372,7 +377,7 @@ for (let n = 0; n < COUNT; n++) {
     let r, extra = null;
     if (QR_MODE === 'split') {
       r = mainHasImg ? await sendPhoto(caption, imgPathFull) : await sendText(caption);
-      if (qrBuf) extra = await sendQrFollow(qrBuf, it.id, r.message_id);
+      if (qrBuf) extra = await sendQrFollow(qrBuf, it.id, r.message_id, it.links?.[0]?.label || '夸克网盘');
     } else if (qrBuf) {
       r = mainHasImg ? await sendAlbum(caption, imgPathFull, qrBuf, it.id) : await sendPhotoBuf(caption, qrBuf, `${it.id}-quark-qr.png`);
     } else {
