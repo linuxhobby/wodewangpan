@@ -195,13 +195,13 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 ## 八、功能模块
 
-### QQ/TG 群查询机器人（2026-11-10 上线，2026-11-12 代码迁出）
+### QQ/TG 群查询机器人（2026-11-10 上线，2026-11-12 迁出，2026-11-17 并回本仓）
 
-- **机器人代码不在本站仓库**：QQ/TG 机器人整体迁至私有仓 `mybot`（原站内 `bot/`），部署、配置、NapCat 与 OneBot 的运维细节和踩坑记录都在那边的 `bot/README.md`，本文只保留与站点有关的事实。
+- **机器人代码已回到本站仓库**（2026-11-17）：`bot/` 目录 + `push/` 社媒推送并回本仓，部署、配置与踩坑记录见根目录 `AGENTS.md` §11 与 `bot/README.md`；本文只保留与站点有关的事实。
 - **与站点构建从来互不影响**：`npm run lint` 只扫 `scripts theme/assets`，`scripts/build.js` 只从显式路径取文件、从不扫描仓库根目录，所以机器人代码既不参与构建、也不会被打进 `public/` 上线。
-- **只读线上站**：数据源只有 `/search-index.json` 与 `/<slug>/<id>/` 两个 HTTP GET（mybot 私有仓需同步该口径），不读 `data/*.yaml`，不依赖仓库。
+- **只读线上站**：数据源只有 `/search-index.json` 与 `/<slug>/<id>/` 两个 HTTP GET（`bot/` 代码已在本仓，改口径时同仓同步），不读 `data/*.yaml`，不依赖仓库。
 - 站内面向用户的指令说明在 `/about/#qq-bot`（`scripts/lib/render.js` 的 `qqBotBlock` 与 `theme/assets/style.css` 的 `.cmd-box`），那属于站点内容，不因机器人代码迁出而删除。
-- 指令清单、回复版式、翻页与限频、QQ/TG 双进程架构等细节以私有仓 `mybot` 的 `bot/README.md` 为准，此处不再重复。
+- 指令清单、回复版式、翻页与限频、QQ/TG 双进程架构等细节以 `bot/README.md` 与 `AGENTS.md` §11 为准，此处不再重复。
 
 ### 热门榜 `/hot/`
 
@@ -253,6 +253,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 - 2026-11-16 详情页相关推荐改「6 主位 + 4 保底轮换」（`render.js` 的 `relatedOf`）：保底位从同分类活链按 id 尾号做确定性偏移等距轮换取老条目，修「详情页孤岛」——详情间入链 <5 的页从 503 降到 54、中位 5→8，构建幂等。
 - 2026-11-12 机器人代码整体迁出本站仓库至**私有仓 `mybot`**：QQ/TG 本体与社媒推送脚本（Telegram 频道 / Bluesky）随仓走，站内 `/about/#qq-bot` 说明保留（服务没停，只是代码换了户口）；真实 QQ 号与群号不再出现在公开文档（**历史提交里仍可见，属已发生的暴露，如需彻底抹除要重写公开仓历史**）。
+- 2026-11-17 私有仓 `mybot` 并回本仓库：`bot/`、`push/`、`tools/feishu-reports/` 落位，mybot 33 条提交经 `git filter-repo` 剥离凭据后并入；`bot/config.json` 与 `push/**/*.env` 恢复不入库，凭据只留运行机本地。
 - 2026-11-06 加 `static/ads.txt`（AdSense 发布商验证），构建复制到根目录。
 - 2026-11-02 robots 放开 `/stats.json`（前端 fetch 取数 + Googlebot 渲染需要）；取消全站阿里云联盟链接。
 - 2026-10 月：分享改资源包文本与富文本复制、复制海报按钮、反馈条落地、docs 合并单篇、构建「内容未变不覆盖」+ 内容哈希版本号、7 家零回流爬虫 403、Bing/360 全量推送、百度链接清空等——细节见 Git 历史。
@@ -266,8 +267,8 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 | 项 | 路径 |
 |---|---|
 | 仓库 | macOS `/Users/marco.chan/Documents/GitHub/wodewangpan`；Windows `C:\Users\marco\Github\wodewangpan` |
-| 机器人代码 | **私有仓 `mybot`**：`C:\Users\marco\Github\mybot\bot`（2026-11-12 从站内 `bot/` 迁出并删除站内副本；进程与开机自启均已指向新目录） |
-| 远端 | `git@github.com:linuxhobby/wodewangpan.git`（公开）；机器人与社媒推送远端 `https://github.com/linuxhobby/mybot`（私有） |
+| 机器人代码 | 本仓库 `bot/`（2026-11-17 并回；Windows 机检出路径 `C:\Users\marco\Github\wodewangpan\bot`，进程与开机自启指回仓库目录） |
+| 远端 | `git@github.com:linuxhobby/wodewangpan.git`（公开；2026-11-17 起机器人与社媒推送代码同仓） |
 | 线上 | https://www.wodewangpan.top |
 | 技能真身 | `~/.workbuddy/skills/`（`quark-resource-sync` / `quarkclouddrive` / `quark-upload-share`）；`~/.codebuddy` 为历史目录 |
 | 凭据 | `~/.workbuddy/skills/quark-resource-sync/config.env`（含凭据，不写进文档） |

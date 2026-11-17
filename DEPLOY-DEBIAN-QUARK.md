@@ -24,7 +24,7 @@
 | 编排脚本 | 本文附录 | `~/share-update-cron.mjs` | 整合了原 4 个辅助脚本的逻辑 |
 | quarkclouddrive CLI | `~/.workbuddy/skills/quarkclouddrive/` | 同（可用 `QK_SKILL_DIR` 覆盖） | skill 整个目录，含 `scripts/quark-drive.cjs` |
 | 夸克登录态 | `.../quarkclouddrive/workbuddy/config.json` | 同 | **cookie，敏感，绝不进 git**，需 scp |
-| 飞书卡片脚本 | `C:/Users/marco/Scripts/wodewangpan-share-update-feishu.mjs` | `~/Scripts/...`（可用 `QK_FEISHU_SCRIPT` 覆盖） | 从 mybot 之外单独拷 |
+| 飞书卡片脚本 | `tools/feishu-reports/wodewangpan-share-update-feishu.mjs`（2026-11-17 起在仓库内） | 同仓库路径（可用 `QK_FEISHU_SCRIPT` 覆盖） | 随仓库分发，无需单独拷 |
 | lark-cli 绑定 | WorkBuddy 的 lark-cli | 同机 WorkBuddy | 脚本走 `~/.workbuddy/binaries/.../@larksuite/cli/scripts/run.js`，需当前绑定应用为「我的网盘」`cli_aa56dbd9dab8dd0f` |
 | 中间文件目录 | `~/.workbuddy/quark-sync-cache/` | 同（可用 `QK_CACHE_DIR` 覆盖） | 脚本自建，落 candidates/results/verify/payload |
 
