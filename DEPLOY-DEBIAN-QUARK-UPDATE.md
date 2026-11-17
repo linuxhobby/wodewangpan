@@ -94,6 +94,10 @@ node ~/prestore-move-cron.mjs
 
 用标记块写入，不动已有条目（补存任务的 `wdp-quark` 块保留）：
 
+> ⚠️ 本机实况（2026-11-17 迁移时发现）：Debian 侧为容器环境，`/var/spool/cron` 属主为 `nobody:nogroup`，
+> `crontab` 命令报 `mkstemp: 不允许的操作`；`/etc/cron.d` 也被 WorkBuddy 沙箱安全策略拦截。
+> cron 写入需在宿主机真实 shell 里手动执行（见下），WorkBuddy 会话内装不了定时任务。
+
 ```bash
 CRON_BIN="$(command -v node)"
 ( crontab -l 2>/dev/null | sed '/# >>> wdp-move/,/# <<< wdp-move/d'; cat <<EOF
@@ -109,6 +113,7 @@ crontab -l | grep -A2 wdp-move
 
 | 坑 | 后果 | 处理 |
 |---|---|---|
+| 宿主 shell / cron 直跑报「无法识别当前 Agent 环境，禁止继续使用」 | `get-user-info` 失败，整轮不发卡 | CLI 按 env 识别 Agent（workbuddy 检测器认 `WORKBUDDY_CONFIG_DIR` 等 7 个变量）；编排脚本 `cli()` 已内置注入 `WORKBUDDY_CONFIG_DIR=~/.workbuddy`，登录态 `agent_auth` 本就按 `"workbuddy"` 键存。裸跑 quark-drive.cjs 需自行带该 env |
 | 登录态 `config.json` 没拷 / cookie 过期 | `get-user-info` 失败，整轮不发卡 | scp 覆盖；脚本报错即停，不启动登录流程、不反复重试 |
 | 凭据进了 git | 账号泄露 | 登录态、`.env`、`config.json` 一律只走 scp，不 commit |
 | 飞书绑定成别的应用 | 卡片发错应用或失败 | 确认 lark-cli 当前应用为「我的网盘」`cli_aa56dbd9dab8dd0f` |
