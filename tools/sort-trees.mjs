@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// sort-trees：把 data/*.yaml 里已有的 files.tree 按 scripts/lib/tree-sort.mjs 的规则重排成有序清单。
+// sort-trees：把 data/*.yaml 里已有的 files.tree 按 tools/lib/tree-sort.mjs 的规则重排成有序清单。
 //
 // 为什么单独一个工具：fill-files 只给「还没有 files: 块」的条目写清单，已有清单的条目它不碰，
 // 所以历史上抓下来的 67 条 tree 仍是夸克接口的内部顺序（乱序）。这个工具负责回填那批存量。

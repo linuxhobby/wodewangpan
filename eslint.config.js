@@ -8,7 +8,7 @@ import globals from 'globals';
  */
 export default [
   {
-    files: ['scripts/**/*.{js,mjs}', 'theme/assets/**/*.js'],
+    files: ['scripts/**/*.{js,mjs}', 'tools/**/*.{js,mjs}', 'theme/assets/**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

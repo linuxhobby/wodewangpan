@@ -13,7 +13,7 @@ import {
   normalizeResources,
   orderCategories,
   todayShanghai,
-} from './lib/data.js';
+} from '../scripts/lib/data.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);

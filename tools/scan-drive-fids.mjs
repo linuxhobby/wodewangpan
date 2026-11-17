@@ -19,7 +19,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadResources } from './lib/data.js';
+import { loadResources } from '../scripts/lib/data.js';
 import { QUARK_CLI as CLI } from './lib/quark-cli.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');

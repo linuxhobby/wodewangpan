@@ -12,7 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SERIAL_FILES, IDLE_DAYS, parseSerialFile, itemState } from './lib/serials.mjs';
-import { todayShanghai } from './lib/data.js';
+import { todayShanghai } from '../scripts/lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const today = todayShanghai();

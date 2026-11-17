@@ -11,7 +11,7 @@
 // 连载轮询（2026-11-10 起）：电视剧 / 动漫的夸克目录会持续追加资源，首份清单写完就过期。
 // 每轮例行顺带抽查 1 条「已有 files: 块」的剧集，重抓盘端目录；只有内容真变了才整体
 // 重写 files 块并写当天 updated，没变一个字都不写。静止满 60 天降为低频复查，永不宣称完结。
-// 判定口径只在 scripts/lib/serials.mjs，list-ongoing 与本工具共用，不要另写一份。
+// 判定口径只在 tools/lib/serials.mjs，list-ongoing 与本工具共用，不要另写一份。
 //
 // 待办扫描（2026-11-10 起）：trending-sync 建的是空编号目录，正片由人工转存。补齐队列按
 // added 升序先补老资源，新空目录排在最末发现太慢。每轮另抽查 3 条「最近入库且无清单」的
@@ -22,7 +22,7 @@
 // last_episode_to_air（播出日期是精确事实）。最近 7 天播了新集且在播的剧，打印 [追更提醒]
 // 推给飞书，让人确认盘端要不要追。只提醒、不解析也不写入「还差几集」的结论——
 // tree 会截断 40 行、混 .xltd.cfg、动漫分类里还有电影和合辑，集数不是可靠事实。
-// 凭据只读环境变量或本机 skill 的 config.env（scripts/lib/tmdb.mjs），匹配不确定就静默跳过。
+// 凭据只读环境变量或本机 skill 的 config.env（tools/lib/tmdb.mjs），匹配不确定就静默跳过。
 //
 // 队列顺序：待补条目按 added（入库时间）升序扫描，最老的资源先补；缺 added 的排最后。
 // 写入额度：--limit 是「本次要写几条」，不是「本次看几条」。占位目录 / 抓取失败不占额度，
@@ -50,7 +50,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sortTree } from './lib/tree-sort.mjs';
-import { todayShanghai } from './lib/data.js';
+import { todayShanghai } from '../scripts/lib/data.js';
 import { QUARK_CLI as CLI } from './lib/quark-cli.mjs';
 import {
   SERIAL_FILES,

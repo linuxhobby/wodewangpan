@@ -13,7 +13,7 @@ import path from 'node:path';
 const sharpOf = async () => (await import('sharp')).default;
 import yaml from 'js-yaml';
 import { esc } from '../theme/assets/card.js';
-import { CAT_STYLE, ICONS } from './lib/assets.js';
+import { CAT_STYLE, ICONS } from '../scripts/lib/assets.js';
 
 const W = 1200;
 const H = 630;

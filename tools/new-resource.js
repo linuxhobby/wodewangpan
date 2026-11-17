@@ -3,7 +3,7 @@ import readline from 'node:readline/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // 分类 → data 文件映射与副标口径收口在 lib/data.js（fill-title.mjs 同源），勿另抄
-import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, isLongTitle, todayShanghai } from './lib/data.js';
+import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, isLongTitle, todayShanghai } from '../scripts/lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 

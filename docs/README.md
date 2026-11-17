@@ -127,14 +127,14 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 - 禁止：关键词堆砌、编造事实、空洞形容词、复用同段、**正文用破折号**（改逗号/冒号）。
 - 特殊字段别自己写：`【第 N 季 · 共 M 集】` 与 `｜TMDB 8.5` 由 `fill-desc.mjs` 接回。
 - 各分类侧重：软件（干什么/痛点/差异；系统镜像等写版本，非影视 `date` 填版本发布日）、电子书（作者与体裁/主张/读者）、游戏（版本/平台/内容）、纪录片（题材/视角）、电视剧（题材/主线）、课程（内容/节数/基础/学完能做）。
-- 批量补写工具链：正文放 `.tmp/desc-draft.json`（`{ "id": "新正文" }`）→ `node scripts/fill-desc.mjs`（空跑）→ `--apply` 落盘（只改 description，自动接回头尾）。
+- 批量补写工具链：正文放 `.tmp/desc-draft.json`（`{ "id": "新正文" }`）→ `node tools/fill-desc.mjs`（空跑）→ `--apply` 落盘（只改 description，自动接回头尾）。
 
 ### 配图：图源与兜底
 
 - 放 `static/images/<slug>/`（按分类分目录），文件名 = id；产物 `/img/<id>-*.webp` 仍按 id 平铺，不受影响。卡片 240×360 `fit:cover`，源图宽 ≥240 即达标（维基 ~256×364 够用）。
-- **真实素材优先**：Wikimedia ✅首选（带浏览器 UA）／ TMDB 海报 ✅ ／ iTunes 512 ✅ ／ simple-icons ✅ ／ 豆瓣图书 ✅（电子书主力）／ weserv 代理 ✅；Fandom／MobyGames／Google Books ❌。课程无 TMDB 海报：官方图→维基→`scripts/poster.mjs icon` 合成。
+- **真实素材优先**：Wikimedia ✅首选（带浏览器 UA）／ TMDB 海报 ✅ ／ iTunes 512 ✅ ／ simple-icons ✅ ／ 豆瓣图书 ✅（电子书主力）／ weserv 代理 ✅；Fandom／MobyGames／Google Books ❌。课程无 TMDB 海报：官方图→维基→`tools/poster.mjs icon` 合成。
 - **假图识别**：下载完 `file` 看 image/JPEG/PNG 且宽 ≥200；出图必须打开看一眼（`app.js` 取图、图标偏小、identicon 假头像只有看图能发现）。
-- **自绘兜底** `scripts/poster.mjs`（douban/book/icon/set/scene 五模式）+ `scripts/share-poster.mjs`（首页品牌分享卡 `static/share.jpg`，改站名/分类后重跑）。
+- **自绘兜底** tools/poster.mjs（douban/book/icon/set/scene 五模式）+ tools/share-poster.mjs（首页品牌分享卡 `static/share.jpg`，改站名/分类后重跑）。
 
 ### 三个 skill
 
@@ -290,12 +290,12 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 配图/封面：
 
 ```bash
-node scripts/poster.mjs douban --title "书名" --out static/images/ebook/bk-001.jpg   # 抓豆瓣正版封面（电子书优先）
-node scripts/poster.mjs book   --title "书名" --out static/images/ebook/bk-002.jpg   # 豆瓣查无此书时生成兜底
-node scripts/poster.mjs icon   --icon <图标> --out static/images/software/app-001.png   # 图标合成竖版
-node scripts/poster.mjs set    --title "套装名" --out static/images/ebook/bk-006.jpg # 套装深色封面
-node scripts/poster.mjs scene  --preset silk --out static/images/misc/ot-xxx.jpg     # 编辑式主题版式
-node scripts/share-poster.mjs  # 改完站点配置后重跑，刷新 static/share.jpg
+node tools/poster.mjs douban --title "书名" --out static/images/ebook/bk-001.jpg   # 抓豆瓣正版封面（电子书优先）
+node tools/poster.mjs book   --title "书名" --out static/images/ebook/bk-002.jpg   # 豆瓣查无此书时生成兜底
+node tools/poster.mjs icon   --icon <图标> --out static/images/software/app-001.png   # 图标合成竖版
+node tools/poster.mjs set    --title "套装名" --out static/images/ebook/bk-006.jpg # 套装深色封面
+node tools/poster.mjs scene  --preset silk --out static/images/misc/ot-xxx.jpg     # 编辑式主题版式
+node tools/share-poster.mjs  # 改完站点配置后重跑，刷新 static/share.jpg
 ```
 
 资源同步 skill（`S=~/.workbuddy/skills/quark-resource-sync/scripts`）：

@@ -11,10 +11,10 @@
     "build": "node scripts/build.js",
     "serve": "node scripts/serve.js",
     "dev": "node scripts/build.js && node scripts/serve.js",
-    "new": "node scripts/new-resource.js",
+    "new": "node tools/new-resource.js",
     "audit:css": "node scripts/audit-css.js",
-    "lint": "eslint scripts theme/assets",
-    "list:short": "node scripts/list-short-desc.mjs",
+    "lint": "eslint scripts tools theme/assets",
+    "list:short": "node tools/list-short-desc.mjs",
     "check:images": "node scripts/check-images.mjs"
   },
   "dependencies": {

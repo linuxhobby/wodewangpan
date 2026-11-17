@@ -9,7 +9,7 @@
  * 分类口径：
  *  - 适用副标：游戏 / 软件 / 电子书 / 课程 / 其他 —— 工具、资料类，一句话说清「是什么/干什么用」。
  *  - 不适用副标：电影 / 电视剧 / 动漫 / 纪录片 —— 标题就是作品名，
- *    scripts/lib/tmdb.mjs 的剧名检索、季号识别、追更提醒与 TMDB 热门同步都按精确片名匹配，
+ *    tools/lib/tmdb.mjs 的剧名检索、季号识别、追更提醒与 TMDB 热门同步都按精确片名匹配，
  *    加副标会打断这些链路；详情页 <title> 也已由 render.js 拼了年份 + 分类后缀。
  *  - 已经自带副标（` - ` / `: ` / 括号 / 圆点 / 破折号）或中文长名的条目不再叠加。
  *
@@ -32,7 +32,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, isLongTitle } from './lib/data.js';
+import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, isLongTitle } from '../scripts/lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');

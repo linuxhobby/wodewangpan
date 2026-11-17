@@ -22,7 +22,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadResources, normalizeResources, bodyLength, MIN_DESC } from './lib/data.js';
+import { loadResources, normalizeResources, bodyLength, MIN_DESC } from '../scripts/lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const argv = process.argv.slice(2);

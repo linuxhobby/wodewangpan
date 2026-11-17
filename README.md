@@ -237,12 +237,21 @@ static/
   share.jpg          # 首页品牌分享卡（1200×630），构建时拷到站点根目录供 og:image 用
   images/            # 配图，按分类 slug 分子目录：images/<slug>/<id>.jpg / .png / .webp / .svg（产物 /img/ 仍按 id 平铺）
 theme/assets/        # 前端样式与脚本，构建时拷到 public/assets/
-scripts/             # 站点脚本单目录：构建 / 预览 / 内容运维工具（lib/ 是构建核心：读数据、出图片、渲染页面）
+scripts/             # 站点脚本目录：构建 / 预览（lib/ 是构建核心：读数据、出图片、渲染页面）
   sitestats.py           # 访问统计脚本（VPS 方案用到）
-  share-poster.mjs       # 生成首页品牌分享卡 static/share.jpg（改站点配置后重跑）
+tools/                # 工具目录：数据采集与内容生产（依赖夸克 CLI / TMDB 凭据，站点构建不引用）
+  fill-files.mjs         # 补文件清单 files: 块（连载轮询、待办扫描）
+  scan-drive-fids.mjs    # 扫夸克 SHARE 目录生成 config/drive-fids.json
+  sort-trees.mjs         # 回填 files.tree 行序（幂等，不动内容与日期）
+  list-ongoing.mjs       # 只读盘点连载条目状态
+  new-resource.js        # 交互式新增资源条目（npm run new）
   fill-desc.mjs          # 把 .tmp/desc-draft.json 里的简介写回 YAML（自动接回【季/集】前缀与 ｜TMDB 后缀，--strict 拦不合格稿）
+  fill-title.mjs         # 批量补标题
   list-short-desc.mjs    # 列出正文不足指定字数的条目（npm run list:short）
   poster.mjs             # 海报/封面生成器，单入口五模式：book（生成书封兜底）/ icon（图标合成竖版）/ set（套装深色封面）/ scene（编辑式主题版式，saas/arch/silk/dl 预设）/ douban（抓豆瓣正版封面）
+  share-poster.mjs       # 生成首页品牌分享卡 static/share.jpg（改站点配置后重跑）
+  export-all-resources.mjs # 导出全部资源 Markdown 清单（群机器人用）
+  lib/                   # 工具专用共享库：quark-cli（夸克 CLI 探测）/ serials（连载轮询口径）/ tree-sort（目录树排序）/ tmdb（TMDB 查询）
 docs/                # 经验类文档（已合并为单一 README.md，含建站/内容/SEO/待办/规划），见 docs/README.md
 deploy/              # 部署用：setup-vps.sh 一键部署、Nginx 配置示例、自动更新脚本、统计日志格式、搜索引擎提交脚本
 public/              # 构建产物，部署这个目录（本目录不入库）
