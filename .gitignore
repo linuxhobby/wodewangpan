@@ -63,3 +63,8 @@ posted.json
 # 本仓库公开，凭据一律不进 git（历史已用 filter-repo 清洗），真身只留运行机本地
 bot/config.json
 push/**/*.env
+
+# wdp-scheduler 常驻调度器运行态（deploy/wdp-scheduler/）
+deploy/wdp-scheduler/logs/
+deploy/wdp-scheduler/lastrun.json
+deploy/wdp-scheduler/*.pid

@@ -555,6 +555,7 @@ QQ 端（NapCat / OneBot）已迁至绿联 NAS Docker，本仓库不含其代码
 | `push/*/wodewangpan-*.env` | 两个推送脚本的现役凭据，**运行机本地，不入库** |
 | `tools/feishu-reports/` | 5 个飞书简报脚本（fill-files / 资源同步等例行任务的汇报端） |
 | `deploy-cron.sh` | Debian cron 推送一键部署（幂等，凭据走 scp） |
+| `deploy/wdp-scheduler/` | TG / Bluesky 推送**常驻调度器**（不依赖 LLM / WorkBuddy，:08 TG、:09 Bluesky，崩溃自重启）；与 `deploy-cron.sh` 二选一，严禁同时开（见其 README） |
 
 ### 11.4 运行（TG 机器人，Windows 机）
 
@@ -612,6 +613,8 @@ TG 推送的 caption 末尾固定一行「查询更多资源请联系 [小艾](h
 | 我的网盘.资源推送到 Bluesky | 每小时第 9 分钟（`BYMINUTE=9`，起点对齐） | `37f6dfb3-76c2-46d3-9352-8aa4202ba3af` |
 
 调度口径（2026-11-15 核实，别再按「每 2 小时」描述）：两个任务都是 `FREQ=HOURLY;INTERVAL=1`，各自每小时发 1 条（2026-11-16 起 TG 在 :08、Bluesky 在 :09，相差 1 分钟）。WorkBuddy 调度器的 HOURLY 分支是「上次运行 + 1 小时」滚动（`computeHourlyNextRunAt` 只加 intervalHours，不按 BYHOUR/BYMINUTE 对齐），所以 `BYMINUTE` 仅用于界面显示和 validFrom 起点对齐，逐轮会随发帖耗时后移几十秒。要长期严格落在固定分钟，只能靠脚本层门控或系统计划任务，不要误以为是 rrule 在保证。
+
+**脱离 LLM 的调度（2026-11-17 并入）**：Debian 机可用 `deploy/wdp-scheduler/control.sh`（常驻调度器，:08 / :09）或 `deploy-cron.sh`（系统 cron，:03 / :05）独立驱动 push/ 脚本，两者**二选一**；与上表 WorkBuddy 自动化任务并存会每小时双发，迁移时先停掉自动化任务再启用。
 
 ### 11.6 代码权威源
 
