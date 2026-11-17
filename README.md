@@ -261,3 +261,10 @@ public/              # 构建产物，部署这个目录（本目录不入库）
 
 经验类文档已合并为单一 [`docs/README.md`](docs/README.md)，按「铁律 / 样式 / 配置 / 构建 / 部署 / 内容生产 / SEO / 功能模块 / 待办规划 / 环境速查」分节，覆盖建站、内容生产、SEO 与待办变更。结论只写一份，过程留 Git 历史。
 
+
+## 机器人与社媒推送（2026-11-17 并自 mybot 仓）
+
+- `bot/` — Telegram 群查询机器人（Python 标准库），失效反馈走飞书，用法见 [`bot/README.md`](bot/README.md)
+- `push/` — 资源站 → Telegram 频道 / Bluesky 的定时推送脚本（Node.js）
+- ⚠️ 本仓库公开：`bot/config.json` 与 `push/**/*.env` 含真实凭据，**一律不进 git**（已加 .gitignore，历史已清洗），凭据只留各运行机本地
+- QQ 群查询机器人已迁至绿联 NAS Docker，不在本仓库

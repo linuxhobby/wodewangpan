@@ -40,3 +40,26 @@ skills-lock.json
 config.env
 
 # （2026-11-12 机器人已迁至私有仓 mybot，原 bot/**/qr-*.png 两条临时图规则随之移除）
+# 私有仓：凭据按指挥官口径原样入库（config.json / *.env 不再排除）
+# 但运行态与可再生垃圾永远不进 git——聊天日志里有用户 id 与会话内容，属隐私不是配置
+logs/
+__pycache__/
+*.pyc
+*.pyo
+*.lnk
+
+# 扫码面板/桌面落盘的一次性二维码临时图
+bot/icons/qr-*.png
+bot/**/qr-*.png
+
+# Telegram / Bluesky 判重记录：现网状态，只留本机（删了会重复发）
+posted.json
+*.state.json
+
+# WorkBuddy 自动化在本目录留下的本地运行态（memory/automations 等），不进 git
+.workbuddy/
+
+# ===== 2026-11-17 mybot 并入后新增 =====
+# 本仓库公开，凭据一律不进 git（历史已用 filter-repo 清洗），真身只留运行机本地
+bot/config.json
+push/**/*.env

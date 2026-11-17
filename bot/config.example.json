@@ -1,0 +1,22 @@
+{
+  "common": {
+    "site_url": "https://www.wodewangpan.top"
+  },
+  "telegram": {
+    "enabled": true,
+    "embedded": false,
+    "token": "",
+    "allowed_chats": [],
+    "reply_mode": "group",
+    "subscribe_url": "https://t.me/myquark",
+    "display_name": "",
+    "private_max_results": 10,
+    "proxy": "",
+    "poll_timeout": 25,
+    "allow_private": true,
+    "cooldown_seconds": 3,
+    "global_rate_per_minute": 20,
+    "reply_to_any_text": false,
+    "welcome_enabled": true
+  }
+}
