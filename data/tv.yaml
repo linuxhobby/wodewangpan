@@ -3030,17 +3030,18 @@
   date: 2025-09-22
   added: "2026-11-08 10:00"
   image: tv-092.jpg
-  updated: 2026-11-11
+  updated: 2026-11-19
   files:
-    count: 3
-    size: "4.4 GB"
-    format: "MKV×3"
+    count: 4
+    size: "5.9 GB"
+    format: "MKV×4"
     tree: |
       092-塔尔萨之王-第四季 Tulsa King Season 3‎ (2025)/
       塔尔萨之王 第四季 Tulsa King Season 4‎ (2026)/
       Tulsa.King.S04E01.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
       Tulsa.King.S04E02.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
       Tulsa.King.S04E03.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
+      Tulsa.King.S04E04.2026.1080p.NowPlayer.WEB-DL.AAC2.0.H.264.mkv
 
 - id: tv-093
   title: "电幻国度"
