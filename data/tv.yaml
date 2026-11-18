@@ -1,4 +1,4 @@
-# 电视剧资源（194 条）
+# 电视剧资源（195 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3765,3 +3765,26 @@
   date: 2026-11-18
   added: "2026-11-19 03:50"
   image: tv-194.jpg
+
+- id: tv-195
+  title: "LOST10"
+  category: 电视剧
+  tags: ["电视剧", "悬疑", "LOST10 LOST10"]
+  quark_url: "https://pan.quark.cn/s/4d6cc9e70eb4"
+  description: "【第 1 季 · 共 10 集】以北海道严酷的大自然为舞台，一场名为「支樺岳事件」的登山遇难事故揭开故事的序幕。 刑警小驹与保险调查员联手追查事故真相。 然而，幸存游客、导游及相关人士的证词却相互矛盾。 这起意外背后，隐藏着错综复杂的背叛、巨大权力介入与人性的严峻考验。 面对各怀鬼胎的关键人物，两人能否在层层「迷失」中拼凑出残酷真相？｜TMDB 8.8"
+  date: 2026-10-16
+  added: 2026-11-18
+  image: tv-195.jpg
+  updated: 2026-11-19
+  files:
+    count: 5
+    size: "15.7 GB"
+    format: "MKV×5"
+    tree: |
+      195-LOST10（2026）/
+      S01/
+      LOST10.S01E01.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
+      LOST10.S01E02.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
+      LOST10.S01E03.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
+      LOST10.S01E04.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
+      LOST10.S01E05.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
