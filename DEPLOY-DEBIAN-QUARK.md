@@ -5,6 +5,8 @@
 > TG / Bluesky 两条推送已迁移完成并验收，旧部署文档不再保留。
 > 本文不含任何凭据值；`<USER>` / `<DEBIAN_IP>` 按实际替换。
 
+> 2026-11-18 更新：编排脚本已并入本仓库 `tools/quark-cron/`，cron 安装走 `deploy/install-quark-cron.sh`，本文不再内嵌脚本全文。
+
 ## 1. 这个任务和 TG / Bluesky 的本质区别
 
 | | TG / Bluesky 推送 | 本任务（夸克分享补存） |
@@ -15,13 +17,13 @@
 | 副作用 | 对外发帖，判重靠本地 json | **网盘写操作**（`saveas-update` 增量转存），有资源目录红线 |
 
 关键：原任务 prompt 里的大量判断（分页取完、41043/41040 语义、疑似新建目录判据、msg 原样展示）此前由 LLM 现场做。
-迁移方案把这些判断**固化进一个自包含编排脚本** `share-update-cron.mjs`（本文附录全文），cron 每天 17:20 直跑，无需 LLM。
+迁移方案把这些判断**固化进一个自包含编排脚本** `tools/quark-cron/share-update.mjs`（已入库），cron 每天 17:20 直跑，无需 LLM。
 
 ## 2. 依赖清单（必须全部搬到 Debian）
 
 | 依赖 | 本机路径 | Debian 默认路径 | 说明 |
 |---|---|---|---|
-| 编排脚本 | 本文附录 | `~/share-update-cron.mjs` | 整合了原 4 个辅助脚本的逻辑 |
+| 编排脚本 | 仓库 `tools/quark-cron/share-update.mjs` | 同（随 `git pull` 更新） | 2026-11-18 入库，整合原 4 个辅助脚本逻辑 |
 | quarkclouddrive CLI | `~/.workbuddy/skills/quarkclouddrive/` | 同（可用 `QK_SKILL_DIR` 覆盖） | skill 整个目录，含 `scripts/quark-drive.cjs` |
 | 夸克登录态 | `.../quarkclouddrive/workbuddy/config.json` | 同 | **cookie，敏感，绝不进 git**，需 scp |
 | 飞书卡片脚本 | `tools/feishu-reports/wodewangpan-share-update-feishu.mjs`（2026-11-17 起在仓库内） | 同仓库路径（可用 `QK_FEISHU_SCRIPT` 覆盖） | 随仓库分发，无需单独拷 |
@@ -29,6 +31,7 @@
 | 中间文件目录 | `~/.workbuddy/quark-sync-cache/` | 同（可用 `QK_CACHE_DIR` 覆盖） | 脚本自建，落 candidates/results/verify/payload |
 
 > 环境注记：CLI 和飞书脚本内部已用 `os.homedir()` 解析路径，跨平台；原 prompt 里的 `C:/Users/marco/...` 全部不要带到 Debian。
+> 并入仓库后，编排脚本按自身位置定位仓库内飞书脚本（`tools/feishu-reports/`），本机 `~/Scripts/` 副本不再是依赖；`QK_FEISHU_SCRIPT` 仍可覆盖。
 > `install.sh` 每轮更新 skill 的行为在脚本里**故意去掉了**（Debian 上没人值守，且它可能重建登录态配置），改成人工按需更新 skill。
 
 ## 3. 操作步骤（顺序固定）
@@ -41,8 +44,8 @@ Windows 侧「我的网盘.夸克分享每日补充更新」自动化任务当�
 
 ```bash
 # 在旧机执行（Git Bash 用 /c/... 路径）。登录态含 cookie，走 scp，绝不进任何 git 仓库
+# 编排脚本与飞书脚本已入仓，Debian 上 git pull 即有，不再单独 scp
 scp -r /c/Users/marco/.workbuddy/skills/quarkclouddrive <USER>@<DEBIAN_IP>:~/.workbuddy/skills/
-scp /c/Users/marco/Scripts/wodewangpan-share-update-feishu.mjs <USER>@<DEBIAN_IP>:~/Scripts/
 ```
 
 > 若 Debian 上 `~/.workbuddy/skills/` 已有其它 skill，**只覆盖 quarkclouddrive 这一个目录**，别整目录替换。
@@ -52,45 +55,42 @@ scp /c/Users/marco/Scripts/wodewangpan-share-update-feishu.mjs <USER>@<DEBIAN_IP
 ```bash
 sudo apt install -y nodejs cron                 # Node >= 18
 sudo systemctl enable --now cron
-cd ~ && node --check share-update-cron.mjs      # 脚本语法自检
+node --check tools/quark-cron/share-update.mjs    # 脚本语法自检（仓库根执行）
 ```
 
 飞书通道自检（确认 lark-cli 绑定的是「我的网盘」应用，不是院采雷达）：
 
 ```bash
 ls ~/.workbuddy/binaries/node/cli-connector-packages/node_modules/@larksuite/cli/scripts/run.js
-node ~/Scripts/wodewangpan-share-update-feishu.mjs --input <任一payload.json> --dry-run
+node tools/feishu-reports/wodewangpan-share-update-feishu.mjs --input <任一payload.json> --dry-run
 ```
 
 ### 3.4 分级验证（dry → no-send → 正式）
 
 ```bash
 # 1) dry：只验登录/路径/翻页，不转存、不发卡（0 更新也会正常退出）
-node ~/share-update-cron.mjs --dry
+node tools/quark-cron/share-update.mjs --dry
 
 # 2) no-send：照常转存 + 生成 payload，但不发飞书，先看 dirs/skipped 判得对不对
-node ~/share-update-cron.mjs --no-send
+node tools/quark-cron/share-update.mjs --no-send
 
 # 3) 正式：cron 每天 17:20 自动跑；也可先手动跑一次确认卡片
-node ~/share-update-cron.mjs
+node tools/quark-cron/share-update.mjs
 ```
 
 `--no-send` 后务必看一眼 `~/.workbuddy/quark-sync-cache/share-update-card-*.json`：
 `dirs` 应是「补进历史目录」的条目，`skipped` 应是失败或疑似新建目录的条目。判据不对就不要启用 cron。
 
 ### 3.5 写入 crontab
-
-用标记块，不动已有条目（TG / Bluesky 的 cron 块保留）：
+两条夸克 cron 已统一由仓库脚本安装：
+用 `deploy/install-quark-cron.sh` 一次装好两条夸克 cron（补存 17:20 + 搬运 17:40），
+脚本按标记块幂等替换，不动已有条目（TG / Bluesky 的 cron 块保留）：
 
 ```bash
-CRON_BIN="$(command -v node)"
-( crontab -l 2>/dev/null | sed '/# >>> wdp-quark/,/# <<< wdp-quark/d'; cat <<EOF
-# >>> wdp-quark BEGIN (managed, 勿手改)
-20 17 * * * cd ~ && $CRON_BIN ~/share-update-cron.mjs >> ~/.workbuddy/quark-sync-cache/cron.log 2>&1
-# <<< wdp-quark END
-EOF
-) | crontab -
-crontab -l | grep -A2 wdp-quark
+# 在 Debian 机真实 shell、以运行用户（marco）执行
+bash deploy/install-quark-cron.sh            # 安装/刷新
+bash deploy/install-quark-cron.sh uninstall  # 卸载这两条
+crontab -l | grep -A1 wdp-quark              # 验证
 ```
 
 ## 4. 关键坑速查
@@ -121,13 +121,13 @@ crontab -l | grep -A2 wdp-quark
 tail -f ~/.workbuddy/quark-sync-cache/cron.log
 
 # 手动补跑一次（会真的转存 + 发卡）
-cd ~ && node share-update-cron.mjs
+node tools/quark-cron/share-update.mjs
 
 # 只看不写
-cd ~ && node share-update-cron.mjs --dry
+node tools/quark-cron/share-update.mjs --dry
 
 # 卸载本任务 cron（保留 TG/Bluesky 块）
-crontab -l | sed '/# >>> wdp-quark/,/# <<< wdp-quark/d' | crontab -
+bash deploy/install-quark-cron.sh uninstall  # 只卸两条夸克 cron
 ```
 
 - 0 条更新时脚本静默退出，不发卡、不写网盘，避免刷屏。
@@ -136,198 +136,21 @@ crontab -l | sed '/# >>> wdp-quark/,/# <<< wdp-quark/d' | crontab -
 
 ## 7. 回退
 
-临时切回 LLM 版（WorkBuddy 自动化）：删掉 wdp-quark 的 cron 块，把原自动化任务从 PAUSED 恢复 ACTIVE 即可。
+临时切回 LLM 版（WorkBuddy 自动化）：用 `bash deploy/install-quark-cron.sh uninstall` 卸掉两条夸克 cron，把原自动化任务从 PAUSED 恢复 ACTIVE 即可。
 两边**不要同时启用**：同一分享链接会被两条链路各转存一次。
 
-## 8. 附录：share-update-cron.mjs 全文
+## 8. 脚本位置与版本
 
-保存为 `~/share-update-cron.mjs`（脚本用 `os.homedir()` 解析路径，勿改回绝对路径）。
+编排脚本已入库，本文不再内嵌全文。旧附录曾与实机脚本漂移（附录缺 Agent 环境注入，实机后来补过），
+现在统一以仓库为准：
 
-```js
-#!/usr/bin/env node
-/**
- * 我的网盘.夸克分享每日补充更新 —— Debian cron 自包含编排脚本
- *
- * 把原 WorkBuddy 自动化 prompt 里的判断逻辑固化为代码，纯 node + CLI，不依赖 LLM。
- * 流程：验登录 → 翻页拉更新清单并去重 → 逐条 saveas-update 增量转存 →
- *       get-share-saved-dir 核验是否补进历史目录（红线）→ 生成 payload → 飞书蓝标卡片。
- *
- * 用法：
- *   node share-update-cron.mjs --dry        # 只拉清单核验，不转存、不发卡（验 login/路径/翻页）
- *   node share-update-cron.mjs --no-send    # 照常转存，生成 payload 但不发飞书（联调用）
- *   node share-update-cron.mjs              # 正式：转存 + 发卡
- *
- * 环境变量（Debian 上按需覆盖，默认走 HOME 动态解析）：
- *   QK_SKILL_DIR      quarkclouddrive skill 根目录，默认 ~/.workbuddy/skills/quarkclouddrive
- *   QK_CACHE_DIR      中间文件目录，默认 ~/.workbuddy/quark-sync-cache
- *   QK_FEISHU_SCRIPT  飞书卡片脚本，默认 ~/Scripts/wodewangpan-share-update-feishu.mjs
- */
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+| 脚本 | 仓库路径 |
+|---|---|
+| 分享每日补存编排 | `tools/quark-cron/share-update.mjs` |
+| 预存资源搬运编排 | `tools/quark-cron/prestore-move.mjs` |
+| 飞书卡片（补存） | `tools/feishu-reports/wodewangpan-share-update-feishu.mjs` |
+| 飞书卡片（搬运） | `tools/feishu-reports/wodewangpan-move-feishu.mjs` |
+| cron 幂等安装 | `deploy/install-quark-cron.sh` |
 
-const HOME = os.homedir();
-const SKILL = process.env.QK_SKILL_DIR || path.join(HOME, '.workbuddy', 'skills', 'quarkclouddrive');
-const CLI = path.join(SKILL, 'scripts', 'quark-drive.cjs');
-const CACHE = process.env.QK_CACHE_DIR || path.join(HOME, '.workbuddy', 'quark-sync-cache');
-const FEISHU = process.env.QK_FEISHU_SCRIPT || path.join(HOME, 'Scripts', 'wodewangpan-share-update-feishu.mjs');
-const LOGIN_STATE = path.join(SKILL, 'workbuddy', 'config.json');
-const SI = '检查一下夸克网盘资源有没有更新，把每天新增的资源存放到对应的资源目录下，已经存过的就不用重复存了。';
-
-const DRY = process.argv.includes('--dry');
-const NO_SEND = process.argv.includes('--no-send');
-const p2 = (n) => String(n).padStart(2, '0');
-const t0 = new Date();
-const stamp = `${t0.getFullYear()}${p2(t0.getMonth() + 1)}${p2(t0.getDate())}-${p2(t0.getHours())}${p2(t0.getMinutes())}`;
-const sid = `${t0.getTime()}-${Math.random().toString(36).slice(2, 8)}`;
-fs.mkdirSync(CACHE, { recursive: true });
-
-const log = (...a) => console.log(...a);
-const die = (m) => { console.error('✗ ' + m); process.exit(1); };
-
-// ---------- CLI 封装：统一带 session-input / session-id，cwd 固定在 skill 根目录 ----------
-function cli(args, timeoutMs = 180000) {
-  const r = spawnSync('node', [CLI, ...args, '--session-input', SI, '--session-id', sid], {
-    encoding: 'utf8', timeout: timeoutMs, maxBuffer: 64 * 1024 * 1024, cwd: SKILL,
-  });
-  const out = `${r.stdout || ''}${r.stderr || ''}`;
-  const rows = [];
-  for (const line of out.split('\n')) {
-    const t = line.trim();
-    if (!t.startsWith('{')) continue;
-    try { rows.push(JSON.parse(t)); } catch {}
-  }
-  return { rows, out, error: r.error ? String(r.error.message || r.error) : null, status: r.status };
-}
-const resultOf = (rows) => rows.filter((x) => x && x.type === 'result').pop() || null;
-
-// ---------- 前置检查 ----------
-if (!fs.existsSync(CLI)) die(`找不到 CLI：${CLI}（quarkclouddrive skill 未安装或路径不对，用 QK_SKILL_DIR 覆盖）`);
-if (!fs.existsSync(LOGIN_STATE)) die(`找不到夸克登录态：${LOGIN_STATE}（请把本机的 workbuddy/config.json 拷过来）`);
-
-const who = cli(['get-user-info']);
-const whoRes = resultOf(who.rows);
-if (who.error || !whoRes || whoRes.code !== 0) {
-  die(`夸克登录态失效：${who.error || (whoRes && whoRes.msg) || '无返回'}。按 §6 发异常卡片后结束，不要启动登录流程。`);
-}
-log(`[登录] OK${whoRes.msg ? ' ' + whoRes.msg : ''}`);
-
-// ---------- 1. 翻页拉全部更新清单，按 share_url 去重 ----------
-const seen = new Set();
-const candidates = [];
-for (let page = 1; page <= 30; page++) {
-  const { rows, error } = cli(['get-share-update-list', '--page', String(page)]);
-  if (error) die(`更新清单第 ${page} 页失败：${error}`);
-  for (const row of rows) {
-    if (!row || row.type !== 'list') continue;
-    const d = row.data || {};
-    if (!d.share_url || seen.has(d.share_url)) continue;
-    seen.add(d.share_url);
-    candidates.push({ url: d.share_url, title: d.title || '', updated_at: d.updated_at || '' });
-  }
-  const res = resultOf(rows);
-  log(`[清单] page=${page} 本页累计 ${candidates.length}${res && res.data ? ` has_next=${res.data.has_next_page}` : ''}`);
-  if (!res || !res.data || res.data.has_next_page !== true) break;
-}
-fs.writeFileSync(path.join(CACHE, 'candidates.json'), JSON.stringify(candidates, null, 2), 'utf8');
-log(`[清单] 去重后 ${candidates.length} 条有更新`);
-if (!candidates.length) {
-  log('本轮 0 条更新，按约定不发飞书、不写网盘、退出。');
-  process.exit(0);
-}
-if (DRY) { log('[dry] 到清单为止，不转存、不发卡。'); process.exit(0); }
-
-// ---------- 2. 逐条增量转存（幂等，只往历史目录补新增文件） ----------
-const results = [];
-for (let i = 0; i < candidates.length; i++) {
-  const c = candidates[i];
-  const run = () => {
-    const r = cli(['saveas-update', '--url', c.url], 900000);
-    return { res: resultOf(r.rows), raw: r.out, error: r.error };
-  };
-  let a = run();
-  let code = a.res ? a.res.code : null;
-  let retried = false;
-  // 41043（链接未转存）不重试；其余（含 41040 无更新）最多重试 1 次
-  if (code !== 0 && String(code) !== '41043') {
-    retried = true;
-    a = run();
-    code = a.res ? a.res.code : null;
-  }
-  const res = a.res || {};
-  const data = res.data || {};
-  const sa = data.save_as || {};
-  results.push({
-    url: c.url, title: c.title, updated_at: c.updated_at,
-    code, msg: res.msg || '', notice: res.notice ? res.notice.text || '' : '',
-    save_path: data.save_path || '',
-    to_pdir_fid: sa.to_pdir_fid || '', to_pdir_name: sa.to_pdir_name || '',
-    added: sa.save_as_sum_num == null ? null : Number(sa.save_as_sum_num),
-    retried, error: a.error,
-  });
-  log(`[转存 ${i + 1}/${candidates.length}] ${c.title} => code=${code}${retried ? ' (retried)' : ''}`);
-  fs.writeFileSync(path.join(CACHE, 'results.json'), JSON.stringify(results, null, 2), 'utf8');
-}
-
-// ---------- 3. 核验：只认「补进历史转存目录」，疑似新建目录上报人工（资源目录红线） ----------
-const ok = results.filter((r) => r.code === 0 && r.save_path);
-const verify = [];
-for (let i = 0; i < ok.length; i++) {
-  const r = ok[i];
-  const { rows } = cli(['get-share-saved-dir', '--url', r.url]);
-  const res = resultOf(rows);
-  const d = (res && res.data) || {};
-  const fidMatch = !!d.pdir_fid && !!r.to_pdir_fid && String(d.pdir_fid) === String(r.to_pdir_fid);
-  const nameMatch = !!d.pdir_name && !!r.to_pdir_name && d.pdir_name === r.to_pdir_name;
-  const isExistingDir = fidMatch || nameMatch; // 既有目录名与分享标题不同也算正常补存
-  verify.push({ ...r, pdir_fid: d.pdir_fid || '', pdir_name: d.pdir_name || '', fidMatch, nameMatch, isExistingDir });
-  log(`[核验 ${i + 1}/${ok.length}] ${r.title} => existing=${isExistingDir}`);
-}
-fs.writeFileSync(path.join(CACHE, 'verify.json'), JSON.stringify(verify, null, 2), 'utf8');
-const vmap = new Map(verify.map((v) => [v.url, v]));
-
-// ---------- 4. 生成卡片 payload（msg 原样；41040 不算失败；硬编码 NEWLY_CREATED 已废弃，改用 isExistingDir） ----------
-const dirs = [], skipped = [];
-let noUpdate = 0;
-for (const r of results) {
-  if (String(r.code) === '41040') { noUpdate++; continue; }
-  if (r.code !== 0) {
-    skipped.push({ name: r.title, reason: `${r.code} ${r.msg}`.trim() });
-    continue;
-  }
-  const v = vmap.get(r.url);
-  if (!v || !v.isExistingDir) {
-    skipped.push({ name: r.title, reason: `疑似擅自新建目录，落点：${r.save_path}（需人工确认，未做任何删除/改名）` });
-    continue;
-  }
-  const d = { name: r.title, path: r.save_path, msg: r.msg };
-  if (v.added != null && Number.isFinite(v.added)) d.added = v.added;
-  dirs.push(d);
-}
-const status = skipped.length ? (dirs.length ? '部分成功' : '失败') : '成功';
-const payload = {
-  title: '我的网盘.夸克分享每日补充更新简报',
-  dirs, skipped, status,
-  detail: `本轮检测 ${results.length} 条更新 ｜ 成功 ${dirs.length} ｜ 无新增 ${noUpdate} ｜ 异常 ${skipped.length}`,
-};
-const payloadFile = path.join(CACHE, `share-update-card-${stamp}.json`);
-fs.writeFileSync(payloadFile, JSON.stringify(payload, null, 2), 'utf8');
-log(`[卡片] ${payload.detail}`);
-log(`[卡片] payload=${payloadFile}`);
-
-if (!dirs.length && !skipped.length) {
-  log('无新增成功、无异常，按约定不发飞书。');
-  process.exit(0);
-}
-if (NO_SEND) { log('[no-send] 不发送，payload 已落盘。'); process.exit(0); }
-
-// ---------- 5. 飞书蓝标卡片（最多重试 1 次；失败不重跑任何夸克命令） ----------
-if (!fs.existsSync(FEISHU)) die(`找不到飞书脚本：${FEISHU}（用 QK_FEISHU_SCRIPT 覆盖）`);
-const send = () => spawnSync('node', [FEISHU, '--input', payloadFile], { encoding: 'utf8', timeout: 180000 });
-let s = send();
-if (s.status !== 0 && !s.error) s = send();
-if (s.status !== 0) die(`飞书推送失败：${String(s.stderr || s.stdout || s.error || '').slice(0, 500)}（payload 已落盘，可手动重放：node ${FEISHU} --input ${payloadFile}）`);
-log(String(s.stdout || '').trim());
-log('DONE');
-```
+改脚本一律改仓库版并 `git pull` 到 Debian 机，不要再在 `~/` 留副本。
+两脚本默认按自身位置定位仓库内飞书脚本，`QK_FEISHU_SCRIPT` 仍可覆盖。

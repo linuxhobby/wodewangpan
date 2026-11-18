@@ -15,6 +15,9 @@ npm run build              # 构建到 public/（本地）
 npm run serve              # 本地预览 http://localhost:4321
 npx eslint scripts/        # lint，提交前必须 0 错误
 node tools/new-resource.js        # 交互式新增资源条目
+node tools/quark-cron/share-update.mjs --dry    # 夸克每日补存 dry 自检（不转存）
+node tools/quark-cron/prestore-move.mjs --dry   # 预存搬运 dry 自检（不 move）
+bash deploy/install-quark-cron.sh               # 幂等安装两条夸克 cron
 node tools/fill-files.mjs --limit 3 # 补文件清单（见 §4）
 node tools/sort-trees.mjs --dry-run # 预览/回填目录树排序（见 §4）
 node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
@@ -36,6 +39,8 @@ npm run check:images                 # 配图盘点（分类目录命中 / 孤�
 | `scripts/lib/render.js` | 全部页面模板与 SEO 输出（meta/JSON-LD/sitemap） |
 | `scripts/lib/assets.js` | 配图/二维码等静态资产处理 |
 | `tools/` | **工具目录（2026-11-17 拆分）**：数据采集与内容生产脚本（fill-files 全家桶、补描述/标题、海报生成、资源导出），依赖采集环境（夸克 CLI / TMDB 凭据）；站点构建不引用本目录，依赖方向单向 tools → scripts/lib |
+| `tools/quark-cron/` | **两条夸克定时任务的编排脚本（2026-11-18 并入）**：`share-update.mjs`（分享每日补存，cron 17:20）与 `prestore-move.mjs`（预存资源搬运，17:40），纯 node + CLI、不依赖 LLM；详见 `DEPLOY-DEBIAN-QUARK*.md` |
+| `deploy/install-quark-cron.sh` | 幂等安装上述两条 cron（标记块 `wdp-quark` / `wdp-move`），`uninstall` 可卸；凭据只走 scp |
 | `tools/fill-files.mjs` | 补「文件清单」`files:` 块（§4 例行任务的主角） |
 | `tools/sort-trees.mjs` | 回填已有 `files.tree` 的行序（只重排，不动内容与日期） |
 | `tools/scan-drive-fids.mjs` | 扫夸克 SHARE 目录，生成 `config/drive-fids.json`（id → 盘端目录 fid），`--source drive` 口径依赖它 |
