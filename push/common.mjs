@@ -30,11 +30,12 @@ export const collectPicks = () => process.argv.reduce(
 );
 
 // ---------- 凭据 ----------
-// 查找顺序：调用脚本同目录的 <envName> → ~/.workbuddy（唯一权威，2026-11-14 迁移完成）。
+// 查找顺序：调用脚本同目录的 <envName>（临时覆盖）→ ~/.config（本机凭据，唯一权威）。
+// 2026-11-18 起与 WorkBuddy 无关，不再读 ~/.workbuddy。
 export function findEnvFile(callerUrl, envName) {
   return firstPresent(
     path.join(path.dirname(fileURLToPath(callerUrl)), envName),
-    path.join(HOME, '.workbuddy', envName),
+    path.join(HOME, '.config', envName),
   );
 }
 
@@ -55,11 +56,10 @@ export function loadEnv(callerUrl, envName) {
 }
 
 // ---------- 判重状态 ----------
-// posted.json 是现网判重状态，永远留在本机 home、不进 git、不搬仓库（复制会导致重复发）。
+// 2026-11-18 起固定读仓库内 state/<dir>/posted.json；这两个文件已从 git 取消跟踪，只留本机磁盘。
+export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export function findStateFile(dir, file = 'posted.json') {
-  return firstPresent(
-    path.join(HOME, '.workbuddy', dir, file),
-  );
+  return path.join(REPO_ROOT, 'state', dir, file);
 }
 
 export function loadState(stateFile) {

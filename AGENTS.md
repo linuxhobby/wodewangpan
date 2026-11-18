@@ -600,36 +600,35 @@ node push/bluesky/bluesky-post.mjs
 ```
 
 TG 推送的 caption 末尾固定一行「查询更多资源请联系 [小艾](https://t.me/wodewangpantop)」；
-想换称呼或目标地址，在运行机本地的 `push/telegram/wodewangpan-tg.env` 里写 `TG_CONTACT_NAME` / `TG_CONTACT_URL` 覆盖。
+想换称呼或目标地址，在运行机本地的 `~/.config/wodewangpan-tg.env` 里写 `TG_CONTACT_NAME` / `TG_CONTACT_URL` 覆盖。
 
 判重口径（定死，唯一实现在 `push/common.mjs`）：只认夸克或百度分享链接，任一相同即同一份资源；
 **标题相同但链接不同照发**（系列电影、多季剧是不同资源）。
 
-判重状态文件在**本机**、不在本仓库，删了会重复发：
+判重状态文件（2026-11-18 起）：
 
-- `~/.workbuddy/telegram-posts/posted.json`
-- `~/.workbuddy/bluesky-posts/posted.json`
+- `state/telegram-posts/posted.json`
+- `state/bluesky-posts/posted.json`
 
-定时任务（WorkBuddy 自动化调度，不在仓库里）：
+两个文件已从 git 取消跟踪（`.gitignore` 的 `posted.json` 规则覆盖），只留运行机磁盘、不推送；删了会重复发。
+`push/common.mjs` 的 `findStateFile()` 固定读这里，不再读 `~/.workbuddy`。
 
-| 任务 | 节奏 | id |
-|---|---|---|
-| 我的网盘.资源推送 Telegram 频道 | 每小时第 8 分钟（`BYMINUTE=8`，起点对齐） | `4b3c64dc-f994-433d-94f3-dbd606e6aef1` |
-| 我的网盘.资源推送到 Bluesky | 每小时第 9 分钟（`BYMINUTE=9`，起点对齐） | `37f6dfb3-76c2-46d3-9352-8aa4202ba3af` |
+**定时调度（2026-11-18 定稿，Debian 13 本机）**：两个任务不依赖 LLM / WorkBuddy，用系统 cron，
+每小时 TG `:03`、Bluesky `:05`，以 `marco` 用户身份在仓库根目录执行，日志落 `~/.cache/wdp-tg-post.log`
+与 `~/.cache/wdp-bsky-post.log`；crontab 由标记块 `wdp-push` 管理，手工维护时不要动块外条目。
+另一台电脑上的 WorkBuddy 自动化任务已停用，不要再按 `:08/:09` 或 rrule 描述现役调度。
 
-调度口径（2026-11-15 核实，别再按「每 2 小时」描述）：两个任务都是 `FREQ=HOURLY;INTERVAL=1`，各自每小时发 1 条（2026-11-16 起 TG 在 :08、Bluesky 在 :09，相差 1 分钟）。WorkBuddy 调度器的 HOURLY 分支是「上次运行 + 1 小时」滚动（`computeHourlyNextRunAt` 只加 intervalHours，不按 BYHOUR/BYMINUTE 对齐），所以 `BYMINUTE` 仅用于界面显示和 validFrom 起点对齐，逐轮会随发帖耗时后移几十秒。要长期严格落在固定分钟，只能靠脚本层门控或系统计划任务，不要误以为是 rrule 在保证。
-
-**脱离 LLM 的调度（2026-11-17 并入）**：Debian 机可用 `deploy/wdp-scheduler/control.sh`（常驻调度器，:08 / :09）或 `deploy-cron.sh`（系统 cron，:03 / :05）独立驱动 push/ 脚本，两者**二选一**；与上表 WorkBuddy 自动化任务并存会每小时双发，迁移时先停掉自动化任务再启用。
+备选 `deploy/wdp-scheduler/control.sh`（常驻调度器，:08 / :09）与上面的 cron **二选一**，同时开会每小时双发。
 
 ### 11.6 代码权威源
 
 **本仓库是站点 + 机器人 + 推送代码的唯一实现**。定时任务 prompt 若仍指向 `telegram-push/`、
 `bluesky-push/` 或私有仓 mybot 的旧路径，都已失效，应改成 `push/...` 与 `bot/...` 的仓库内路径。
 
-- 凭据查找顺序：脚本**同目录**的 `*.env` → `~/.workbuddy/*.env`（老环境回退）。
-  运行机本地 `push/telegram/wodewangpan-tg.env`、`push/bluesky/wodewangpan-bluesky.env` 是**现役凭据**，
-  仓库里没有这两个文件（不进 git），换机部署用 scp 就位。
-- `posted.json` 判重记录**永远留在本机** `~/.workbuddy/{telegram,bluesky}-posts/`，不进 git、不搬仓库：
-  复制或搬走会让已发过的资源重复发布。
+- 凭据查找顺序：脚本**同目录**的 `*.env`（临时覆盖）→ `~/.config/*.env`（现役唯一权威）。
+  本机实身是 `~/.config/wodewangpan-tg.env` 与 `~/.config/wodewangpan-bluesky.env`，权限 `600`；
+  仓库里没有这两个文件（不进 git），换机部署走 scp，不走 WorkBuddy 目录。
+- `posted.json` 判重记录留在仓库工作区的 `state/{telegram,bluesky}-posts/posted.json`，
+  但已从 git 取消跟踪、不推送；复制或搬走会让已发过的资源重复发布。
 - 飞书反馈凭据在运行机本地 `bot/config.json` 的 `feishu.tg`（也可用 `FEISHU_TG_APP_ID/APP_SECRET` 或
   `~/.workbuddy/feishu-app-tg.json` 覆盖）；专用通道缺凭据直接判失败，不回退默认应用。

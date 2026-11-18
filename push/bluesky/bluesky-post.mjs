@@ -19,9 +19,9 @@
 //   node bluesky-post.mjs --no-state       # 测试用：照常发帖，但不写 posted.json（不计入判重）
 //   node bluesky-post.mjs --audit          # 打印不可发条目的原因分布
 //
-// 凭据：同目录 wodewangpan-bluesky.env（回退 ~/.workbuddy → ~/.workbuddy）
+// 凭据：同目录 wodewangpan-bluesky.env（临时覆盖）→ ~/.config/wodewangpan-bluesky.env
 //   （BLUESKY_IDENTIFIER / BLUESKY_APP_PASSWORD / BLUESKY_PDS / REPO / SITE_URL）
-// 已发记录：~/.workbuddy/bluesky-posts/posted.json（去重唯一依据，勿删；见 SKILL.md「沙箱坑」）
+// 已发记录：仓库 state/bluesky-posts/posted.json（去重唯一依据，勿删，不推送）
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';

@@ -23,9 +23,9 @@
 //   node tg-post.mjs --retract <id>        # 撤回之前由本脚本发出去的某条目消息（调试用）
 //   node tg-post.mjs --audit               # 打印不可发条目的原因分布
 //
-// 凭据：同目录 wodewangpan-tg.env（回退 ~/.workbuddy → ~/.workbuddy）—— TG_BOT_TOKEN / TG_CHAT / REPO / SITE_URL
+// 凭据：同目录 wodewangpan-tg.env（临时覆盖）→ ~/.config/wodewangpan-tg.env —— TG_BOT_TOKEN / TG_CHAT / REPO / SITE_URL
 //   （TG_CHAT 填 @频道用户名 或 -100 开头的数字 ID；bot 必须是该频道管理员并有「发布消息」权限）
-// 已发记录：~/.workbuddy/telegram-posts/posted.json —— 去重唯一依据，勿删，不随仓库搬
+// 已发记录：仓库 state/telegram-posts/posted.json —— 去重唯一依据，勿删，不推送
 //
 // 传输只用 Node 内置 fetch（本机实测 api.telegram.org 直连 200），不走 curl，避开沙箱里 curl 无法 spawn 的坑。
 import fs from 'node:fs';

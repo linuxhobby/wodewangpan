@@ -266,12 +266,13 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 | 项 | 路径 |
 |---|---|
-| 仓库 | macOS `/Users/marco.chan/Documents/GitHub/wodewangpan`；Windows `C:\Users\marco\Github\wodewangpan` |
+| 仓库 | macOS `/Users/marco.chan/Documents/GitHub/wodewangpan`；Windows `C:\Users\marco\Github\wodewangpan`；Debian 13 `/home/marco/Documents/Github/wodewangpan` |
 | 机器人代码 | 本仓库 `bot/`（2026-11-17 并回；Windows 机检出路径 `C:\Users\marco\Github\wodewangpan\bot`，进程与开机自启指回仓库目录） |
 | 远端 | `git@github.com:linuxhobby/wodewangpan.git`（公开；2026-11-17 起机器人与社媒推送代码同仓） |
 | 线上 | https://www.wodewangpan.top |
 | 技能真身 | `~/.workbuddy/skills/`（`quark-resource-sync` / `quarkclouddrive` / `quark-upload-share`）；`~/.codebuddy` 为历史目录 |
 | 凭据 | `~/.workbuddy/skills/quark-resource-sync/config.env`（含凭据，不写进文档） |
+| 推送凭据 | `~/.config/wodewangpan-tg.env` / `~/.config/wodewangpan-bluesky.env`（权限 600，不进 git，不依赖 WorkBuddy） |
 | VPS autoupdate | `/usr/local/bin/wdwp-autoupdate`（拉取→npm ci→构建→原子替换 public→reload nginx） |
 
 > 凭据真实值一律不写进文档，只记「在哪、叫什么」。
