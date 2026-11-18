@@ -28,22 +28,31 @@ const ZH_NOISE =
 // 英文名里的发布规格 token
 const EN_NOISE =
   /^(1080p|720p|2160p|480p|4k|web|web-?dl|web-?rip|bluray|bdrip|brrip|remux|hdtv|dvdrip|x264|x265|h\.?264|h\.?265|hevc|aac|ac3|eac3|dts|dd5|ddp5|atmos|hdr|hdr10|dv|dolby|10bit|itunes|nf|amzn|dsnp|max|hulu|diy|edith|rar-bg|cmct|hdbthd|bbqddq|dreamhd|lamatgx|huzzahtgx|xiaomi|quickio|hdsweb)$/i;
+// 年份不再截断 base 后，规格词会留在英文串里；复合 token（BD1080P、CHS-ENG）先整体剥掉，再走 EN_NOISE
+const EN_SPEC =
+  /(?:1080P|2160P|720P|480P|4K|BD|BluRay|WEB-?DL|WEB|HDTV|DVDRip|REMUX|x26[45]|H\.?26[45]|HEVC|AAC|AC3|EAC3|DTS|DD5|DDP5|Atmos|HDR|10bit|Dolby|CHS-ENG|MandarinEnglish)/gi;
+// CHS / ENG 这类短标记必须整词匹配，否则会把 Vengeance 里的 eng 削掉
+const EN_SHORT_SPEC = /\b(?:BD|WEB|CHS|ENG|4K)\b/gi;
 
 function clean(name) {
-  let s = String(name).replace(/\.[a-z0-9]{1,5}$/i, '');
-  const ym = s.match(/(?:19|20)\d{2}/);
+  const raw = String(name).replace(/\.[a-z0-9]{1,5}$/i, '');
+  const ym = raw.match(/(?:19|20)\d{2}/);
   const year = ym ? ym[0] : null;
-  let base = year ? s.slice(0, s.indexOf(year)) : s.split(/[.\[(]/)[0];
+  // 括号只当分隔符；年份从标题里整体剥掉，不再假设「片名一定在年份前面」
+  const normalized = raw.replace(/[（(]/g, ' ').replace(/[）)]/g, ' ');
+  const base = (year ? normalized.replace(year, ' ') : normalized).trim();
 
   // 规格词先从 base 里剔掉，再认中文名；中文片名末尾的续集数字/季数（虎胆龙威3、速度与激情9、第二季）是标题的一部分，不能当噪音砍掉
   const zhBase = base.replace(ZH_NOISE, '');
-  let zh = (zhBase.match(/[一-龥]{2,}(?:\d+)?(?:季|部|集)?/g) || []).sort((a, b) => b.length - a.length)[0] || null;
+  let zh = (zhBase.match(/[一-龥]{2,}(?:\d+)?(?:季|部|集)?/g) || [])
+    .filter((x) => !/^(?:第)?[一二两三四五六七八九十\d]+(?:季|部)$/.test(x))
+    .sort((a, b) => b.length - a.length)[0] || null;
   if (zh) {
     zh = zh.replace(/[\-—]+$/, '').trim();
     if (zh.length < 2) zh = null;
   }
 
-  let en = base.replace(/\[[^\]]*\]/g, ' ').replace(/\([^)]*\)/g, ' ');
+  let en = base.replace(/\[[^\]]*\]/g, ' ').replace(/\([^)]*\)/g, ' ').replace(EN_SPEC, ' ').replace(EN_SHORT_SPEC, ' ');
   if (zh && en.includes(zh)) en = en.split(zh).pop();
   const keep = [];
   for (const t of en.split(/[.\s_-]+/).filter(Boolean)) {
@@ -54,7 +63,30 @@ function clean(name) {
   en = keep.join(' ').trim();
   if (en.length < 2) en = null;
 
-  return { year, zh, en };
+  return { year, zh, en, season: seasonHint(name) };
+}
+
+const CN_DIGIT = { 零: 0, 一: 1, 二: 2, 两: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9 };
+function cn2num(s) {
+  const t = String(s || '').trim();
+  if (/^\d+$/.test(t)) return Number(t);
+  if (t === '十') return 10;
+  if (t.includes('十')) {
+    const [a, b] = t.split('十');
+    return (a ? CN_DIGIT[a] : 1) * 10 + (b ? CN_DIGIT[b] : 0);
+  }
+  return CN_DIGIT[t] || null;
+}
+
+/** 从目录名里取季数提示；只作多候选时的判别，不拼进 TMDB 查询词 */
+function seasonHint(name) {
+  for (const p of [/第\s*([一二两三四五六七八九十\d]+)\s*[季部]/, /([一二两三四五六七八九十\d]+)\s*[季部](?:[\s.（(]|$)/, /\bS(?:eason)?\s*(\d+)\b/i]) {
+    const m = String(name).match(p);
+    if (!m) continue;
+    const n = cn2num(m[1]);
+    if (n) return n;
+  }
+  return null;
 }
 
 const get = (url, retry = 1) =>
@@ -97,9 +129,10 @@ for (let i = 0; i < list.length; i += CONC) {
   const chunk = list.slice(i, i + CONC);
   const out = await Promise.all(
     chunk.map(async (t) => {
-      const { zh, en, year } = clean(t.filename);
+      const { zh, en, year, season } = clean(t.filename);
       const tried = [];
       let hit = null;
+      let hitDetail = null;
       const queries = [];
       if (zh) queries.push(zh);
       if (en) queries.push(en);
@@ -109,6 +142,23 @@ for (let i = 0; i < list.length; i += CONC) {
           tried.push(`${q}${year ? `/${year}` : ''}→${r.length}`);
           if (r.length) {
             hit = r[0];
+            // 季数只在「主标题命中多个候选」时用来挑人；唯一命中不干扰，仍按主标题口径
+            if (season && t.type === 'tv' && r.length > 1) {
+              let best = null;
+              for (const cand of r.slice(0, 3)) {
+                let cd;
+                try { cd = await detail(t.type, cand.id); } catch { continue; }
+                const seasonRow = (cd.seasons || []).find((s) => Number(s.season_number) === season);
+                const has = Boolean(seasonRow) || Number(cd.number_of_seasons || 0) >= season;
+                const years = [cd.release_date, cd.first_air_date, seasonRow?.air_date].map((x) => String(x || '').slice(0, 4)).filter(Boolean);
+                const yearOk = Boolean(year && years.some((dy) => Math.abs(Number(dy) - Number(year)) <= 1));
+                const score = (yearOk ? 2 : 0) + (has ? 1 : 0);
+                const candScore = Number(cand.vote || cd.vote_average || 0);
+                if (!best || score > best.score || (score === best.score && candScore > best.vote)) best = { cand, d: cd, score, vote: candScore };
+              }
+              if (best && best.score > 0) { hit = best.cand; hitDetail = best.d; tried.push(`季数${season}/年份→${best.cand.id}`); }
+              else tried.push(`季数${season}→未判别，取默认`);
+            }
             break;
           }
         } catch (e) {
@@ -118,9 +168,13 @@ for (let i = 0; i < list.length; i += CONC) {
       let info = null;
       let lowConfidence = false;
       if (hit) {
-        const d = await detail(t.type, hit.id);
+        const d = hitDetail || await detail(t.type, hit.id);
         const date = d.release_date || d.first_air_date || '';
-        if (year && date && Math.abs(Number(date.slice(0, 4)) - Number(year)) > 1) lowConfidence = true;
+        // 剧集带季数提示时，首播年份或该季播出年份任一接近即可；
+        // TMDB 尚未收录该季时目录年份可能领先，不做年份降级，避免误伤未开播/刚开播的续集。
+        const seasonRow = season && (d.seasons || []).find((s) => Number(s.season_number) === season);
+        const years = [date, seasonRow?.air_date].map((x) => String(x || '').slice(0, 4)).filter(Boolean);
+        if (year && !(season && !seasonRow) && !years.some((dy) => Math.abs(Number(dy) - Number(year)) <= 1)) lowConfidence = true;
         info = {
           id: d.id,
           title: d.title || d.name,
@@ -131,7 +185,7 @@ for (let i = 0; i < list.length; i += CONC) {
           poster_url: d.poster_path ? `https://image.tmdb.org/t/p/w500${d.poster_path}` : null,
           seasons: d.number_of_seasons || null,
           episodes: d.number_of_episodes || null,
-          season_list: (d.seasons || []).map((s) => ({ season: s.season_number, episodes: s.episode_count })),
+          season_list: (d.seasons || []).map((s) => ({ season: s.season_number, episodes: s.episode_count, air_date: s.air_date || '' })),
           overview: d.overview || '',
         };
         // 简介下限 150 字是**补齐线**（2026-11-12 定夺，与 trending-sync 同口径）：原文不足时，
@@ -144,7 +198,7 @@ for (let i = 0; i < list.length; i += CONC) {
           info.desc_filled = built.filled;
         }
       }
-      return { ...t, parsed: { zh, en, year }, tried, match: info, low_confidence: lowConfidence };
+      return { ...t, parsed: { zh, en, year, season }, tried, match: info, low_confidence: lowConfidence };
     })
   );
   results.push(...out);
