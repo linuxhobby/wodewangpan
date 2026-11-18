@@ -6,7 +6,7 @@
  * 这一串确定性步骤收进一个脚本，任务 prompt 只剩「跑这个脚本 + 转述简报」。
  *
  * 用法：
- *   node C:/Users/marco/Scripts/wodewangpan-fillfiles-run.mjs
+ *   node C:/Users/marco/Github/wodewangpan/tools/feishu-reports/wodewangpan-fillfiles-run.mjs
  *   node ... --dry-run          试跑：不动 git、不写盘、不发飞书，只验证流程与解析
  *   node ... --limit 3          每轮写入额度，默认 3（不要调大）
  *   node ... --no-feishu        跳过飞书卡片（调试用）
@@ -424,7 +424,7 @@ if (!DRY) {
 // ---------------------------------------------------------------------------
 // 2. 跑工具
 // ---------------------------------------------------------------------------
-const toolArgs = ['scripts/fill-files.mjs', '--limit', String(LIMIT), '--delay', DRY ? '2000' : '3000'];
+const toolArgs = ['tools/fill-files.mjs', '--limit', String(LIMIT), '--delay', DRY ? '2000' : '3000'];
 if (DRY) toolArgs.push('--dry-run');
 log(`\n$ node ${toolArgs.join(' ')}`);
 const ff = node(toolArgs, { timeout: 1800000 });
