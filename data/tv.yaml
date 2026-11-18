@@ -1,4 +1,4 @@
-# 电视剧资源（189 条）
+# 电视剧资源（193 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3700,3 +3700,43 @@
   date: 2026-10-19
   added: "2026-11-17 03:51"
   image: tv-189.jpg
+
+- id: tv-190
+  title: "大卫王朝"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "大卫王朝 House of David"]
+  quark_url: "https://pan.quark.cn/s/1d51df6bd8d0"
+  description: "【全剧 2 季 · 共 16 集】《大卫王朝》讲述的是圣经人物大卫崛起并成为以色列最受欢迎的国王的故事。该系列为我们呈现了昔日强大的扫罗王因为骄傲自大而自取灭亡的全过程。在上帝的指引下，先知撒母耳膏立了一位出人意料的新王——一个离经叛道的少年。一个领袖的倒下势必会迎来另一个领袖的崛起。本剧类型：剧情。2025 年首播，已获续订，仍在播出，全剧 2 季，累计 16 集。｜TMDB 8.4"
+  date: 2025-02-27
+  added: 2026-11-18
+  image: tv-190.jpg
+
+- id: tv-191
+  title: "茜茜皇后"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "茜茜皇后 Die Kaiserin"]
+  quark_url: "https://pan.quark.cn/s/cf6e54f4c974"
+  description: "【全剧 3 季 · 共 18 集】叛逆的伊丽莎白对皇帝弗朗兹一见倾心，并出人意料地成为了皇帝的新娘。从此，她不得不应对维也纳宫廷的种种纷争与阴谋。本剧类型：剧情。2022 年首播，已完结，全剧 3 季，累计 18 集。播出平台：Netflix。制片国家/地区：德国。主创：Katharina Eyssen。出品方：Sommerhaus Serien。｜TMDB 7.7"
+  date: 2022-09-29
+  added: 2026-11-18
+  image: tv-191.jpg
+
+- id: tv-192
+  title: "波巴·费特之书"
+  category: 电视剧
+  tags: ["电视剧", "动作冒险", "Sci-Fi & Fantasy", "波巴·费特之书 The Book of Boba Fett"]
+  quark_url: "https://pan.quark.cn/s/a74878586271"
+  description: "【第 1 季 · 共 7 集】波巴·费特不再只是一个雇佣兵，他与芬内克·尚德一起在塔图因开辟新天地。官方标语：每个星系，都有一个地下世界。本剧类型：动作冒险 / Sci-Fi & Fantasy。2021 年首播，已完结，全剧 1 季，累计 7 集。播出平台：Disney+。制片国家/地区：美国。主创：乔恩·费儒。出品方：Lucasfilm Ltd.、Golem Creations。｜TMDB 7.5"
+  date: 2021-12-29
+  added: 2026-11-17
+  image: tv-192.jpg
+
+- id: tv-193
+  title: "奇思妙探"
+  category: 电视剧
+  tags: ["电视剧", "犯罪", "剧情", "喜剧", "奇思妙探 Elsbeth"]
+  quark_url: "https://pan.quark.cn/s/b1ccac902305"
+  description: "【全剧 4 季 · 共 59 集】Elsbeth Tascioni是一位精明但异于常人的律师，在芝加哥取得事业上的成功后，她来到了纽约。Elsbeth运用自己的奇异视角进行着独特的观察，协同纽约警局要员追捕那些犯罪手法高超的罪犯。本剧类型：犯罪 / 剧情 / 喜剧。2024 年首播，已获续订，仍在播出，全剧 4 季，累计 59 集。｜TMDB 6.7"
+  date: 2024-02-29
+  added: 2026-11-16
+  image: tv-193.jpg

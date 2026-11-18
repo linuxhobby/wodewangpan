@@ -1,4 +1,4 @@
-# 软件资源（135 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
+# 软件资源（136 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
 - id: app-001
   title: "Parallels Desktop 18 - macOS 虚拟机软件"
   category: 软件
@@ -1734,3 +1734,12 @@
       7z-2606-Windows 32-bit x86.exe
       7z-2606-Windows ARM64.exe
       7z-2606-Windows x64 .exe
+
+- id: app-108
+  title: "workbuddy for Linux"
+  category: 软件
+  tags: ["软件", "macOS", "workbuddy for Linux"]
+  quark_url: "https://pan.quark.cn/s/d0a6bd6d18d4"
+  description: "workbuddy for Linux for macOS：官方原版应用安装包，下载后拖入「应用程序」文件夹即可使用。"
+  date: 2026-11-16
+  added: 2026-11-16
