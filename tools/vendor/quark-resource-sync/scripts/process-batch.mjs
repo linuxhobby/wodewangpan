@@ -11,6 +11,7 @@ import crypto from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { cfg, requireCfg, SKILL, CACHE, TMP, QUARK_TASK_DIR } from './lib/config.mjs';
 import { posterDir } from './lib/site-paths.mjs';
+import { isJpegFile } from '../../../lib/image-check.mjs';
 import { pad3 } from './lib/number.mjs';
 import { upsertEntry } from './lib/yaml-store.mjs';
 
@@ -201,13 +202,12 @@ await Promise.all(
     const dest = path.join(destDir, `${p.id}.jpg`);
     try {
       await run('curl', ['-s', ...(PROXY ? ['-x', PROXY] : []), '-o', dest, p.match.poster_url]);
-      const size = fs.statSync(dest).size;
-      if (size < 5000) throw new Error('文件过小');
+      if (!isJpegFile(dest)) throw new Error('不是有效 JPEG');
       p.poster = `${p.id}.jpg`;
-    } catch (e) {
+    } catch {
       try {
         await run('curl', ['-s', ...(PROXY ? ['-x', PROXY] : []), '-o', dest, p.match.poster_url]);
-        p.poster = fs.statSync(dest).size > 5000 ? `${p.id}.jpg` : null;
+        p.poster = isJpegFile(dest) ? `${p.id}.jpg` : null;
       } catch {
         p.poster = null;
       }

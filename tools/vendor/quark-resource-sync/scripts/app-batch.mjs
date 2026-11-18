@@ -10,6 +10,7 @@ import crypto from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { cfg, requireCfg, SKILL, CACHE, TMP, QUARK_TASK_DIR } from './lib/config.mjs';
 import { pad3 } from './lib/number.mjs';
+import { isImageFile, isJpegFile } from '../../../lib/image-check.mjs';
 import { upsertEntry } from './lib/yaml-store.mjs';
 
 const { PROXY, REPO, QUARK_CLI: CLI, SHARE_FID } = cfg;
@@ -188,14 +189,14 @@ for (const p of batch) {
       const outJpg = path.join(IMG_DIR, `${p.id}.jpg`);
       try {
         await run('curl', ['-s', '-L', '-m', '40', ...PROXY_ARGS, '-o', iconTmp, iconUrl]);
-        if (fs.statSync(iconTmp).size < 3000) throw new Error('icon 过小');
+        if (!isImageFile(iconTmp)) throw new Error('icon 不是有效图片');
         const [c1, c2] = PALETTE[parseInt(p.num, 10) % PALETTE.length];
         await run('node', [ICON_POSTER, '--icon', iconTmp, '--out', outJpg,
           '--title', meta?.trackName || p.name, '--sub', meta?.primaryGenreName || 'macOS 应用',
           '--c1', c1, '--c2', c2, '--radius', '22']);
-        if (fs.statSync(outJpg).size < 5000) throw new Error('poster 过小');
+        if (!isJpegFile(outJpg)) throw new Error('poster 不是有效 JPEG');
         image = `${p.id}.jpg`;
-      } catch (e) {
+      } catch {
         image = null; // 回退占位海报
       }
     }

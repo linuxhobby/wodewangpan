@@ -11,6 +11,7 @@ import path from 'node:path';
 import { execFile } from 'node:child_process';
 import { cfg, requireCfg, SKILL, CACHE, TMP, QUARK_TASK_DIR } from './lib/config.mjs';
 import { posterDir } from './lib/site-paths.mjs';
+import { isJpegFile } from '../../../lib/image-check.mjs';
 import { buildBody, DESC_MIN } from './lib/desc.mjs';
 import { bd, bdWhoami, bdListDir, bdMkdir, bdUploadFile, bdShare } from './lib/baidu.mjs';
 import { resolvePlaceholders } from './lib/placeholder.mjs';
@@ -688,7 +689,7 @@ async function processType(kind) {
         fs.mkdirSync(path.dirname(dest), { recursive: true });
         for (const useProxy of [true, false]) {
           await run('curl', ['-s', '--max-time', '60', ...(useProxy && PROXY ? ['-x', PROXY] : []), '-o', dest, poster]).catch(() => {});
-          if (fs.existsSync(dest) && fs.statSync(dest).size > 5000) { image = `${id}.jpg`; break; }
+          if (isJpegFile(dest)) { image = `${id}.jpg`; break; }
         }
         if (!image && fs.existsSync(dest)) fs.unlinkSync(dest);
       }

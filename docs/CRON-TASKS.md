@@ -23,6 +23,7 @@
 3. 夸克中间产物只落 `~/.cache/quark-sync/`，可随时清理，不影响判重。
 4. 所有 cron 用标记块管理，幂等替换，不碰块外条目。
 5. 两条推送任务不碰网盘；两条夸克定点任务不写 `data/*.yaml`、不发帖；fill-files 写 `data/*.yaml` 并 build/push 但不 ssh；TMDB 与资源同步会写 `data/*.yaml`、build/push、VPS 即时重建，TMDB 还做光鸭镜像、资源同步做光鸭补链。
+6. 下载/合成的海报必须验真实图片类型（`tools/lib/image-check.mjs` 读文件头）：`.jpg` 必须是 JPEG，官方图标允许 PNG/JPEG/WebP/GIF；HTML 或体积够大的伪图一律不写 `image:`。
 
 ## 2. 环境与凭据
 
