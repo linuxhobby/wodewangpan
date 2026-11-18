@@ -1,8 +1,8 @@
-# 我的网盘 · 六个常驻 cron 任务
+# 我的网盘 · 七个常驻 cron 任务
 
-> 2026-11-18 定稿。本文合并原两份夸克部署手册，并补入 Telegram / Bluesky 推送、fill-files 与 TMDB 每日热门。
+> 2026-11-18 定稿。本文合并原两份夸克部署手册，并补入 Telegram / Bluesky 推送、fill-files、TMDB 每日热门与夸克资源同步。
 > 运行机：Debian 13（主机名 `debian13`），仓库 `/home/marco/Documents/Github/wodewangpan`，运行用户 `marco`。
-> **六个任务全部是纯 Node + 系统 cron，不依赖 LLM，也不依赖 WorkBuddy 自动化调度。**
+> **七个任务全部是纯 Node + 系统 cron，不依赖 LLM，也不依赖 WorkBuddy 自动化调度。**
 
 ## 1. 任务总表
 
@@ -14,6 +14,7 @@
 | 我的网盘.夸克预存资源搬运 | 每天 `01:40` | `tools/quark-cron/prestore-move.mjs` | 夸克 `move` 目录搬运 | 源/目标目录名实时归一化比对 | `~/.cache/quark-sync/move-cron.log` |
 | 我的网盘.fill-files补文件清单 | 每 2 小时 `:30` | `tools/feishu-reports/wodewangpan-fillfiles-run.mjs` | 写 `data/*.yaml` + build + git push | 按 `added` 升序找无 `files:` 的条目 | `~/.cache/wdp-fillfiles-cron.log` |
 | 我的网盘.TMDB今日热门影视每日同步 | 每天 `03:50` | `tools/quark-cron/trending-daily.mjs` | 建夸克目录 + 出链 + 写 `data/*.yaml` + build + push + 可选光鸭镜像/VPS 重建 | `~/.cache/quark-sync/trending-seen.json` | `~/.cache/wdp-trending-cron.log` |
+| 我的网盘.夸克资源同步 | 每 6 小时 `:10` | `tools/quark-cron/resource-sync.mjs` | 目录改名/出链 + 写 `data/*.yaml` + build + push + 光鸭补链/VPS 重建 | 夸克实时目录与站点 YAML 对账 | `~/.cache/wdp-resource-sync-cron.log` |
 
 共同原则：
 
@@ -21,7 +22,7 @@
 2. `posted.json` 留在仓库工作区但已从 git 取消跟踪；删掉会重复发帖。
 3. 夸克中间产物只落 `~/.cache/quark-sync/`，可随时清理，不影响判重。
 4. 所有 cron 用标记块管理，幂等替换，不碰块外条目。
-5. 两条推送任务不碰网盘；两条夸克任务不写 `data/*.yaml`、不发帖；fill-files 写 `data/*.yaml` 并 build/push 但不 ssh；TMDB 任务会写 `data/*.yaml`、build/push、VPS 即时重建与光鸭镜像。
+5. 两条推送任务不碰网盘；两条夸克定点任务不写 `data/*.yaml`、不发帖；fill-files 写 `data/*.yaml` 并 build/push 但不 ssh；TMDB 与资源同步会写 `data/*.yaml`、build/push、VPS 即时重建，TMDB 还做光鸭镜像、资源同步做光鸭补链。
 
 ## 2. 环境与凭据
 
@@ -88,9 +89,13 @@ PATH=/usr/bin:/bin
 PATH=/usr/bin:/bin
 50 3 * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node tools/quark-cron/trending-daily.mjs >> /home/marco/.cache/wdp-trending-cron.log 2>&1
 # <<< wdp-trending
+# >>> wdp-sync (managed, 勿手改)
+PATH=/usr/bin:/bin
+10 */6 * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node tools/quark-cron/resource-sync.mjs >> /home/marco/.cache/wdp-resource-sync-cron.log 2>&1
+# <<< wdp-sync
 ```
 
-- `wdp-push` / `wdp-fill` / `wdp-trending` 块由人工按上面全文维护（`crontab -e`）。
+- `wdp-push` / `wdp-fill` / `wdp-trending` / `wdp-sync` 块由人工按上面全文维护（`crontab -e`）。
 - 两条夸克 cron 用仓库脚本幂等安装：
 
 ```bash
@@ -159,7 +164,24 @@ tail -f ~/.cache/wdp-trending-cron.log
 - 本任务**不写 `files:` 与 `updated`**、不自动标 `dead`；空目录由 fill-files 后续补清单。
 - VPS 重建走 `ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'`，不看 ssh stdout，看日志末行「发布完成：<hash>」。
 
-## 7. 夸克分享每日补充更新（16:10）
+## 7. 夸克资源同步（每 6 小时 `:10`）
+
+一条命令完成：git 预检/对齐 → `scan-new` → `match-batch` → 分类批量入库 → 构建/冒烟 → commit/push → VPS 重建 → 光鸭补链 → 飞书卡片。
+
+```bash
+node tools/quark-cron/resource-sync.mjs --dry-run   # 只扫描+TMDB 匹配，不改名、不出链、不写 data、不提交
+node tools/quark-cron/resource-sync.mjs             # 正式（cron 自动跑）
+tail -f ~/.cache/wdp-resource-sync-cron.log
+```
+
+- 第一版自动入库范围：`mv` / `tv` / `dc`（`process-batch`）与 `app`（`app-batch`）；`an` / `game` / `bk` / `cs` / `ot` 只扫描并以 `unsupported_category` 上报，不自动入库。
+- `duplicate_suspect`（`likely_duplicate_of`）、`unknown_category`（`unmapped`）一律跳过并写进卡片 `skipped`，不删不改；合集拆分本版只做关键词保守跳过，不自动拆。
+- TMDB 低置信（年份不符或评分过低）降级为中性简介，不把错片名写进站点。
+- 编号按 `scan-new` 的 `holes_free` + `holes_reclaim` 最小可用优先，空洞用完才顺延；`holes_blocked` 绝不使用。
+- 构建或冒烟失败 → 不提交不推送；push 被拒 → `fetch/rebase` 后重推一次；VPS 重建失败非致命。
+- 光鸭补链每轮必跑；夸克侧无新增时**不发飞书卡**，避免空报刷屏。
+
+## 8. 夸克分享每日补充更新（16:10）
 
 原 LLM prompt 里的判断已固化进 `tools/quark-cron/share-update.mjs`。流程：验登录 → 翻页拉更新清单并按 `share_url` 去重 → 逐条 `saveas-update` 增量转存 → `get-share-saved-dir` 核验是否补进历史目录 → 生成 payload → 飞书蓝卡。
 
@@ -181,7 +203,7 @@ node tools/quark-cron/share-update.mjs             # 正式（cron 自动跑）
 - `saveas-update` 成功不重试；确定性失败码 `41043` / `41040` / `41006` / `41009` / `41031` 不重试；其余瞬时错误最多重试 1 次。
 - 卡片 `msg` 原样展示，不改写、不概括、不加前后缀。
 
-## 8. 夸克预存资源搬运（01:40）
+## 9. 夸克预存资源搬运（01:40）
 
 把「预存资源」下 9 个分类目录的资源目录，每类随机挑 1 个，搬到「SHARE」下对应分类；先按目录名归一化查重，重复跳过。
 
@@ -207,7 +229,7 @@ node tools/quark-cron/prestore-move.mjs            # 正式（cron 自动跑）
 - 唯一额外动作是发一张蓝卡；推送失败最多重试 1 次，不因推送失败回滚搬运；每轮必发卡。
 - CLI 的 `notice.text` 只进本地简报、原样展示，不写进飞书卡。
 
-## 9. 故障速查
+## 10. 故障速查
 
 | 现象 | 原因 | 处理 |
 |---|---|---|
@@ -217,15 +239,15 @@ node tools/quark-cron/prestore-move.mjs            # 正式（cron 自动跑）
 | TG 报 `fetch failed / other side closed` | 网络抖动 | 失败不写状态，下轮自动重试；`--check` 验权限 |
 | 飞书发送失败 | 凭据缺失 / app 配错 / 网络 | 检查 `~/.config/wodewangpan-feishu.env` 三个键与权限 600 |
 | 重复发帖 | 判重文件被删或跨机复制 | 用现网最新 `posted.json` 恢复；不要两端同时跑 |
-| 同一资源被转存/搬运两次 | LLM 版与 cron 版同时启用 | 必须二选一，见第 10 节 |
+| 同一资源被转存/搬运两次 | LLM 版与 cron 版同时启用 | 必须二选一，见第 11 节 |
 
-## 10. 回退与互斥
+## 11. 回退与互斥
 
 - 推送任务：不要同时启用 WorkBuddy 自动化与这套 cron，否则每小时双发。
 - 夸克任务：`bash deploy/install-quark-cron.sh uninstall` 卸掉两条 cron 后，才能把旧 WorkBuddy 自动化从 PAUSED 恢复；两边同时开会对同一链接/目录各操作一次。
 - 卸载推送 cron：`crontab -e` 删除 `wdp-push` 标记块整段；不要误删另外两个夸克块。
 
-## 11. 脚本权威源
+## 12. 脚本权威源
 
 | 用途 | 仓库路径 |
 |---|---|
@@ -236,6 +258,7 @@ node tools/quark-cron/prestore-move.mjs            # 正式（cron 自动跑）
 | 预存搬运编排 | `tools/quark-cron/prestore-move.mjs` |
 | fill-files 一轮编排 | `tools/feishu-reports/wodewangpan-fillfiles-run.mjs` |
 | TMDB 每日同步编排 | `tools/quark-cron/trending-daily.mjs` |
+| 夸克资源同步编排 | `tools/quark-cron/resource-sync.mjs` |
 | vendor 脚本 | `tools/vendor/quark-resource-sync/`、`tools/vendor/quarkclouddrive/` |
 | 飞书卡片直发（唯一实现） | `tools/feishu-reports/feishu-api.mjs` |
 | 飞书卡片（补存 / 搬运 / 补齐 / TMDB） | `tools/feishu-reports/wodewangpan-{share-update,move,fillfiles,trending}-feishu.mjs` |

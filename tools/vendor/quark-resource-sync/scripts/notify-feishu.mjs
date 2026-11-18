@@ -36,42 +36,11 @@
  *  - 发送失败返回非 0，调用方自行决定是否致命（同步流程里视为非致命）。
  */
 import fs from 'node:fs';
-import path from 'node:path';
-import { spawnSync } from 'node:child_process';
-import { SKILL, HOME, TMP } from './lib/config.mjs';
+import { feishuConfig, sendInteractiveCard } from '../../../feishu-reports/feishu-api.mjs';
 
-/** 将军的 open_id（本应用内）；可用 config.env / 环境变量 FEISHU_TO 覆盖 */
-const DEFAULT_TO = 'ou_5c0d1b0b62e3bef0ffa84b7b496c18f5';
+/** 接收人取本机 ~/.config/wodewangpan-feishu.env；发卡走飞书开放 API */
+const TO = feishuConfig().to;
 const DEFAULT_TITLE = '夸克资源同步任务简报';
-
-function readEnvFile() {
-  const file = path.join(SKILL, 'config.env');
-  let raw;
-  try { raw = fs.readFileSync(file, 'utf8'); } catch { return {}; }
-  return Object.fromEntries(
-    raw
-      .split(/\r?\n/)
-      .filter((l) => l.trim() && !l.trim().startsWith('#'))
-      .map((l) => {
-        const i = l.indexOf('=');
-        return i < 0 ? null : [l.slice(0, i).trim(), l.slice(i + 1).trim().replace(/^["']|["']$/g, '')];
-      })
-      .filter(Boolean)
-  );
-}
-
-const envFile = readEnvFile();
-const TO = (process.env.FEISHU_TO || envFile.FEISHU_TO || '').trim() || DEFAULT_TO;
-
-/** lark-cli 底层 run.js 自动探测（workbuddy / codebuddy 都认；沙箱用 statSync 判存在） */
-function detectRunJs() {
-  const roots = ['.workbuddy', '.codebuddy'];
-  for (const r of roots) {
-    const p = path.join(HOME, r, 'binaries', 'node', 'cli-connector-packages', 'node_modules', '@larksuite', 'cli', 'scripts', 'run.js');
-    try { fs.statSync(p); return p; } catch {}
-  }
-  return '';
-}
 
 const args = process.argv.slice(2);
 const opt = (k, d = '') => {
@@ -189,54 +158,13 @@ if (dry) {
   process.exit(0);
 }
 
-// ---- 发送 ------------------------------------------------------------------
-const runJs = detectRunJs();
-if (!runJs) {
-  console.error('未找到 lark-cli 底层 run.js，无法发送');
-  process.exit(3);
-}
-
-// 内容走 @file 传参：避免超长命令行，也便于降级时手工重放
-const contentFile = path.join(TMP, `feishu-card-${Date.now()}.json`);
-fs.writeFileSync(contentFile, payload, 'utf8');
-
+// ---- 发送（飞书开放 API 直连）----------------------------------------------
 const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
 const idem = opt('--idempotency-key', `quark-sync-${stamp}`);
-const cliArgs = [
-  runJs, 'im', '+messages-send',
-  '--as', 'bot', '--user-id', TO,
-  '--msg-type', 'interactive', '--content', `@${contentFile}`,
-  '--idempotency-key', idem,
-];
-
-// 同步 sleep（无需 async）
-const nap = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
-
-let r;
-for (let attempt = 1; attempt <= 3; attempt += 1) {
-  r = spawnSync(process.execPath, cliArgs, { encoding: 'utf8' });
-  if (!r.error) break; // 进程起来了（成功或业务报错都算）
-  if (!['EBUSY', 'ETXTBSY', 'EAGAIN', 'EPERM'].includes(r.error.code)) break;
-  if (attempt < 3) nap(1500 * attempt);
-}
-
-if (r.error) {
-  console.error(`[发送失败] 无法启动子进程：${r.error.code} ${r.error.message}`);
-  console.error('内容已落盘，可在 shell 里直接重放（一级进程一般不受限）：');
-  console.error(`  node "${runJs}" im +messages-send --as bot --user-id ${TO} --msg-type interactive --content "@${contentFile}" --idempotency-key ${idem}`);
-  process.exit(4);
-}
-
-if (r.status !== 0) {
-  const detail = String(r.stderr || r.stdout || '').trim() || `退出码 ${r.status}`;
-  console.error('[发送失败]', detail.slice(0, 600));
-  process.exit(r.status || 1);
-}
-
-let mid = '';
 try {
-  mid = JSON.parse(r.stdout).data?.message_id || '';
-} catch {
-  mid = (r.stdout.match(/om_[A-Za-z0-9]+/) || [''])[0];
+  const mid = await sendInteractiveCard(JSON.parse(payload), { to: TO, idempotencyKey: idem });
+  console.log(`[飞书] ✓ 已推送 ${count} 条 (message_id ${mid || 'unknown'})`);
+} catch (e) {
+  console.error('[发送失败]', String(e.message || e).slice(0, 600));
+  process.exit(1);
 }
-console.log(`[飞书] ✓ 已推送 ${count} 条 (message_id ${mid || 'unknown'})`);

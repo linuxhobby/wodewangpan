@@ -17,6 +17,8 @@ npx eslint scripts/        # lint，提交前必须 0 错误
 node tools/new-resource.js        # 交互式新增资源条目
 node tools/quark-cron/share-update.mjs --dry    # 夸克每日补存 dry 自检（不转存）
 node tools/quark-cron/prestore-move.mjs --dry   # 预存搬运 dry 自检（不 move）
+node tools/quark-cron/trending-daily.mjs --dry-run  # TMDB 同步配置/状态检查
+node tools/quark-cron/resource-sync.mjs --dry-run   # 资源同步扫描+匹配（不写盘）
 bash deploy/install-quark-cron.sh               # 幂等安装两条夸克 cron
 node tools/fill-files.mjs --limit 3 # 补文件清单（见 §4）
 node tools/sort-trees.mjs --dry-run # 预览/回填目录树排序（见 §4）
@@ -39,7 +41,7 @@ npm run check:images                 # 配图盘点（分类目录命中 / 孤�
 | `scripts/lib/render.js` | 全部页面模板与 SEO 输出（meta/JSON-LD/sitemap） |
 | `scripts/lib/assets.js` | 配图/二维码等静态资产处理 |
 | `tools/` | **工具目录（2026-11-17 拆分）**：数据采集与内容生产脚本（fill-files 全家桶、补描述/标题、海报生成、资源导出），依赖采集环境（夸克 CLI / TMDB 凭据）；站点构建不引用本目录，依赖方向单向 tools → scripts/lib |
-| `tools/quark-cron/` | **两条夸克定时任务的编排脚本（2026-11-18 并入）**：`share-update.mjs`（分享每日补存，cron 16:10）与 `prestore-move.mjs`（预存资源搬运，01:40），纯 node + CLI、不依赖 LLM；缓存/日志走 `~/.cache/quark-sync/`；四个常驻 cron 任务的统一手册见 `docs/CRON-TASKS.md` |
+| `tools/quark-cron/` | **四条夸克/同步编排脚本**：`share-update.mjs`（16:10）、`prestore-move.mjs`（01:40）、`trending-daily.mjs`（03:50）、`resource-sync.mjs`（每 6 小时 :10），纯 node + CLI、不依赖 LLM；缓存/日志走 `~/.cache/quark-sync/`；七个常驻 cron 任务的统一手册见 `docs/CRON-TASKS.md` |
 | `deploy/install-quark-cron.sh` | 幂等安装上述两条 cron（标记块 `wdp-quark` / `wdp-move`），`uninstall` 可卸；凭据只走 scp |
 | `tools/fill-files.mjs` | 补「文件清单」`files:` 块（§4 例行任务的主角） |
 | `tools/sort-trees.mjs` | 回填已有 `files.tree` 的行序（只重排，不动内容与日期） |
@@ -89,9 +91,9 @@ npm run check:images                 # 配图盘点（分类目录命中 / 孤�
 ## 3. Git 约束（重要）
 
 - 分支就是 `main`，直接提交推送，不需要开分支。
-- **推送前必须 `git fetch` 并确认本地仍基于远程 HEAD**：本仓库有三个定时任务并行提交
+- **推送前必须 `git fetch` 并确认本地仍基于远程 HEAD**：本仓库有多个任务并行提交
   `data/`——fill-files 补文件清单（每 2 小时的 30 分）、夸克资源同步（每 6 小时的 10 分）、
-  TMDB 今日热门（每天 3:50）。先 `git pull --rebase` 再 push，不要等被拒了才补。
+  TMDB 今日热门（每天 3:50）等。先 `git pull --rebase` 再 push，不要等被拒了才补。
   其中 fill-files 与 VPS 的发布 cron **同刻触发**（都在偶数小时 :30），互不冲突（任务只 push 不 ssh）。
 - rebase 前工作区要干净（`git status --short` 无输出）。出现非本任务产生的改动就标注「工作区不干净」上报，
   **不要 stash、不要丢弃**。
