@@ -216,46 +216,65 @@ async function main() {
 
     if (DRY || !wanted.length) return { report, exitCode: 0 };
 
-    // 3. 一次一批出链，每条只提交一次。失败项只记录，不重试、不恢复、不重建分享。
+    // 3. 一次一批出链，每条只提交一次。已创建/结果未确认的绝不重提；
+    //    SHARE_FILE_REJECTED 是 CLI 预检抛出的（尚未创建任何分享），响应里带具体 file_id，
+    //    只剔除那一条并把同批其余条目作为新请求提交，不把整批都误判为失败。
     const created = new Map();
     for (let off = 0; off < wanted.length; off += 100) {
-      const batch = wanted.slice(off, off + 100);
-      const requestId = crypto.randomUUID();
-      const payload = {
-        version: 1, request_id: requestId,
-        operations: batch.map((w) => ({ id: w.id, type: 'create_share', remote_ids: [w.remote_id], share_type: 0, validity_seconds: 0 })),
-      };
-      const run = await cli('run', payload);
-      if (run.__error || run.code !== 'OK' || /^LOGIN_/.test(String(run.code))) {
-        for (const w of batch) report.failed.push({ id: w.id, code: run.code || run.__error, message: String(run.data?.message || '出链请求未通过预检，本批不重试') });
-        for (const w of wanted.slice(off + batch.length)) report.skipped.push({ id: w.id, reason: '前一批出链请求未通过预检，本轮不再提交，也不重试' });
-        exitCode = 1;
+      let batch = wanted.slice(off, off + 100);
+      let guard = 0;
+      while (batch.length && guard++ <= 100) {
+        const requestId = crypto.randomUUID();
+        const payload = {
+          version: 1, request_id: requestId,
+          operations: batch.map((w) => ({ id: w.id, type: 'create_share', remote_ids: [w.remote_id], share_type: 0, validity_seconds: 0 })),
+        };
+        const run = await cli('run', payload);
+        if (run.code === 'SHARE_FILE_REJECTED') {
+          const badId = String(run.data?.file_id || '');
+          const bad = batch.find((w) => w.remote_id === badId);
+          if (bad) {
+            report.failed.push({ id: bad.id, code: 'SHARE_FILE_REJECTED', message: `违规文件不能创建分享：${String(run.data?.file_name || bad.dir).slice(0, 80)}` });
+            batch = batch.filter((w) => w.id !== bad.id);
+            exitCode = 1;
+            continue;
+          }
+        }
+        if (run.__error || run.code !== 'OK' || /^LOGIN_/.test(String(run.code))) {
+          for (const w of batch) report.failed.push({ id: w.id, code: run.code || run.__error, message: String(run.data?.message || '出链请求未通过预检，本批不重试') });
+          for (const w of wanted.slice(off + batch.length)) report.skipped.push({ id: w.id, reason: '前一批出链请求未通过预检，本轮不再提交，也不重试' });
+          exitCode = 1;
+          break;
+        }
+        const batchId = run.batch_id || requestId;
+        let st = run;
+        for (let i = 0; i < 30 && !TERMINAL.has(st.batch_state || st.data?.batch_state); i++) {
+          await sleep(1000);
+          st = await cli('status', undefined, ['--batch-id', batchId]);
+          if (st.__error) break;
+        }
+        const state = st.batch_state || st.data?.batch_state;
+        if (!TERMINAL.has(state)) {
+          for (const w of batch) report.unconfirmed.push({ id: w.id, batch_id: batchId, code: st.__error || 'STATUS_TIMEOUT', message: '出链结果未确认，不重提，需人工按 batch_id 核对' });
+          exitCode = 1;
+          break;
+        }
+        const items = st.data?.items || [];
+        for (const w of batch) {
+          const it = items.find((x) => x.operation_id === w.id);
+          const url = it?.result?.shareUrl;
+          if (it?.state === 'SUCCEEDED' && /^https:\/\/[^\s"]+\/s\//.test(String(url))) {
+            created.set(w.id, url);
+            report.created.push({ id: w.id, category: w.category, dir: w.dir, url });
+          } else {
+            report.failed.push({ id: w.id, code: it?.code || it?.state || 'NO_RESULT', message: String(it?.error?.message || it?.message || '出链失败，不重试') });
+            exitCode = 1;
+          }
+        }
         break;
       }
-      const batchId = run.batch_id || requestId;
-      let st = run;
-      for (let i = 0; i < 30 && !TERMINAL.has(st.batch_state || st.data?.batch_state); i++) {
-        await sleep(1000);
-        st = await cli('status', undefined, ['--batch-id', batchId]);
-        if (st.__error) break;
-      }
-      const state = st.batch_state || st.data?.batch_state;
-      if (!TERMINAL.has(state)) {
-        for (const w of batch) report.unconfirmed.push({ id: w.id, batch_id: batchId, code: st.__error || 'STATUS_TIMEOUT', message: '出链结果未确认，不重提，需人工按 batch_id 核对' });
-        exitCode = 1;
-        continue;
-      }
-      const items = st.data?.items || [];
-      for (const w of batch) {
-        const it = items.find((x) => x.operation_id === w.id);
-        const url = it?.result?.shareUrl;
-        if (it?.state === 'SUCCEEDED' && /^https:\/\/[^\s"]+\/s\//.test(String(url))) {
-          created.set(w.id, url);
-          report.created.push({ id: w.id, category: w.category, dir: w.dir, url });
-        } else {
-          report.failed.push({ id: w.id, code: it?.code || it?.state || 'NO_RESULT', message: String(it?.error?.message || it?.message || '出链失败，不重试') });
-          exitCode = 1;
-        }
+      if (batch.length) {
+        for (const w of batch) report.skipped.push({ id: w.id, reason: '同批预检拒绝次数过多，未在本轮提交' });
       }
     }
 

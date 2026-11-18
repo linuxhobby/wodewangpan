@@ -239,6 +239,24 @@ try {
   gyText = `光鸭补链：成功 ${n}/${g.pending?.length ?? 0}（失败 ${(g.failed || []).length}，未确认 ${(g.unconfirmed || []).length}）`;
   if (g.login_required) gyText += '：需人工重新登录';
   for (const f of g.failed || []) skipped.push({ name: f.name || f.id || '光鸭条目', reason: `guangya_failed：${String(f.message || f.reason || '').slice(0, 100)}` });
+  // 光鸭链接是在主流程 commit/push 之后写进 data/*.yaml 的，必须单独收口，
+  // 否则工作区留脏，下一轮 git 预检会直接停手。
+  if (n && !DRY) {
+    run('git add guangya', 'git', ['add', 'data']);
+    const gc = run('git commit guangya', 'git', ['commit', '-m', `chore: 光鸭补链 ${n} 条`]);
+    if (gc.ok) {
+      let gp = run('git push guangya', 'git', ['push', 'origin', 'main']);
+      if (!gp.ok && /rejected|fetch first/i.test(gp.out)) {
+        run('git rebase guangya', 'git', ['rebase', 'origin/main']);
+        gp = run('git push guangya retry', 'git', ['push', 'origin', 'main']);
+      }
+      if (gp.ok) gyText += ' ｜ 链接已提交推送';
+      else skipped.push({ name: 'git push guangya', reason: 'GitHub 未推送（本地提交已保留）' });
+      gyText += ' ｜ ' + vpsRebuild('guangya');
+    } else {
+      skipped.push({ name: 'git commit guangya', reason: '光鸭链接提交失败' });
+    }
+  }
 } catch {}
 log(gyText);
 
