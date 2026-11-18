@@ -35,9 +35,11 @@ function clean(name) {
   const year = ym ? ym[0] : null;
   let base = year ? s.slice(0, s.indexOf(year)) : s.split(/[.\[(]/)[0];
 
-  let zh = (base.match(/[一-龥]{2,}/g) || []).map((x) => x).sort((a, b) => b.length - a.length)[0] || null;
+  // 规格词先从 base 里剔掉，再认中文名；中文片名末尾的续集数字/季数（虎胆龙威3、速度与激情9、第二季）是标题的一部分，不能当噪音砍掉
+  const zhBase = base.replace(ZH_NOISE, '');
+  let zh = (zhBase.match(/[一-龥]{2,}(?:\d+)?(?:季|部|集)?/g) || []).sort((a, b) => b.length - a.length)[0] || null;
   if (zh) {
-    zh = zh.replace(ZH_NOISE, '').replace(/[\d\-—]+$/, '').trim();
+    zh = zh.replace(/[\-—]+$/, '').trim();
     if (zh.length < 2) zh = null;
   }
 
