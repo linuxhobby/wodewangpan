@@ -100,12 +100,13 @@ npm run check:images                 # 配图盘点（分类目录命中 / 孤�
 
 ## 4. 例行任务：补文件清单（fill-files）
 
-本站 SEO 的核心增量工作，**每 2 小时一轮、每轮 3 条**（约 36 条/天），由定时任务
-「我的网盘.fill-files补文件清单」在 0:30 / 2:30 / … / 22:30（Asia/Shanghai）无人值守执行。
-原则是**宁可少不可断**。
+本站 SEO 的核心增量工作，**每 2 小时一轮、每轮 3 条**（约 36 条/天）。2026-11-18 起由本机
+Debian cron（标记块 `wdp-fill`，`30 */2 * * *`）直接跑编排脚本，不再依赖 WorkBuddy / LLM；
+原则是**宁可少不可断**。五个常驻任务的统一手册见 `docs/CRON-TASKS.md`。
 
 ```bash
-node tools/fill-files.mjs --limit 3 --delay 3000
+node tools/feishu-reports/wodewangpan-fillfiles-run.mjs            # 整轮：对齐→补齐→校验→构建→推送→飞书
+node tools/feishu-reports/wodewangpan-fillfiles-run.mjs --dry-run  # 试跑，不写盘不提交
 ```
 
 工具行为（补齐）：遍历 `data/*.yaml` 中「有 `quark_url` 且还没有 `files:` 块」的条目，按 `added`

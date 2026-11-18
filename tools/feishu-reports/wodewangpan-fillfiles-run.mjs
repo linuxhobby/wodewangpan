@@ -6,7 +6,7 @@
  * 这一串确定性步骤收进一个脚本，任务 prompt 只剩「跑这个脚本 + 转述简报」。
  *
  * 用法：
- *   node C:/Users/marco/Github/wodewangpan/tools/feishu-reports/wodewangpan-fillfiles-run.mjs
+ *   node tools/feishu-reports/wodewangpan-fillfiles-run.mjs
  *   node ... --dry-run          试跑：不动 git、不写盘、不发飞书，只验证流程与解析
  *   node ... --limit 3          每轮写入额度，默认 3（不要调大）
  *   node ... --no-feishu        跳过飞书卡片（调试用）
@@ -22,20 +22,20 @@
  *   commit message 格式 → 第 7 段
  *   飞书卡片参数        → finish() 里的 FEISHU 调用
  *   发布方式            → 本脚本不发布，只 push，等 VPS 每 2 小时 :30 的 cron
- * 运行日志与锁：C:/Users/marco/.workbuddy/fillfiles-run（也是自动化的 cwd）
+ * 运行日志与锁：~/.cache/wdp-fillfiles-*.log 与 ~/.cache/wdp-fillfiles.lock（不再新建工作目录）
  */
 
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REPO = 'C:/Users/marco/Github/wodewangpan';
-// 简报脚本与本文件同目录（2026-11-17 并入站点仓 tools/feishu-reports/ 后按自身位置解析）
 const SCRIPTS = path.dirname(fileURLToPath(import.meta.url));
+const REPO = process.env.WDP_REPO || path.resolve(SCRIPTS, '..', '..');
 const FEISHU = path.join(SCRIPTS, 'wodewangpan-fillfiles-feishu.mjs');
-const LOG_DIR = 'C:/Users/marco/.workbuddy/fillfiles-run';
-const LOCK = path.join(LOG_DIR, '.run.lock');
+const LOG_DIR = path.join(os.homedir(), '.cache');
+const LOCK = path.join(LOG_DIR, 'wdp-fillfiles.lock');
 
 const argv = process.argv.slice(2);
 const DRY = argv.includes('--dry-run');
@@ -53,7 +53,7 @@ const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate
 const stamp = `${today} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
 fs.mkdirSync(LOG_DIR, { recursive: true });
-const LOG_FILE = path.join(LOG_DIR, `${today}-${pad(now.getHours())}${pad(now.getMinutes())}.log`);
+const LOG_FILE = path.join(LOG_DIR, `wdp-fillfiles-${today}-${pad(now.getHours())}${pad(now.getMinutes())}.log`);
 let logFd = null;
 try {
   logFd = fs.openSync(LOG_FILE, 'a');
