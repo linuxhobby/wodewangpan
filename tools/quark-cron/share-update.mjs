@@ -109,8 +109,10 @@ for (let i = 0; i < candidates.length; i++) {
   let a = run();
   let code = a.res ? a.res.code : null;
   let retried = false;
-  // 41043（链接未转存）不重试；其余（含 41040 无更新）最多重试 1 次
-  if (code !== 0 && String(code) !== '41043') {
+  // 确定性失败不重试：41043 未转存 / 41040 无更新 / 41006 分享不存在 /
+  // 41009 分享文件已删除 / 41031 分享者封禁查看受限。其余瞬时错误最多重试 1 次。
+  const NO_RETRY = new Set(['41043', '41040', '41006', '41009', '41031']);
+  if (code !== 0 && !NO_RETRY.has(String(code))) {
     retried = true;
     a = run();
     code = a.res ? a.res.code : null;
