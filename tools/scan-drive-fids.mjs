@@ -20,7 +20,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadResources } from '../scripts/lib/data.js';
-import { QUARK_CLI as CLI } from './lib/quark-cli.mjs';
+import { QUARK_CLI as CLI, QUARK_CLI_ENV } from './lib/quark-cli.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -73,10 +73,11 @@ function browse(fid) {
         '--session-input', SESSION_INPUT,
         '--session-id', SESSION_ID,
       ],
-      { encoding: 'utf8', timeout: 180_000, maxBuffer: 1 << 26 }
+      { encoding: 'utf8', timeout: 180_000, maxBuffer: 1 << 26, env: QUARK_CLI_ENV }
     );
   } catch (e) {
-    throw new Error(`browse 调用失败：${String(e.message).split('\n')[0]}`);
+    const detail = String(e.stderr || e.message || '').trim().split('\n').slice(-1)[0] || `exit=${e.status}`;
+    throw new Error(`browse 调用失败：${detail.slice(0, 300)}`);
   }
   for (const line of out.split('\n')) {
     const t = line.trim();

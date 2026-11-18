@@ -235,6 +235,7 @@ node tools/quark-cron/prestore-move.mjs            # 正式（cron 自动跑）
 |---|---|---|
 | 夸克报「无法识别当前 Agent 环境」 | 裸跑 CLI 缺 env | 用编排脚本跑（已内置注入）；裸跑需带 `WORKBUDDY_CONFIG_DIR` |
 | 预存搬运报「服务器内部异常{0}」 | 夸克 `search` 偶发抖动 | `findRoot()` 已内置最多重试 1 次；仍失败再手动重跑 |
+| fill-files 报 `Command failed: .../quark-drive.cjs share-detail` | cron 缺 Agent 环境标识，CLI 返回 `-104` | `tools/lib/quark-cli.mjs` 已统一注入 `QUARK_CLI_ENV`；错误输出现在带真实 stderr |
 | 夸克报未登录 / `-103` | 登录态缺失或 cookie 过期 | 重新授权或 scp `workbuddy/config.json`；脚本不会启动登录流程 |
 | TG 报 `fetch failed / other side closed` | 网络抖动 | 失败不写状态，下轮自动重试；`--check` 验权限 |
 | 飞书发送失败 | 凭据缺失 / app 配错 / 网络 | 检查 `~/.config/wodewangpan-feishu.env` 三个键与权限 600 |

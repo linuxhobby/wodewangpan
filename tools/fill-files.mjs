@@ -51,7 +51,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sortTree } from './lib/tree-sort.mjs';
 import { todayShanghai } from '../scripts/lib/data.js';
-import { QUARK_CLI as CLI } from './lib/quark-cli.mjs';
+import { QUARK_CLI as CLI, QUARK_CLI_ENV } from './lib/quark-cli.mjs';
 import {
   SERIAL_FILES,
   splitLines,
@@ -201,10 +201,11 @@ function fetchDetail(url, pdirFid = '', page = 1) {
         '--session-input', SESSION_INPUT,
         '--session-id', SESSION_ID,
       ],
-      { encoding: 'utf8', timeout: 90_000 }
+      { encoding: 'utf8', timeout: 90_000, env: QUARK_CLI_ENV }
     );
   } catch (e) {
-    return { error: `调用失败：${String(e.message).split('\n')[0]}` };
+    const detail = String(e.stderr || e.message || '').trim().split('\n').slice(-1)[0] || `exit=${e.status}`;
+    return { error: `调用失败：${detail.slice(0, 300)}` };
   }
   for (const line of out.split('\n')) {
     const t = line.trim();
@@ -249,10 +250,11 @@ function fetchDriveDir(fid) {
         '--session-input', SESSION_INPUT,
         '--session-id', SESSION_ID,
       ],
-      { encoding: 'utf8', timeout: 180_000 }
+      { encoding: 'utf8', timeout: 180_000, env: QUARK_CLI_ENV }
     );
   } catch (e) {
-    return { error: `调用失败：${String(e.message).split('\n')[0]}` };
+    const detail = String(e.stderr || e.message || '').trim().split('\n').slice(-1)[0] || `exit=${e.status}`;
+    return { error: `调用失败：${detail.slice(0, 300)}` };
   }
   for (const line of out.split('\n')) {
     const t = line.trim();

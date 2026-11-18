@@ -7,6 +7,8 @@ import globals from 'globals';
  * 但每次提交都会在 CI 日志里把死代码亮出来，形成「只减不增」的约束。
  */
 export default [
+  // vendor 是第三方 skill 原样副本，不参与本站 lint（本地改造文件已单独检查）
+  { ignores: ['tools/vendor/**'] },
   {
     files: ['scripts/**/*.{js,mjs}', 'tools/**/*.{js,mjs}', 'theme/assets/**/*.js'],
     languageOptions: {
