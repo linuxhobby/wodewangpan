@@ -1736,10 +1736,20 @@
       7z-2606-Windows x64 .exe
 
 - id: app-108
-  title: "workbuddy for Linux"
+  title: "WorkBuddy for Linux"
   category: 软件
-  tags: ["软件", "macOS", "workbuddy for Linux"]
+  tags: ["软件", "Linux", "AI 工作台", "WorkBuddy"]
   quark_url: "https://pan.quark.cn/s/d0a6bd6d18d4"
-  description: "workbuddy for Linux for macOS：官方原版应用安装包，下载后拖入「应用程序」文件夹即可使用。"
+  description: "WorkBuddy 桌面客户端的 Linux x64 安装包留存，提供 DEB 与 RPM 两种格式，方便按发行版选择：Debian、Ubuntu 及衍生系统用 DEB，Fedora、RHEL 及衍生系统用 RPM。目录内共 2 个安装包，约 771 MB，版本信息见文件名 5.6.2.40046327。下载后请用系统包管理器安装，并先确认 CPU 架构与系统依赖匹配；具体功能与授权以 WorkBuddy 官方说明为准。"
   date: 2026-11-16
   added: 2026-11-16
+  updated: 2026-11-19
+  image: app-108.jpg
+  files:
+    count: 2
+    size: "771 MB"
+    format: "RPM / DEB"
+    tree: |
+      108-workbuddy for Linux/
+      WorkBuddy-linux-x64-deb-5.6.2.40046327-c7b525f3.deb
+      WorkBuddy-linux-x64-rpm-5.6.2.40046327-c7b525f3.rpm
