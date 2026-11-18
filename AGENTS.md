@@ -484,8 +484,9 @@ npm run build                  # 第二次构建应「重新生成 0 个」（30
 
 ## 10. TMDB 今日热门同步的筛选口径（年份窗口 2026-11-10 起 · 节目类黑名单 2026-11-11 起）
 
-「我的网盘.TMDB今日热门影视每日同步」调的是 skill 脚本
-`~/.workbuddy/skills/quark-resource-sync/scripts/trending-sync.mjs`。从这天起本站的筛选口径多一条**内容日期窗口**：
+「我的网盘.TMDB今日热门影视每日同步」2026-11-18 起由本机 cron `50 3 * * *` 跑
+`tools/quark-cron/trending-daily.mjs`，脚本 vendor 在 `tools/vendor/quark-resource-sync/`，不再依赖 WorkBuddy 自动化。
+从 2026-11-10 起本站的筛选口径多一条**内容日期窗口**：
 
 - **只收上映/首播落在近 12 个月内的今日热门**（滚动窗口，下限 = 运行当天往前推 12 个月）。
 - 电影（含热门电影榜里归入动漫的动画电影）按 `release_date`；剧集（含热门剧集榜里归入动漫的动画剧集）按**目标季 `air_date`**，
@@ -507,7 +508,7 @@ TMDB 剧集类型 **10767 脱口秀 / 10764 真人秀 / 10763 新闻** 任一即
 - 放开只能人工显式加 `--allow-program`，无人值守轮次不要带。
 - 存量不回溯：已入库的节目类条目不动。
 
-规则实现与完整口径在 skill 侧 `quark-resource-sync/SKILL.md` 的 trending-sync 一节；改任何一侧都要同步另一侧。
+规则实现与完整口径在 vendor 侧 `tools/vendor/quark-resource-sync/SKILL.md` 的 trending-sync 一节；改任何一侧都要同步另一侧。
 
 ## 11. 机器人与社媒推送（2026-11-17 并自私有仓 mybot）
 

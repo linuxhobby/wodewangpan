@@ -68,3 +68,9 @@ push/**/*.env
 deploy/wdp-scheduler/logs/
 deploy/wdp-scheduler/lastrun.json
 deploy/wdp-scheduler/*.pid
+
+# vendored skills 的运行态与登录态链接（本机文件，不入库）
+tools/vendor/quarkclouddrive/workbuddy
+tools/vendor/quarkclouddrive/browse/
+tools/vendor/quark-resource-sync/browse/
+tools/vendor/quark-resource-sync/scripts/browse/

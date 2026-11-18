@@ -1,0 +1,13 @@
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import fs from 'node:fs';
+import { cfg } from './lib/config.mjs';
+const run = promisify(execFile);
+const hit = JSON.parse(fs.readFileSync('C:\\Users\\marco\\AppData\\Local\\Temp\\wdwp\\mv-move\\mv-fid.json','utf8'))[0];
+const { stdout } = await run('node', [cfg.QUARK_CLI, 'share', hit.fid, '--title', '454-盗墓大案', '--url-type', '1', '--expired-type', '1'], { maxBuffer: 32e6 });
+const jsonLine = stdout.split('\n').find(l => l.trim().startsWith('{'));
+const obj = JSON.parse(jsonLine);
+console.log(JSON.stringify(obj, null, 1));
+const d = obj.data || {};
+const ok = obj.code === 0 && d.url_type == 1 && !d.passcode && d.share_url;
+console.log('\nRESULT:', ok ? 'OK' : 'CHECK', '| url_type=', d.url_type, '| passcode=', d.passcode, '| url=', d.share_url);

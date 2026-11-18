@@ -14,12 +14,12 @@
  * 这样 agent 只需要补三件它才知道的事实：冒烟结果、VPS 发布结果、额外的人工跟进项。
  *
  * 用法：
- *   node C:/Users/marco/Scripts/wodewangpan-trending-feishu.mjs \
+ *   node tools/feishu-reports/wodewangpan-trending-feishu.mjs \
  *     --status 成功 --smoke 12/12 --deploy "VPS 发布完成 441af38" \
  *     [--follow "某条 — 原因"] [--dry-run]
  *
  * 参数：
- *   --report <路径>   trending-sync 机读报告，默认 C:/Users/marco/.workbuddy/quark-sync-cache/trending-last.json
+ *   --report <路径>   trending-sync 机读报告，默认 ~/.cache/quark-sync/trending-last.json
  *   --repo <路径>     站点仓库，默认 C:/Users/marco/Github/wodewangpan
  *   --status <文本>   note 状态行首项，默认取报告结果自动判定（成功 / 部分成功 / 无新增）
  *   --smoke <文本>    本地冒烟结果，如「12/12」；不传则该段不出现
@@ -32,21 +32,23 @@
  *   --per-day / --no-reconcile  关掉编号对账段
  *   --dry-run         只打印卡片 JSON
  *
- * 接收人：环境变量 FEISHU_TO → quark-resource-sync config.env → 内置默认值。
+ * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env → 内置默认值；发卡走飞书开放 API。
  * 百度链路已于 2026-11-08 停止，卡片不出现任何百度相关字段。
  */
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { feishuConfig, sendInteractiveCard } from './feishu-api.mjs';
 
-const HOME = os.homedir();
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const args = process.argv.slice(2);
 const opt = (k, d = '') => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] ?? d : d; };
 const has = (k) => args.includes(k);
 
-const REPO = opt('--repo', 'C:/Users/marco/Github/wodewangpan');
-const REPORT = opt('--report', path.join(HOME, '.workbuddy', 'quark-sync-cache', 'trending-last.json'));
+const REPO = opt('--repo', process.env.WDP_REPO || REPO_ROOT);
+const CACHE = process.env.WDP_CACHE_DIR || path.join(os.homedir(), '.cache', 'quark-sync');
+const REPORT = opt('--report', path.join(CACHE, 'trending-last.json'));
 const TITLE = opt('--title', '我的网盘.TMDB今日热门同步简报');
 // 站点域名前缀；详情页按 id 前缀拼 /<slug>/<id>/（2026-11-15 起全站 URL 带分类，/resource/ 已成历史）
 const SITE_BASE = opt('--site', 'https://www.wodewangpan.top');
@@ -61,24 +63,11 @@ function siteUrl(id) {
   const slug = PREFIX_SLUG[String(id).split('-')[0]] || '';
   return slug ? `${SITE_BASE}/${slug}/${id}/` : `${SITE_BASE}/resource/${id}/`;
 }
-const DEFAULT_TO = 'ou_5c0d1b0b62e3bef0ffa84b7b496c18f5';
+const TO = feishuConfig().to;
 
 const EMOJI = { 电影: '🎞', 电视剧: '📺', 动漫: '🎌', 纪录片: '🎬', 游戏: '🎮', 软件: '💻', 电子书: '📚', 操作系统: '🖥', 课程: '🎓', 其他: '📦' };
 /** trending-sync 的 kind → 站点分类 / 数据文件 / id 前缀 */
 const KIND = { movie: { cat: '电影', file: 'movie.yaml', prefix: 'mv' }, tv: { cat: '电视剧', file: 'tv.yaml', prefix: 'tv' }, anime: { cat: '动漫', file: 'anime.yaml', prefix: 'an' } };
-
-function readFeishuTo() {
-  let raw = '';
-  try { raw = fs.readFileSync(path.join(HOME, '.workbuddy', 'skills', 'quark-resource-sync', 'config.env'), 'utf8'); } catch { return ''; }
-  for (const line of raw.split(/\r?\n/)) {
-    const t = line.trim();
-    if (!t || t.startsWith('#')) continue;
-    const i = t.indexOf('=');
-    if (i >= 0 && t.slice(0, i).trim() === 'FEISHU_TO') return t.slice(i + 1).trim().replace(/^["']|["']$/g, '');
-  }
-  return '';
-}
-const TO = (process.env.FEISHU_TO || readFeishuTo() || '').trim() || DEFAULT_TO;
 
 // ---------- 读 trending-sync 报告 ------------------------------------------------
 if (!fs.existsSync(REPORT)) { console.error(`找不到 trending-sync 报告：${REPORT}（可先跑 trending-sync.mjs 或用 --report 指定）`); process.exit(2); }
@@ -201,38 +190,13 @@ console.log(payload);
 console.log(`\n[摘要] 入库 ${created.length} 条 ｜ 顺延/未入库 ${skipped.length} 条 ｜ 失败 ${failed.length} ｜ 跟进段 ${follow.length} 行 ｜ ran_at ${fmt(when)}`);
 if (has('--dry-run')) { console.log('[dry-run] 未发送'); process.exit(0); }
 
-// ---------- 发送（与 fill-files 卡片同一套：底层 node + lark-cli run.js）----------
-function detectRunJs() {
-  for (const r of ['.workbuddy', '.codebuddy']) {
-    const p = path.join(HOME, r, 'binaries', 'node', 'cli-connector-packages', 'node_modules', '@larksuite', 'cli', 'scripts', 'run.js');
-    try { fs.statSync(p); return p; } catch {}
-  }
-  return '';
-}
-const runJs = detectRunJs();
-if (!runJs) { console.error('未找到 lark-cli 底层 run.js，无法发送'); process.exit(3); }
-const contentFile = path.join(os.tmpdir(), `feishu-trending-card-${Date.now()}.json`);
-fs.writeFileSync(contentFile, payload, 'utf8');
+// ---------- 发送（飞书开放 API 直连）----------
 const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
 const idem = opt('--idempotency-key', `trending-sync-${stamp}`);
-const cliArgs = [runJs, 'im', '+messages-send', '--as', 'bot', '--user-id', TO,
-  '--msg-type', 'interactive', '--content', `@${contentFile}`, '--idempotency-key', idem];
-
-const nap = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
-let r;
-for (let attempt = 1; attempt <= 3; attempt += 1) {
-  r = spawnSync(process.execPath, cliArgs, { encoding: 'utf8' });
-  if (!r.error) break;
-  if (!['EBUSY', 'ETXTBSY', 'EAGAIN', 'EPERM'].includes(r.error.code)) break;
-  if (attempt < 3) nap(1500 * attempt);
+try {
+  const mid = await sendInteractiveCard(card, { to: TO, idempotencyKey: idem });
+  console.log(`[飞书] ✓ 已推送 TMDB 同步简报卡片 (message_id ${mid || 'unknown'}) ｜ 入库 ${created.length} 条 ｜ 跟进 ${follow.length} 行`);
+} catch (e) {
+  console.error('[发送失败]', String(e.message || e).slice(0, 600));
+  process.exit(1);
 }
-if (r.error) {
-  console.error(`[发送失败] 无法启动子进程：${r.error.code} ${r.error.message}`);
-  console.error('内容已落盘，可在 shell 里直接原样重放（一级进程一般不受限）：');
-  console.error(`  node "${runJs}" im +messages-send --as bot --user-id ${TO} --msg-type interactive --content "@${contentFile}" --idempotency-key ${idem}`);
-  process.exit(4);
-}
-if (r.status !== 0) { console.error('[发送失败]', (String(r.stderr || r.stdout || '').trim() || `退出码 ${r.status}`).slice(0, 600)); process.exit(r.status || 1); }
-let mid = '';
-try { mid = JSON.parse(r.stdout).data?.message_id || ''; } catch { mid = (String(r.stdout).match(/om_[A-Za-z0-9]+/) || [''])[0]; }
-console.log(`[飞书] ✓ 已推送 TMDB 同步简报卡片 (message_id ${mid || 'unknown'}) ｜ 入库 ${created.length} 条 ｜ 跟进 ${follow.length} 行`);
