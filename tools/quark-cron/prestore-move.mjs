@@ -15,7 +15,7 @@
  * 环境变量（Debian 上按需覆盖，默认走 HOME 动态解析）：
  *   QK_SKILL_DIR       quarkclouddrive skill 根目录，默认 ~/.workbuddy/skills/quarkclouddrive
  *   QK_FEISHU_SCRIPT   飞书卡片脚本，默认本仓库 tools/feishu-reports/wodewangpan-move-feishu.mjs
- *   QK_CACHE_DIR       中间文件目录，默认 ~/.workbuddy/quark-sync-cache
+ *   QK_CACHE_DIR       中间文件目录，默认 ~/.cache/quark-sync
  */
 import fs from 'node:fs';
 import os from 'node:os';
@@ -30,7 +30,7 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '.
 const SKILL = process.env.QK_SKILL_DIR || path.join(HOME, '.workbuddy', 'skills', 'quarkclouddrive');
 const CLI = path.join(SKILL, 'scripts', 'quark-drive.cjs');
 const FEISHU = process.env.QK_FEISHU_SCRIPT || path.join(REPO, 'tools', 'feishu-reports', 'wodewangpan-move-feishu.mjs');
-const CACHE = process.env.QK_CACHE_DIR || path.join(HOME, '.workbuddy', 'quark-sync-cache');
+const CACHE = process.env.QK_CACHE_DIR || path.join(HOME, '.cache', 'quark-sync');
 const LOGIN_STATE = path.join(SKILL, 'workbuddy', 'config.json');
 const SI = '把预存资源各分类的资源目录各搬一个到SHARE对应分类目录，重复的跳过';
 
@@ -119,12 +119,19 @@ const clean = (s) => String(s == null ? '' : s).replace(/[｜|]/g, '/').trim();
 
 // 发现根目录：search 定位 + 读 artifact 全量 + 精确匹配目录名
 function findRoot(keyword) {
-  const c = cli(['search', '--keyword', keyword, '--search-type', 'dir', '--stdout-only']);
-  const res = resultOf(c.rows);
-  if (c.error || (res && res.code !== 0)) return { dir: null, error: c.error || (res && res.msg) };
-  const items = readJsonl(filePathOf(c.rows));
-  const hit = byName(items, keyword) || items.find((x) => x && x.filename === keyword);
-  return { dir: hit ? { fid: hit.fid, name: hit.filename } : null, error: null };
+  // 夸克偶发「服务器内部异常{0}」，这里最多重试 1 次；其它失败口径不变
+  let lastErr = '';
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const c = cli(['search', '--keyword', keyword, '--search-type', 'dir', '--stdout-only']);
+    const res = resultOf(c.rows);
+    if (!c.error && (!res || res.code === 0)) {
+      const items = readJsonl(filePathOf(c.rows));
+      const hit = byName(items, keyword) || items.find((x) => x && x.filename === keyword);
+      return { dir: hit ? { fid: hit.fid, name: hit.filename } : null, error: null };
+    }
+    lastErr = c.error || (res && res.msg) || 'search 无返回';
+  }
+  return { dir: null, error: lastErr };
 }
 
 // 飞书蓝卡（接收人内置于脚本；最多重试 1 次；失败不回滚任何搬运）

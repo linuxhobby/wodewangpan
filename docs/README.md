@@ -273,6 +273,7 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 | 技能真身 | `~/.workbuddy/skills/`（`quark-resource-sync` / `quarkclouddrive` / `quark-upload-share`）；`~/.codebuddy` 为历史目录 |
 | 凭据 | `~/.workbuddy/skills/quark-resource-sync/config.env`（含凭据，不写进文档） |
 | 推送凭据 | `~/.config/wodewangpan-tg.env` / `~/.config/wodewangpan-bluesky.env`（权限 600，不进 git，不依赖 WorkBuddy） |
+| 飞书简报凭据 | `~/.config/wodewangpan-feishu.env`（权限 600；`FEISHU_APP_ID` / `FEISHU_APP_SECRET` / `FEISHU_TO`，直连飞书 API） |
 | VPS autoupdate | `/usr/local/bin/wdwp-autoupdate`（拉取→npm ci→构建→原子替换 public→reload nginx） |
 
 > 凭据真实值一律不写进文档，只记「在哪、叫什么」。

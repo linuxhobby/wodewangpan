@@ -26,15 +26,10 @@
  *   --title <文本>    卡片蓝色头部标题，默认「我的网盘.预存资源搬运简报」。
  *   --dry-run         只打印将要发送的卡片 JSON，不发送。
  *
- * 接收人：环境变量 FEISHU_TO → quark-resource-sync config.env → 内置默认值。
- * lark-cli 是 sh 包装脚本，Windows 下不能直接 CreateProcess，故走底层 node + run.js。
+ * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env → 内置默认值。
+ * 发送走飞书开放 API 直连，不依赖 lark-cli / WorkBuddy。
  */
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-import { spawnSync } from 'node:child_process';
-
-const HOME = os.homedir();
+import { feishuConfig, sendInteractiveCard } from './feishu-api.mjs';
 const args = process.argv.slice(2);
 const opt = (k, d = '') => {
   const i = args.indexOf(k);
@@ -43,22 +38,7 @@ const opt = (k, d = '') => {
 const has = (k) => args.includes(k);
 
 const TITLE = opt('--title', '我的网盘.预存资源搬运简报');
-const DEFAULT_TO = 'ou_5c0d1b0b62e3bef0ffa84b7b496c18f5';
-
-function readFeishuTo() {
-  const file = path.join(HOME, '.workbuddy', 'skills', 'quark-resource-sync', 'config.env');
-  let raw = '';
-  try { raw = fs.readFileSync(file, 'utf8'); } catch { return ''; }
-  for (const line of raw.split(/\r?\n/)) {
-    const t = line.trim();
-    if (!t || t.startsWith('#')) continue;
-    const i = t.indexOf('=');
-    if (i < 0) continue;
-    if (t.slice(0, i).trim() === 'FEISHU_TO') return t.slice(i + 1).trim().replace(/^["']|["']$/g, '');
-  }
-  return '';
-}
-const TO = (process.env.FEISHU_TO || readFeishuTo() || '').trim() || DEFAULT_TO;
+const TO = feishuConfig().to;
 
 const pad = (n) => String(n).padStart(2, '0');
 const now = new Date();
@@ -120,43 +100,12 @@ if (has('--dry-run')) {
   process.exit(0);
 }
 
-function detectRunJs() {
-  for (const r of ['.workbuddy', '.codebuddy']) {
-    const p = path.join(HOME, r, 'binaries', 'node', 'cli-connector-packages', 'node_modules', '@larksuite', 'cli', 'scripts', 'run.js');
-    try { fs.statSync(p); return p; } catch {}
-  }
-  return '';
-}
-const runJs = detectRunJs();
-if (!runJs) { console.error('未找到 lark-cli 底层 run.js，无法发送'); process.exit(3); }
-
-const contentFile = path.join(os.tmpdir(), `feishu-move-card-${Date.now()}.json`);
-fs.writeFileSync(contentFile, payload, 'utf8');
-
 const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
 const idem = opt('--idempotency-key', `prestore-move-${stamp}`);
-const cliArgs = [runJs, 'im', '+messages-send', '--as', 'bot', '--user-id', TO,
-  '--msg-type', 'interactive', '--content', `@${contentFile}`, '--idempotency-key', idem];
-
-const nap = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
-let r;
-for (let attempt = 1; attempt <= 3; attempt += 1) {
-  r = spawnSync(process.execPath, cliArgs, { encoding: 'utf8' });
-  if (!r.error) break;
-  if (!['EBUSY', 'ETXTBSY', 'EAGAIN', 'EPERM'].includes(r.error.code)) break;
-  if (attempt < 3) nap(1500 * attempt);
+try {
+  const mid = await sendInteractiveCard(card, { to: TO, idempotencyKey: idem });
+  console.log(`[飞书] ✓ 已推送搬运简报卡片 (message_id ${mid || 'unknown'}) ｜ 搬运 ${names.length} 条 ｜ 状态 ${status}`);
+} catch (e) {
+  console.error('[发送失败]', String(e.message || e).slice(0, 600));
+  process.exit(1);
 }
-if (r.error) {
-  console.error(`[发送失败] 无法启动子进程：${r.error.code} ${r.error.message}`);
-  console.error('内容已落盘，可在 shell 里直接原样重放（一级进程一般不受限）：');
-  console.error(`  node "${runJs}" im +messages-send --as bot --user-id ${TO} --msg-type interactive --content "@${contentFile}" --idempotency-key ${idem}`);
-  process.exit(4);
-}
-if (r.status !== 0) {
-  const detail2 = String(r.stderr || r.stdout || '').trim() || `退出码 ${r.status}`;
-  console.error('[发送失败]', detail2.slice(0, 600));
-  process.exit(r.status || 1);
-}
-let mid = '';
-try { mid = JSON.parse(r.stdout).data?.message_id || ''; } catch { mid = (String(r.stdout).match(/om_[A-Za-z0-9]+/) || [''])[0]; }
-console.log(`[飞书] ✓ 已推送搬运简报卡片 (message_id ${mid || 'unknown'}) ｜ 搬运 ${names.length} 条 ｜ 状态 ${status}`);

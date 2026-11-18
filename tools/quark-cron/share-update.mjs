@@ -13,7 +13,7 @@
  *
  * 环境变量（Debian 上按需覆盖，默认走 HOME 动态解析）：
  *   QK_SKILL_DIR      quarkclouddrive skill 根目录，默认 ~/.workbuddy/skills/quarkclouddrive
- *   QK_CACHE_DIR      中间文件目录，默认 ~/.workbuddy/quark-sync-cache
+ *   QK_CACHE_DIR      中间文件目录，默认 ~/.cache/quark-sync
  *   QK_FEISHU_SCRIPT  飞书卡片脚本，默认本仓库 tools/feishu-reports/wodewangpan-share-update-feishu.mjs
  */
 import fs from 'node:fs';
@@ -27,7 +27,7 @@ const HOME = os.homedir();
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SKILL = process.env.QK_SKILL_DIR || path.join(HOME, '.workbuddy', 'skills', 'quarkclouddrive');
 const CLI = path.join(SKILL, 'scripts', 'quark-drive.cjs');
-const CACHE = process.env.QK_CACHE_DIR || path.join(HOME, '.workbuddy', 'quark-sync-cache');
+const CACHE = process.env.QK_CACHE_DIR || path.join(HOME, '.cache', 'quark-sync');
 const FEISHU = process.env.QK_FEISHU_SCRIPT || path.join(REPO, 'tools', 'feishu-reports', 'wodewangpan-share-update-feishu.mjs');
 const LOGIN_STATE = path.join(SKILL, 'workbuddy', 'config.json');
 const SI = '检查一下夸克网盘资源有没有更新，把每天新增的资源存放到对应的资源目录下，已经存过的就不用重复存了。';

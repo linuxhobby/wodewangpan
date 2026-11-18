@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 我的网盘 · 两条夸克 cron 幂等安装（分享每日更新 17:20 / 预存资源搬运 17:40）
+# 我的网盘 · 两条夸克 cron 幂等安装（分享每日更新 16:10 / 预存资源搬运 01:40）
 # 2026-11-18 并入仓库。在 Debian 机真实 shell、以运行用户（marco）执行：
 #   bash deploy/install-quark-cron.sh            # 安装/刷新
 #   bash deploy/install-quark-cron.sh uninstall  # 卸载这两条
@@ -10,7 +10,7 @@ set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NODE="$(command -v node || true)"
-LOG_DIR="${HOME}/.workbuddy/quark-sync-cache"
+LOG_DIR="${HOME}/.cache/quark-sync"
 
 Q_BEGIN='# >>> wdp-quark'
 Q_END='# <<< wdp-quark'
@@ -50,10 +50,10 @@ tmp="$(mktemp)"
 crontab -l 2>/dev/null | strip_blocks > "$tmp" || true
 {
   echo "$Q_BEGIN BEGIN (managed, 勿手改)"
-  echo "20 17 * * * cd $REPO && $NODE tools/quark-cron/share-update.mjs >> $LOG_DIR/cron.log 2>&1"
+  echo "10 16 * * * cd $REPO && QK_CACHE_DIR=$LOG_DIR $NODE tools/quark-cron/share-update.mjs >> $LOG_DIR/share-cron.log 2>&1"
   echo "$Q_END END"
   echo "$M_BEGIN BEGIN (managed, 勿手改)"
-  echo "40 17 * * * cd $REPO && $NODE tools/quark-cron/prestore-move.mjs >> $LOG_DIR/move-cron.log 2>&1"
+  echo "40 1 * * * cd $REPO && QK_CACHE_DIR=$LOG_DIR $NODE tools/quark-cron/prestore-move.mjs >> $LOG_DIR/move-cron.log 2>&1"
   echo "$M_END END"
 } >> "$tmp"
 crontab "$tmp"; rm -f "$tmp"

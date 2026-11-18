@@ -39,7 +39,7 @@ npm run check:images                 # 配图盘点（分类目录命中 / 孤�
 | `scripts/lib/render.js` | 全部页面模板与 SEO 输出（meta/JSON-LD/sitemap） |
 | `scripts/lib/assets.js` | 配图/二维码等静态资产处理 |
 | `tools/` | **工具目录（2026-11-17 拆分）**：数据采集与内容生产脚本（fill-files 全家桶、补描述/标题、海报生成、资源导出），依赖采集环境（夸克 CLI / TMDB 凭据）；站点构建不引用本目录，依赖方向单向 tools → scripts/lib |
-| `tools/quark-cron/` | **两条夸克定时任务的编排脚本（2026-11-18 并入）**：`share-update.mjs`（分享每日补存，cron 17:20）与 `prestore-move.mjs`（预存资源搬运，17:40），纯 node + CLI、不依赖 LLM；详见 `DEPLOY-DEBIAN-QUARK*.md` |
+| `tools/quark-cron/` | **两条夸克定时任务的编排脚本（2026-11-18 并入）**：`share-update.mjs`（分享每日补存，cron 16:10）与 `prestore-move.mjs`（预存资源搬运，01:40），纯 node + CLI、不依赖 LLM；缓存/日志走 `~/.cache/quark-sync/`；四个常驻 cron 任务的统一手册见 `docs/CRON-TASKS.md` |
 | `deploy/install-quark-cron.sh` | 幂等安装上述两条 cron（标记块 `wdp-quark` / `wdp-move`），`uninstall` 可卸；凭据只走 scp |
 | `tools/fill-files.mjs` | 补「文件清单」`files:` 块（§4 例行任务的主角） |
 | `tools/sort-trees.mjs` | 回填已有 `files.tree` 的行序（只重排，不动内容与日期） |
@@ -602,8 +602,10 @@ node push/bluesky/bluesky-post.mjs
 TG 推送的 caption 末尾固定一行「查询更多资源请联系 [小艾](https://t.me/wodewangpantop)」；
 想换称呼或目标地址，在运行机本地的 `~/.config/wodewangpan-tg.env` 里写 `TG_CONTACT_NAME` / `TG_CONTACT_URL` 覆盖。
 
-判重口径（定死，唯一实现在 `push/common.mjs`）：只认夸克或百度分享链接，任一相同即同一份资源；
-**标题相同但链接不同照发**（系列电影、多季剧是不同资源）。
+链接展示口径（2026-11-16 起）：**有什么网盘链接就发什么**——夸克 / 百度 / 光鸭 / 阿里 / 天翼 / UC / 迅雷 / 115 / 移动，
+以及数据里任意 `*_url` 分享字段（海报、详情页、官链等非分享字段除外），实现在 `push/common.mjs` 的 `NETDISK_PRESETS`。
+判重口径仍按用户定死：只认夸克或百度链接，任一相同即同一份资源；其他链接**会发但不参与判重**；
+两条链接都空才按 id 判重；**标题相同但链接不同照发**（系列电影、多季剧是不同资源）。
 
 判重状态文件（2026-11-18 起）：
 
@@ -632,3 +634,6 @@ TG 推送的 caption 末尾固定一行「查询更多资源请联系 [小艾](h
   但已从 git 取消跟踪、不推送；复制或搬走会让已发过的资源重复发布。
 - 飞书反馈凭据在运行机本地 `bot/config.json` 的 `feishu.tg`（也可用 `FEISHU_TG_APP_ID/APP_SECRET` 或
   `~/.workbuddy/feishu-app-tg.json` 覆盖）；专用通道缺凭据直接判失败，不回退默认应用。
+- 夸克两条任务的简报卡片走飞书开放 API 直发（不依赖 lark-cli / WorkBuddy）：凭据在
+  `~/.config/wodewangpan-feishu.env`（`FEISHU_APP_ID` / `FEISHU_APP_SECRET` / `FEISHU_TO`，权限 600）；
+  唯一实现在 `tools/feishu-reports/feishu-api.mjs`，两个简报脚本共用。
