@@ -3489,6 +3489,14 @@
   date: 2012-02-24
   added: 2026-09-30
   image: mv-177.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "3.2 GB"
+    format: "MKV"
+    tree: |
+      177-勇者行动.Act.of.Valor.2012.BluRay.720p.x264.AC3-CMCT/
+      勇者行动.Act.of.Valor.2012.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-178
   title: "卢旺达饭店"
@@ -3501,6 +3509,14 @@
   date: 2004-12-22
   added: 2026-09-30
   image: mv-178.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "3.6 GB"
+    format: "MKV"
+    tree: |
+      178-卢旺达饭店.Hotel.Rwanda.2004.BluRay.720p.x264.AC3-CMCT/
+      卢旺达饭店.Hotel.Rwanda.2004.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-179
   title: "十二宫"
@@ -3513,6 +3529,14 @@
   date: 2007-03-02
   added: 2026-09-30
   image: mv-179.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "5.0 GB"
+    format: "MKV"
+    tree: |
+      179-十二宫杀手.Zodiac.DC.2007.BluRay.720p.x264.AC3.2Audios-CMCT/
+      十二宫杀手.Zodiac.DC.2007.BluRay.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-180
   title: "十三刺客"

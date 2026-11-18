@@ -2788,28 +2788,42 @@
   date: 2026-11-02
   added: "2026-11-04 16:16"
   image: tv-078.jpg
-  updated: 2026-11-11
+  updated: 2026-11-19
   files:
-    count: 15
-    size: "21.5 GB"
-    format: "MP4×15"
+    count: 29
+    size: "89.8 GB"
+    format: "MKV×24 / MP4×5"
     tree: |
       078-走马上任（2026）/
-      S01E01.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E02.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E03.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E04.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E05.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E06.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E07.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E08.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E09.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E10.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E11.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E12.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E13.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E14.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
-      S01E15.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+      1.mkv
+      2.mkv
+      3.mkv
+      4.mkv
+      5.mkv
+      8.mkv
+      9.mkv
+      11.mkv
+      12.mkv
+      13.mkv
+      14.mkv
+      16.mkv
+      17.mkv
+      19.mkv
+      20.mkv
+      21.mkv
+      22.mkv
+      23.mkv
+      24.mkv
+      25.mkv
+      26.mkv
+      27.mkv
+      28.mkv
+      29.mkv
+      6.mp4
+      7.mp4
+      10.mp4
+      15.mp4
+      18.mp4
 
 - id: tv-079
   title: "真相捕捉 第三季"
