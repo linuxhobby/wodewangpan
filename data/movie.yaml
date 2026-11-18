@@ -3549,6 +3549,14 @@
   date: 2010-09-25
   added: 2026-09-30
   image: mv-180.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "3.4 GB"
+    format: "MKV"
+    tree: |
+      180-十三刺客.13.Assassins.2010.BluRay.720p.x264.AC3-CMCT/
+      十三刺客.13.Assassins.2010.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-181
   title: "双宝斗恶魔"
@@ -3561,6 +3569,14 @@
   date: 2010-01-22
   added: 2026-09-30
   image: mv-181.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "2.4 GB"
+    format: "MKV"
+    tree: |
+      181-双宝斗恶魔.Tucker.and.Dale.vs.Evil.2010.Bluray.720p.x264.AC3-CMCT/
+      双宝斗恶魔.Tucker.and.Dale.vs.Evil.2010.Bluray.720p.x264.AC3-CMCT.mkv
 
 - id: mv-182
   title: "危情谍战"
@@ -3573,6 +3589,14 @@
   date: 2010-06-15
   added: 2026-09-30
   image: mv-182.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "3.4 GB"
+    format: "MKV"
+    tree: |
+      182-危情谍战.Knight.And.Day.Extended.Cut.2010.BluRay.720p.x264.AC3-CMCT/
+      危情谍战.Knight.And.Day.Extended.Cut.2010.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-183
   title: "危情时速"
