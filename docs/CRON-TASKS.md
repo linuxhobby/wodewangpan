@@ -167,7 +167,7 @@ tail -f ~/.cache/wdp-trending-cron.log
 
 ## 7. 夸克资源同步（每 6 小时 `:10`）
 
-一条命令完成：git 预检/对齐 → `scan-new` → `match-batch` → 分类批量入库 → 构建/冒烟 → commit/push → VPS 重建 → 光鸭补链 → 飞书卡片。
+一条命令完成：git 预检/对齐 → `scan-new` → `match-batch` → 分类批量入库 → 新条目补文件清单 → 构建/冒烟 → commit/push → VPS 重建 → 光鸭补链 → 飞书卡片。
 
 ```bash
 node tools/quark-cron/resource-sync.mjs --dry-run   # 只扫描+TMDB 匹配，不改名、不出链、不写 data、不提交
@@ -178,6 +178,7 @@ tail -f ~/.cache/wdp-resource-sync-cron.log
 - 第一版自动入库范围：`mv` / `tv` / `dc`（`process-batch`）与 `app`（`app-batch`）；`an` / `game` / `bk` / `cs` / `ot` 只扫描并以 `unsupported_category` 上报，不自动入库。
 - `duplicate_suspect`（`likely_duplicate_of`）、`unknown_category`（`unmapped`）一律跳过并写进卡片 `skipped`，不删不改；合集拆分本版只做关键词保守跳过，不自动拆。
 - TMDB 低置信（年份不符或评分过低）降级为中性简介，不把错片名写进站点。
+- 新入库条目当场调用 `tools/fill-files.mjs --ids <本轮ids> --serials 0 --todo 0 --airing 0` 补 `files:`；占位目录或抓取失败只记入简报，留给每 2 小时 fill-files 任务兜底。要临时关掉这个当场补步骤，设 `WDP_SYNC_FILL=0`。
 - 编号按 `scan-new` 的 `holes_free` + `holes_reclaim` 最小可用优先，空洞用完才顺延；`holes_blocked` 绝不使用。
 - 构建或冒烟失败 → 不提交不推送；push 被拒 → `fetch/rebase` 后重推一次；VPS 重建失败非致命。
 - 光鸭补链每轮必跑；夸克侧无新增时**不发飞书卡**，避免空报刷屏。

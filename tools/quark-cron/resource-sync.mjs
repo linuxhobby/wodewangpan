@@ -164,6 +164,24 @@ for (const b of batches) {
 }
 log(`\n[入库] 成功 ${written.length} 条 ｜ 异常 ${skipped.length} 条`);
 
+// ---------- 2.5 本轮新条目当场补文件清单 ----------
+// 只对本轮新入库 id 调用 fill-files：不掺连载轮询/待加资源扫描，失败不阻断入库，
+// 占位或抓取失败的条目留给每 2 小时的 fill-files 例行任务兜底。
+let fillText = '文件清单：本轮无新增';
+if (written.length && process.env.WDP_SYNC_FILL !== '0') {
+  const ids = written.map((w) => w.id);
+  const ff = node('文件清单（新入库）', path.join(REPO, 'tools', 'fill-files.mjs'), [
+    '--ids', ids.join(','), '--serials', '0', '--todo', '0', '--airing', '0', '--delay', '3000',
+  ]);
+  const done = [...ff.out.matchAll(/^(.+?)\s*…\s*完成（/gm)].map((m) => m[1].trim());
+  const notReady = [...ff.out.matchAll(/^(.+?)\s*…\s*跳过（盘端只有占位说明文件/gm)].map((m) => m[1].trim());
+  const failedFill = [...ff.out.matchAll(/^(.+?)\s*…\s*失败（/gm)].map((m) => m[1].trim());
+  fillText = `文件清单：完成 ${done.length}/${ids.length}（占位 ${notReady.length}｜失败 ${failedFill.length}）`;
+  if (!ff.ok) skipped.push({ name: 'fill-files', reason: `本轮补文件清单异常（退出码 ${ff.code}）` });
+  for (const id of failedFill) skipped.push({ name: id, reason: 'file_list_failed：本轮文件清单抓取失败，留给 fill-files 后续重试' });
+  log(fillText);
+}
+
 // ---------- 3. 构建 + 冒烟 ----------
 let buildOk = false;
 let smokeText = '0/0';
@@ -286,7 +304,7 @@ if (written.length) {
     groups: [...groupsMap.values()],
     skipped,
     reconcile,
-    footer: `commit ${commit || 'unknown'} ｜ 构建 ${written.length} 资源 ｜ 冒烟 ${smokeText} ｜ ${pushed ? '已推送 GitHub' : '未推送 GitHub'} ｜ ${deployText} ｜ ${gyText}`,
+    footer: `commit ${commit || 'unknown'} ｜ 构建 ${written.length} 资源 ｜ 冒烟 ${smokeText} ｜ ${fillText} ｜ ${pushed ? '已推送 GitHub' : '未推送 GitHub'} ｜ ${deployText} ｜ ${gyText}`,
   };
   const payloadFile = path.join(CACHE, `resource-sync-card-${Date.now()}.json`);
   fs.writeFileSync(payloadFile, JSON.stringify(payload, null, 2), 'utf8');
@@ -297,5 +315,6 @@ if (written.length) {
 
 log('\n===== 简报 =====');
 log(`入库 ${written.length} 条 ｜ 跳过/异常 ${skipped.length} 条 ｜ 冒烟 ${smokeText}`);
+log(fillText);
 log(deployText);
 log(gyText);
