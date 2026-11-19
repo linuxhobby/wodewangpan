@@ -4034,6 +4034,14 @@
   date: 2023-05-31
   added: 2026-09-30
   image: mv-204.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "6.1 GB"
+    format: "MKV"
+    tree: |
+      204-犯罪都市3中文字幕+特效字幕.The.Roundup.No.Way.Out.2023.1080p.WEB-DL.AAC2.0.H.264-DreamHD/
+      The.Roundup.No.Way.Out.2023.1080p.WEB-DL.AAC2.0.H.264-DreamHD.mkv
 
 - id: mv-205
   title: "罪人"
@@ -4046,6 +4054,15 @@
   date: 2025-04-16
   added: 2026-09-30
   image: mv-205.jpg
+  updated: 2026-11-19
+  files:
+    count: 2
+    size: "15.0 GB"
+    format: "MKV / JPG"
+    tree: |
+      205-Sinners.2025.2160p.AMZN.WEB-DL.DDP5.1.Atmos.H.265-BYNDRPianYuan/
+      Sinners.2025.2160p.AMZN.WEB-DL.DDP5.1.Atmos.H.265-BYNDR.jpg
+      Sinners.2025.2160p.AMZN.WEB-DL.DDP5.1.Atmos.H.265-BYNDR.mkv
 
 - id: mv-206
   title: "绝望海峡"
@@ -4058,6 +4075,16 @@
   date: 2023-07-14
   added: 2026-09-30
   image: mv-206.jpg
+  updated: 2026-11-19
+  files:
+    count: 3
+    size: "5.6 GB"
+    format: "SFV / SRT / MKV"
+    tree: |
+      206-The.Channel.2023.1080p.WEB.h264-ETHELTGx/
+      The.Channel.2023.1080p.WEB.h264-ETHEL.mkv
+      the.channel.2023.1080p.web.h264-ethel.sfv
+      The.Channel.2023.1080p.WEB.h264-ETHEL_CHS_8255173.srt
 
 - id: mv-207
   title: "坚守阵地"

@@ -665,6 +665,42 @@ async function posterScene() {
   return 0;
 }
 
+// ── fit：把横版网图合成为 480×720 竖版（2026-11-19，配合「禁止AI文生图、网上找真实图片」新规）──
+// 模糊放大的同图铺满作底 + 清晰原图等比缩放居中，视频平台处理横版封面的通用做法。
+// src 用本地路径（先用 python/curl 下载到 .tmp 再传路径；本机 node fetch 有 WASM 内存问题，别传 URL）。
+async function posterFit() {
+  const src = arg('src');
+  const out = arg('out');
+  if (!src || !out) {
+    console.error('用法：node tools/poster.mjs fit --src <本地图片> --out <输出.jpg> [--blur 24] [--brightness 0.82]');
+    return 1;
+  }
+  const sh = await sharp();
+  const buf = fs.readFileSync(src);
+  const meta = await sh(buf).metadata();
+  const blur = Number(arg('blur', '24')) || 24;
+  const brightness = Number(arg('brightness', '0.82')) || 0.82;
+
+  const bg = await sh(buf)
+    .resize(W, H, { fit: 'cover' })
+    .blur(blur)
+    .linear(brightness, 0) // sharp 0.34 移除了 .mod()，亮度用 linear(a,0) 等价实现
+    .toColorspace('srgb')
+    .toBuffer();
+
+  const fgW = W;
+  const fgH = Math.max(1, Math.round((meta.height || H) * W / (meta.width || W)));
+  const fg = await sh(buf).resize(fgW, fgH, { kernel: 'lanczos3' }).toColorspace('srgb').toBuffer();
+
+  fs.mkdirSync(path.dirname(out), { recursive: true });
+  await sh(bg)
+    .composite([{ input: fg, left: 0, top: Math.max(0, Math.round((H - fgH) / 2)) }])
+    .jpeg({ quality: 82, mozjpeg: true })
+    .toFile(out);
+  console.log(`网图适配海报已生成：${out}（${W}×${H}，前景 ${fgW}×${fgH}）`);
+  return 0;
+}
+
 // ── douban：抓豆瓣正版书封（电子书 bk- 优先用它）────────────────
 const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
@@ -772,6 +808,7 @@ const MODES = {
   icon: posterIcon,
   set: posterSet,
   scene: posterScene,
+  fit: posterFit,
   douban: posterDouban,
 };
 
