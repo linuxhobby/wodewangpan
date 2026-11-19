@@ -1,4 +1,4 @@
-# 游戏资源（49 条）
+# 游戏资源（50 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1046,3 +1046,24 @@
       解压后用读卡器覆盖到卡根目录.zip
       数据包.zip
       安装说明.txt
+
+- id: game-050
+  title: "侠盗猎车手5 Grand Theft Auto V - 开放世界动作冒险游戏"
+  category: 游戏
+  tags: ["游戏", "动作冒险", "开放世界", "Rockstar", "GTA5"]
+  quark_url: "https://pan.quark.cn/s/4c2ef75a1372"
+  description: "《侠盗猎车手V》（Grand Theft Auto V）由 Rockstar North 开发、Rockstar Games 发行，是一款开放世界动作冒险游戏，2013 年 9 月首发于 PlayStation 3 与 Xbox 360，后陆续登陆 PlayStation 4、Xbox One、Microsoft Windows 以及 PlayStation 5、Xbox Series X|S。游戏舞台设定在以美国南加利福尼亚州为原型的圣安地列斯州，围绕虚构城市洛圣都及其周边地区展开，玩家可操控退休银行劫匪麦克、街头青年富兰克林与毒贩崔佛三位主角，故事以抢劫行动为核心，并穿插射击、驾驶与探索等玩法。本作采用可切换的多视角设计，主线可在三名角色间自由转换，另附独立的线上多人模式。这里收录的是该作品的网盘分享资源，具体语言版本、平台归属与文件构成请以网盘内实际文件为准，下载前建议先查看目录清单。"
+  date: 2013-09-17
+  added: 2026-11-18
+  updated: 2026-11-19
+  files:
+    count: 6
+    format: "DOCX×2 / JPG / XLSX"
+    tree: |
+      050-侠盗猎车手5 Grand Theft Auto V/
+      0必装（游戏本体、更新补丁、NSP程序文件，缺一不可！）/
+      1可选（存档以及画质文件）/
+      必看！9月10日更新日志及教程.docx
+      使用教程（必看）.docx
+      彩蛋.jpg
+      Switch作弊码对照.xlsx
