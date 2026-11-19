@@ -71,7 +71,7 @@ if (DRY) {
 // 1) 进程锁：挡住并发的第二实例（双触发源同时起跑）。
 function acquireLock() {
   try {
-    const st = fs.statSync(LOCK);
+    fs.statSync(LOCK);
     const pid = parseInt(fs.readFileSync(LOCK, 'utf8').trim(), 10);
     let alive = false;
     if (Number.isFinite(pid) && pid > 0) {

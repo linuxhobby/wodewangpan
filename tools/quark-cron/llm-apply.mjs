@@ -12,7 +12,6 @@ import { execFile } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { upsertEntry } from '../vendor/quark-resource-sync/scripts/lib/yaml-store.mjs';
-import { posterDir } from '../vendor/quark-resource-sync/scripts/lib/site-paths.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = process.env.WDP_REPO || path.resolve(HERE, '..', '..');

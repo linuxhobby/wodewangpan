@@ -10,11 +10,8 @@ import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
 import { execFile } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
 import { QUARK_CLI, QUARK_CLI_ENV } from '../lib/quark-cli.mjs';
 
-const HERE = path.dirname(fileURLToPath(import.meta.url));
-const REPO = process.env.WDP_REPO || path.resolve(HERE, '..', '..');
 const CACHE = process.env.WDP_CACHE_DIR || path.join(os.homedir(), '.cache', 'quark-sync');
 const ENV_FILE = path.join(os.homedir(), '.config', 'wodewangpan-tmdb.env');
 const SCAN = path.join(CACHE, 'scan-new.json');
