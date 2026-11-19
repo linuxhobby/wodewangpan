@@ -76,8 +76,18 @@ async function poster(item, file) {
   const dest = path.join(destDir, `${item.id}.jpg`);
   const tmp = path.join(CACHE, `llm-poster-${item.id}-${Date.now()}.img`);
   try {
-    await run('curl', ['-fL', '--max-time', '60', '-o', tmp, String(item.image_url)]);
-    await sharp(tmp).rotate().resize(500, 750, { fit: 'cover' }).jpeg({ quality: 88 }).toFile(dest);
+    // curl 缺失时用 node fetch 下载（不落盘，直接进 sharp）
+    let buf;
+    try {
+      await run('curl', ['-fL', '--max-time', '60', '-o', tmp, String(item.image_url)]);
+      buf = fs.readFileSync(tmp);
+    } catch {
+      const r = await fetch(String(item.image_url), { signal: AbortSignal.timeout(60000) });
+      if (!r.ok) throw new Error(`fetch ${r.status}`);
+      buf = Buffer.from(await r.arrayBuffer());
+    }
+    if (buf.length < 1024) throw new Error('image too small');
+    await sharp(buf).rotate().resize(500, 750, { fit: 'cover' }).jpeg({ quality: 88 }).toFile(dest);
     fs.rmSync(tmp, { force: true });
     return true;
   } catch {

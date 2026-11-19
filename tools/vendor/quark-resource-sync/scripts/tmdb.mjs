@@ -33,6 +33,36 @@ const curl = (url, useProxy = true, extra = []) =>
     execFile('curl', args, { maxBuffer: 32e6 }, (e, s) => (e ? rej(e) : res(s ?? '')));
   });
 
+// 本机无 curl 时的 node fetch 回退（undici ProxyAgent 走代理）
+let _undici = null;
+const loadUndici = async () => (_undici ||= await import('undici'));
+
+const fetchAgent = async (url) => {
+  const { Agent, ProxyAgent } = await loadUndici();
+  const dispatcher = PROXY ? new ProxyAgent(PROXY) : new Agent();
+  const r = await fetch(url, {
+    headers: { Authorization: `Bearer ${TMDB_TOKEN}` },
+    dispatcher,
+    signal: AbortSignal.timeout(30000),
+  });
+  if (!r.ok) throw new Error(`fetch ${r.status}`);
+  return r;
+};
+
+const fetchText = async (url) => {
+  const r = await fetchAgent(url);
+  return r.text();
+};
+
+const fetchToFile = async (url, out) => {
+  const r = await fetchAgent(url);
+  if (r.status !== 200) return false;
+  const buf = Buffer.from(await r.arrayBuffer());
+  if (buf.length < 1024) return false;
+  fs.writeFileSync(out, buf);
+  return true;
+};
+
 const get = async (url) => {
   let s = '';
   try {
@@ -41,6 +71,7 @@ const get = async (url) => {
     s = '';
   }
   if (!s) s = await curl(url, false).catch(() => '');
+  if (!s) s = await fetchText(url).catch(() => ''); // 无 curl 时 fetch 回退
   try {
     return JSON.parse(s);
   } catch {
@@ -48,7 +79,7 @@ const get = async (url) => {
   }
 };
 
-/** 下载文件：同样代理优先 + 直连回退 */
+/** 下载文件：同样代理优先 + 直连回退，再退 node fetch */
 const download = async (url, out) => {
   fs.mkdirSync(path.dirname(out), { recursive: true });
   for (const useProxy of [true, false]) {
@@ -61,7 +92,7 @@ const download = async (url, out) => {
     );
     if (fs.existsSync(out) && fs.statSync(out).size > 1024) return true;
   }
-  return false;
+  return fetchToFile(url, out); // 无 curl 时 fetch 回退
 };
 
 if (cmd === 'search') {
