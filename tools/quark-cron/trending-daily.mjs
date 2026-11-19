@@ -27,7 +27,11 @@ const ENV_FILE = path.join(os.homedir(), '.config', 'wodewangpan-tmdb.env');
 const FEISHU = path.join(REPO, 'tools', 'feishu-reports', 'wodewangpan-trending-feishu.mjs');
 const REPORT = path.join(CACHE, 'trending-last.json');
 const MIRROR_REPORT = path.join(CACHE, 'guangya-mirror-last.json');
+const LOCK = path.join(CACHE, 'trending-daily.lock');
 const DRY = process.argv.includes('--dry-run');
+// 幂等窗口：距上次成功同步 < 该值则视为重入（工具层 sandbox retry / 双触发源），直接跳过。
+// 2026-11-20：曾因 WorkBuddy Bash 工具 sandbox retry 把同一条命令顺序执行两遍，导致多入库一轮。
+const IDEMPOTENT_MS = Number(process.env.WDP_TRENDING_IDEMPOTENT_MS || 90 * 60 * 1000);
 
 const log = (...a) => console.log(...a);
 const die = (m, code = 4) => { console.error('✗ ' + m); process.exit(code); };
@@ -62,6 +66,49 @@ if (DRY) {
   log('[dry] 不执行外部命令、不写盘、不发卡。');
   process.exit(0);
 }
+
+// ---------- 重入防护（2026-11-20）：进程互斥锁 + 当日成功运行幂等 ----------
+// 1) 进程锁：挡住并发的第二实例（双触发源同时起跑）。
+function acquireLock() {
+  try {
+    const st = fs.statSync(LOCK);
+    const pid = parseInt(fs.readFileSync(LOCK, 'utf8').trim(), 10);
+    let alive = false;
+    if (Number.isFinite(pid) && pid > 0) {
+      try { process.kill(pid, 0); alive = true; }
+      catch (e) { alive = Boolean(e && e.code === 'EPERM'); }
+    }
+    if (alive) {
+      log(`[重入防护] 另一个 trending-daily 实例仍在运行（pid ${pid}），本轮跳过。`);
+      process.exit(0);
+    }
+    log(`[重入防护] 清理残留锁（pid ${pid} 已退出）`);
+    fs.unlinkSync(LOCK);
+  } catch { /* 无锁 */ }
+  fs.writeFileSync(LOCK, String(process.pid));
+}
+function releaseLock() { try { fs.unlinkSync(LOCK); } catch { /* ignore */ } }
+process.on('exit', releaseLock);
+process.on('SIGINT', () => { releaseLock(); process.exit(130); });
+process.on('SIGTERM', () => { releaseLock(); process.exit(143); });
+// 2) 幂等：即便顺序重跑（PID 已退出，锁挡不住），距上次成功同步过近也跳过。
+//    trending-sync 每轮都会重写 REPORT 的 ran_at；用它作为「上一轮成功完成」的时间锚点。
+function recentRunGuard() {
+  if (process.env.WDP_TRENDING_FORCE === '1') { log('[重入防护] WDP_TRENDING_FORCE=1，跳过幂等检查。'); return; }
+  try {
+    const rep = JSON.parse(fs.readFileSync(REPORT, 'utf8'));
+    const ran = Date.parse(rep.ran_at);
+    if (Number.isFinite(ran)) {
+      const age = Date.now() - ran;
+      if (age >= 0 && age < IDEMPOTENT_MS) {
+        log(`[重入防护] 距上次同步仅 ${Math.round(age / 1000)}s（< ${Math.round(IDEMPOTENT_MS / 60000)}min），判定为重复触发，本轮跳过。`);
+        process.exit(0);
+      }
+    }
+  } catch { /* 报告不存在/损坏：不拦，正常跑 */ }
+}
+acquireLock();
+recentRunGuard();
 
 const run = (label, cmd, args, opts = {}) => {
   const r = spawnSync(cmd, args, {
