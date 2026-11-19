@@ -3669,6 +3669,14 @@
   date: 2004-05-26
   added: 2026-09-30
   image: mv-186.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "4.2 GB"
+    format: "MKV"
+    tree: |
+      186-后天(国英双语).The.Day.After.Tomorrow.2004.720p.BluRay.x264.AC3-CMCT/
+      后天(国英双语).The.Day.After.Tomorrow.2004.720p.BluRay.x264.AC3-CMCT.mkv
 
 - id: mv-187
   title: "史前一万年"
@@ -3681,6 +3689,14 @@
   date: 2008-03-04
   added: 2026-09-30
   image: mv-187.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "3.4 GB"
+    format: "MKV"
+    tree: |
+      187-史前一万年.10000.BC.2008.BluRay.720p.x264.AC3.2Audios-CMCT/
+      史前一万年.10000.BC.2008.BluRay.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-188
   title: "地心引力"
@@ -3693,6 +3709,14 @@
   date: 2013-10-03
   added: 2026-09-30
   image: mv-188.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "3.0 GB"
+    format: "MKV"
+    tree: |
+      188-地心引力.Gravity.2013.BluRay.720p.x264.AC3-CMCT/
+      地心引力.Gravity.2013.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-189
   title: "囚徒"
