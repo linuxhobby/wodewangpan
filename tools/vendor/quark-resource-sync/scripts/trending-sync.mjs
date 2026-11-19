@@ -4,8 +4,8 @@
 //   存量条目的 baidu_url/baidu_pwd 一律不动；只有人工显式 --baidu 才临时恢复镜像+出链。）
 // 用法：
 //   node trending-sync.mjs [--movies 3] [--tv 3] [--anime 1] [--dry-run] [--allow-original] [--no-filter-anime] [--allow-program] [--baidu] [--recency-months 12] [--no-recency]
-// 每天定时执行，已处理过的 TMDB id 记录在 ~/.workbuddy/quark-sync-cache/trending-seen.json，不会重复。
-// 输出：stdout 人类可读摘要 + 机读 JSON 写入 ~/.workbuddy/quark-sync-cache/trending-last.json
+// 每天定时执行，已处理过的 TMDB id 记录在 CACHE/trending-seen.json（~/.cache/quark-sync），不会重复。
+// 输出：stdout 人类可读摘要 + 机读 JSON 写入 CACHE/trending-last.json
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFile } from 'node:child_process';

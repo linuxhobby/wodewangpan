@@ -5,6 +5,7 @@
  *   node guangya-sync.mjs --dry-run            # 只扫描 + 报告，不出链、不改 YAML
  *   node guangya-sync.mjs                     # 对缺 guangya_url 的条目出链并写回 data/*.yaml
  *   node guangya-sync.mjs --only bk --limit 2  # 限定分类前缀 / 条数，排障用
+ *   node guangya-sync.mjs --recheck            # 只读复核上次「未确认」批次：查结果、补写 guangya_url，绝不重提
  *
  * 口径（2026-11-16 指挥官定）：
  * - 光鸭 SHARE 下的资源只是夸克资源在第二个网盘的副本，站点条目已存在，只补 `guangya_url` 字段，
@@ -12,7 +13,7 @@
  * - 按目录名开头的编号配对站点 id（04电影 → mv-004 → movie.yaml），已有 guangya_url 的跳过。
  * - 出链一次提交，无提取码、永久。失败只记录，绝不重试、不重建分享、不轮询等结果。
  * - 登录态失效或 CLI 异常直接结束本阶段，不启动登录流程（无人值守没人扫码）。
- * - 报告固定写 ~/.workbuddy/quark-sync-cache/guangya-sync-last.json，供收尾简报取数。
+ * - 报告写 CACHE/guangya-sync-last.json（~/.cache/quark-sync，见 lib/config.mjs），供收尾简报取数。
  *
  * 依赖光鸭 skill：~/.workbuddy/skills/guangyapan-drive（bundled 版，勿 npm install）。
  * 实例绑定走 ~/.workbuddy/guangyapan-instance-id，与登录时的 scope 必须一致。
@@ -32,6 +33,7 @@ const arg = (k, d) => {
   return i >= 0 && process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[i + 1] : d;
 };
 const DRY = process.argv.includes('--dry-run');
+const RECHECK = process.argv.includes('--recheck');
 const REPO = arg('repo', cfg.REPO);
 const OUT = arg('out', path.join(CACHE, 'guangya-sync-last.json'));
 const ONLY = arg('only', '');
@@ -140,6 +142,78 @@ async function listAll(ids) {
   return byKey;
 }
 
+/** 只读复核上次未确认的批次：查结果、把已成功的链接补写回 YAML，绝不重新提交出链。 */
+async function recheckUnconfirmed(report) {
+  let exitCode = 0;
+  const last = JSON.parse(fs.readFileSync(OUT, 'utf8'));
+  const unconfirmed = last.unconfirmed || [];
+  if (!unconfirmed.length) { console.log('复核：上次没有未确认批次，无事可做。'); return exitCode; }
+  const batches = new Map();
+  for (const u of unconfirmed) {
+    if (!u.batch_id) continue;
+    if (!batches.has(u.batch_id)) batches.set(u.batch_id, []);
+    batches.get(u.batch_id).push(u);
+  }
+  // id → 所在数据文件，用于写回 guangya_url
+  const idFile = new Map();
+  for (const c of CATS) {
+    const file = path.join(REPO, 'data', c.file);
+    if (!fs.existsSync(file)) continue;
+    const text = fs.readFileSync(file, 'utf8');
+    for (const b of text.split(/(?=- id: )/)) {
+      const m = b.match(/^- id:\s*(\S+)/);
+      if (m) idFile.set(m[1], file);
+    }
+  }
+  const confirmed = new Map();
+  for (const [batchId, entries] of batches) {
+    let st = null;
+    for (let i = 0; i < 30 && !TERMINAL.has(st?.batch_state || st?.data?.batch_state); i++) {
+      if (i) await sleep(1000);
+      st = await cli('status', undefined, ['--batch-id', batchId]);
+      if (st.__error) break;
+    }
+    const state = st?.batch_state || st?.data?.batch_state;
+    if (!TERMINAL.has(state)) {
+      for (const u of entries) report.unconfirmed.push({ ...u, code: 'STILL_UNCONFIRMED', message: `复核后仍未确认（batch_state=${state || st?.__error || 'UNKNOWN'}），保持不重提` });
+      console.log(`  批次 ${batchId}：仍未确认（${state || st?.__error || 'UNKNOWN'}）`);
+      exitCode = 1;
+      continue;
+    }
+    const items = st?.data?.items || [];
+    for (const u of entries) {
+      const it = items.find((x) => x.operation_id === u.id);
+      const url = it?.result?.shareUrl;
+      if (it?.state === 'SUCCEEDED' && /^https:\/\/[^\s"]+\/s\//.test(String(url))) {
+        confirmed.set(u.id, url);
+        report.created.push({ id: u.id, dir: '', url, rechecked: true });
+        console.log(`  ${u.id}：出链成功，补写 ${String(url).slice(0, 60)}…`);
+      } else {
+        report.failed.push({ id: u.id, code: it?.code || it?.state || 'NO_RESULT', message: '复核确认出链失败，不重试' });
+        console.log(`  ${u.id}：确认失败（${it?.state || it?.code || 'NO_RESULT'}）`);
+        exitCode = 1;
+      }
+    }
+  }
+  if (confirmed.size) {
+    const byFile = new Map();
+    for (const [id, url] of confirmed) {
+      const file = idFile.get(id);
+      if (!file) { console.error(`  ${id}：找不到所在数据文件，跳过写盘`); exitCode = 1; continue; }
+      const m = byFile.get(file) || new Map();
+      m.set(id, url);
+      byFile.set(file, m);
+    }
+    for (const [file, links] of byFile) {
+      const src = fs.readFileSync(file, 'utf8');
+      const { text, changed } = insertGuangyaUrl(src, links);
+      if (changed.length) { fs.writeFileSync(file, text); console.log(`  写入 ${path.basename(file)}：${changed.length} 条`); }
+    }
+  }
+  console.log(`复核完成：确认成功 ${confirmed.size} / 未确认 ${unconfirmed.length}`);
+  return exitCode;
+}
+
 async function main() {
   const report = {
     scanned_at: new Date().toISOString(),
@@ -152,6 +226,14 @@ async function main() {
     if (!REPO || !fs.existsSync(path.join(REPO, 'data'))) throw new Error(`站点仓库不可用：${REPO}`);
     if (!fs.existsSync(DRIVE_CLI)) throw new Error(`光鸭 CLI 不存在：${DRIVE_CLI}`);
     if (!IID && !PROFILE_DIR) throw new Error('缺少光鸭实例绑定：GUANGYA_INSTANCE_ID / guangyapan-instance-id / GUANGYA_PROFILE_DIR 均不可用');
+
+    if (RECHECK) {
+      report.dry_run = false;
+      report.recheck = true;
+      const code = await recheckUnconfirmed(report);
+      console.log('复核为只读操作：只补写已确认成功的 guangya_url，不构建、不推送（由主流程/例行任务统一处理）。');
+      return { report, exitCode: code };
+    }
 
     const login = await cli('login-status');
     if (login.__error || login.data?.logged_in !== true) {

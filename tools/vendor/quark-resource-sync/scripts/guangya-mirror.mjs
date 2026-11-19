@@ -13,7 +13,7 @@
  * - 出链一次提交（share_type=0 无提取码、永久），失败只记录，绝不重试。
  * - 只给缺 guangya_url 的条目出链并写回该字段，幂等；不新建条目、不碰其它字段。
  * - 本阶段自己 commit + push（data: 光鸭链接 …），VPS 重建由主流程在镜像成功后统一触发。
- * - 报告固定写 ~/.workbuddy/quark-sync-cache/guangya-mirror-last.json。
+ * - 报告写 CACHE/guangya-mirror-last.json（~/.cache/quark-sync）。
  *
  * 依赖光鸭 skill：~/.workbuddy/skills/guangyapan-drive（bundled 版，勿 npm install）。
  * 实例绑定走 ~/.workbuddy/guangyapan-instance-id。

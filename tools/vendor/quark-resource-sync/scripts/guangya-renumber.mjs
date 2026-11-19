@@ -19,7 +19,7 @@
  * - 由 guangya-sync.mjs 每轮补链前自动调用；改名后原补链逻辑自然能按编号配对出链。
  * - 出链仍归 guangya-sync.mjs；本脚本只负责把裸名对齐成编号名。失败只记录、不重试。
  *
- * 报告：~/.workbuddy/quark-sync-cache/guangya-renumber-last.json
+ * 报告：CACHE/guangya-renumber-last.json（~/.cache/quark-sync）
  */
 import fs from 'node:fs';
 import path from 'node:path';

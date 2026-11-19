@@ -3,7 +3,7 @@
 //   node app-batch.mjs --scan <scan-new.json> [--size 999] [--sleep 1500] [--init]
 // 编号口径（2026-11-04 起）：自动读 scan-new 的 holes 做空洞补位，空洞用完才从最大编号顺延；
 // --start 仍可手工指定连续段（例外用法）。写 YAML 走 lib/yaml-store.mjs 的 upsert（同 id 就地改写死链旧条目）。
-// 可断点续跑：进度存 ~/.workbuddy/quark-sync-cache/app-plan.json
+// 可断点续跑：进度存 CACHE/app-plan.json（~/.cache/quark-sync）
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';

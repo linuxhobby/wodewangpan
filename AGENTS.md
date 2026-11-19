@@ -24,6 +24,7 @@ node tools/fill-files.mjs --limit 3 # 补文件清单（见 §4）
 node tools/sort-trees.mjs --dry-run # 预览/回填目录树排序（见 §4）
 node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
 npm run check:images                 # 配图盘点（分类目录命中 / 孤儿文件）
+node tools/list-missing-posters.mjs  # 缺海报盘点（只读，列无 image:/图缺失的条目）
 ```
 
 一次完整构建约 45~130 秒（首次全量偏慢，增量约 40 秒），第二次跑应「重新生成 0 个」。
@@ -52,6 +53,7 @@ npm run check:images                 # 配图盘点（分类目录命中 / 孤�
 | `tools/lib/serials.mjs` | 连载轮询的唯一口径（候选、无状态轮换、快照签名、保留行尾写盘），fill-files 与 list-ongoing 共用 |
 | `tools/lib/tmdb.mjs` | TMDB 只读查询（凭据跨机探测、剧名年份校验、播出事件、季号识别），只供追更提醒 |
 | `tools/list-ongoing.mjs` | 只读盘点「活跃 / 已定格 / 死链」的连载条目（§4） |
+| `tools/list-missing-posters.mjs` | 只读盘点「条目无 `image:` 或配图文件缺失」（补海报前先跑它）；2026-11-19 起全站配图已齐全 |
 | `.gitattributes` | 锁 `data/*.yaml` 为 LF，跨平台不产生 CRLF 混排（§5） |
 | `tools/fill-desc.mjs`、`tools/poster.mjs`、`tools/share-poster.mjs`、`tools/list-short-desc.mjs` | 批量补描述 / 配图 / 短描述盘点 |
 | `theme/assets/style.css` | 全站样式（CSS 变量制，改动要克制；CI 有 `npm run audit:css`） |

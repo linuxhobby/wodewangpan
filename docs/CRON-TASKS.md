@@ -182,6 +182,12 @@ tail -f ~/.cache/wdp-resource-sync-cron.log
 - 编号按 `scan-new` 的 `holes_free` + `holes_reclaim` 最小可用优先，空洞用完才顺延；`holes_blocked` 绝不使用。
 - 构建或冒烟失败 → 不提交不推送；push 被拒 → `fetch/rebase` 后重推一次；VPS 重建失败非致命。
 - 光鸭补链每轮必跑；夸克侧无新增时**不发飞书卡**，避免空报刷屏。
+- 光鸭出链结果**未确认**（`STATUS_TIMEOUT`，脚本超时前查不到终态）时不重提，事后可只读复核：
+  `node tools/vendor/quark-resource-sync/scripts/guangya-sync.mjs --recheck`（读 `guangya-sync-last.json` 的
+  `unconfirmed` 按 batch_id 查终态，成功者补写 `guangya_url`，**绝不重提出链**）。注意 `--recheck` 也会
+  覆盖写 `guangya-sync-last.json`，跑之前如有需要先备份该报告。
+- 2026-11-19：本轮遗留的 75 条未确认批次已人工按 batch_id 复核，全部 SUCCEEDED 并写回 `guangya_url`
+  （movie 19 条、documentary 56 条）。
 
 ## 8. 夸克分享每日补充更新（16:10）
 
