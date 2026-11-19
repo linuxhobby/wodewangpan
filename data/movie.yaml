@@ -3789,6 +3789,14 @@
   date: 2011-01-07
   added: 2026-09-30
   image: mv-192.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "2.4 GB"
+    format: "MKV"
+    tree: |
+      192-女巫季节(英俄双语).Season.Of.The.Witch.2011.BluRay.720p.x264.AC3-CMCT/
+      女巫季节(英俄双语).Season.Of.The.Witch.2011.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-193
   title: "夜访吸血鬼"
@@ -3801,6 +3809,14 @@
   date: 1994-11-11
   added: 2026-09-30
   image: mv-193.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "3.8 GB"
+    format: "MKV"
+    tree: |
+      193-夜访吸血鬼.Interview.with.the.Vampire.1994.BluRay.720p.x264.AC3.2Audios-CMCT/
+      夜访吸血鬼.Interview.with.the.Vampire.1994.BluRay.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-194
   title: "完美风暴"
@@ -3813,6 +3829,14 @@
   date: 2000-06-29
   added: 2026-09-30
   image: mv-194.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "4.6 GB"
+    format: "MKV"
+    tree: |
+      194-完美风暴.The.Perfect.Storm.2000.BluRay.720p.x264.AC3.2Audios-CMCT/
+      完美风暴.The.Perfect.Storm.2000.BluRay.720p.x264.AC3.2Audios-CMCT.mkv
 
 - id: mv-195
   title: "嫌疑人"

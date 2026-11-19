@@ -3093,11 +3093,11 @@
   date: 2026-11-01
   added: 2026-11-08
   image: tv-094.jpg
-  updated: 2026-11-11
+  updated: 2026-11-19
   files:
-    count: 37
-    size: "71.5 GB"
-    format: "MP4×37"
+    count: 50
+    size: "87.3 GB"
+    format: "MP4×44 / MKV×6"
     tree: |
       094-鉴定（2026）/
       S01E01_4K.mp4
@@ -3137,6 +3137,9 @@
       S01E35_4K.mp4
       S01E36_4K.mp4
       S01E37_4K.mp4
+      S01E38_4K.mp4
+      S01E39_4K.mp4
+      S01E40_4K.mp4
 
 - id: tv-096
   title: "神探夏洛克 第三季"
