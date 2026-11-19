@@ -1,4 +1,4 @@
-# 软件资源（136 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
+# 软件资源（137 条）（2026-11-10「操作系统」分类并入本文件；原 os-001~011 已统一为 app-130~140，尾号与盘端 02应用 目录号一致）
 - id: app-001
   title: "Parallels Desktop 18 - macOS 虚拟机软件"
   category: 软件
@@ -1753,3 +1753,29 @@
       108-workbuddy for Linux/
       WorkBuddy-linux-x64-deb-5.6.2.40046327-c7b525f3.deb
       WorkBuddy-linux-x64-rpm-5.6.2.40046327-c7b525f3.rpm
+
+- id: app-109
+  title: "openCode全平台应用下载"
+  category: 软件
+  tags: ["软件", "macOS", "openCode全平台应用下载"]
+  quark_url: "https://pan.quark.cn/s/8b3c2e4e3097"
+  description: "openCode全平台应用下载 for macOS：官方原版应用安装包，下载后拖入「应用程序」文件夹即可使用。"
+  date: 2026-11-19
+  added: 2026-11-19
+  updated: 2026-11-19
+  files:
+    count: 10
+    size: "2.6 GB"
+    format: "EXE×2 / DEB×2 / DMG×2 / RPM×2"
+    tree: |
+      109-openCode全平台应用下载/
+      opencode-desktop-linux-amd64-2.deb
+      opencode-desktop-linux-arm64.deb
+      opencode-desktop-mac-arm64.dmg
+      opencode-desktop-mac-x64.dmg
+      opencode-desktop-win-arm64.exe
+      opencode-desktop-win-x64.exe
+      opencode-desktop-linux-aarch64.rpm
+      opencode-desktop-linux-x86_64.rpm
+      opencode-desktop-linux-arm64.AppImage
+      opencode-desktop-linux-x86_64.AppImage
