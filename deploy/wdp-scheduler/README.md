@@ -5,11 +5,11 @@
 路径全部按脚本自身位置解析，整个目录放哪都能跑（logs/、lastrun.json、scheduler.pid
 为运行态产物，自动生成在目录内，不入库）。
 
-## 与 `deploy-cron.sh` 的关系（二选一，别同时开）
+## 与 `deploy/deploy-cron.sh` 的关系（二选一，别同时开）
 
 | 方案 | 入口 | 机制 | 适用 |
 |---|---|---|---|
-| 系统 cron | `deploy-cron.sh`（仓库根，幂等安装） | 每小时 :03 / :05 由 crontab 触发 | 宿主机 cron 可写（非容器） |
+| 系统 cron | `deploy/deploy-cron.sh`（幂等安装） | 每小时 :03 / :05 由 crontab 触发 | 宿主机 cron 可写（非容器） |
 | 常驻调度器 | 本目录 `control.sh start` | node 进程内 setInterval 秒级扫描，崩溃 5 秒自重启 | cron 不可用（容器内 spool 属主异常等） |
 
 两者都以**推送脚本自带的判重与门控**兜底，重复触发不会重复发帖；但两个方案同时开
@@ -26,7 +26,7 @@ bash deploy/wdp-scheduler/control.sh stop     # 停止
 ```
 
 前置条件：`node >= 18`（`NODE` 环境变量可覆盖，默认 `command -v node`）；
-推送凭据在 `push/**/*.env`（不入库，部署时 scp 就位，见 `deploy-cron.sh` 的 fix_env）。
+推送凭据在 `push/**/*.env`（不入库，部署时 scp 就位，见 `deploy/deploy-cron.sh` 的 fix_env）。
 
 ## 迁移旧部署（Debian 机 ~/wdp-scheduler → 仓库目录）
 

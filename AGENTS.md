@@ -572,8 +572,8 @@ QQ 端（NapCat / OneBot）已迁至绿联 NAS Docker，本仓库不含其代码
 | `push/bluesky/bluesky-post.mjs` | 资源站 → Bluesky |
 | `push/*/wodewangpan-*.env` | 两个推送脚本的现役凭据，**运行机本地，不入库** |
 | `tools/feishu-reports/` | 5 个飞书简报脚本（fill-files / 资源同步等例行任务的汇报端） |
-| `deploy-cron.sh` | Debian cron 推送一键部署（幂等，凭据走 scp） |
-| `deploy/wdp-scheduler/` | TG / Bluesky 推送**常驻调度器**（不依赖 LLM / WorkBuddy，:08 TG、:09 Bluesky，崩溃自重启）；与 `deploy-cron.sh` 二选一，严禁同时开（见其 README） |
+| `deploy/deploy-cron.sh` | Debian cron 推送一键部署（幂等，凭据走 scp） |
+| `deploy/wdp-scheduler/` | TG / Bluesky 推送**常驻调度器**（不依赖 LLM / WorkBuddy，:08 TG、:09 Bluesky，崩溃自重启）；与 `deploy/deploy-cron.sh` 二选一，严禁同时开（见其 README） |
 
 ### 11.4 运行（TG 机器人，Windows 机）
 
