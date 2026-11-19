@@ -3729,14 +3729,15 @@
   image: tv-190.jpg
 
 - id: tv-191
-  title: "茜茜皇后"
+  title: "茜茜皇后 第二季"
   category: 电视剧
-  tags: ["电视剧", "剧情", "茜茜皇后 Die Kaiserin"]
+  tags: ["电视剧", "剧情", "茜茜皇后 第二季 Die Kaiserin"]
   quark_url: "https://pan.quark.cn/s/cf6e54f4c974"
-  description: "【全剧 3 季 · 共 18 集】叛逆的伊丽莎白对皇帝弗朗兹一见倾心，并出人意料地成为了皇帝的新娘。从此，她不得不应对维也纳宫廷的种种纷争与阴谋。本剧类型：剧情。2022 年首播，已完结，全剧 3 季，累计 18 集。播出平台：Netflix。制片国家/地区：德国。主创：Katharina Eyssen。出品方：Sommerhaus Serien。｜TMDB 7.7"
-  date: 2022-09-29
+  description: "【第 2 季 · 共 6 集】第一次危机刚刚过去，这对年轻的皇室夫妇本想享受新婚的幸福，美泉宫上空却再度阴云密布：弗朗茨在欧洲意外遭遇强劲对手，帝国局势骤然紧张；伊丽莎白则承受着尽快诞下皇位继承人、确保帝国未来的巨大压力。当命运重击而至，两人的爱情面临破裂的风险，她不仅要为家庭而战，更要为自我灵魂的完整而抗争。本季于 2024 年 11 月 22 日在 Netflix 一次性上线全部 6 集。本剧类型：剧情。2024 年首播，已完结，本季 6 集。播出平台：Netflix。制片国家/地区：德国。主创：Katharina Eyssen。出品方：Sommerhaus Serien。主演：Devrim Lingnau、Philip Froissant、Melika Foroutan、Johannes Nussbaum。｜TMDB 7.7"
+  date: 2024-11-22
   added: 2026-11-18
   image: tv-191.jpg
+  updated: 2026-11-19
 
 - id: tv-192
   title: "波巴·费特之书"
