@@ -4,7 +4,7 @@
  *
  * 2026-11-08 改版：从「富文本 post」换成蓝色卡片（仿「院采雷达 · 采集简报」样式）。
  *  - 标题只出现在卡片蓝色头部一次，不再在正文里重复。
- *  - 新增两段：`skipped`（本轮未入库资源 + 原因）、`reconcile`（各分类「站点条目数 / 网盘最大编号」对账）。
+ *  - 新增两段：`skipped`（本轮未入库资源 + 原因）、`reconcile`（各分类「站点条目数 / 夸克实际目录数」对账）。
  *
  * 用法：
  *   node scripts/notify-feishu.mjs --input <payload.json> [--dry-run]
@@ -24,7 +24,7 @@
  *       { "name": "某未识别目录", "reason": "unknown_category：站点无对应分类" }
  *     ],
  *     "reconcile": [                                   // 本轮有入库时必填（缺了脚本会告警）
- *       { "cat": "🎬 电影", "site": 428, "max": 430 } // max=网盘最大编号；脚本自动算差值
+ *       { "cat": "🎬 电影", "site": 428, "quark": 428 } // quark=改名后夸克实际目录数；脚本自动算差值
  *     ],
  *     "footer":  "commit 6a12ca3 ｜ 构建 904 资源 ｜ 冒烟 9/9 ｜ 已推送 GitHub ｜ 已上线"
  *   }
@@ -106,19 +106,19 @@ for (const g of groups) {
   elements.push(hr());
 }
 
-// 编号对账：站点条目数 vs 网盘最大编号（排在「未入库」之前）
+// 编号对账：站点条目数 vs 改名后夸克实际目录数（排在「未入库」之前）
 if (reconcile.length) {
-  const lines = ['**📊 编号对账（站点 / 网盘最大编号）**'];
+  const lines = ['**📊 编号对账（站点 / 夸克实际目录数）**'];
   for (const r of reconcile) {
     const site = Number(r.site);
-    const max = Number(r.max);
+    const quark = Number(r.quark ?? r.max);
     let flag = '';
-    if (Number.isFinite(site) && Number.isFinite(max)) {
-      if (site === max) flag = ' ✅';
-      else if (max > site) flag = ` ⚠️ 差 ${max - site}（网盘有空洞或站点缺条目）`;
-      else flag = ` ⚠️ 站点多 ${site - max}（网盘目录少于条目）`;
+    if (Number.isFinite(site) && Number.isFinite(quark)) {
+      if (site === quark) flag = ' ✅';
+      else if (quark > site) flag = ` ⚠️ 夸克多 ${quark - site}（站点缺条目）`;
+      else flag = ` ⚠️ 站点多 ${site - quark}（夸克目录少于条目）`;
     }
-    lines.push(`· ${r.cat}：${r.site} / ${r.max}${flag}`);
+    lines.push(`· ${r.cat}：${r.site} / ${quark}${flag}`);
   }
   elements.push(md(lines.join('\n')));
   elements.push(hr());

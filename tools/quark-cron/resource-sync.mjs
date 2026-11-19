@@ -50,6 +50,7 @@ for (const p of [SKILL, CACHE, path.join(SKILL, 'scripts')]) if (!fs.existsSync(
 
 const SCRIPT = (name) => path.join(SKILL, 'scripts', name);
 const SCAN_OUT = path.join(CACHE, 'scan-new.json');
+const AFTER_SCAN_OUT = path.join(CACHE, 'scan-after.json');
 const MATCH_OUT = path.join(CACHE, 'match.json');
 const run = (label, cmd, args, opts = {}) => {
   const r = spawnSync(cmd, args, {
@@ -291,13 +292,21 @@ if (written.length) {
     g.items.push({ id: w.id, name: w.match?.title || String(w.old_name || '').replace(/^\d+[-.]\s*/, ''), quark: w.url || '', site: `https://www.wodewangpan.top/${slug}/${w.id}/` });
     groupsMap.set(w.prefix, g);
   }
+  // 卡片里的网盘侧数字以改名完成后的夸克实际目录数为准；旧 scan-new 是改名前的快照，会误报「站点多 1」
+  node('scan-new 复核', SCRIPT('scan-new.mjs'), ['--out', AFTER_SCAN_OUT]);
+  let afterCats = cats;
+  try {
+    const after = JSON.parse(fs.readFileSync(AFTER_SCAN_OUT, 'utf8'));
+    if (Array.isArray(after.categories) && after.categories.length) afterCats = after.categories;
+  } catch {}
   const reconcile = [];
   for (const p of new Set(written.map((w) => w.prefix))) {
     const file = path.join(REPO, 'data', fileByPrefix[p]);
     let site = 0;
     try { site = (fs.readFileSync(file, 'utf8').match(/^- id:/gm) || []).length; } catch {}
-    const scanCat = cats.find((c) => c.prefix === p);
-    reconcile.push({ cat: labelByPrefix[p], site, max: parseInt(scanCat?.max_number || '0', 10) || site });
+    const scanCat = afterCats.find((c) => c.prefix === p);
+    const quark = Number(scanCat?.total ?? scanCat?.numbered ?? scanCat?.max_number);
+    reconcile.push({ cat: labelByPrefix[p], site, quark: Number.isFinite(quark) ? quark : site, max: Number.isFinite(quark) ? quark : site });
   }
   const payload = {
     title: `夸克资源同步 · 新增 ${written.length} 条`,
