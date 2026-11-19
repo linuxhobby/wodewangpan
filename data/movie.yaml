@@ -3729,6 +3729,14 @@
   date: 2013-09-19
   added: 2026-09-30
   image: mv-189.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "4.5 GB"
+    format: "MKV"
+    tree: |
+      189-囚徒.Prisoners.2013.BluRay.720p.x264.AC3-CMCT/
+      囚徒.Prisoners.2013.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-190
   title: "夺宝联盟"
@@ -3741,6 +3749,14 @@
   date: 2012-07-25
   added: 2026-09-30
   image: mv-190.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "3.6 GB"
+    format: "MKV"
+    tree: |
+      190-夺宝联盟.The.Thieves.2012.BluRay.720p.x264.AC3-CMCT/
+      夺宝联盟.The.Thieves.2012.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-191
   title: "夺魂索"
@@ -3753,6 +3769,14 @@
   date: 1948-02-01
   added: 2026-09-30
   image: mv-191.jpg
+  updated: 2026-11-19
+  files:
+    count: 1
+    size: "2.2 GB"
+    format: "MKV"
+    tree: |
+      191-夺魂索.Rope.1948.BluRay.720p.x264.AC3-CMCT/
+      夺魂索.Rope.1948.BluRay.720p.x264.AC3-CMCT.mkv
 
 - id: mv-192
   title: "女巫季节"
