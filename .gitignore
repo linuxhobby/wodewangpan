@@ -56,8 +56,9 @@ bot/**/qr-*.png
 posted.json
 *.state.json
 
-# WorkBuddy 自动化在本目录留下的本地运行态（memory/automations 等），不进 git
+# WorkBuddy / CodeBuddy 自动化在本目录留下的本地运行态（memory/automations 等），不进 git
 .workbuddy/
+.codebuddy/
 
 # ===== 2026-11-17 mybot 并入后新增 =====
 # 本仓库公开，凭据一律不进 git（历史已用 filter-repo 清洗），真身只留运行机本地
