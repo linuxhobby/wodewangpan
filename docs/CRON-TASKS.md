@@ -266,5 +266,15 @@ node tools/quark-cron/prestore-move.mjs            # 正式（cron 自动跑）
 | 飞书卡片直发（唯一实现） | `tools/feishu-reports/feishu-api.mjs` |
 | 飞书卡片（补存 / 搬运 / 补齐 / TMDB） | `tools/feishu-reports/wodewangpan-{share-update,move,fillfiles,trending}-feishu.mjs` |
 | 夸克 cron 幂等安装 | `deploy/install-quark-cron.sh` |
+| LLM pending 准备 | `tools/quark-cron/llm-prepare.mjs` |
+| LLM 草稿校验写回 | `tools/quark-cron/llm-apply.mjs` |
 
 改脚本一律改仓库版并 `git pull` 到运行机，不要在 `~/` 留副本。
+
+## 13. LLM 补全链路（WorkBuddy 自动化）
+
+- 资源同步 cron 每轮先跑 `llm-prepare.mjs`，把 `an/game/bk/cs/ot` 的未编号目录编号、改名、出链，写 `~/.cache/quark-sync/llm-pending-*.json`。
+- TMDB 热门 cron 每轮写 `~/.cache/quark-sync/llm-pending-trending-*.json`，供 LLM 复核新入库条目的标题/简介/海报。
+- WorkBuddy 自动化「我的网盘.资源同步LLM补全」每天 `00:45/06:45/12:45/18:45` 处理非 trending pending。
+- WorkBuddy 自动化「我的网盘.TMDB热门LLM复核」每天 `04:15` 处理 trending pending。
+- LLM 只能生成草稿 JSON；`llm-apply.mjs` 负责校验、写 YAML、补文件清单、build、push、VPS。校验失败的草稿不写库。

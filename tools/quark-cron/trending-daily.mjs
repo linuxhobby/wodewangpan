@@ -97,6 +97,31 @@ const created = Array.isArray(rep.created) ? rep.created : [];
 const errors = Array.isArray(rep.errors) ? rep.errors : [];
 const skipped = Array.isArray(rep.skipped) ? rep.skipped : [];
 log(`\n[汇总] 入库 ${created.length} 条 ｜ 顺延 ${skipped.length} 条 ｜ 失败 ${errors.length} 条`);
+if (!DRY && created.length) {
+  const CAT_BY_PREFIX = { mv: '电影', tv: '电视剧', an: '动漫' };
+  const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
+  const pendingFile = path.join(CACHE, `llm-pending-trending-${stamp}.json`);
+  const items = created.map((c) => ({
+    id: c.id,
+    tmdb_id: c.tmdb_id,
+    title: c.title,
+    original: c.original,
+    category: CAT_BY_PREFIX[String(c.id || '').slice(0, 2)] || '',
+    date: c.date,
+    vote: c.vote,
+    genres: c.genres || [],
+    desc_len: c.desc_len || 0,
+    desc_filled: Boolean(c.desc_filled),
+    image: c.image || '',
+    quark_url: c.quark_url || '',
+    dir_name: c.dirname || '',
+    source: 'trending',
+    reason: 'trending_new',
+    status: 'pending',
+  }));
+  fs.writeFileSync(pendingFile, JSON.stringify({ source: 'trending', created_at: new Date().toISOString(), items }, null, 2));
+  log(`LLM 复核 pending 已写入 ${pendingFile}（${items.length} 条）`);
+}
 if (!created.length) { log('本轮无新增：按口径不发飞书、不做光鸭镜像。'); process.exit(0); }
 
 // ---------- 2. VPS 即时重建 ----------

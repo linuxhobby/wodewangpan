@@ -78,6 +78,7 @@ if (!DRY) {
 // ---------- 1. 扫描 + TMDB 匹配（只读网盘，写缓存报告） ----------
 const scan = node('scan-new', SCRIPT('scan-new.mjs'), ['--out', SCAN_OUT]);
 if (!scan.ok) die('scan-new 失败', 3);
+if (!DRY) node('LLM 待处理准备', path.join(HERE, 'llm-prepare.mjs'));
 const match = node('match-batch', SCRIPT('match-batch.mjs'), ['--scan', SCAN_OUT, '--out', MATCH_OUT]);
 if (!match.ok) die('match-batch 失败', 3);
 
