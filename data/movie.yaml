@@ -1,4 +1,4 @@
-# 电影资源（469 条）
+# 电影资源（473 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -7733,3 +7733,77 @@
   date: 2026-11-18
   added: 2026-11-19
   image: mv-469.jpg
+
+- id: mv-470
+  title: "恶女"
+  category: 电影
+  tags: ["电影", "动作", "惊悚", "恶女 악녀"]
+  quark_url: "https://pan.quark.cn/s/05d41ce66f2f"
+  description: "故事讲述了在中国被男主人公(申河均饰)训练成杀手的女人(金玉彬饰)在重新回到韩国后展开复仇的故事。 淑熙自年幼时起便被培养成一名出色的杀手。她被选拔至国家秘密组织，看似获得了新生。 “为我们工作10年，你就自由了。 但是如果一旦你的真实身份被发现，我们就会把你除掉！”为了生存，淑熙不得不一直进行着杀戮。 某天，两个神秘的男人出现在了她面前。淑熙得知了有关自己的身世之谜后，开始选择反抗。｜TMDB 6.9"
+  date: 2017-06-08
+  added: 2026-11-19
+  image: mv-470.jpg
+  updated: 2026-11-20
+  files:
+    count: 1
+    size: "4.0 GB"
+    format: "MKV"
+    tree: |
+      470-恶女 악녀 (2017)/
+      [恶女].The.Villainess.2017.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+
+- id: mv-471
+  title: "荷兰镇"
+  category: 电影
+  tags: ["电影", "悬疑", "惊悚", "荷兰镇 Holland"]
+  quark_url: "https://pan.quark.cn/s/f8ce08d4c047"
+  description: "密歇根州荷兰镇教师南希·范德格鲁特（妮可·基德曼 饰），她与担任社区领袖的丈夫弗雷德（马修·麦克费登 饰）、儿子哈里过着典型的美国田园生活。当南希与同事戴夫·德尔加多（盖尔·加西亚·贝纳尔 饰）偶然发现丈夫隐藏的秘密后，平静生活迅速崩解。本片类型：悬疑 / 惊悚。2025 年上映，片长 108 分钟。｜TMDB 5.3"
+  date: 2025-03-09
+  added: 2026-11-19
+  image: mv-471.jpg
+  updated: 2026-11-20
+  files:
+    count: 1
+    size: "7.4 GB"
+    format: "MKV"
+    tree: |
+      471-荷兰镇（2025）/
+      荷兰镇.Holland.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H264-ParkHD.mkv
+
+- id: mv-472
+  title: "千年虫"
+  category: 电影
+  tags: ["电影", "科幻", "恐怖", "喜剧", "千年虫 Y2K"]
+  quark_url: "https://pan.quark.cn/s/e9e04997247d"
+  description: "1999年新年前夕，两个不起眼的高中生决定在新千年之前参加一场盛大的派对，但当时针指向午夜，他们想象不到的疯狂事件发生了。本片类型：科幻 / 恐怖 / 喜剧。2024 年上映，片长 93 分钟。制片国家/地区：美国。出品方：A24、Strong Baby Productions、American Light & Fixture。｜TMDB 5.1"
+  date: 2024-12-06
+  added: 2026-11-19
+  image: mv-472.jpg
+  updated: 2026-11-20
+  files:
+    count: 1
+    size: "3.3 GB"
+    format: "MP4"
+    tree: |
+      472-千年虫（2024）/
+      千年虫.1080p.HD中英双字.mp4
+
+- id: mv-473
+  title: "罪兽之法"
+  category: 电影
+  tags: ["电影", "罪兽之法 undefined"]
+  quark_url: "https://pan.quark.cn/s/eb23091690cd"
+  description: "本资源来自夸克网盘分享，简介与海报待人工补充。｜TMDB 0.0"
+  date: 2026-11-19
+  added: 2026-11-19
+  updated: 2026-11-20
+  files:
+    count: 4
+    size: "11.1 GB"
+    format: "MKV×4"
+    tree: |
+      473-罪兽之法 (2026)/
+      The Law of Beasts.2026.S01E01.1080p.NF.WEB-DL.DDP 5.1 Atmos.H264.Qshan.mkv
+      The Law of Beasts.2026.S01E02.1080p.NF.WEB-DL.DDP 5.1 Atmos.H264.Qshan.mkv
+      The Law of Beasts.2026.S01E03.1080p.NF.WEB-DL.DDP 5.1 Atmos.H264.Qshan.mkv
+      The Law of Beasts.2026.S01E04.1080p.NF.WEB-DL.DDP 5.1 Atmos.H264.Qshan.mkv

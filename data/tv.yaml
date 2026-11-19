@@ -1,4 +1,4 @@
-# 电视剧资源（198 条）
+# 电视剧资源（203 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -3839,3 +3839,126 @@
   date: 2026-11-18
   added: "2026-11-20 03:55"
   image: tv-198.jpg
+
+- id: tv-199
+  title: "拣选"
+  category: 电视剧
+  tags: ["电视剧", "动作冒险", "家庭", "剧情", "拣选 The Chosen"]
+  quark_url: "https://pan.quark.cn/s/895b95729a5e"
+  description: "【全剧 6 季 · 共 46 集】拣选是第一部关于基督生平的多季电视连续剧，通过他影响的人的眼睛见证。本剧类型：动作冒险 / 家庭 / 剧情。2019 年首播，已获续订，仍在播出，全剧 6 季，累计 46 集，单集约 60 分钟。播出平台：Prime Video、VidAngel、Angel、TheChosen.tv。制片国家/地区：美国。｜TMDB 8.9"
+  date: 2019-04-21
+  added: 2026-11-19
+  image: tv-199.jpg
+  updated: 2026-11-20
+  files:
+    count: 8
+    size: "14.3 GB"
+    format: "MKV×8"
+    tree: |
+      199-拣选 第一季 The Chosen Season 1 (2019)/
+      The.Chosen.S01E01.2019.1080p.Netflix.WEB-DL.AVC.DDP.5.1-DBTV.mkv
+      The.Chosen.S01E02.2019.1080p.Netflix.WEB-DL.AVC.DDP.5.1-DBTV.mkv
+      The.Chosen.S01E03.2019.1080p.Netflix.WEB-DL.AVC.DDP.5.1-DBTV.mkv
+      The.Chosen.S01E04.2019.1080p.Netflix.WEB-DL.AVC.DDP.5.1-DBTV.mkv
+      The.Chosen.S01E05.2019.1080p.Netflix.WEB-DL.AVC.DDP.5.1-DBTV.mkv
+      The.Chosen.S01E06.2019.1080p.Netflix.WEB-DL.AVC.DDP.5.1-DBTV.mkv
+      The.Chosen.S01E07.2019.1080p.Netflix.WEB-DL.AVC.DDP.5.1-DBTV.mkv
+      The.Chosen.S01E08.2019.1080p.Netflix.WEB-DL.AVC.DDP.5.1-DBTV.mkv
+
+- id: tv-200
+  title: "狂医魔徒"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "犯罪", "狂医魔徒 하이퍼나이프"]
+  quark_url: "https://pan.quark.cn/s/11d1ebf82917"
+  description: "【第 1 季 · 共 8 集】热情且才华横溢的神经外科医师郑世玉，与多年前毁了她人生的崔德熙教授重逢。这两位外科医师曾经比任何人都在乎对方，但现在彼此之间只剩下仇恨，世玉对于德熙重回她的生活感到愤怒，并誓言要复仇。本剧类型：剧情 / 犯罪。2025 年首播，已完结，全剧 1 季，累计 8 集。播出平台：Disney+。制片国家/地区：韩国。｜TMDB 7.8"
+  date: 2025-03-19
+  added: 2026-11-19
+  image: tv-200.jpg
+  updated: 2026-11-20
+  files:
+    count: 8
+    size: "45.5 GB"
+    format: "MKV×8"
+    tree: |
+      200-狂医魔徒 (2025) 4K HDR & Dv/
+      狂医魔徒.Hyper.Knife.S01E06.2025.2160p.DSNP.WEB-DL.DDP5.1.H265.HDR.DV-ZeroTV.mkv
+      Hyper.Knife.S01E01.2025.2160p.DSNP.WEB-DL.DDP5.1.H265.HDR.DV-ZeroTV.mkv
+      Hyper.Knife.S01E02.2025.2160p.DSNP.WEB-DL.DDP5.1.H265.HDR.DV-ZeroTV.mkv
+      Hyper.Knife.S01E03.2025.2160p.DSNP.WEB-DL.DDP5.1.H265.HDR.DV-ZeroTV.mkv
+      Hyper.Knife.S01E04.2025.2160p.DSNP.WEB-DL.DDP5.1.H265.HDR.DV-ZeroTV.mkv
+      Hyper.Knife.S01E05.2025.2160p.DSNP.WEB-DL.DDP5.1.H265.HDR.DV-ZeroTV.mkv
+      Hyper.Knife.S01E07.2025.2160p.DSNP.WEB-DL.DDP5.1.H265.HDR.DV-ZeroTV.mkv
+      Hyper.Knife.S01E08.2025.2160p.DSNP.WEB-DL.DDP5.1.H265.HDR.DV-ZeroTV.mkv
+
+- id: tv-201
+  title: "茜茜皇后"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "茜茜皇后 Die Kaiserin"]
+  quark_url: "https://pan.quark.cn/s/27c85a5a0382"
+  description: "【全剧 3 季 · 共 18 集】叛逆的伊丽莎白对皇帝弗朗兹一见倾心，并出人意料地成为了皇帝的新娘。从此，她不得不应对维也纳宫廷的种种纷争与阴谋。本剧类型：剧情。2022 年首播，已完结，全剧 3 季，累计 18 集。播出平台：Netflix。制片国家/地区：德国。主创：Katharina Eyssen。出品方：Sommerhaus Serien。｜TMDB 7.7"
+  date: 2022-09-29
+  added: 2026-11-19
+  image: tv-201.jpg
+  updated: 2026-11-20
+  files:
+    count: 6
+    size: "29.6 GB"
+    format: "MKV×6"
+    tree: |
+      201-茜茜皇后-第一季/
+      The Empress.2022.S01E01.2160p.NF.WEB-DL.DDP 5.1 Atmos.H.265.Qshan.mkv
+      The Empress.2022.S01E02.2160p.NF.WEB-DL.DDP 5.1 Atmos.H.265.Qshan.mkv
+      The Empress.2022.S01E03.2160p.NF.WEB-DL.DDP 5.1 Atmos.H.265.Qshan.mkv
+      The Empress.2022.S01E04.2160p.NF.WEB-DL.DDP 5.1 Atmos.H.265.Qshan.mkv
+      The Empress.2022.S01E05.2160p.NF.WEB-DL.DDP 5.1 Atmos.H.265.Qshan.mkv
+      The Empress.2022.S01E06.2160p.NF.WEB-DL.DDP 5.1 Atmos.H.265.Qshan.mkv
+
+- id: tv-202
+  title: "钻井"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "悬疑", "Sci-Fi & Fantasy", "钻井 The Rig"]
+  quark_url: "https://pan.quark.cn/s/b32a9ce9a45f"
+  description: "【全剧 2 季 · 共 12 集】剧集故事以位于苏格兰海岸外北海危险海域的Kishorn Bravo石油钻井平台为背景，当船员们即将返回大陆时，一场神秘的、全方位的大雾席卷而来，他们发现自己与岸边和外界的所有联系都被切断了。当钻井平台受到巨大的震动时，船员们努力探索是什么在驱动着这股未知的力量，但一场重大的事故迫使他们对自己真正能信任的人产生了疑问。｜TMDB 6.6"
+  date: 2023-01-06
+  added: 2026-11-19
+  image: tv-202.jpg
+  updated: 2026-11-20
+  files:
+    count: 6
+    size: "32.4 GB"
+    format: "MKV×6"
+    tree: |
+      202-钻井 (2023) 4K HDR/
+      The.Rig.S01E01.HDR.2160p.Web.H265-Poke.mkv
+      The.Rig.S01E02.HDR.2160p.Web.H265-Poke.mkv
+      The.Rig.S01E03.HDR.2160p.Web.H265-Poke.mkv
+      The.Rig.S01E04.HDR.2160p.Web.H265-Poke.mkv
+      The.Rig.S01E05.HDR.2160p.Web.H265-Poke.mkv
+      The.Rig.S01E06.HDR.2160p.Web.H265-Poke.mkv
+
+- id: tv-203
+  title: "夏季"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "夏季 하절기"]
+  quark_url: "https://pan.quark.cn/s/0fecc09094ba"
+  description: "【第 1 季 · 共 10 集】车道贤与吕恩浩是相伴十九年的发小。在旁人眼中，道贤是近乎完美的学霸兼全校主席，也是恩浩最信任的支柱。然而，在这份看似稳固的友谊之下，道贤却隐藏着扭曲而深沉的占有欲——他沉溺于恩浩的校服气息，在隐秘的角落里滋长着不为人知的疯狂恋慕。随着一名转学生的闯入，原本平衡的关系被打破。看着恩浩与他人越走越近，一向冷静克制的道贤彻底撕下伪善的面具。在闷热躁动的夏日里，他开始施展缜密的计策，步步为营地将恩浩推向死角，试图将这段单纯的友谊彻底禁锢成无法逃脱的爱欲恋情。这段长达十九年的陪伴，究竟是避风港，还是精心布置的牢笼？｜TMDB 7.1"
+  date: 2026-08-28
+  added: 2026-11-19
+  image: tv-203.jpg
+  updated: 2026-11-20
+  files:
+    count: 10
+    size: "15.7 GB"
+    format: "MKV×10"
+    tree: |
+      203-夏季时光 하절기 (2026)/
+      Summertime.S01E01.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
+      Summertime.S01E02.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
+      Summertime.S01E03.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
+      Summertime.S01E04.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
+      Summertime.S01E05.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
+      Summertime.S01E06.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
+      Summertime.S01E07.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
+      Summertime.S01E08.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
+      Summertime.S01E09.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
+      Summertime.S01E10.2026.1080p.friDay.WEB-DL.H264.AAC-ADWeb.mkv
