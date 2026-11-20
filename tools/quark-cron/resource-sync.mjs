@@ -82,12 +82,19 @@ if (!DRY) node('LLM 待处理准备', path.join(HERE, 'llm-prepare.mjs'));
 const match = node('match-batch', SCRIPT('match-batch.mjs'), ['--scan', SCAN_OUT, '--out', MATCH_OUT]);
 if (!match.ok) die('match-batch 失败', 3);
 
-// 低置信 / 明显错配（年份不符或评分过低）一律降级为中性简介，不把错片名写进站点
+// 低置信 / 明显错配（年份不符或评分过低）一律降级为中性简介，不把错片名写进站点。
+// 新剧豁免：TMDB 新开播条目评分人数少，vote_average 常为 0.0，不能按低分降级
+// （2026-11-20《三十六计杀》开播半个月即被误伤：海报+简介全被剥掉）。首播 90 天内的放行。
+const RECENT_MATCH_DAYS = 90;
+const isFresh = (m) => {
+  const t = Date.parse(String(m?.date || ''));
+  return Number.isFinite(t) && (Date.now() - t) / 86400000 <= RECENT_MATCH_DAYS;
+};
 try {
   const matchData = JSON.parse(fs.readFileSync(MATCH_OUT, 'utf8'));
   let degraded = 0;
   for (const row of matchData) {
-    const bad = row.low_confidence || !row.match || Number(row.match?.vote ?? 0) < 3.5;
+    const bad = row.low_confidence || !row.match || (Number(row.match?.vote ?? 0) < 3.5 && !isFresh(row.match));
     if (!bad) continue;
     const title = row.parsed?.zh || row.parsed?.en || String(row.filename || '').replace(/^\d+[-.]\s*/, '').replace(/\.[a-z0-9]{1,5}$/i, '');
     row.match = { title, overview: '本资源来自夸克网盘分享，简介与海报待人工补充。', vote: 0, genres: [] };
@@ -95,7 +102,7 @@ try {
     degraded++;
   }
   fs.writeFileSync(MATCH_OUT, JSON.stringify(matchData, null, 1), 'utf8');
-  log(`[匹配] 低置信降级 ${degraded} 条（按未命中写中性简介）`);
+  log(`[匹配] 低置信降级 ${degraded} 条（按未命中写中性简介；首播 90 天内新剧豁免）`);
 } catch (e) {
   die(`match 报告处理失败：${e.message}`, 3);
 }

@@ -201,12 +201,17 @@ await Promise.all(
     fs.mkdirSync(destDir, { recursive: true });
     const dest = path.join(destDir, `${p.id}.jpg`);
     try {
-      await run('curl', ['-s', ...(PROXY ? ['-x', PROXY] : []), '-o', dest, p.match.poster_url]);
+      await run('curl', ['-sfL', '--max-time', '60', ...(PROXY ? ['-x', PROXY] : []), '-o', dest, p.match.poster_url]);
       if (!isJpegFile(dest)) throw new Error('不是有效 JPEG');
       p.poster = `${p.id}.jpg`;
     } catch {
+      // curl 不可用或失败时用 node fetch 兜底（与 llm-apply 同口径，不因缺 curl 丢海报）
       try {
-        await run('curl', ['-s', ...(PROXY ? ['-x', PROXY] : []), '-o', dest, p.match.poster_url]);
+        const r = await fetch(p.match.poster_url, { signal: AbortSignal.timeout(60000) });
+        if (!r.ok) throw new Error(`fetch ${r.status}`);
+        const buf = Buffer.from(await r.arrayBuffer());
+        if (buf.length < 1024) throw new Error('image too small');
+        fs.writeFileSync(dest, buf);
         p.poster = isJpegFile(dest) ? `${p.id}.jpg` : null;
       } catch {
         p.poster = null;
@@ -233,7 +238,7 @@ for (const p of batch) {
     id: p.id,
     title: m?.title || p.old_name.replace(/^\d+-/, ''),
     category: catMap[p.id.slice(0, 2)],
-    tags: [catMap[p.id.slice(0, 2)], ...(m?.genres || []).slice(0, 3), ...(m ? [`${m.title} ${m.original}`] : [])],
+    tags: [catMap[p.id.slice(0, 2)], ...(m?.genres || []).slice(0, 3), ...(m ? [m.original ? `${m.title} ${m.original}` : m.title] : [])],
     quark_url: p.url,
     description: desc,
     date: m?.date || p.added,
