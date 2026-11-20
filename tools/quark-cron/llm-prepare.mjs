@@ -65,7 +65,9 @@ function allocNumbers(cat, count) {
   const holes = (cat.holes || []).map((x) => parseInt(x, 10)).filter(Number.isFinite).sort((a, b) => a - b);
   const max = parseInt(cat.max_number, 10) || 0;
   const nums = holes.slice(0, count);
-  for (let i = nums.length; i < count; i++) nums.push(max + 1 + (i - nums.length));
+  // 注意：不能用 nums.length 参与顺延计算——push 会改变它，导致同批全部分到同一个号
+  let next = Math.max(max, nums.length ? nums[nums.length - 1] : 0) + 1;
+  while (nums.length < count) nums.push(next++);
   return nums;
 }
 
