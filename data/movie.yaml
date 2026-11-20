@@ -4404,6 +4404,14 @@
   date: 2010-09-15
   added: 2026-09-30
   image: mv-223.jpg
+  updated: 2026-11-20
+  files:
+    count: 1
+    size: "48.9 GB"
+    format: "MKV"
+    tree: |
+      223-城中大盗 4K原盘REMUX 杜比视界 国英双音 特效字幕/
+      The.Town.2010.2160p.BluRay.REMUX.DV.HDR.HEVC.DTS-HD.MA.5.1-老K.mkv
 
 - id: mv-225
   title: "飞机陷落"
@@ -4416,6 +4424,14 @@
   date: 2023-01-11
   added: 2026-09-30
   image: mv-225.jpg
+  updated: 2026-11-20
+  files:
+    count: 2
+    format: "MP4"
+    tree: |
+      225-Plane.2023.1080p.WEBRip.x264-RARBG/
+      Subs/
+      Plane.2023.1080p.WEBRip.x264-RARBG.mp4
 
 - id: mv-226
   title: "黑亚当"
@@ -4428,6 +4444,17 @@
   date: 2022-10-19
   added: 2026-09-30
   image: mv-226.jpg
+  updated: 2026-11-20
+  files:
+    count: 5
+    format: "SRT×3 / MP4"
+    tree: |
+      226-Black.Adam.2022.1080p.WEBRip.x264-RARBG/
+      Subs/
+      Black.Adam.2022.1080p.WEBRip.x264-RARBG_CHS_7777617.srt
+      Black.Adam.2022.1080p.WEBRip.x264-RARBG_CHS_7777679.srt
+      Black.Adam.2022.1080p.WEBRip.x264-RARBG_CHS_7816067.srt
+      Black.Adam.2022.1080p.WEBRip.x264-RARBG.mp4
 
 - id: mv-227
   title: "黑鹰坠落"
