@@ -126,7 +126,7 @@ if (reconcile.length) {
 
 // 未入库 / 需人工跟进（固定放在最后一段）
 if (skipped.length) {
-  const lines = [`**⚠️ 未入库 · 需人工跟进（${skipped.length}）**`];
+  const lines = [`**⚠️ 未入库 / 补链异常 · 需跟进（${skipped.length}）**`];
   for (const s of skipped) {
     const nm = s.name || s.id || '（未命名）';
     const reason = s.reason || s.kind || '未说明原因';

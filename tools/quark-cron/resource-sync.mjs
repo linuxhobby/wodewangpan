@@ -114,7 +114,7 @@ for (const c of cats) {
     continue;
   }
   if (!SUPPORTED[c.prefix]) {
-    for (const u of c.unnumbered || []) skipped.push({ name: u.filename, reason: `unsupported_category：${c.prefix} 第一版未开放自动入库，需人工处理` });
+    for (const u of c.unnumbered || []) skipped.push({ name: u.filename, reason: `unsupported_category：${c.prefix} 不在脚本直入范围，已转 LLM 补全链路（无需人工审核）` });
     continue;
   }
   const fresh = (c.unnumbered || []).filter((u) => !u.likely_duplicate_of);
