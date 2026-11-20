@@ -42,7 +42,12 @@ const SHARE_ID = arg('share-id', process.env.GUANGYA_SHARE_ID || '19689928822724
 const DRIVE_SKILL = process.env.GUANGYA_SKILL_DIR || path.join(HOME, '.workbuddy', 'skills', 'guangyapan-drive');
 const DRIVE_CLI = process.env.GUANGYA_CLI || path.join(DRIVE_SKILL, 'bin', 'guangyapan.mjs');
 const AGENT = process.env.GUANGYA_AGENT_NAME || 'WorkBuddy';
-const IID_FILE = process.env.GUANGYA_INSTANCE_ID_FILE || path.join(HOME, '.workbuddy', 'guangyapan-instance-id');
+const IID_FILE = process.env.GUANGYA_INSTANCE_ID_FILE
+  || [
+    path.join(HOME, '.workbuddy', 'guangyapan-instance-id'),
+    path.join(HOME, '.workbuddy', 'guangyapan-drive-instance-id'),
+  ].find((p) => fs.existsSync(p))
+  || path.join(HOME, '.workbuddy', 'guangyapan-instance-id');
 const PROFILE_DIR = process.env.GUANGYA_PROFILE_DIR || '';
 const IID = process.env.GUANGYA_INSTANCE_ID || (() => {
   try { return fs.readFileSync(IID_FILE, 'utf8').trim(); } catch { return ''; }
