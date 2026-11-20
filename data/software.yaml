@@ -103,6 +103,41 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-005.jpg
+  updated: 2026-11-21
+  files:
+    count: 28
+    size: "1.3 GB"
+    format: "APK×28"
+    tree: |
+      005-AdGuard/
+      AdGuard_Ver.4.13.2-Final_Balatan.apk
+      AdGuard_Ver.4.13.2-Final_Balatan(1).apk
+      AdGuard_Ver.4.14-Final_rushi.apk
+      AdGuard_Ver.4.14-Final_rushi(1).apk
+      AdGuard_Ver.4.14.0-Beta1_rushi.apk
+      AdGuard_Ver.4.14.0-Beta1_rushi(1).apk
+      AdGuard_Ver.4.14.0-Final_Balatan.apk
+      AdGuard_Ver.4.14.0-Final_Balatan(1).apk
+      AdGuard_Ver.4.14.1-Final_Balatan.apk
+      AdGuard_Ver.4.14.1-Final_Balatan(1).apk
+      AdGuard_Ver.4.14.1-Final_rushi.apk
+      AdGuard_Ver.4.14.1-Final_rushi(1).apk
+      AdGuard_Ver.4.14.2-Final_Balatan.apk
+      AdGuard_Ver.4.14.2-Final_Balatan(1).apk
+      AdGuard_Ver.4.14.2-Final_rushi.apk
+      AdGuard_Ver.4.14.2-Final_rushi(1).apk
+      AdGuard_Ver.4.15-Final_rushi.apk
+      AdGuard_Ver.4.15.0-Nightly_Balatan.apk
+      AdGuard_Ver.4.15.0-Nightly_Balatan(1).apk
+      AdGuard_Ver.4.15.0-Nightly_rushi.apk
+      AdGuard_Ver.4.15.0-Nightly_rushi(1).apk
+      AdGuard_Ver.4.15.0-Nightly-高级版-youarefinished.apk
+      AdGuard_Ver.4.15.1-Final_Balatan.apk
+      AdGuard_Ver.4.15.1-Final_youarefinished.apk
+      AdGuard_Ver.4.15.2-Final-高级版-NURIK.apk
+      AdGuard_Ver.4.15.2-Final-高级版-rushi.apk
+      AdGuard_Ver.4.16.0-Nightly_Balatan.apk
+      AdGuard_Ver.4.16.0-Nightly_youarefinished.apk
 
 - id: app-006
   title: "Adobe 大师版 - 设计剪辑主力工具合集"
@@ -114,6 +149,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-006.jpg
+  updated: 2026-11-21
+  files:
+    count: 4
+    tree: |
+      006-adobe大师/
+      2026 Win x64 SP版/
+      解决Adobe正版弹窗提示/
+      解压密码：@vposy/
+      Mac/
 
 
 - id: app-007
