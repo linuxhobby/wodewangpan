@@ -1959,6 +1959,22 @@
   date: 2023-07-23
   added: 2026-10-03
   image: tv-073.jpg
+  updated: 2026-11-21
+  files:
+    count: 8
+    size: "49.5 GB"
+    format: "MKV×8"
+    tree: |
+      073-母狮（第三季-2026）/
+      S03/
+      Lioness.S03E01.2026.2160p.AMZN.WEB-DL.H265.DDP.5.1.Atmos.mkv
+      Lioness.S03E02.2026.2160p.AMZN.WEB-DL.H265.DDP.5.1.Atmos.mkv
+      Lioness.S03E03.2026.2160p.AMZN.WEB-DL.H265.DDP.5.1.Atmos.mkv
+      Lioness.S03E04.2026.2160p.AMZN.WEB-DL.H265.DDP.5.1.Atmos.mkv
+      Lioness.S03E05.2026.2160p.AMZN.WEB-DL.H265.DDP.5.1.Atmos.mkv
+      Lioness.S03E06.2026.2160p.AMZN.WEB-DL.H265.DDP.5.1.Atmos.mkv
+      Lioness.S03E07.2026.2160p.AMZN.WEB-DL.H265.DDP.5.1.Atmos.mkv
+      Lioness.S03E08.2026.2160p.AMZN.WEB-DL.H265.DDP.5.1.Atmos.mkv
 
 - id: tv-109
   title: "绿灯军团"
@@ -3316,23 +3332,33 @@
   date: 2026-11-11
   added: "2026-11-12 06:24"
   image: tv-103.jpg
-  updated: 2026-11-12
+  updated: 2026-11-21
   files:
-    count: 10
-    size: "19.0 GB"
-    format: "MKV×10"
+    count: 20
+    size: "38.1 GB"
+    format: "MKV×20"
     tree: |
       103-翻案人生 第一季 2026/
       Alicia&#39;s.Law.2026.S01E01.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E01.1080p.web.h264.Qshan(1).mkv
       Alicia&#39;s.Law.2026.S01E02.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E02.1080p.web.h264.Qshan(1).mkv
       Alicia&#39;s.Law.2026.S01E03.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E03.1080p.web.h264.Qshan(1).mkv
       Alicia&#39;s.Law.2026.S01E04.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E04.1080p.web.h264.Qshan(1).mkv
       Alicia&#39;s.Law.2026.S01E05.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E05.1080p.web.h264.Qshan(1).mkv
       Alicia&#39;s.Law.2026.S01E06.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E06.1080p.web.h264.Qshan(1).mkv
       Alicia&#39;s.Law.2026.S01E07.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E07.1080p.web.h264.Qshan(1).mkv
       Alicia&#39;s.Law.2026.S01E08.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E08.1080p.web.h264.Qshan(1).mkv
       Alicia&#39;s.Law.2026.S01E09.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E09.1080p.web.h264.Qshan(1).mkv
       Alicia&#39;s.Law.2026.S01E10.1080p.web.h264.Qshan.mkv
+      Alicia&#39;s.Law.2026.S01E10.1080p.web.h264.Qshan(1).mkv
 
 - id: tv-104
   title: "现在不是出轨的问题"

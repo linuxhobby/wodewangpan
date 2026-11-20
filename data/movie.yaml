@@ -4770,6 +4770,14 @@
   date: 2013-10-09
   added: 2026-10-04
   image: mv-243.jpg
+  updated: 2026-11-21
+  files:
+    count: 1
+    size: "1.1 GB"
+    format: "RMVB"
+    tree: |
+      243-金蝉脱壳1/
+      金蝉脱壳 2013.1080P.rmvb
 
 - id: mv-244
   title: "金蝉脱壳2：冥府"
@@ -4782,6 +4790,14 @@
   date: 2018-06-05
   added: 2026-10-04
   image: mv-244.jpg
+  updated: 2026-11-21
+  files:
+    count: 1
+    size: "1.3 GB"
+    format: "MKV"
+    tree: |
+      244-金蝉脱壳2/
+      金蝉脱壳2：冥府 2018.1080p.mkv
 
 - id: mv-245
   title: "金蝉脱壳3：恶魔车站"
