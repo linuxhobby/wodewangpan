@@ -36,6 +36,7 @@ const DRY = process.argv.includes('--dry-run');
 const RECHECK = process.argv.includes('--recheck');
 const REPO = arg('repo', cfg.REPO);
 const OUT = arg('out', path.join(CACHE, 'guangya-sync-last.json'));
+const REJECT_FILE = process.env.GUANGYA_REJECT_FILE || path.join(CACHE, 'guangya-rejected-ids.json');
 const ONLY = arg('only', '');
 const LIMIT = parseInt(arg('limit', '0'), 10) || 0;
 const SHARE_ID = arg('share-id', process.env.GUANGYA_SHARE_ID || '1968992882272407648');
@@ -117,6 +118,27 @@ function cli(command, payload, extraArgs = []) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const TERMINAL = new Set(['SUCCEEDED', 'PARTIAL', 'FAILED', 'STOPPED']);
+
+/** 光鸭服务端判定违规的 id 永久跳过出链：首次从上一轮报告播种，之后以本文件为准。 */
+function loadRejected() {
+  try {
+    return new Set(JSON.parse(fs.readFileSync(REJECT_FILE, 'utf8')).map(String));
+  } catch {
+    const seeded = new Set();
+    try {
+      const last = JSON.parse(fs.readFileSync(OUT, 'utf8'));
+      for (const f of last.failed || []) if (f.code === 'SHARE_FILE_REJECTED' && f.id) seeded.add(String(f.id));
+    } catch { /* 没有上轮报告就空表起步 */ }
+    saveRejected(seeded);
+    return seeded;
+  }
+}
+function saveRejected(set) {
+  try {
+    fs.mkdirSync(path.dirname(REJECT_FILE), { recursive: true });
+    fs.writeFileSync(REJECT_FILE, JSON.stringify([...set].sort(), null, 2));
+  } catch { /* 黑名单写不动时只影响本轮，不阻断补链 */ }
+}
 
 /** 只读 list：一次请求最多放 100 个 list，分页取全 */
 async function listAll(ids) {
@@ -227,6 +249,7 @@ async function main() {
     note: '分享链接创建成功仅代表链接生成，内容需经分享审核，审核通过前文件可能暂不可见。',
   };
   let exitCode = 0;
+  const rejected = loadRejected();
   try {
     if (!REPO || !fs.existsSync(path.join(REPO, 'data'))) throw new Error(`站点仓库不可用：${REPO}`);
     if (!fs.existsSync(DRIVE_CLI)) throw new Error(`光鸭 CLI 不存在：${DRIVE_CLI}`);
@@ -297,6 +320,10 @@ async function main() {
       }
       report.categories.push({ category: c.key, dir: c.dirName, dirs: items.length, missing });
     }
+    // 服务端已判违规的条目永远不再提交出链，也不进失败/汇报清单。
+    const retry = wanted.filter((w) => !rejected.has(w.id));
+    report.rejected_skipped = wanted.length - retry.length;
+    wanted.splice(0, wanted.length, ...retry);
     if (LIMIT > 0) wanted.length = Math.min(wanted.length, LIMIT);
     report.pending = wanted.map(({ id, category, dir }) => ({ id, category, dir }));
     console.log(`光鸭补链：扫描 ${mapped.length} 个分类，待补 ${wanted.length} 条${DRY ? '（dry-run，不出链）' : ''}`);
@@ -322,6 +349,8 @@ async function main() {
           const bad = batch.find((w) => w.remote_id === badId);
           if (bad) {
             report.failed.push({ id: bad.id, code: 'SHARE_FILE_REJECTED', message: `违规文件不能创建分享：${String(run.data?.file_name || bad.dir).slice(0, 80)}` });
+            rejected.add(bad.id);
+            saveRejected(rejected);
             batch = batch.filter((w) => w.id !== bad.id);
             exitCode = 1;
             continue;

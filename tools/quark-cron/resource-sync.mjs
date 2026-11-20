@@ -258,7 +258,11 @@ try {
   const n = (g.created || []).length;
   gyText = `光鸭补链：成功 ${n}/${g.pending?.length ?? 0}（失败 ${(g.failed || []).length}，未确认 ${(g.unconfirmed || []).length}）`;
   if (g.login_required) gyText += '：需人工重新登录';
-  for (const f of g.failed || []) skipped.push({ name: f.name || f.id || '光鸭条目', reason: `guangya_failed：${String(f.message || f.reason || '').slice(0, 100)}` });
+  // 服务端已判定违规的条目不再逐条出现在汇报里（guangya-sync 也会永久跳过出链）。
+  for (const f of g.failed || []) {
+    if (f.code === 'SHARE_FILE_REJECTED') continue;
+    skipped.push({ name: f.name || f.id || '光鸭条目', reason: `guangya_failed：${String(f.message || f.reason || '').slice(0, 100)}` });
+  }
   // 光鸭链接是在主流程 commit/push 之后写进 data/*.yaml 的，必须单独收口，
   // 否则工作区留脏，下一轮 git 预检会直接停手。
   if (n && !DRY) {
