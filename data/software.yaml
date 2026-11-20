@@ -170,6 +170,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-007.jpg
+  updated: 2026-11-21
+  files:
+    count: 3
+    size: "1.4 GB"
+    format: "EXE×2 / TXT"
+    tree: |
+      007-国家版剪映2025告别剪映会员官方正版/
+      CapCut_6_7_0_2661_capcutpc_0_creatortool.exe
+      CapCut_6_8_0_2703_beta5_capcutpc_beta_creatortool.exe
+      版本说明：6.7是稳定版，6.8是测试版.txt
 
 
 - id: app-008
@@ -182,6 +192,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-008.jpg
+  updated: 2026-11-21
+  files:
+    count: 3
+    format: "PDF / ZIP"
+    packed: true
+    tree: |
+      008-IDM下载器终身会员版/
+      毛子版本（备用）/
+      idm 安装指南.pdf
+      Internet Download Manager 6.42 Build 16.zip
 
 
 - id: app-009
@@ -194,6 +214,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-009.jpg
+  updated: 2026-11-21
+  files:
+    count: 3
+    size: "500 MB"
+    format: "EXE / DMG / APK"
+    tree: |
+      009-Obsidian笔记/
+      Obsidian-1.12.7-Android.apk
+      Obsidian-1.12.7-macOS.dmg
+      Obsidian-1.12.7-windows.exe
 
 
 - id: app-010
