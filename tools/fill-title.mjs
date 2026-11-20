@@ -2,7 +2,7 @@
 /**
  * 批量补/改资源标题副标（口径与 data/software.yaml 已改的 95 条一致：`原名 - 客观功能描述`）。
  *
- * 分类与正则口径收口在 scripts/lib/data.js（SUBTITLE_CATS / HAS_SUBTITLE_RE / BANNED_TITLE_RE），
+ * 分类与正则口径收口在 scripts/lib/data.js（SUBTITLE_CATS / HAS_SUBTITLE_RE），
  * new-resource.js（入库问询）与 skill 侧 make-entry.mjs（自动入库强校验）同一份，本脚本不另抄。
  * 副标已在入库时把关，本脚本只兜存量：盘点 + 批量修正。
  *
@@ -32,7 +32,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, isLongTitle } from '../scripts/lib/data.js';
+import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, isLongTitle } from '../scripts/lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
@@ -109,7 +109,6 @@ function validate(map, rows) {
     if (!row) errors.push(`${id}：data/*.yaml 里找不到`);
     else if (!SUBTITLE_CATS.has(row.category)) errors.push(`${id}：${row.category} 不适用副标（影视片名要保持精确）`);
     if (typeof title !== 'string' || !/\s-\s/.test(title)) errors.push(`${id}：新标题必须含「 - 」分隔`);
-    if (BANNED_TITLE_RE.test(String(title))) errors.push(`${id}：含绝对化/主观用语，改为客观功能描述`);
     if ([...String(title)].length > 48) errors.push(`${id}：标题超过 48 字，副标建议 8~12 字`);
     if (String(title).includes('"')) errors.push(`${id}：标题不要含双引号`);
   }

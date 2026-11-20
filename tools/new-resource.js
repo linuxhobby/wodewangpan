@@ -3,7 +3,7 @@ import readline from 'node:readline/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // 分类 → data 文件映射与副标口径收口在 lib/data.js（fill-title.mjs 同源），勿另抄
-import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, BANNED_TITLE_RE, isLongTitle, todayShanghai } from '../scripts/lib/data.js';
+import { CATEGORY_FILES, SUBTITLE_CATS, HAS_SUBTITLE_RE, isLongTitle, todayShanghai } from '../scripts/lib/data.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -40,12 +40,8 @@ if (SUBTITLE_CATS.has(categoryCn) && !HAS_SUBTITLE_RE.test(title) && !isLongTitl
   for (;;) {
     const subtitle = await get('副标（客观功能描述，留空则保持原名）');
     if (!subtitle) {
-      console.log('提示：工具/资料类建议写「原名 - 客观功能描述」，别用「最好/第一/必备」等主观词。');
+      console.log('提示：工具/资料类建议写「原名 - 客观功能描述」。');
       break;
-    }
-    if (BANNED_TITLE_RE.test(subtitle)) {
-      console.log('副标含「最好/第一/必备」等主观词，请改为客观功能描述');
-      continue;
     }
     if ([...`${title} - ${subtitle}`].length > 48) {
       console.log('标题合计超过 48 字，副标建议 8~12 字');

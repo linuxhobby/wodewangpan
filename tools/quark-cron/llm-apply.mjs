@@ -32,7 +32,6 @@ const CATS = {
   课程: { prefix: 'cs', file: 'course.yaml', slug: 'course' },
 };
 const SUBTITLE_CATS = new Set(['游戏', '软件', '电子书', '课程', '其他']);
-const BANNED = /最好|最佳|最强|第一|必备|最便捷|排第二|官方原版应用安装包下载后拖入/;
 
 const argv = process.argv.slice(2);
 const draftArg = argv.indexOf('--draft');
@@ -61,7 +60,6 @@ function validate(x) {
   const desc = String(x.description || '').replace(/\s+/g, ' ').trim();
   const len = [...desc].length;
   if (len < 150 || len > 700) errs.push(`description 长度 ${len} 不在 150-700`);
-  if (BANNED.test(String(x.title || '') + desc)) errs.push('含绝对化/模板化禁用词');
   if (!Array.isArray(x.sources) || !x.sources.length) errs.push('sources 为空');
   if (!(Number(x.confidence) >= MIN_CONF)) errs.push(`confidence < ${MIN_CONF}`);
   if (x.platform && /ios|iphone|ipad|mac/i.test(String(x.platform)) && x.category !== '软件') errs.push('平台词与分类冲突');

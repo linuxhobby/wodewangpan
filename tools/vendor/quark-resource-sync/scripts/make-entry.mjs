@@ -37,13 +37,10 @@ if (!new RegExp(`^(${Object.values(CATS).map((c) => c.prefix).join('|')})-\\d{3}
 if (!d.id.startsWith(`${cat.prefix}-`))
   throw new Error(`id 前缀与分类不匹配：「${d.category}」应写作 ${cat.prefix}-xxx，当前：${d.id}`);
 if (!Array.isArray(d.tags) || !d.tags.length) throw new Error('tags 必须是非空数组');
-// 标题副标口径（2026-11-16 补，与站点 scripts/lib/data.js 的 SUBTITLE_CATS / HAS_SUBTITLE_RE /
-// BANNED_TITLE_RE 完全一致，fill-title.mjs 注释所说的「入库强校验」此前在本脚本缺失，导致
-// 2026-11-16 的 app-105「Git for Windows」漏写副标）。游戏/软件/电子书/课程/其他必须写
-// 「原名 - 客观功能描述」；影视片名保持精确（TMDB 剧名检索/季号识别依赖）。
+// 标题副标口径（2026-11-20 更新：绝对化禁词校验已按指挥官要求移除）。游戏/软件/电子书/课程/其他
+// 必须写「原名 - 客观功能描述」；影视片名保持精确（TMDB 剧名检索/季号识别依赖）。
 const SUBTITLE_CATS = new Set(['游戏', '软件', '电子书', '课程', '其他']);
 const HAS_SUBTITLE_RE = /\s-\s|:\s|：|\(|（|•|—|\s·\s/;
-const BANNED_TITLE_RE = /最好|最佳|最强|第一|必备|最便捷|排第二/;
 // 长标题豁免，与仓库 scripts/lib/data.js 的 isLongTitle 同口径：中文≥10字 或 任意字符总长≥18。
 // 指挥官口径：电影/电视剧/动漫不用副标（不在 SUBTITLE_CATS），主标题已很长也可不用副标。
 const isLongTitle = (t) => {
@@ -51,7 +48,6 @@ const isLongTitle = (t) => {
   return (/[\u4e00-\u9fff]/.test(s) && [...s].length >= 10) || [...s].length >= 18;
 };
 if (SUBTITLE_CATS.has(d.category)) {
-  if (BANNED_TITLE_RE.test(d.title)) throw new Error(`标题/副标含绝对化或主观用语：${d.title}`);
   if (!HAS_SUBTITLE_RE.test(d.title) && !isLongTitle(d.title))
     throw new Error(`「${d.category}」标题必须写「原名 - 客观功能描述」副标（8~12字，从 description/tags 提炼），当前：${d.title}`);
   if ([...d.title].length > 48) throw new Error(`标题超过 48 字：${d.title}`);
