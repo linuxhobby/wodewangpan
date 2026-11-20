@@ -4535,6 +4535,14 @@
   date: 2025-04-30
   added: 2026-09-30
   image: mv-230.jpg
+  updated: 2026-11-20
+  files:
+    count: 1
+    size: "57.0 KB"
+    format: "ASS"
+    tree: |
+      230-Holy Night Demon Hunters 2025.1080p.WEBRip.H264神圣之夜：恶魔猎人/
+      Holy Night Demon Hunters 2025.1080p.WEBRip.H264.AAC.chs.ass
 
 - id: mv-231
   title: "疾速追杀3"
@@ -4547,6 +4555,19 @@
   date: 2019-05-15
   added: 2026-09-30
   image: mv-231.jpg
+  updated: 2026-11-20
+  files:
+    count: 6
+    size: "2.5 GB"
+    format: "SUP×2 / SRT×2 / MP4 / ASS"
+    tree: |
+      231-John.Wick.Chapter.3.Parabellum.2019.1080p.WEBRip.x264-RARBG/
+      2_English.srt
+      3_English.srt
+      John Wick Chapter 3 - Parabellum 2019 BluRay 1080p.sup
+      John Wick Chapter 3 - Parabellum 2019 BluRay 2160p.sup
+      John.Wick.Chapter.3.Parabellum.2019.1080p.WEBRip.x264-RARBG.ass
+      John.Wick.Chapter.3.Parabellum.2019.1080p.WEBRip.x264-RARBG.mp4
 
 - id: mv-232
   title: "碟中谍"
@@ -4579,6 +4600,16 @@
   date: 2023-03-01
   added: 2026-09-30
   image: mv-233.jpg
+  updated: 2026-11-20
+  files:
+    count: 3
+    size: "2.2 GB"
+    format: "SRT×2 / MP4"
+    tree: |
+      233-The.Devils.Deal.2021.KOREAN.1080p.WEBRip.x264-VXT/
+      The.Devils.Deal.2021.KOREAN.1080p.WEBRip.x264-VXT.繁体中文.srt
+      The.Devils.Deal.2021.KOREAN.1080p.WEBRip.x264-VXT.简体中文.srt
+      The.Devils.Deal.2021.KOREAN.1080p.WEBRip.x264-VXT.mp4
 
 - id: mv-234
   title: "敢死队4：最终章"
