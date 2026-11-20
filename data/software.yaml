@@ -9,6 +9,23 @@
   date: 2022-08-09
   added: 2026-10-02
   image: app-001.jpg
+  updated: 2026-11-20
+  files:
+    count: 10
+    format: "ZIP×4"
+    packed: true
+    tree: |
+      001-ParallelsDesktop18/
+      Parallels Desk18.0.1/
+      Parallels Desktop18.1.1-20230720 2/
+      Parallels Desktop18.1.1-20230720/
+      Parallels Desktop18.1.1/
+      Parallels Desktop18.1.1直接安装版/
+      Parallels_Toolbox_Business_Edition_6.0.1_[HCiSO]__xclient.info/
+      Parallels Desk18.0.1.zip
+      Parallels Desk18.1.0.zip
+      Parallels Desktop18.1.1-20230720.zip
+      Parallels Desktop18.1.1直接安装版.zip
 
 - id: app-002
   title: "Parallels Desktop 19 - 适配 Apple 芯片的虚拟机"
