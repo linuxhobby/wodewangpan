@@ -236,6 +236,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-010.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "279 MB"
+    format: "DMG / MD"
+    tree: |
+      010-OpenShot/
+      OpenShot-v4.0.1-x86_64.dmg
+      APP简介.md
 
 
 - id: app-011
@@ -248,6 +257,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-011.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "185 MB"
+    format: "DMG / MD"
+    tree: |
+      011-Zettlr/
+      Zettlr-4.8.0-arm64.dmg
+      APP简介.md
 
 
 - id: app-012
@@ -260,6 +278,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-012.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "113 MB"
+    format: "DMG / MD"
+    tree: |
+      012-Zed/
+      Zed-aarch64.dmg
+      APP简介.md
 
 
 - id: app-013
