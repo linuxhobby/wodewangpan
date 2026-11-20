@@ -4467,6 +4467,14 @@
   date: 2001-12-28
   added: 2026-09-30
   image: mv-227.jpg
+  updated: 2026-11-20
+  files:
+    count: 1
+    size: "5.6 GB"
+    format: "MP4"
+    tree: |
+      227-Black Hawk Down.黑鹰坠落 重制加长版 2001 英语 中英双字 BD1080P/
+      Black Hawk Down.黑鹰坠落.重制加长版.2001.BD1080P.AAC.H264.CHS-ENG.mp4
 
 - id: mv-228
   title: "第一滴血"
@@ -4479,6 +4487,18 @@
   date: 1982-10-22
   added: 2026-09-30
   image: mv-228.jpg
+  updated: 2026-11-20
+  files:
+    count: 5
+    size: "10.9 GB"
+    format: "MP4×5"
+    tree: |
+      228-第一滴血.1-5部合集.1080p【史泰龙】/
+      第一滴血 First Blood (1982).超清国英双语中英双字.mp4
+      第一滴血2 Rambo_ First Blood Part II (1985).超清国英双语中英双字.mp4
+      第一滴血3 Rambo III (1988).超清国英双语中英双字.mp4
+      第一滴血4 Rambo (2008).超清国英双语中英双字.mp4
+      第一滴血5：最后的血 Rambo Last Blood (2019).1080p.英语中字.mp4
 
 - id: mv-229
   title: "四十七浪人之刃"
@@ -4491,6 +4511,18 @@
   date: 2022-10-25
   added: 2026-09-30
   image: mv-229.jpg
+  updated: 2026-11-20
+  files:
+    count: 5
+    size: "2.0 GB"
+    format: "SRT×3 / SUP / MP4"
+    tree: |
+      229-Blade.of.the.47.Ronin.2022.1080p.BluRay.H264.AAC-RARBG/
+      Blade of the 47 Ronin 2022 1080p BluRay DTS x264-MTeam.1English.srt
+      Blade of the 47 Ronin 2022 1080p BluRay DTS x264-MTeam.2English.srt
+      Blade of the 47 Ronin 2022 1080p BluRay DTS x264-MTeam.romanian.srt
+      Blade.of.the.47.Ronin.2022.1080p.BluRay.H264.AAC-RARBG.mp4
+      Blade.of.the.47.Ronin.2022.1080p.BluRay.H264.AAC-RARBG.sup
 
 - id: mv-230
   title: "神圣之夜：恶魔猎人"
