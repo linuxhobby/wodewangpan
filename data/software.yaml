@@ -37,6 +37,19 @@
   date: 2023-08-21
   added: 2026-10-02
   image: app-002.jpg
+  updated: 2026-11-20
+  files:
+    count: 6
+    size: "881 MB"
+    format: "DMG×5 / TXT"
+    tree: |
+      002-ParallelsDesktop19/
+      Parallels Desktop Activation Tool 4.0.0 [MacKed]19.1.0.dmg
+      Parallels Desktop Activation Tool 4.3.1 [MacKed].dmg
+      ParallelsDesktop-19.0.0-54570.dmg
+      ParallelsDesktop-19.1.0-54729.dmg
+      ParallelsDesktop-19.1.1-54734.dmg
+      readme.txt
 
 - id: app-003
   title: "Raycast - macOS 启动器与效率工具"
@@ -48,6 +61,14 @@
   date: 2026-09-30
   added: 2026-10-02
   image: app-003.jpg
+  updated: 2026-11-20
+  files:
+    count: 1
+    size: "95.0 MB"
+    format: "DMG"
+    tree: |
+      003-Raycast/
+      Raycast.dmg
 
 - id: app-004
   title: "Alfred - macOS 启动器与工作流工具"
@@ -59,6 +80,18 @@
   date: 2026-09-24
   added: 2026-10-02
   image: app-004.jpg
+  updated: 2026-11-20
+  files:
+    count: 4
+    size: "31.9 MB"
+    format: "DMG×2 / ISO / ZIP"
+    packed: true
+    tree: |
+      004-Alfred/
+      Alfred 5 5.0.6.2110.dmg
+      Alfred 5.8.1 [TNT].dmg
+      Alfred_5_6_2_TNT_MacKed.iso
+      Alfred_5.6.2_TNT__xclient.info.zip
 
 - id: app-005
   title: "AdGuard - 系统级广告与跟踪拦截"
