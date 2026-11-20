@@ -1,4 +1,4 @@
-# 游戏资源（52 条）
+# 游戏资源（54 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1111,3 +1111,44 @@
       谜题解锁MOD [作者 水の仙][365道在线谜题][版本未标明].rar
       汉化安装说明.txt
       [整合v1.1.0][0100FDB00AA80000][9.2.0][JP][1G+1U+1D][MOD9.2.0].xci
+
+- id: game-053
+  title: "永恒传说 Remastered - 传说系列30周年高清复刻JRPG"
+  category: 游戏
+  tags: ["游戏", "Switch", "JRPG", "传说系列"]
+  quark_url: "https://pan.quark.cn/s/13dee368098a"
+  description: "《永恒传说 Remastered》（Tales of Eternia Remastered）是万代南梦宫为「传说」系列30周年推出的高清复刻版角色扮演游戏，由TOSE开发，2026年10月15日登陆PS5、PS4、Xbox Series X|S、Nintendo Switch及Switch 2，Steam版于10月16日上线，本作首次配备官方简体中文界面与字幕（不含中文配音）。原作最初于2000年在PlayStation平台推出，2005年推出PSP版，北美市场曾以《Tales of Destiny II》名义发行，此次为原作时隔二十余年的再次移植。剧情讲述边境村落的青年里德与青梅竹马法拉偶然结识来自异世界塞莱斯迪亚的少女梅露蒂，得知名为「大崩落」的灾难将令因菲利亚与塞莱斯迪亚两个世界相撞，三人踏上寻找掌管法则的大晶灵、阻止灾难的旅程。游戏沿用系列标志性的A-LMBS主动线性动作战斗系统，支持术技连招与队友协同作战；复刻版新增目的地图示、可选关闭随机遇敌、自动战斗高速模式、战斗重试、事件跳过与自动存档等便利功能，并可在复刻画面与原版画面、音效之间自由切换。本资源为Nintendo Switch版本体与升级档文件（NSP格式，含中文），含v1.0.0本体、v2.0.0与v2.1.0升级档及历史版本目录，安装与使用方法以盘端目录内说明为准。"
+  date: 2026-10-15
+  added: 2026-11-20
+  image: game-053.jpg
+  updated: 2026-11-20
+  files:
+    count: 4
+    format: "NSP×3"
+    tree: |
+      053-永恒传说 Remastered Tales of Eternia Remastered/
+      历史版本[不用下载]/
+      [本体v1.0.0][010006E0230AC000][22.1.0][中文][US].nsp
+      [升级档v2.0.0][010006E0230AC800][23.0.0][中文][US].nsp
+      [升级档v2.1.0][010006E0230AC800][23.0.1][中文].nsp
+
+- id: game-054
+  title: "泽诺尼亚1 ZENONIA - Gamevil经典动作RPG Switch复刻版"
+  category: 游戏
+  tags: ["游戏", "Switch", "动作RPG", "像素风"]
+  quark_url: "https://pan.quark.cn/s/76dd2c742376"
+  description: "《泽诺尼亚1》（ZENONIA）是韩国Gamevil（现Com2uS Holdings旗下）开发的动作角色扮演游戏，2008年8月首发于韩国功能手机平台，2009年登陆iOS，2010年登陆Android，之后推出过Nintendo DSiWare与PSP移植版，原手机版本已在各大应用商店下架。2026年，该作由Com2uS Holdings与CFK以复刻形式回归：Steam版于8月31日发售，Nintendo Switch版于同年10月发售，重制版移除了手机版的内购内容，改为一次性买断。游戏讲述少年雷格雷特（Regret）为查明养父死于恶魔之手的原因而踏上旅途的故事，玩家在关键剧情节点的选择会累积善恶值，导向正邪两条不同线路与结局。战斗采用俯视角即时制，提供战士、圣骑士、刺客三种职业与各自的技能树，武器装备数量众多；角色还带有饥饿度与负重设定，负重过高会减缓移动速度，世界中有昼夜交替变化。Switch复刻版针对手柄操作、界面显示与存档方式做了适配，保留原作系统与内容。本资源为Nintendo Switch版本体与升级档文件（NSP格式，含中文），含v1.0.0本体与v1.1.0升级档及一个社区修正补丁压缩包，安装与使用方法以盘端目录内说明为准。"
+  date: 2026-10-14
+  added: 2026-11-20
+  image: game-054.jpg
+  updated: 2026-11-20
+  files:
+    count: 4
+    format: "NSP×2 / RAR"
+    packed: true
+    tree: |
+      054-泽诺尼亚1 ZENONIA/
+      历史版本[不用下载]/
+      [本体v1.0.0][01006BE029808000][22.5.0][中文].nsp
+      [升级档v1.1.0][01006BE029808800][23.0.0][中文].nsp
+      [修复按加号崩溃][作者 Monologue][游戏v1.1.0].rar
