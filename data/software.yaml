@@ -426,6 +426,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-019.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "324 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      019-Pritunl/
+      APP简介.md
+      Pritunl.pkg.zip
 
 
 - id: app-020
@@ -438,6 +448,14 @@
   date: 2019-07-31
   added: 2026-10-04
   image: app-020.jpg
+  updated: 2026-11-21
+  files:
+    count: 1
+    size: "1.1 KB"
+    format: "MD"
+    tree: |
+      020-Selected/
+      APP简介.md
 
 
 - id: app-021
@@ -450,6 +468,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-021.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "52.7 MB"
+    format: "DMG / MD"
+    tree: |
+      021-Marker Data/
+      Marker-Data_v2.1.4.dmg
+      APP简介.md
 
 
 - id: app-022
