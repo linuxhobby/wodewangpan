@@ -3439,11 +3439,11 @@
   date: 2026-10-07
   added: 2026-11-12
   image: tv-107.jpg
-  updated: 2026-11-12
+  updated: 2026-11-21
   files:
-    count: 5
-    size: "6.3 GB"
-    format: "MKV×5"
+    count: 6
+    size: "7.3 GB"
+    format: "MKV×6"
     tree: |
       107-爱上草莓的季节/
       E02.mkv
@@ -3451,6 +3451,7 @@
       E04.mkv
       E05.mkv
       E06.mkv
+      E07.mkv
 
 - id: tv-108
   title: "急诊室的奇迹"
