@@ -489,6 +489,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-022.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "10.1 MB"
+    format: "DMG / MD"
+    tree: |
+      022-PearCleaner/
+      Pearcleaner.dmg
+      APP简介.md
 
 
 - id: app-023
@@ -501,6 +510,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-023.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "127 MB"
+    format: "DMG / MD"
+    tree: |
+      023-LeafView/
+      LeafView-4.4.5-darwin-arm64.dmg
+      APP简介.md
 
 
 - id: app-024
@@ -513,6 +531,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-024.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "37.7 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      024-OpenEmu/
+      APP简介.md
+      OpenEmu_2.4.1.zip
 
 
 - id: app-025
