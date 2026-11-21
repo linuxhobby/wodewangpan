@@ -363,6 +363,15 @@
   date: 2023-05-07
   added: 2026-10-04
   image: app-016.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "10.7 MB"
+    format: "DMG / MD"
+    tree: |
+      016-Transmission/
+      Transmission-4.1.3.dmg
+      APP简介.md
 
 
 - id: app-017
@@ -375,6 +384,15 @@
   date: 2022-07-08
   added: 2026-10-04
   image: app-017.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "155 MB"
+    format: "DMG / MD"
+    tree: |
+      017-Tabby/
+      tabby-1.0.237-macos-arm64.dmg
+      APP简介.md
 
 
 - id: app-018
@@ -387,6 +405,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-018.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "17.6 MB"
+    format: "DMG / MD"
+    tree: |
+      018-Tiny Wi-Fi Analyzer/
+      Tiny_Wi-Fi_Analyzer.dmg
+      APP简介.md
 
 
 - id: app-019
