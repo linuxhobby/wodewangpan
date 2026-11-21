@@ -811,6 +811,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-039.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "1.0 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      039-SwiftQuit/
+      APP简介.md
+      Swift.Quit.zip
 
 
 - id: app-040
@@ -823,6 +833,15 @@
   date: 2016-05-23
   added: 2026-10-04
   image: app-040.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "3.6 MB"
+    format: "DMG / MD"
+    tree: |
+      040-Reminders MenuBar/
+      Reminders-MenuBar.dmg
+      APP简介.md
 
 
 - id: app-041
@@ -835,6 +854,15 @@
   date: 2023-04-09
   added: 2026-10-04
   image: app-041.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "7.3 MB"
+    format: "MD / DMG"
+    tree: |
+      041-Stats/
+      Stats.dmg
+      APP简介.md
 
 
 - id: app-042

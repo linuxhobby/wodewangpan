@@ -3689,11 +3689,11 @@
   date: 2026-11-13
   added: 2026-11-15
   image: tv-186.jpg
-  updated: 2026-11-16
+  updated: 2026-11-22
   files:
-    count: 7
-    size: "26.3 GB"
-    format: "MP4×7"
+    count: 9
+    size: "34.0 GB"
+    format: "MP4×9"
     tree: |
       186-重.生.密.码（2026）/
       S01E01.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
@@ -3703,6 +3703,8 @@
       S01E05.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
       S01E06.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
       S01E07.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+      S01E08.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
+      S01E09.2026.2160p.60fps.WEB-DL.H265.10bit.AAC.mp4
 
 - id: tv-187
   title: "文武"
