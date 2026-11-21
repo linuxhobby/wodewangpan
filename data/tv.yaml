@@ -3823,11 +3823,11 @@
   date: 2026-10-16
   added: 2026-11-18
   image: tv-195.jpg
-  updated: 2026-11-19
+  updated: 2026-11-22
   files:
-    count: 5
-    size: "15.7 GB"
-    format: "MKV×5"
+    count: 6
+    size: "18.7 GB"
+    format: "MKV×6"
     tree: |
       195-LOST10（2026）/
       S01/
@@ -3836,6 +3836,7 @@
       LOST10.S01E03.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
       LOST10.S01E04.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
       LOST10.S01E05.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
+      LOST10.S01E06.2026.1080p.friDay.WEB-DL.H264.AAC.mkv
 
 - id: tv-196
   title: "拣选"

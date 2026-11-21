@@ -1006,6 +1006,16 @@
   date: 2017-05-14
   added: 2026-10-04
   image: app-048.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "22.9 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      048-Loop/
+      APP简介.md
+      Loop.zip
 
 
 - id: app-049
@@ -1018,6 +1028,15 @@
   date: 2025-11-25
   added: 2026-10-04
   image: app-049.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "4.5 MB"
+    format: "MD / DMG"
+    tree: |
+      049-Rectangle/
+      Rectangle2.0.2.dmg
+      APP简介.md
 
 
 - id: app-050
@@ -1030,6 +1049,15 @@
   date: 2025-02-23
   added: 2026-10-04
   image: app-050.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "320 MB"
+    format: "DMG / MD"
+    tree: |
+      050-Brave/
+      Brave-Browser-universal.dmg
+      APP简介.md
 
 
 - id: app-051
