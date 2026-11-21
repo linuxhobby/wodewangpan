@@ -875,6 +875,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-042.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "390 KB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      042-SlowQuitApps/
+      APP简介.md
+      SlowQuitApps.zip
 
 
 - id: app-043
@@ -887,6 +897,16 @@
   date: 2020-01-08
   added: 2026-10-04
   image: app-043.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "1.9 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      043-Plash/
+      APP简介.md
+      Plash.2.16.0.-.macOS.15.zip
 
 
 - id: app-044
@@ -899,6 +919,16 @@
   date: 2020-08-22
   added: 2026-10-04
   image: app-044.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "7.1 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      044-SelfControl/
+      APP简介.md
+      SelfControl-4.0.2.zip
 
 
 - id: app-045
