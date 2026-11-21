@@ -8,7 +8,11 @@ Telegram 群查询机器人与社媒推送代码，2026-11-12 曾从站点仓拆
 
 QQ 群查询机器人已迁至绿联 NAS Docker，其代码、配置与启动器不在本仓库。
 
-⚠️ 本仓库公开：`bot/config.json` 与 `push/**/*.env` 含真实凭据，**一律不进 git**
-（已列 .gitignore，并入历史已清洗），凭据只留各运行机本地，换机走 scp。
+⚠️ 本仓库公开：凭据一律不进 git，只留各运行机本地，换机走 scp。
+
+- `push/**/*.env`、`~/.config/wodewangpan-tg.env`（TG_BOT_TOKEN / SITE_URL）、
+  `~/.config/wodewangpan-feishu.env`（FEISHU_APP_ID / FEISHU_APP_SECRET）——凭据统一在 `~/.config/`，
+  `bot/app/core/config.py` 的 `load_raw()` 从这里读取并注入飞书子进程所需 `FEISHU_TG_*`。
+- `bot/config.json` 只放非敏感配置（开关 / 群白名单 / 文案），**不放 token 与飞书 app 凭据**。
 
 架构约定与坑点见 [`../AGENTS.md`](../AGENTS.md) §11，TG 端用法见本文与 §11.4。

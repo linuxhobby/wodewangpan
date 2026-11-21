@@ -5,7 +5,6 @@
   "telegram": {
     "enabled": true,
     "embedded": false,
-    "token": "",
     "allowed_chats": [],
     "reply_mode": "group",
     "subscribe_url": "https://t.me/myquark",
