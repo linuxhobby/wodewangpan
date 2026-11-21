@@ -1,4 +1,4 @@
-# 电影资源（474 条）
+# 电影资源（476 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -8023,3 +8023,40 @@
   date: 2026-11-20
   added: "2026-11-21 03:51"
   image: mv-474.jpg
+
+- id: mv-475
+  title: "孤独的幸存者"
+  category: 电影
+  tags: ["电影", "战争", "动作", "剧情", "孤独的幸存者 Lone Survivor"]
+  quark_url: "https://pan.quark.cn/s/42ba5c0a88b6"
+  description: "根据马库斯·拉特尔（Marcus Luttrell）的同名回忆录改编。2005年他和另外三位美军“海豹突击队”的同伴负责执行一次暗杀基地组织领导人的任务，在途中他们遇到了当地牧羊人（三个孩子和一个老人），按照交战法则他们是可以杀掉他们的，但海豹队员并没有这样做，反而放了他们——尽管他们也知道这些人有可能去通风报信。不多久他们就遭到了250名塔利班士兵的攻击，四位海豹队员中有三名先后牺牲，最后只剩下马库斯·拉特尔成为“孤独的生还者”。｜TMDB 7.4"
+  date: 2013-12-24
+  added: 2026-11-21
+  image: mv-475.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "19.2 GB"
+    format: "ASS / MKV"
+    tree: |
+      475-孤独的幸存者 (2013) 4K SDR/
+      Lone.Survivor.2013.2160p.BluRay.x265.10bit.SDR.DTS-X.7.1-SWTYBLZ.ass
+      Lone.Survivor.2013.2160p.BluRay.x265.10bit.SDR.DTS-X.7.1-SWTYBLZ.mkv
+
+- id: mv-476
+  title: "猎杀"
+  category: 电影
+  tags: ["电影", "猎杀"]
+  quark_url: "https://pan.quark.cn/s/2e98be4739d9"
+  description: "本资源来自夸克网盘分享，简介与海报待人工补充。｜TMDB 0.0"
+  date: 2026-11-21
+  added: 2026-11-21
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "11.4 GB"
+    format: "SRT / MKV"
+    tree: |
+      476-猎杀U-571 (2000) 4K SDR/
+      U-571.2000.UHD.BluRay-Rip.AV1.2160p.SDR.10-Bit.DTS-HD-MA.5.1.mkv
+      猎杀U-571（2000）.srt
