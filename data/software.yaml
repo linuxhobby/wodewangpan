@@ -682,6 +682,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-032.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "4.1 MB"
+    format: "DMG / MD"
+    tree: |
+      032-UnnaturalScrollWheels/
+      UnnaturalScrollWheels-1.4.2.dmg
+      APP简介.md
 
 
 - id: app-033
@@ -694,6 +703,16 @@
   date: 2026-08-12
   added: 2026-10-04
   image: app-033.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "4.3 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      033-SwiftShift/
+      APP简介.md
+      SwiftShift.zip
 
 
 - id: app-035
@@ -706,6 +725,16 @@
   date: 2020-07-13
   added: 2026-10-04
   image: app-035.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "5.0 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      035-TomatoBar/
+      APP简介.md
+      TomatoBar-v3.6.1.zip
 
 
 - id: app-036
