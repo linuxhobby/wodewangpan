@@ -553,6 +553,15 @@
   date: 2025-05-22
   added: 2026-10-04
   image: app-025.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "30.0 MB"
+    format: "DMG / MD"
+    tree: |
+      025-OnlySwitch/
+      OnlySwitch.dmg
+      APP简介.md
 
 
 - id: app-026
@@ -565,6 +574,16 @@
   date: 2020-03-08
   added: 2026-10-04
   image: app-026.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "9.3 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      026-NetNewsWire/
+      APP简介.md
+      NetNewsWire7.1.5.zip
 
 
 - id: app-027
@@ -577,6 +596,15 @@
   date: 2021-11-23
   added: 2026-10-04
   image: app-027.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "19.4 MB"
+    format: "DMG / MD"
+    tree: |
+      027-Monitor Control/
+      MonitorControl.4.4.0.dmg
+      APP简介.md
 
 
 - id: app-028
