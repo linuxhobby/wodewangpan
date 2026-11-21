@@ -747,6 +747,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-036.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "3.7 MB"
+    format: "MD / DMG"
+    tree: |
+      036-Tauview/
+      Tauview_0.0.16_aarch64.dmg
+      APP简介.md
 
 
 - id: app-037
@@ -759,6 +768,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-037.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "2.9 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      037-Swift Bar/
+      APP简介.md
+      SwiftBar.v2.1.1.b597.zip
 
 
 - id: app-038
@@ -771,6 +790,15 @@
   date: 2024-12-11
   added: 2026-10-04
   image: app-038.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "7.4 MB"
+    format: "DMG / MD"
+    tree: |
+      038-Pika/
+      Pika-1.9.0.dmg
+      APP简介.md
 
 
 - id: app-039
