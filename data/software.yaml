@@ -617,6 +617,15 @@
   date: 2020-10-04
   added: 2026-10-04
   image: app-028.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "10.8 MB"
+    format: "DMG / MD"
+    tree: |
+      028-Meeting Bar/
+      MeetingBar.dmg
+      APP简介.md
 
 
 - id: app-029
@@ -629,6 +638,16 @@
   date: 2022-12-02
   added: 2026-10-04
   image: app-029.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "34.4 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      029-MakeItHome/
+      APP简介.md
+      MakeItHome-2.1.0.zip
 
 
 - id: app-030
@@ -641,6 +660,16 @@
   date: 2021-04-29
   added: 2026-10-04
   image: app-030.jpg
+  updated: 2026-11-21
+  files:
+    count: 2
+    size: "5.8 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      030-System Color Picker/
+      APP简介.md
+      Color.Picker.2.1.4.-.macOS.15.zip
 
 
 - id: app-032
