@@ -77,6 +77,55 @@ export function saveState(stateFile, state) {
   fs.writeFileSync(stateFile, JSON.stringify(state, null, 1));
 }
 
+// ---------- 不确定送达（超时加固）----------
+// 网络超时 / 连接被重置 / 响应不是 JSON 这三类，请求可能已被平台受理，
+// 但客户端没拿到回执。此时**不能**当成失败留空状态——下一小时会重选同一条造成重复。
+// 统一记成 uncertain：写进 posted 占位并 noteSeen，后续轮次自动跳过，等人工核对频道后二选一：
+//   --confirm <id>  确认已送达（删 uncertain 标记，正常计入）
+//   --unfix <id>    确认没发出（删 posted 记录，回到可发队列）
+
+/** 是否是「不确定送达」的错误；确定的 API 报错（400/403 等）不算。 */
+export function isUncertainError(e) {
+  const m = String((e && e.message) || e || '');
+  return /网络失败|TimeoutError|aborted|socket hang up|ECONNRESET|ETIMEDOUT|响应不是 JSON|响应非 JSON|HTTP \d+，响应不是 JSON/.test(m);
+}
+
+/** 写一条 uncertain 占位记录并同步进 seenLinks，防止后续轮次重选。 */
+export function markUncertain(state, item, record, reason) {
+  state.posted[item.id] = {
+    ...record,
+    uncertain: true,
+    uncertainAt: new Date().toISOString(),
+    uncertainReason: String(reason || '').slice(0, 200),
+  };
+}
+
+/** 列出所有 uncertain 记录：[id, rec][]。 */
+export function listUncertain(state) {
+  return Object.entries(state.posted || {}).filter(([, r]) => r && r.uncertain);
+}
+
+/** 人工确认已送达：去掉 uncertain 标记，留正常 posted 记录。返回是否命中。 */
+export function confirmUncertain(state, id) {
+  const rec = state.posted[id];
+  if (!rec || !rec.uncertain) return false;
+  delete rec.uncertain;
+  delete rec.uncertainAt;
+  delete rec.uncertainReason;
+  rec.confirmedManually = true;
+  rec.confirmedAt = new Date().toISOString();
+  return true;
+}
+
+/** 人工确认没发出：删掉 posted 记录，让条目回到可发队列。返回是否命中。 */
+export function unfixUncertain(state, id) {
+  const rec = state.posted[id];
+  if (!rec || !rec.uncertain) return false;
+  delete state.posted[id];
+  state.history = (state.history || []).filter((h) => h.id !== id);
+  return true;
+}
+
 // ---------- 网盘分享链接（2026-11-16 指挥官定：有什么链接就发什么链接） ----------
 // 顺序即展示顺序，口径与站点 scripts/lib/data.js 的 NETDISK_PRESETS 一致。
 // 此前推送链路只认 quark_url / baidu_url，光鸭等链接被整行丢掉；这里改成通用读取：

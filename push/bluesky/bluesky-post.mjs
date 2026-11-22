@@ -18,6 +18,9 @@
 //   node bluesky-post.mjs --no-thumb       # 链接卡不带缩略图（默认带条目海报）
 //   node bluesky-post.mjs --no-state       # 测试用：照常发帖，但不写 posted.json（不计入判重）
 //   node bluesky-post.mjs --audit          # 打印不可发条目的原因分布
+//   node bluesky-post.mjs --pending        # 列出送达不确定的条目（网络超时等）
+//   node bluesky-post.mjs --confirm <id>   # 已去 Bluesky 核对：帖子确实发出去了
+//   node bluesky-post.mjs --unfix <id>     # 已核对没发出去：删记录以便重发
 //
 // 凭据：同目录 wodewangpan-bluesky.env（临时覆盖）→ ~/.config/wodewangpan-bluesky.env
 //   （BLUESKY_IDENTIFIER / BLUESKY_APP_PASSWORD / BLUESKY_PDS / REPO / SITE_URL）
@@ -30,6 +33,7 @@ import {
   arg, has, collectPicks, loadEnv, findStateFile, loadState, saveState,
   loadItems, imgPath, makeDeduper, makePicker, baseRecord, countReasons, printSummary,
   DEFAULT_REPO, DEFAULT_SITE_URL, itemUrl,
+  isUncertainError, markUncertain, listUncertain, confirmUncertain, unfixUncertain,
 } from '../common.mjs';
 
 const { file: ENV_FILE, values: env } = loadEnv(import.meta.url, 'wodewangpan-bluesky.env');
@@ -312,6 +316,25 @@ if (has('audit')) {
   process.exit(0);
 }
 
+// 不确定送达的人工收尾：只读/写本地状态，不需要凭据、不发帖。
+if (has('pending')) {
+  const rows = listUncertain(state);
+  if (!rows.length) console.log('没有待核实的条目。');
+  for (const [id, r] of rows) {
+    console.log(`${id} | ${r.uncertainAt} | ${r.title || ''} | ${r.uncertainReason}`);
+    console.log(`  去 Bluesky 核实后：node push/bluesky/bluesky-post.mjs --confirm ${id} 或 --unfix ${id}`);
+  }
+  process.exit(0);
+}
+if (has('confirm') || has('unfix')) {
+  const id = arg('confirm', '') || arg('unfix', '');
+  const ok = has('confirm') ? confirmUncertain(state, id) : unfixUncertain(state, id);
+  if (!ok) { console.log(`× ${id} 不是待核实的 uncertain 条目`); process.exit(1); }
+  saveState(STATE_FILE, state);
+  console.log(has('confirm') ? `✓ ${id} 已标记为确认送达` : `✓ ${id} 已解除标记，下一轮可重发（也可 --pick ${id} 立即补发）`);
+  process.exit(0);
+}
+
 const usedNow = new Set();
 const results = [];
 let sess = null;
@@ -367,8 +390,21 @@ for (let n = 0; n < COUNT; n++) {
     console.log(`✓ 已发送 → ${url}${NO_STATE ? '（--no-state：测试帖，未写入 posted.json）' : ''}`);
     results.push({ id: it.id, ok: true, url, uri: r.uri, embed: useCard ? `external${cardPayload?.thumb ? '+thumb' : ''}` : (blob ? 'images' : 'none'), noState: NO_STATE || undefined });
   } catch (e) {
-    console.log(`× 发送失败：${e.message}`);
-    results.push({ id: it.id, ok: false, error: String(e.message).slice(0, 200) });
+    const why = String(e.message).slice(0, 200);
+    if (!DRY && !NO_STATE && isUncertainError(e)) {
+      // 超时等不确定错误：帖子很可能已发出，只是回执丢了。写占位 + noteSeen，
+      // 下一轮跳过，避免重复；人工核对后 --confirm / --unfix 收尾。
+      markUncertain(state, it, baseRecord(it, text), why);
+      noteSeen(it);
+      console.log(`⚠ 送达不确定：${it.id}（${why}）`);
+      console.log(`  已标记 uncertain，后续轮次不会重发。去 Bluesky 核实后：`);
+      console.log(`  已发出 → node push/bluesky/bluesky-post.mjs --confirm ${it.id}`);
+      console.log(`  没发出 → node push/bluesky/bluesky-post.mjs --unfix ${it.id} 然后 --pick ${it.id} 补发`);
+      results.push({ id: it.id, ok: false, uncertain: true, error: why });
+    } else {
+      console.log(`× 发送失败：${why}`);
+      results.push({ id: it.id, ok: false, error: why });
+    }
   }
 }
 
@@ -385,6 +421,8 @@ if (!DRY && !NO_STATE) {
   } catch {}
   saveState(STATE_FILE, state);
   console.log(`\n已发记录写入：${STATE_FILE}（累计 ${Object.keys(state.posted).length} 条）`);
+  const pend = listUncertain(state);
+  if (pend.length) console.log(`⚠ 其中 ${pend.length} 条送达不确定：${pend.map(([id]) => id).join('、')}（--pending 查看，--confirm/--unfix 收尾）`);
 } else if (NO_STATE) {
   console.log(`\n--no-state：本次未写 ${STATE_FILE}（测试帖不计入判重）`);
 }

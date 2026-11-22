@@ -22,6 +22,9 @@
 //   node tg-post.mjs --check               # 只校验 token 与 chat 可达（getMe + 目标信息）
 //   node tg-post.mjs --retract <id>        # 撤回之前由本脚本发出去的某条目消息（调试用）
 //   node tg-post.mjs --audit               # 打印不可发条目的原因分布
+//   node tg-post.mjs --pending             # 列出送达不确定的条目（网络超时等）
+//   node tg-post.mjs --confirm <id>        # 已去频道核对：确实发出去了，转正常记录
+//   node tg-post.mjs --unfix <id>          # 已去频道核对：没发出去，删记录以便重发
 //
 // 凭据：同目录 wodewangpan-tg.env（临时覆盖）→ ~/.config/wodewangpan-tg.env —— TG_BOT_TOKEN / TG_CHAT / REPO / SITE_URL
 //   （TG_CHAT 填 @频道用户名 或 -100 开头的数字 ID；bot 必须是该频道管理员并有「发布消息」权限）
@@ -35,6 +38,7 @@ import {
   arg, has, collectPicks, loadEnv, findStateFile, loadState, saveState,
   loadItems, imgPath, hasImgFile, makeDeduper, makePicker, baseRecord,
   countReasons, printSummary, DEFAULT_REPO, DEFAULT_SITE_URL, itemUrl,
+  isUncertainError, markUncertain, listUncertain, confirmUncertain, unfixUncertain,
 } from '../common.mjs';
 
 const { file: ENV_FILE, values: env } = loadEnv(import.meta.url, 'wodewangpan-tg.env');
@@ -312,6 +316,25 @@ if (has('retract')) {
   process.exit(0);
 }
 
+// 不确定送达的人工收尾：这些命令只读/写本地状态，不需要 token，也不发消息。
+if (has('pending')) {
+  const rows = listUncertain(state);
+  if (!rows.length) console.log('没有待核实的条目。');
+  for (const [id, r] of rows) {
+    console.log(`${id} | ${r.uncertainAt} | ${r.title || ''} | ${r.uncertainReason}`);
+    console.log(`  去频道核实后：node push/telegram/tg-post.mjs --confirm ${id} （已发）或 --unfix ${id} （没发，可重发）`);
+  }
+  process.exit(0);
+}
+if (has('confirm') || has('unfix')) {
+  const id = arg('confirm', '') || arg('unfix', '');
+  const ok = has('confirm') ? confirmUncertain(state, id) : unfixUncertain(state, id);
+  if (!ok) { console.log(`× ${id} 不是待核实的 uncertain 条目`); process.exit(1); }
+  saveState(STATE_FILE, state);
+  console.log(has('confirm') ? `✓ ${id} 已标记为确认送达` : `✓ ${id} 已解除标记，下一轮可重发（也可 --pick ${id} 立即补发）`);
+  process.exit(0);
+}
+
 if (!DRY && has('check') === false && (!TOKEN || !CHAT)) {
   console.log(`× 凭据不完整：需要 TG_BOT_TOKEN 与 TG_CHAT（写在 ${ENV_FILE}）。\n  想先看文案请跑 --dry（不需要 token）。`);
   process.exit(1);
@@ -398,13 +421,28 @@ for (let n = 0; n < COUNT; n++) {
     console.log(`✓ 已发送 message_id=${messageIds.join('、')} | ${shape}`);
     results.push({ id: it.id, ok: true, messageId: messageIds[0], messageIds, shape });
   } catch (e) {
-    console.log(`× 发送失败：${e.message}`);
-    results.push({ id: it.id, ok: false, error: String(e.message).slice(0, 200) });
+    const why = String(e.message).slice(0, 200);
+    if (!DRY && isUncertainError(e)) {
+      // 超时等不确定错误：平台很可能已收到，只是回执丢了。写占位记录 + noteSeen，
+      // 下一轮自动跳过，避免重复；等人工去频道核对后用 --confirm / --unfix 收尾。
+      markUncertain(state, it, baseRecord(it, caption), why);
+      noteSeen(it);
+      console.log(`⚠ 送达不确定：${it.id}（${why}）`);
+      console.log(`  已标记 uncertain，后续轮次不会重发。去频道核实后：`);
+      console.log(`  已发出 → node push/telegram/tg-post.mjs --confirm ${it.id}`);
+      console.log(`  没发出 → node push/telegram/tg-post.mjs --unfix ${it.id} 然后 --pick ${it.id} 补发`);
+      results.push({ id: it.id, ok: false, uncertain: true, error: why });
+    } else {
+      console.log(`× 发送失败：${why}`);
+      results.push({ id: it.id, ok: false, error: why });
+    }
   }
 }
 
 if (!DRY) {
   saveState(STATE_FILE, state);
   console.log(`\n已发记录写入 ${STATE_FILE}（累计 ${Object.keys(state.posted).length} 条）`);
+  const pend = listUncertain(state);
+  if (pend.length) console.log(`⚠ 其中 ${pend.length} 条送达不确定：${pend.map(([id]) => id).join('、')}（--pending 查看，--confirm/--unfix 收尾）`);
 }
 printSummary(results, { state, items, skipReason });
