@@ -492,7 +492,10 @@ async function processType(kind) {
       state.seen[kind][it.seenKey || seenKey] = { title: cmpTitle, id: null, skipped: '站内已有', at: report.ran_at };
       continue;
     }
-    if (!NO_FILTER_ANIME && kind === 'tv' && isAnime) {
+    // 2026-11-23 起：动画（genre 16）一律只进动漫分类。原先只对 tv 生效，导致动画电影
+    // 被电影分类抢先收录。配合下方处理顺序改为 anime 优先，动画电影/动画剧集都由动漫先收；
+    // 这里把电影也一并挡掉，避免动漫本轮额度用尽时动画漏到电影分类。
+    if (!NO_FILTER_ANIME && kind !== 'anime' && isAnime) {
       report.skipped.push({ kind, tmdb_id: it.tmdb_id, title: it.zh, reason: '动画（genre 16，归入动漫分类）' });
       continue;
     }
@@ -757,7 +760,9 @@ async function processType(kind) {
   }
 }
 
-for (const kind of ['movie', 'tv', 'anime']) {
+// 2026-11-23 起动漫优先：先跑 anime 把 genre 16 的动画电影/动画剧集收走，
+// 再跑 movie / tv（上面已对这两种分类做动画过滤，标题交叉比对也不会重复收录）。
+for (const kind of ['anime', 'movie', 'tv']) {
   try { await processType(kind); } catch (e) { report.errors.push({ kind, error: String(e.message).slice(0, 200) }); console.log(`【${kind}】失败：${e.message}`); }
 }
 
