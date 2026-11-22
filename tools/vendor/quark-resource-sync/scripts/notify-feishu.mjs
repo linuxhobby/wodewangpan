@@ -125,15 +125,25 @@ if (reconcile.length) {
 }
 
 // 未入库 / 需人工跟进（固定放在最后一段）
+// 2026-11-23：良性跳过（已转 LLM 补全、疑似重复、已知异常）不算「需跟进」——
+// 与 trending 卡片的 BENIGN 白名单同口径，避免自动流转项天天占用人工关注。
+const BENIGN = /^(unsupported_category：|duplicate_suspect：|SHARE_FILE_REJECTED|file_list_failed：)/;
 if (skipped.length) {
-  const lines = [`**⚠️ 未入库 / 补链异常 · 需跟进（${skipped.length}）**`];
+  const follow = [];
+  const benign = [];
   for (const s of skipped) {
     const nm = s.name || s.id || '（未命名）';
     const reason = s.reason || s.kind || '未说明原因';
-    lines.push(`· ${nm} — ${reason}`);
+    (BENIGN.test(reason) ? benign : follow).push(`· ${nm} — ${reason}`);
   }
-  elements.push(md(lines.join('\n')));
-  elements.push(hr());
+  if (follow.length) {
+    elements.push(md([`**⚠️ 未入库 / 补链异常 · 需人工跟进（${follow.length}）**`, ...follow].join('\n')));
+    elements.push(hr());
+  }
+  if (benign.length) {
+    elements.push(md([`**↷ 已自动流转 / 正常跳过（${benign.length}，无需跟进）**`, ...benign].join('\n')));
+    elements.push(hr());
+  }
 }
 
 // footer
