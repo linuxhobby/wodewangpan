@@ -1,4 +1,4 @@
-# 游戏资源（65 条）
+# 游戏资源（66 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1369,3 +1369,23 @@
       nsp非整合版/
       xci整合版/
       3.9.1金手指.zip
+
+- id: game-066
+  title: "女巫的烘焙坊 The Witch's Bakery - 巴黎魔法烘焙叙事冒险RPG"
+  category: 游戏
+  tags: ["游戏", "Switch", "冒险", "角色扮演", "独立游戏"]
+  quark_url: "https://pan.quark.cn/s/4582932823da"
+  description: "《女巫的烘焙坊》（The Witch's Bakery）是由法国独立团队 Sunny Lab 开发、Silver Lining Interactive 发行的 2D 叙事冒险角色扮演游戏，2026年10月14日同步登陆 Steam、PS5、Xbox Series X|S、Nintendo Switch 与 Switch 2 平台，其中 PS5 与任天堂平台的实体版于10月16日推出。玩家扮演女巫 Lunne，在现代巴黎开设一家魔法烘焙坊，白天与猫形伙伴 Orio 一起接待顾客、烘焙可颂与法棍等点心，傍晚漫步巴黎各区结识居民并加深羁绊，夜晚则回到工作室研究法式食谱、提升烘焙与魔法水平。对于心事重重的顾客，Lunne 可以进入名为「心之宫殿」的隐藏空间，将情绪具象化为迷宫进行探索，收集治愈面包所需的材料，帮助对方走出情感困境。游戏画面融合动画风格与法国印象派元素，叙事围绕脆弱、友谊与情感治愈展开，主线流程约15小时。本资源为 Switch 中文版文件，包含 v1.0.1 XCI 整合版与 v1.0.4 NSP 升级档，具体内容以网盘目录清单为准。"
+  date: 2026-10-14
+  added: 2026-11-22
+  image: game-066.jpg
+  updated: 2026-11-23
+  files:
+    count: 3
+    size: "4.6 GB"
+    format: "XCI / TXT / NSP"
+    tree: |
+      066-女巫的烘焙坊 The Witch&#39;s Bakery/
+      [升级档v1.0.4][0100BCB025968800][23.0.1][中文][US].nsp
+      浅夏的ns游戏库.txt
+      [整合v1.0.1][0100BCB025968000][22.1.0][中文][US][1G+1U].xci
