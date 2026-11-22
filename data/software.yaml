@@ -2306,7 +2306,7 @@
   tags: ["软件", "macOS", "openCode全平台应用下载"]
   quark_url: "https://pan.quark.cn/s/8b3c2e4e3097"
   guangya_url: "https://www.guangyapan.com/s/1970459052733857875_avljRRMihbsI49Uo"
-  description: "openCode全平台应用下载 for macOS：官方原版应用安装包，下载后拖入「应用程序」文件夹即可使用。"
+  description: "openCode 是一款面向开发者的开源 AI 编程助手，本资源汇总其官方跨平台桌面客户端安装包：macOS 提供 Intel 与 Apple Silicon 两种 DMG，Windows 提供 arm64 与 x64 两种 EXE，Linux 提供 DEB、RPM 与 AppImage 多种格式。下载对应平台的安装包后按常规方式安装即可：macOS 版拖入「应用程序」文件夹，Windows 版直接运行安装程序，Linux 版按发行版选择对应的包格式。"
   date: 2026-11-19
   added: 2026-11-19
   image: app-109.jpg

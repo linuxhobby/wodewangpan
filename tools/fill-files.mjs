@@ -376,7 +376,7 @@ function aggregate(data, fileNum) {
   if ([...exts.keys()].some((e) => /^(ZIP|RAR|7Z|TAR|GZ|001)$/.test(e))) out.packed = true;
 
   // 目录树：接口返回的是盘端内部顺序（按 fid/更新时间），直接写出去是乱的；
-  // 统一交给 sortTree 排成「目录优先 → 扩展名分组 → 组内自然序」，排完再截前 40 行，
+  // 统一交给 sortTree 排成「目录优先 → 扩展名分组 → 组内自然序」，排完再截前 100 行，
   // 这样大目录被截断时留下的是最靠前的一批，而不是接口随手给的一批。
   const tree = sortTree(
     files.map((f) => {
@@ -384,7 +384,7 @@ function aggregate(data, fileNum) {
       return f.file_type === '0' ? `${name}/` : name;
     })
   );
-  if (tree.length) out.tree = tree.slice(0, 40).join('\n');
+  if (tree.length) out.tree = tree.slice(0, 100).join('\n');
 
   return Object.keys(out).length ? out : null;
 }
