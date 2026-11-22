@@ -13,6 +13,17 @@
   date: 1962-02-01
   added: 2026-10-07
   image: bk-001.jpg
+  updated: 2026-11-22
+  files:
+    count: 4
+    size: "10.5 MB"
+    format: "MOBI / PDF / EPUB / AZW3"
+    tree: |
+      001-飞越疯人院/
+      飞越疯人院.azw3
+      飞越疯人院.epub
+      飞越疯人院.mobi
+      飞越疯人院.pdf
 
 - id: bk-002
   title: "牧羊少年奇幻之旅 - 保罗·柯艾略寓言小说"
@@ -24,6 +35,14 @@
   date: 1988-01-01
   added: 2026-10-07
   image: bk-002.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "252 KB"
+    format: "EPUB"
+    tree: |
+      002-牧羊少年奇幻之旅/
+      牧羊少年奇幻之旅.epub
 
 - id: bk-003
   title: "你当像鸟飞往你的山 - 塔拉·韦斯特弗回忆录"
@@ -35,6 +54,14 @@
   date: 2018-02-20
   added: 2026-10-07
   image: bk-003.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "3.5 MB"
+    format: "PDF"
+    tree: |
+      003-你当像鸟飞往你的山/
+      你当像鸟飞往你的山.pdf
 
 - id: bk-004
   title: "强风吹拂 - 三浦紫苑箱根驿传群像小说"
@@ -46,6 +73,14 @@
   date: 2006-01-01
   added: 2026-10-07
   image: bk-004.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "677 KB"
+    format: "EPUB"
+    tree: |
+      004-强风吹拂/
+      强风吹拂.epub
 
 - id: bk-005
   title: "肖申克的救赎 - 斯蒂芬·金中篇小说"
@@ -57,6 +92,14 @@
   date: 1982-01-01
   added: 2026-10-07
   image: bk-005.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "199 KB"
+    format: "EPUB"
+    tree: |
+      005-肖申克的救赎/
+      肖申克的救赎.epub
 
 - id: bk-006
   title: "斯蒂芬·金的王牌惊悚套装"
@@ -68,6 +111,17 @@
   date: 2020-03-01
   added: "2026-10-07 17:40"
   image: bk-006.jpg
+  updated: 2026-11-22
+  files:
+    count: 4
+    size: "47.1 MB"
+    format: "AZW3 / PNG / MOBI / EPUB"
+    tree: |
+      006-斯蒂芬·金的王牌惊悚套装/
+      斯蒂芬·金的王牌惊悚套装.azw3
+      斯蒂芬·金的王牌惊悚套装.epub
+      斯蒂芬·金的王牌惊悚套装.mobi
+      斯蒂芬·金的王牌惊悚套装(共17册）.png
 
 - id: bk-007
   title: "明朝那些事儿（全9册）"
@@ -79,6 +133,14 @@
   date: 2011-12-01
   added: "2026-10-10 19:25"
   image: bk-007.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "33.9 MB"
+    format: "EPUB"
+    tree: |
+      007-明朝那些事儿（全9册）/
+      明朝那些事儿（全9册）.epub
 
 
 - id: bk-008
@@ -91,6 +153,14 @@
   date: 2026-10-10
   added: "2026-10-10 19:25"
   image: bk-008.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "5.5 MB"
+    format: "PDF"
+    tree: |
+      008-高性价比人生指南/
+      高性价比人生指南.pdf
 
 
 - id: bk-009
@@ -103,6 +173,44 @@
   date: 2026-10-13
   added: "2026-10-13 07:30"
   image: bk-009.jpg
+  updated: 2026-11-22
+  files:
+    count: 31
+    size: "3.4 GB"
+    format: "MP4×31"
+    tree: |
+      009-摆脱内耗行动指南（完结）/
+      1-woc......听完这段我的精神内耗治好了！.mp4
+      2-本质思维-撕掉负面标签，看到困扰你的真相.mp4
+      3-情绪翻译-揭开情绪的真相，让情绪为我所用.mp4
+      4-焦虑转移-走出越想做好，结果越糟糕的怪圈.mp4
+      5-精力分配-巧用分工，牢牢掌握关系当中的主动权.mp4
+      6-高情商沟通-U型沟通术，让沟通效率翻倍.mp4
+      7-向上管理-如何管理你的老板，获得更多支持.mp4
+      8-有效说服-无好处不说服，这么说话更有信服力.mp4
+      9-高效合作-思维三角，让合作更高效.mp4
+      10-目标梳理-如何摆脱职场和家庭束缚，做自己想做的事.mp4
+      11-财富规划-4步梳理，迈出成为有钱人的第一步.mp4
+      12-时间清单-学会借力，让你的时间每天多出3小时.mp4
+      13-权力管理-五维授权清单法，提高对方能动性.mp4
+      14-如何通过正确发脾气达到自己目的.mp4
+      15-我们为什么讨厌KPI.mp4
+      16-无好处不说服.mp4
+      17-如何给别人一个无法拒绝的理由.mp4
+      18-无效工作和有效工作仅仅一步之差.mp4
+      19-内向者的先天优势.mp4
+      20-如何做一个合格的“马屁精”.mp4
+      21-职场不要假清高，要真势利.mp4
+      22-简单有效的沟通法则.mp4
+      23-跟领导打小报告的正确姿势.mp4
+      24-如何让别人喜欢听你说话.mp4
+      25-最好的沟通是倾听.mp4
+      26-你敢跟老板说我不行吗？.mp4
+      27-面试最难回答但是容易掉坑的问题.mp4
+      28-职场人必备的5个开会技巧.mp4
+      29-职场底层思维之合作思维.mp4
+      30-五个沟通好习惯.mp4
+      31-高效的管理都是反常识的.mp4
 
 - id: bk-010
   title: "家庭身心保健师课程 - 肖然家庭健康视频课"
@@ -114,6 +222,18 @@
   date: 2026-10-13
   added: "2026-10-13 07:30"
   image: bk-010.jpg
+  updated: 2026-11-22
+  files:
+    count: 7
+    tree: |
+      010-肖然《家庭身心保健师》课程/
+      00 先导片与试听/
+      01 第一篇 身心健康基础篇/
+      02 第二篇 家庭常见问题调养篇/
+      03 第三篇 家庭四季养护篇/
+      04 第四篇 家庭关系处理篇/
+      05 第五篇 正念减压/
+      直播录屏/
 
 - id: bk-011
   title: "朗文图解词典 - 场景式英语启蒙词典"
@@ -125,6 +245,14 @@
   date: 1989-02-24
   added: "2026-10-19 13:58"
   image: bk-011.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "160 MB"
+    format: "PDF"
+    tree: |
+      011-豆瓣评分9.0 雅思词汇书 《The longman picture dictionary》高清版PDF/
+      The Longman Picture Dictionary American English (Ashworth Julie, Clark John.) (Z-Library).pdf
 
 - id: bk-012
   title: "学会提问（原书第12版）"
@@ -136,6 +264,15 @@
   date: 2021-07-01
   added: "2026-10-19 13:58"
   image: bk-012.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "22.1 MB"
+    format: "ZIP"
+    packed: true
+    tree: |
+      012-学会提问（原书第12版·百万纪念珍藏版）/
+      学会提问（原书第12版·百万纪念珍藏版）.zip
 
 - id: bk-013
   title: "金刚经说什么 - 南怀瑾逐品讲金刚经"
