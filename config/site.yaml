@@ -96,6 +96,6 @@ promo:
 # 换公告只改这里的文案与链接，不用动代码；href 支持站内锚点，#qq-bot 是「关于本站」页的 QQ 群指令章节。
 notice:
   enabled: true
-  text: QQ群已经增加资源搜索功能
+  text: 如需帮助请加QQ群
   href: /about/#qq-bot
-  more: 查看指令 →
+  # more 留空则不显示「· xxx」后缀

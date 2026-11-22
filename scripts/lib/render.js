@@ -77,7 +77,7 @@ const titleAsideLinks = (ctx = {}) => {
   const n = ctx.site && ctx.site.notice;
   const notice =
     n && n.enabled !== false && n.text && n.href
-      ? `<a class="page__notice" href="${esc(n.href)}"><span class="page__notice-badge">公告</span>${esc(n.text)} · ${esc(n.more || '查看详情 →')}</a>`
+      ? `<a class="page__notice" href="${esc(n.href)}"><span class="page__notice-badge">公告</span>${esc(n.text)}${n.more ? ` · ${esc(n.more)}` : ''}</a>`
       : '';
   return (
     '<span class="page__aside">' +
