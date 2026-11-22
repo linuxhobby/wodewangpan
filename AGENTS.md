@@ -629,8 +629,15 @@ TG 推送的 caption 末尾固定一行「查询更多资源请联系 [小艾](h
 两个文件已从 git 取消跟踪（`.gitignore` 的 `posted.json` 规则覆盖），只留运行机磁盘、不推送；删了会重复发。
 `push/common.mjs` 的 `findStateFile()` 固定读这里，不再读 `~/.workbuddy`。
 
+**追加式链接账本 `state.seen`（2026-11-23 加固）**：`posted` 以 id 为键，一旦 id 复用或重编号，
+旧记录会被同键的新条目覆盖，判重记忆随之丢失。2026-11-22 事故就是这么发生的——`game-060` 撞号
+（马力欧 / 怪物猎人共用），09:03 发怪物猎人时把 22:03 已发的马力欧记录顶掉，19:03 又把马力欧重发一遍（msg208 / msg230 重复）。
+现在 `makeDeduper()` 在每次发帖成功后把链接写进 `state.seen`（链接 → `{id, at}`，只增不删），
+初始化时连同 `posted` 一起并入判重集合，所以 id 再怎么变都不会重发同一份资源。
+同时 `loadItems()` 遇到数据撞号会在日志里打 `⚠ 撞号警告`，看到就要先修 id 再跑推送。
+
 **定时调度（2026-11-22 定稿，Debian 13 本机）**：两个任务不依赖 LLM / WorkBuddy，用系统 cron，
-每小时 TG `:03`、Bluesky `:08`（间隔 5 分钟），以 `marco` 用户身份在仓库根目录执行，日志落
+每小时 TG `:03`、Bluesky `:05`（间隔 2 分钟），以 `marco` 用户身份在仓库根目录执行，日志落
 `~/.cache/wdp-tg-post.log` 与 `~/.cache/wdp-bsky-post.log`；crontab 由标记块 `wdp-push` 管理，
 手工维护时不要动块外条目。WorkBuddy / CodeBuddy 自动化任务已全部停用，不要再按 rrule 或自动化 id 描述现役调度。
 

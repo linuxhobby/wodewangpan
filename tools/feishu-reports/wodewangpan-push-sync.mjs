@@ -43,10 +43,26 @@ const bsFps = new Set(bsRecent.map((x) => x.fp));
 const missingInBs = tgRecent.filter((x) => !bsFps.has(x.fp));
 const missingInTg = bsRecent.filter((x) => !tgFps.has(x.fp));
 
+// 窗口差异还要再分两类（2026-11-23）：一侧**全量**发过、只是早于最近两条窗口的，属于
+// 「节奏错位」——补发只会造成重复帖（这次卡片就建议 TG 重发已发过两遍的马力欧）；
+// 全量也没有的才是真缺发。所以按全量指纹集合再筛一遍。
+const allFp = (posted) => new Map(Object.entries(posted)
+  .filter(([, r]) => r && !r.uncertain)
+  .map(([id, rec]) => [fpOf(id, rec), { id, rec }]));
+const tgAll = allFp(tgPosted);
+const bsAll = allFp(bsPosted);
+const isTrueGap = (v, otherAll) => !otherAll.has(v.fp);
+const trueMissingInBs = missingInBs.filter((v) => isTrueGap(v, bsAll)); // TG 发了、BS 全量都没有
+const trueMissingInTg = missingInTg.filter((v) => isTrueGap(v, tgAll)); // BS 发了、TG 全量都没有
+const offsetOnly = [
+  ...missingInBs.filter((v) => !isTrueGap(v, bsAll)).map((v) => ({ ...v, side: 'BS', other: bsAll.get(v.fp) })),
+  ...missingInTg.filter((v) => !isTrueGap(v, tgAll)).map((v) => ({ ...v, side: 'TG', other: tgAll.get(v.fp) })),
+];
+
 const tgUncertain = listUncertain(tg);
 const bsUncertain = listUncertain(bs);
 const uncertain = [...tgUncertain.map(([id]) => ['TG', id]), ...bsUncertain.map(([id]) => ['BS', id])];
-const same = !missingInBs.length && !missingInTg.length && !uncertain.length;
+const same = !trueMissingInBs.length && !trueMissingInTg.length && !uncertain.length && !offsetOnly.length;
 
 const postUrl = (v, platform) => {
   if (platform === 'bs') {
@@ -64,29 +80,50 @@ const lines = (rows, platform) => rows.map((v) => {
   return `· ${v.id}｜${v.rec.title || '（无标题）'}｜[查看帖子](${link})`;
 }).join('\n');
 
+const fmtAt = (at) => (String(at || '').slice(5, 16).replace('T', ' ') || '时间未知');
 const elements = [md(`**检查时间：** ${timeStr}`), hr()];
 elements.push(md(`**检查口径：** 两边各取最近 ${RECENT_N} 条，按资源链接比对（历史遗留条目不参与判定）。`));
 elements.push(md(`**TG 最近 ${RECENT_N} 条：**\n${lines(tgRecent, 'tg') || '· 无'}\n\n**Bluesky 最近 ${RECENT_N} 条：**\n${lines(bsRecent, 'bs') || '· 无'}`));
-if (missingInBs.length) {
-  elements.push(md(`**Bluesky 最近两条与 TG 不一致 · ${missingInBs.length} 条**\n${lines(missingInBs, 'tg')}`));
+if (trueMissingInBs.length) {
+  elements.push(md(`**Bluesky 真缺发 · ${trueMissingInBs.length} 条（TG 已发、BS 全量没有）**\n${lines(trueMissingInBs, 'tg')}`));
 }
-if (missingInTg.length) {
-  elements.push(md(`**Telegram 最近两条与 BS 不一致 · ${missingInTg.length} 条**\n${lines(missingInTg, 'bs')}`));
+if (trueMissingInTg.length) {
+  elements.push(md(`**Telegram 真缺发 · ${trueMissingInTg.length} 条（BS 已发、TG 全量没有）**\n${lines(trueMissingInTg, 'bs')}`));
+}
+if (offsetOnly.length) {
+  const rows = offsetOnly.map((v) => {
+    // v.side 是「最近窗口里缺它」的那一侧；窗口里有它的是另一侧
+    const ownSide = v.side === 'BS' ? 'TG' : 'BS';
+    const alias = v.other.id && v.other.id !== v.id ? `（另一侧记作 ${v.other.id}）` : '';
+    return `· ${v.id}｜${v.rec.title || '（无标题）'}｜${ownSide} ${fmtAt(v.rec.at)} vs ${v.side} ${fmtAt(v.other.rec.at)}${alias}`;
+  });
+  elements.push(md(`**节奏错位 · ${offsetOnly.length} 条（另一侧早就发过，只是不在最近 ${RECENT_N} 条窗口内）**\n${rows.join('\n')}\n这一组**不要补发**，补了就是重复帖；若确认是某一侧重复投递，用「--retract 条目id」撤掉多余那条。`));
 }
 if (uncertain.length) {
   elements.push(md(`**送达不确定（需人工核对）· ${uncertain.length} 条**\n${uncertain.map(([p, id]) => `· ${p}｜${id}｜${titleOf(id)}`).join('\n')}`));
 }
 // 注意：飞书 lark_md 会把 <id> 当 HTML 标签吞掉，卡片里只能写「条目id」，不能写尖括号占位符
-elements.push(md('**人工修正：** 核对后用 `--pick 条目id` 补发（TG：`node push/telegram/tg-post.mjs --pick game-056`；Bluesky：`node push/bluesky/bluesky-post.mjs --pick game-060`）。若属 id 复用，先确认当前数据指向的资源再动手。工具不会自动追平。'));
-elements.push({ tag: 'note', elements: [{ tag: 'plain_text', content: same ? '状态：同步' : `状态：不同步 ｜ 最近两条差异 ${missingInBs.length + missingInTg.length} 条 ｜ 不确定 ${uncertain.length} 条` }] });
+// 补发命令按**实际缺的那一侧**生成（2026-11-23：原先写死的 game-056 示例正好是被重发过两遍的条目，
+// 照着敲会把重复帖再发一遍）。只对「真缺发」给命令，节奏错位一律不给。
+const fixLines = [];
+if (trueMissingInBs.length) fixLines.push(`Bluesky 补发：${trueMissingInBs.map((v) => `\`node push/bluesky/bluesky-post.mjs --pick ${v.id}\``).join('、')}`);
+if (trueMissingInTg.length) fixLines.push(`Telegram 补发：${trueMissingInTg.map((v) => `\`node push/telegram/tg-post.mjs --pick ${v.id}\``).join('、')}`);
+if (fixLines.length) {
+  elements.push(md(`**人工修正：** 先核对再执行，工具不会自动追平；若属 id 复用，先确认当前数据指向的资源再动手。\n${fixLines.join('\n')}`));
+}
+const gapCount = trueMissingInBs.length + trueMissingInTg.length;
+const status = same
+  ? '状态：同步'
+  : `状态：${gapCount ? '不同步' : '节奏错位（无需补发）'} ｜ 最近两条差异 ${missingInBs.length + missingInTg.length} 条（真缺发 ${gapCount}）｜ 不确定 ${uncertain.length} 条`;
+elements.push({ tag: 'note', elements: [{ tag: 'plain_text', content: status }] });
 
 const card = {
   config: { wide_screen_mode: true },
-  header: { template: 'orange', title: { tag: 'plain_text', content: '我的网盘.TG / Bluesky 推送同步告警' } },
+  header: { template: gapCount || uncertain.length ? 'orange' : 'blue', title: { tag: 'plain_text', content: '我的网盘.TG / Bluesky 推送同步告警' } },
   elements,
 };
 
-console.log(`[同步检查] 最近 ${RECENT_N} 条 ｜ TG 漏 ${missingInBs.length} ｜ BS 漏 ${missingInTg.length} ｜ 不确定 ${uncertain.length} ｜ TG: ${tgRecent.map((x) => x.id).join(',')} ｜ BS: ${bsRecent.map((x) => x.id).join(',')}`);
+console.log(`[同步检查] 最近 ${RECENT_N} 条 ｜ 真缺发 BS:${trueMissingInBs.length} TG:${trueMissingInTg.length} ｜ 节奏错位 ${offsetOnly.length} ｜ 不确定 ${uncertain.length} ｜ TG: ${tgRecent.map((x) => x.id).join(',')} ｜ BS: ${bsRecent.map((x) => x.id).join(',')}`);
 if (same) {
   console.log('[同步检查] 最近两条一致，不发卡片');
   process.exit(0);

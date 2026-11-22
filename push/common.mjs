@@ -221,6 +221,16 @@ export function loadItems(repo) {
     if (!f.endsWith('.yaml') || f === 'site.yaml') continue;
     items = items.concat(parseYaml(path.join(dataDir, f)));
   }
+  // 撞号预警（2026-11-22 事故：两条资源共用 game-060，先发的马力欧被后发的怪物猎人在
+  // posted.json 里顶掉，判重记忆丢失 → 19:03 重发一遍）。撞号时 items.find(id) 只认第一条，
+  // 推送会发出错误条目且状态互相覆盖，宁可在日志里吵一句。
+  const seen = new Map();
+  for (const it of items) {
+    const prev = seen.get(it.id);
+    if (prev) {
+      console.log(`⚠ 撞号警告：${it.id} 在数据里出现两次（「${prev.title}」/「${it.title}」），推送只会认第一条，请先修 id`);
+    } else seen.set(it.id, it);
+  }
   return items;
 }
 
@@ -289,7 +299,24 @@ export function makeDeduper({ state, items, extraSkips = [], fallbackSkips = [] 
     if (r.quark) seenLinks.add(r.quark);
     if (r.baidu) seenLinks.add(r.baidu);
   }
-  const noteSeen = (it) => { if (it.quark) seenLinks.add(it.quark); if (it.baidu) seenLinks.add(it.baidu); };
+  // 追加式链接账本（state.seen：链接 → { id, at }）。
+  // posted 以 id 为键，id 复用/重编号后旧记录会被同一键的新条目覆盖，判重记忆随之丢失
+  // （2026-11-22 马力欧重发事故就是这么来的）。账本只增不删，作为第二判重来源长期有效。
+  state.seen = state.seen || {};
+  for (const [id, r] of Object.entries(state.posted)) {
+    for (const link of [r.quark, r.baidu]) {
+      if (link && !state.seen[link]) state.seen[link] = { id, at: r.at || '' };
+    }
+  }
+  for (const link of Object.keys(state.seen)) seenLinks.add(link);
+  const noteSeen = (it) => {
+    const at = new Date().toISOString();
+    for (const link of [it.quark, it.baidu]) {
+      if (!link) continue;
+      seenLinks.add(link);
+      if (!state.seen[link]) state.seen[link] = { id: it.id, at };
+    }
+  };
   const skipReason = (it) => {
     for (const f of extraSkips) { const r = f(it); if (r) return r; }
     if (it.quark && seenLinks.has(it.quark)) return '夸克链接已发过（同一份资源）';
