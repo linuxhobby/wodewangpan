@@ -1987,6 +1987,21 @@
   date: 2026-08-16
   added: 2026-10-06
   image: tv-109.jpg
+  updated: 2026-11-22
+  files:
+    count: 8
+    size: "52.4 GB"
+    format: "MKV×8"
+    tree: |
+      109-绿灯军团/
+      1.mkv
+      2.mkv
+      3.mkv
+      4.mkv
+      5.mkv
+      6.mkv
+      7.mkv
+      8.mkv
 - id: tv-110
   title: "法警小队"
   category: 电视剧

@@ -4842,6 +4842,14 @@
   date: 2026-08-19
   added: 2026-10-06
   image: mv-247.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "3.6 GB"
+    format: "MKV"
+    tree: |
+      247-潜伏6：血域/
+      [ AMZN][1080p][简英双语].mkv
 - id: mv-250
   title: "坠落2：死点"
   category: 电影

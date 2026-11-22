@@ -1262,6 +1262,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-062.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "40.4 MB"
+    format: "DMG / MD"
+    tree: |
+      062-Karabiner-Elements/
+      Karabiner-Elements-16.3.0.dmg
+      APP简介.md
 
 
 - id: app-063

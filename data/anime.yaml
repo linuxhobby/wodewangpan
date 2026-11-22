@@ -595,6 +595,14 @@
   date: 2022-09-13
   added: 2026-10-20
   image: an-035.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    tree: |
+      035-赛博朋克：边缘行者/
+      S01/
+      2022.S01.1080p.Bluray.REMUX.AVC.DTS-HDMA5.1/
+      2022.S01.1080p.NF.WEB-DL.H264.DDP5.1.2Audios/
 
 - id: an-036
   title: "魔法秘境"
