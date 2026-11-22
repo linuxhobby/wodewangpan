@@ -2104,6 +2104,16 @@
   date: 2026-01-04
   added: 2026-10-07
   image: tv-114.jpg
+  updated: 2026-11-23
+  files:
+    count: 4
+    format: "MKV×3"
+    tree: |
+      114-良药苦口（第二季）/
+      Best Medicine (2026)/
+      Best.Medicine.S02E01.Be.Careful.What.You.Fish.For.1080p.AMZN.WEB-DL.DDP5.1.H.264.mkv
+      Best.Medicine.S02E02.Breakin.In.is.Hard.to.Do.1080p.AMZN.WEB-DL.DDP5.1.H.264.mkv
+      Best.Medicine.S02E03.Crate.Expectations.1080p.AMZN.WEB-DL.DDP5.1.H.264-Qshan.mkv
 
 - id: tv-115
   title: "良药苦口 第一季"

@@ -1348,6 +1348,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-066.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "5.7 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      066-Mac Mouse Fix/
+      APP简介.md
+      MacMouseFixApp.zip
 
 
 - id: app-067

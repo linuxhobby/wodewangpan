@@ -684,6 +684,16 @@
   date: 2026-09-17
   added: "2026-10-24 03:41"
   image: an-040.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "8.9 GB"
+    format: "MKV / ASS"
+    tree: |
+      040-小羊肖恩3：怪兽来袭/
+      小羊肖恩3-怪兽来袭/
+      简中英.ass
+      Shaun.the.Sheep.The.Beast.of.Mossy.Bottom.2026.2160p.AMZN.WEB-DL.DDP5.1.Atmos.H.265.mkv
 
 - id: an-041
   title: "JOJO的奇妙冒险 飙马野郎"
