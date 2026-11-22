@@ -641,6 +641,14 @@
   date: 2026-06-24
   added: "2026-10-22 05:42"
   image: an-038.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "3.5 GB"
+    format: "MP4"
+    tree: |
+      038-小黄人与大怪兽/
+      1080p.mp4
 
 - id: an-039
   title: "药屋少女的呢喃"

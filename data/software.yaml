@@ -1305,6 +1305,15 @@
   date: 2011-10-27
   added: 2026-10-04
   image: app-064.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "32.8 MB"
+    format: "DMG / MD"
+    tree: |
+      064-Keka/
+      Keka-1.6.8.dmg
+      APP简介.md
 
 
 - id: app-065

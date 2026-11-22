@@ -4881,6 +4881,16 @@
   date: 2021-11-24
   added: 2026-10-06
   image: mv-251.jpg
+  updated: 2026-11-22
+  files:
+    count: 3
+    size: "13.7 GB"
+    format: "SRT / ASS / MKV"
+    tree: |
+      251-新生化危机 (2021) 4K HDR/
+      Resident.Evil.Welcome.to.Raccoon.City.2021.BluRay.1080p.x264.DTS-HD.MA5.1-HDChina.Chs&Eng.ass
+      Resident.Evil.Welcome.to.Raccoon.City.2021.2160p.UHD.BluRay.x265.10bit.HDR.Atmos.TrueHD.7.1-SONYHD.mkv
+      Resident.Evil.Welcome.to.Raccoon.City.2021.BluRay.1080p.x264.DTS-HD.MA5.1-HDChina.Chs&Eng.srt
 
 - id: mv-252
   title: "生化危机6：终章"
