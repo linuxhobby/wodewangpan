@@ -4943,6 +4943,15 @@
   date: 2010-09-01
   added: 2026-10-06
   image: mv-254.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "26.6 GB"
+    format: "ASS / MKV"
+    tree: |
+      254-生化危机 第4部 (2010) 4K UHD/
+      Resident.Evil.Afterlife.2010.2160p.BluRay.x265.10bit.HDR.TrueHD.7.1.Atmos-TERMiNAL.chs&eng.ass
+      Resident.Evil.Afterlife.2010.UHD.BluRay.2160p.Atmos.TrueHD.7.1.HDR.x265.10bit-DreamHD.mkv
 
 - id: mv-255
   title: "生化危机3：灭绝"

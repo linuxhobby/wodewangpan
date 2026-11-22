@@ -1370,6 +1370,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-067.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "32.8 MB"
+    format: "DMG / MD"
+    tree: |
+      067-KeePassXC/
+      KeePassXC-2.7.12-arm64.dmg
+      APP简介.md
 
 
 - id: app-068
