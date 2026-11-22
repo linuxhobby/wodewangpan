@@ -590,6 +590,7 @@ a.tag:hover { background: var(--brand-soft); }
   font-size: var(--fs-xl);
   font-weight: 700;
   line-height: var(--lh-tight);
+  text-align: center;
   background: var(--brand-soft);
   border-color: var(--brand);
 }
