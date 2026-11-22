@@ -1197,6 +1197,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-059.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "10.0 MB"
+    format: "DMG / MD"
+    tree: |
+      059-Keyboard Cowboy/
+      Keyboard.Cowboy.3.28.4.dmg
+      APP简介.md
 
 
 - id: app-060
@@ -1209,6 +1218,16 @@
   date: 2020-10-16
   added: 2026-10-04
   image: app-060.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "4.5 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      060-Maccy/
+      APP简介.md
+      Maccy.app.zip
 
 
 - id: app-061
@@ -1221,6 +1240,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-061.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "3.8 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      061-MiniSim/
+      APP简介.md
+      MiniSim.app.zip
 
 
 - id: app-062
