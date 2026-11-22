@@ -1,6 +1,6 @@
 ---
 name: wodewangpan-bluesky
-description: 把 wodewangpan 资源站（www.wodewangpan.top）的资源发到 Bluesky，带海报图、夸克网盘 + 百度网盘分享链接（含提取码）和资源简介。当用户说"发 Bluesky""推送网盘资源到 Bluesky""Bluesky 发帖""资源站社媒同步"时使用；也覆盖定时推送的编排（每 1 小时一条、全天 24 小时轮转，自动化 id f9355e9c-86ed-424a-a286-2731684d7578）。
+description: 把 wodewangpan 资源站（www.wodewangpan.top）的资源发到 Bluesky，带海报图、夸克网盘 + 百度网盘分享链接（含提取码）和资源简介。当用户说"发 Bluesky""推送网盘资源到 Bluesky""Bluesky 发帖""资源站社媒同步"时使用；也覆盖定时推送的编排（本机 cron 每小时 :08，TG 在 :03；发帖后跑同步检查，不同步发飞书告警）。
 version: "1.2"
 ---
 
@@ -51,6 +51,8 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 - `--audit` 可打印不可发条目的原因分布，排查用。
 
 **默认 `latest`：最新入库优先**（用户 2026-11-15 要求）。读全站 `data/*.yaml` 的 `added`，按时间倒序取还没发过的第一条；`added` 相同（同一批入库）时按 id 数值倒序。新资源一入库就排到队首、下一轮优先发，不会压在几百条老资源后面。`added` 覆盖率 100%（现 1040 条），格式 `YYYY-MM-DD` 或 `YYYY-MM-DD HH:MM`，字符串倒序即时间倒序。全部发完报「没有新条目可发」并停止。
+
+**2026-11-22 定稿：两频道各自独立发帖，不同步由飞书告警**：Bluesky 与 TG 都按自己的 `state/**/posted.json` 判重、各自用 `latest` 选片，**不读对方状态、不自动追平**。后发帖的 Bluesky（每小时 `:08`，TG 在 `:03`）跑完后由 cron 接着执行 `tools/feishu-reports/wodewangpan-push-sync.mjs`，只读对比两边已发资源的链接（夸克 / 百度，与判重同口径；id 被复用会单独提示），不同步才发橙色告警飞书卡片给人工修正（附 id、标题、链接与 `--pick <id>` 命令），同步时不发。`--pick` 与 `--strategy weighted|rotate|random` 用法不变。
 
 **备选 `weighted`：按分类剩余量加权随机**（`--strategy weighted`，2026-11-15 之前是默认）。做法是**按各分类剩余可发条数加权随机**选一个分类，再在该分类内随机挑一条：
 
@@ -128,15 +130,13 @@ POST {PDS}/xrpc/com.atproto.repo.createRecord      {repo, collection, record}   
 
 ## 定时任务
 
-自动化「wodewangpan 资源推送 Bluesky」（id `f9355e9c-86ed-424a-a286-2731684d7578`），**每 1 小时一条，全天 24 小时轮转**（2026-10-10 核对：实际 rrule 已是 `FREQ=HOURLY;INTERVAL=1`，每天 24 条）。
-
-rrule：`FREQ=HOURLY;INTERVAL=1` —— HOURLY 模式**不要加 BYHOUR/BYMINUTE**，加了反而会互相打架。
+本机系统 cron `8 * * * *`（详见 `docs/CRON-TASKS.md`），每小时 `:08` 一轮，TG 在 `:03`（间隔 5 分钟）。同一条 cron 里 Bluesky 跑完紧接着执行 `tools/feishu-reports/wodewangpan-push-sync.mjs`，日志 `~/.cache/wdp-push-sync.log`；两边不同步时发飞书卡片。**CodeBuddy / WorkBuddy 自动化已全部下线**，不要再去找 `~/.codebuddy/automations` 或自动化 id；判断跑没跑只看本机 crontab 与这两个日志。
 
 （历史记录：2026-10-08 曾用 `INTERVAL=3`（每 3 小时一条），再早用 `FREQ=HOURLY;INTERVAL=2;BYHOUR=8,10,12,14,16,18,20;BYMINUTE=0`。**`FREQ=DAILY` 不接受多值 BYHOUR**，会报 "BYHOUR must be an integer"，要用多时段得上 HOURLY + BYHOUR 列表。）
 
 ## 边界
 
-- 每次只发 1 条；失败只重试一次，不要连发刷屏。
+- 两个频道各自独立发帖，工具不自动补发、不改写 state；不同步由 `:08` 后的同步检查发飞书告警，人工决定是否 `--pick` 补发。不要为了「追进度」让脚本连发刷屏。
 - 不改仓库任何文件、不碰 git；发帖内容一律取自 yaml。
 - **沙箱坑（2026-10-30 踩过，脚本已内置三处兼容补丁，别删）**：在自动化沙箱里跑时
   1. `fs.existsSync()` 会**对真实存在的文件返回 false**（`~/.workbuddy` 整个目录、以及 `static/images/*.jpg` 都中招），而 `readFileSync` / `statSync` 正常。若不改，脚本会以为「已发 0 条」→ 去重全失效，并把 `posted.json` 覆盖成只剩一条（历史全丢）→ 之后必然重复发。补丁：状态文件改成直接 try-read；海报判定 `hasImg` 改用 `statSync().isFile()`。

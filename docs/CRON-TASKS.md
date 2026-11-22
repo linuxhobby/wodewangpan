@@ -9,7 +9,8 @@
 | 任务 | 节奏 | 脚本 | 外部副作用 | 判重 / 状态 | 日志 |
 |---|---|---|---|---|---|
 | 我的网盘.资源推送 Telegram 频道 | 每小时 `:03` | `push/telegram/tg-post.mjs` | 发帖到 `@myquark` | `state/telegram-posts/posted.json` | `~/.cache/wdp-tg-post.log` |
-| 我的网盘.资源推送到 Bluesky | 每小时 `:05` | `push/bluesky/bluesky-post.mjs` | 发帖到 Bluesky | `state/bluesky-posts/posted.json` | `~/.cache/wdp-bsky-post.log` |
+| 我的网盘.资源推送到 Bluesky | 每小时 `:08` | `push/bluesky/bluesky-post.mjs` | 发帖到 Bluesky | `state/bluesky-posts/posted.json` | `~/.cache/wdp-bsky-post.log` |
+| 我的网盘.TG / Bluesky 同步检查 | 每小时 `:08`（Bluesky 之后） | `tools/feishu-reports/wodewangpan-push-sync.mjs` | 不同步发飞书橙色告警卡片 | 两边 `posted.json` 的资源链接（夸克 / 百度），id 复用单独提示 | `~/.cache/wdp-push-sync.log` |
 | ~~我的网盘.夸克分享每日补充更新~~（已迁 WorkBuddy 自动化） | 每天 `16:10`（自动化 rrule，非 cron） | `tools/quark-cron/share-update.mjs` | 夸克 `saveas-update` 增量转存 | 夸克接口返回的更新清单 | 自动化会话输出（缓存仍在 `~/.cache/quark-sync/`） |
 | 我的网盘.夸克预存资源搬运 | 每天 `01:40` | `tools/quark-cron/prestore-move.mjs` | 夸克 `move` 目录搬运 | 源/目标目录名实时归一化比对 | `~/.cache/quark-sync/move-cron.log` |
 | 我的网盘.fill-files补文件清单 | 每 2 小时 `:30` | `tools/feishu-reports/wodewangpan-fillfiles-run.mjs` | 写 `data/*.yaml` + build + git push | 每个分类各补 1 条（无待补分类跳过），按 `added` 升序、占位在本类内顺延 | `~/.cache/wdp-fillfiles-cron.log` |
@@ -24,6 +25,7 @@
 4. 所有 cron 用标记块管理，幂等替换，不碰块外条目。
 5. 两条推送任务不碰网盘；两条夸克定点任务不写 `data/*.yaml`、不发帖；fill-files 写 `data/*.yaml` 并 build/push 但不 ssh；TMDB 与资源同步会写 `data/*.yaml`、build/push、VPS 即时重建，TMDB 还做光鸭镜像、资源同步做光鸭补链。
 6. 下载/合成的海报必须验真实图片类型（`tools/lib/image-check.mjs` 读文件头）：`.jpg` 必须是 JPEG，官方图标允许 PNG/JPEG/WebP/GIF；HTML 或体积够大的伪图一律不写 `image:`。
+7. 两条推送**各自独立发帖**（都按 `latest` 选片），工具不自动追平；后发帖的 Bluesky（`:08`）之后跑同步检查，只读对比两边 `posted.json` 的资源链接（夸克 / 百度，与判重同口径；id 被复用会单独提示），不同步发飞书橙色卡片给人工用 `--pick <id>` 修正，同步时不发。判差与 CodeBuddy / WorkBuddy 自动化无关。
 
 ## 2. 环境与凭据
 
@@ -74,7 +76,7 @@ TMDB 同步依赖的 `quark-resource-sync` 同样 vendor 在 `tools/vendor/quark
 # >>> wdp-push (managed, 勿手改)
 PATH=/usr/bin:/bin
 3 * * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node push/telegram/tg-post.mjs >> /home/marco/.cache/wdp-tg-post.log 2>&1
-5 * * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node push/bluesky/bluesky-post.mjs >> /home/marco/.cache/wdp-bsky-post.log 2>&1
+8 * * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node push/bluesky/bluesky-post.mjs >> /home/marco/.cache/wdp-bsky-post.log 2>&1; /usr/bin/node tools/feishu-reports/wodewangpan-push-sync.mjs >> /home/marco/.cache/wdp-push-sync.log 2>&1
 # <<< wdp-push
 # >>> wdp-quark BEGIN (managed, 勿手改)
 10 16 * * * cd /home/marco/Documents/Github/wodewangpan && QK_CACHE_DIR=/home/marco/.cache/quark-sync /usr/bin/node tools/quark-cron/share-update.mjs >> /home/marco/.cache/quark-sync/share-cron.log 2>&1
@@ -126,7 +128,7 @@ node push/bluesky/bluesky-post.mjs --dry
 ### 4.3 运维
 
 ```bash
-tail -f ~/.cache/wdp-tg-post.log ~/.cache/wdp-bsky-post.log
+tail -f ~/.cache/wdp-tg-post.log ~/.cache/wdp-bsky-post.log ~/.cache/wdp-push-sync.log
 python3 -c "import json;print(len(json.load(open('state/telegram-posts/posted.json'))['posted']))"
 ```
 

@@ -572,9 +572,9 @@ QQ 端（NapCat / OneBot）已迁至绿联 NAS Docker，本仓库不含其代码
 | `push/telegram/tg-post.mjs` | 资源站 → Telegram 频道 `@myquark` |
 | `push/bluesky/bluesky-post.mjs` | 资源站 → Bluesky |
 | `push/*/wodewangpan-*.env` | 两个推送脚本的现役凭据，**运行机本地，不入库** |
-| `tools/feishu-reports/` | 5 个飞书简报脚本（fill-files / 资源同步等例行任务的汇报端） |
+| `tools/feishu-reports/` | 6 个飞书简报脚本（fill-files / 资源同步 / TG-Bluesky 同步检查等例行任务的汇报端） |
 | `deploy/deploy-cron.sh` | Debian cron 推送一键部署（幂等，凭据走 scp） |
-| `deploy/wdp-scheduler/` | TG / Bluesky 推送**常驻调度器**（不依赖 LLM / WorkBuddy，:08 TG、:09 Bluesky，崩溃自重启）；与 `deploy/deploy-cron.sh` 二选一，严禁同时开（见其 README） |
+| `deploy/wdp-scheduler/` | TG / Bluesky 推送**常驻调度器**（不依赖 LLM / WorkBuddy，:03 TG、:08 Bluesky + 同步检查，崩溃自重启）；与 `deploy/deploy-cron.sh` 二选一，严禁同时开（见其 README） |
 
 ### 11.4 运行（TG 机器人，Windows 机）
 
@@ -629,12 +629,17 @@ TG 推送的 caption 末尾固定一行「查询更多资源请联系 [小艾](h
 两个文件已从 git 取消跟踪（`.gitignore` 的 `posted.json` 规则覆盖），只留运行机磁盘、不推送；删了会重复发。
 `push/common.mjs` 的 `findStateFile()` 固定读这里，不再读 `~/.workbuddy`。
 
-**定时调度（2026-11-18 定稿，Debian 13 本机）**：两个任务不依赖 LLM / WorkBuddy，用系统 cron，
-每小时 TG `:03`、Bluesky `:05`，以 `marco` 用户身份在仓库根目录执行，日志落 `~/.cache/wdp-tg-post.log`
-与 `~/.cache/wdp-bsky-post.log`；crontab 由标记块 `wdp-push` 管理，手工维护时不要动块外条目。
-另一台电脑上的 WorkBuddy 自动化任务已停用，不要再按 `:08/:09` 或 rrule 描述现役调度。
+**定时调度（2026-11-22 定稿，Debian 13 本机）**：两个任务不依赖 LLM / WorkBuddy，用系统 cron，
+每小时 TG `:03`、Bluesky `:08`（间隔 5 分钟），以 `marco` 用户身份在仓库根目录执行，日志落
+`~/.cache/wdp-tg-post.log` 与 `~/.cache/wdp-bsky-post.log`；crontab 由标记块 `wdp-push` 管理，
+手工维护时不要动块外条目。WorkBuddy / CodeBuddy 自动化任务已全部停用，不要再按 rrule 或自动化 id 描述现役调度。
 
-备选 `deploy/wdp-scheduler/control.sh`（常驻调度器，:08 / :09）与上面的 cron **二选一**，同时开会每小时双发。
+**两个频道各自独立发帖、各按 latest 选片，工具不自动追平**：Bluesky 发帖后紧接着跑
+`tools/feishu-reports/wodewangpan-push-sync.mjs`（日志 `~/.cache/wdp-push-sync.log`），
+只读两边 `posted.json` 并**按资源链接（夸克 / 百度）对账**（与判重同口径，不能只比 id——有 id 被复用成不同资源的先例），**不同步就发飞书橙色告警卡片给人工修正**，同步时不发。
+差异条目列出 id、标题与可点击链接，卡片里带 `--pick <id>` 补发命令；改方向由人决定。
+
+备选 `deploy/wdp-scheduler/control.sh`（常驻调度器，:03 / :08 + 同步检查）与上面的 cron **二选一**，同时开会每小时双发。
 
 ### 11.6 代码权威源
 
