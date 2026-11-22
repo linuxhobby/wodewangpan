@@ -1047,7 +1047,7 @@
       数据包.zip
       安装说明.txt
 
-- id: game-050
+- id: game-061
   title: "侠盗猎车手5 Grand Theft Auto V - 开放世界动作冒险游戏"
   category: 游戏
   tags: ["游戏", "动作冒险", "开放世界", "Rockstar", "GTA5"]
@@ -1055,13 +1055,13 @@
   description: "《侠盗猎车手V》（Grand Theft Auto V）由 Rockstar North 开发、Rockstar Games 发行，是一款开放世界动作冒险游戏，2013 年 9 月首发于 PlayStation 3 与 Xbox 360，后陆续登陆 PlayStation 4、Xbox One、Microsoft Windows 以及 PlayStation 5、Xbox Series X|S。游戏舞台设定在以美国南加利福尼亚州为原型的圣安地列斯州，围绕虚构城市洛圣都及其周边地区展开，玩家可操控退休银行劫匪麦克、街头青年富兰克林与毒贩崔佛三位主角，故事以抢劫行动为核心，并穿插射击、驾驶与探索等玩法。本作采用可切换的多视角设计，主线可在三名角色间自由转换，另附独立的线上多人模式。这里收录的是该作品的网盘分享资源，具体语言版本、平台归属与文件构成请以网盘内实际文件为准，下载前建议先查看目录清单。"
   date: 2013-09-17
   added: 2026-11-18
-  image: game-050.jpg
-  updated: 2026-11-19
+  image: game-061.jpg
+  updated: 2026-11-22
   files:
     count: 6
     format: "DOCX×2 / JPG / XLSX"
     tree: |
-      050-侠盗猎车手5 Grand Theft Auto V/
+      061-侠盗猎车手5 Grand Theft Auto V/
       0必装（游戏本体、更新补丁、NSP程序文件，缺一不可！）/
       1可选（存档以及画质文件）/
       必看！9月10日更新日志及教程.docx
@@ -1172,7 +1172,7 @@
       [本体v1.0.0][01003EC027CC8000][22.1.0][中文].nsp
       [升级档v1.0.3][01003EC027CC8800][23.0.1][中文].nsp
 
-- id: game-056
+- id: game-062
   title: "朋友收集 梦想生活 Tomodachi Life: Living the Dream"
   category: 游戏
   tags: ["游戏", "Switch", "模拟", "生活模拟", "中文"]
@@ -1180,20 +1180,20 @@
   description: "《朋友收集：梦想生活》（Tomodachi Life: Living the Dream）是任天堂开发并发行的生活模拟游戏，2026年4月16日发售，登陆 Nintendo Switch 与 Switch 2 平台，对应简体与繁体中文等多国语言。游戏舞台是漂浮在大海中央的小岛，玩家扮演岛屿管理员，制作自己、家人、朋友或憧憬人物的 Mii 肖像角色，让他们在岛上生活。玩家可以照顾居民的日常起居、赠送食物与服装、帮忙解决烦恼，也可通过拖拽促成居民相遇，观察他们交友、恋爱等关系的自然发展。本作相比 3DS 前作《朋友收集：新生活》扩展了角色定制与互动系统，新增微个性设定与更自由的岛屿建设，可在物品工坊中手绘制作食物、服装、宠物等原创物品，并支持通过邻近主机通讯交换 Mii 与物品。据公开报道，本作发售两周后全球销量超过380万份。本资源为 Switch 中文版 NSP 文件，含本体 v1.0.0 与 v1.0.4 升级档，另附社区制作的 Mii 绘制辅助小工具，安装方法与可用性以网盘内实际文件为准。"
   date: 2026-11-18
   added: 2026-11-21
-  image: game-056.jpg
-  updated: 2026-11-21
+  image: game-062.jpg
+  updated: 2026-11-22
   files:
     count: 4
     format: "NSP×2 / RAR"
     packed: true
     tree: |
-      050-朋友收集梦想生活 Tomodachi Life Living the Dream/
+      062-朋友收集梦想生活 Tomodachi Life Living the Dream/
       历史版本[不用下载]/
       [本体v1.0.0][010051F0207B2000][21.1.0][中文].nsp
       [升级档v1.0.4][010051F0207B2800][22.5.0][中文][US].nsp
       人森自动绘制工具[作者 zhouxiyu1997].rar
 
-- id: game-057
+- id: game-063
   title: "异度神剑2 Xenoblade Chronicles 2 - 任天堂Switch角色扮演游戏"
   category: 游戏
   tags: ["游戏", "Switch", "RPG", "角色扮演", "中文"]
@@ -1201,19 +1201,19 @@
   description: "《异度神剑2》（Xenoblade Chronicles 2）是由 Monolith Soft 开发、任天堂发行的日式角色扮演游戏，2017年12月1日发售于 Nintendo Switch 平台，对应繁体与简体中文字幕，为系列正统续作。故事发生在由云海与巨神兽构成的世界阿尔斯特：人类居住在巨大生物巨神兽的躯体上建立国家，少年雷克斯与被称为天之圣杯的神剑少女焰相遇后，结伴踏上寻找人类故乡乐园的旅途。游戏采用以神剑为核心的战斗系统，玩家作为御刃者与多种神剑同调，组合属性与技能进行战斗，角色养成、收集要素与剧情动画体量较大，音乐由光田康典领衔制作。2026年7月官方公布了面向 Switch 2 的强化版本。本资源为 Switch 中文版 NSP 文件，含游戏本体 v1.0.0、v3.0.1 升级档与 DLC 内容目录，实际文件构成以网盘目录清单为准。"
   date: 2026-11-18
   added: 2026-11-21
-  image: game-057.jpg
-  updated: 2026-11-21
+  image: game-063.jpg
+  updated: 2026-11-22
   files:
     count: 4
     format: "NSP×2"
     tree: |
-      050-异度神剑2 Xenoblade Chronicles2/
+      063-异度神剑2 Xenoblade Chronicles2/
       历史版本[不用下载]/
       DLC6/
       [本体v1.0.0][0100F3400332C000][3.0.2][中文][JP].nsp
       [升级档v3.0.1][0100F3400332C800][22.5.0][中文][JP].nsp
 
-- id: game-058
+- id: game-064
   title: "玩具总动员3：完全版+复古合集 - Switch复古游戏双合集"
   category: 游戏
   tags: ["游戏", "Switch", "合集", "休闲", "中文"]
@@ -1221,17 +1221,17 @@
   description: "《玩具总动员3：完全版+复古合集》（Disney/Pixar Toy Story: Retro Roundup! + Toy Story 3 Complete Edition Double Pack）是 Atari 与 Digital Eclipse 为纪念玩具总动员系列三十周年推出的双游戏合集，2026年10月15日发售，登陆 Nintendo Switch、Switch 2、PlayStation、Xbox 与 PC 平台，支持中文。合集包含两部分：其一为《Toy Story 3 Complete Edition》，将2010年发售的 3D 动作冒险游戏《玩具总动员3》重制搬上现代平台，收录原 PlayStation 3 版独占内容并提升画面与性能，玩家可在剧情模式重温电影桥段，也可在开放式的玩具盒模式中自由游玩；其二为《Toy Story: Retro Roundup!》，收录五款早期经典作品，包括玩具总动员、玩具总动员2、巴斯光年星河战队、玩具总动员赛车与虫虫危机，并加入回退、随时存档等现代化功能。本资源为 Switch 中文版 XCI 双游戏整合文件，实际文件构成以网盘目录清单为准。"
   date: 2026-11-17
   added: 2026-11-21
-  image: game-058.jpg
-  updated: 2026-11-21
+  image: game-064.jpg
+  updated: 2026-11-22
   files:
     count: 2
     format: "XCI"
     tree: |
-      050-玩具总动员3：完全版+复古合集 Disney Pixar Toy Story 3 Complete Edition + Retro Roundup/
+      064-玩具总动员3：完全版+复古合集 Disney Pixar Toy Story 3 Complete Edition + Retro Roundup/
       Proof/
       [双游戏整合v1.0.1][01001DC025BC4000+0100F98025BC0000][22.5.0][中文][US].xci
 
-- id: game-059
+- id: game-065
   title: "哈迪斯 Hades - Switch动作角色扮演游戏"
   category: 游戏
   tags: ["游戏", "Switch", "Roguelike", "动作", "角色扮演"]
@@ -1239,14 +1239,14 @@
   description: "《哈迪斯》（Hades）是由 Supergiant Games 开发并发行的 Roguelike 动作角色扮演游戏，2020年9月17日推出正式版并同步登陆 Nintendo Switch 与 PC 平台，2021年登陆 PlayStation 与 Xbox 平台，支持简体中文文本。玩家扮演冥王哈迪斯之子扎格柔斯，为逃离冥界前往奥林匹斯山，一次次突破由地狱、水仙平原、至福乐土与冥河神庙四个区域构成的地下世界。每次闯关的房间、敌人与奖励随机生成，角色阵亡后可用收集到的资源强化属性、解锁武器，逐步推进剧情，并获得宙斯、雅典娜等奥林匹斯诸神的祝福，组合出不同的祝福搭配。游戏以手绘美术、节奏明快的战斗与丰富的叙事演出为特点，获得多家媒体的年度游戏奖项。本资源为 Switch 中文版文件，包含 NSP 非整合与 XCI 整合版两种形态及金手指文件，具体内容以网盘目录清单为准。"
   date: 2026-11-16
   added: 2026-11-21
-  image: game-059.jpg
-  updated: 2026-11-21
+  image: game-065.jpg
+  updated: 2026-11-22
   files:
     count: 3
     format: "ZIP"
     packed: true
     tree: |
-      050-哈迪斯 Hades/
+      065-哈迪斯 Hades/
       ［nsp 非整合］/
       ［xci 整合版］v1.0.38233/
       1.0.38233金手指.zip

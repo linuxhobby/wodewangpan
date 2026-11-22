@@ -88,6 +88,34 @@ server {
     rewrite ^/resource/os-010(/index\.html|/)?$ /software/app-136/ permanent;
     rewrite ^/resource/os-011(/index\.html|/)?$ /software/app-137/ permanent;
 
+    # 2026-11-22 撞号重编号：旧 id → 新 id（历史 /resource/ 与现行 /<slug>/ 两种地址都覆盖）。
+    rewrite ^/resource/cs-035(/index\.html|/)?$ /course/cs-043/ permanent;
+    rewrite ^/resource/cs-038(/index\.html|/)?$ /course/cs-044/ permanent;
+    rewrite ^/resource/cs-039(/index\.html|/)?$ /course/cs-045/ permanent;
+    rewrite ^/resource/cs-040(/index\.html|/)?$ /course/cs-046/ permanent;
+    rewrite ^/resource/cs-041(/index\.html|/)?$ /course/cs-047/ permanent;
+    rewrite ^/resource/bk-023(/index\.html|/)?$ /ebook/bk-026/ permanent;
+    rewrite ^/resource/bk-024(/index\.html|/)?$ /ebook/bk-027/ permanent;
+    rewrite ^/resource/bk-025(/index\.html|/)?$ /ebook/bk-028/ permanent;
+    rewrite ^/resource/game-050(/index\.html|/)?$ /game/game-061/ permanent;
+    rewrite ^/resource/game-056(/index\.html|/)?$ /game/game-062/ permanent;
+    rewrite ^/resource/game-057(/index\.html|/)?$ /game/game-063/ permanent;
+    rewrite ^/resource/game-058(/index\.html|/)?$ /game/game-064/ permanent;
+    rewrite ^/resource/game-059(/index\.html|/)?$ /game/game-065/ permanent;
+    rewrite ^/course/cs-035(/index\.html|/)?$ /course/cs-043/ permanent;
+    rewrite ^/course/cs-038(/index\.html|/)?$ /course/cs-044/ permanent;
+    rewrite ^/course/cs-039(/index\.html|/)?$ /course/cs-045/ permanent;
+    rewrite ^/course/cs-040(/index\.html|/)?$ /course/cs-046/ permanent;
+    rewrite ^/course/cs-041(/index\.html|/)?$ /course/cs-047/ permanent;
+    rewrite ^/ebook/bk-023(/index\.html|/)?$ /ebook/bk-026/ permanent;
+    rewrite ^/ebook/bk-024(/index\.html|/)?$ /ebook/bk-027/ permanent;
+    rewrite ^/ebook/bk-025(/index\.html|/)?$ /ebook/bk-028/ permanent;
+    rewrite ^/game/game-050(/index\.html|/)?$ /game/game-061/ permanent;
+    rewrite ^/game/game-056(/index\.html|/)?$ /game/game-062/ permanent;
+    rewrite ^/game/game-057(/index\.html|/)?$ /game/game-063/ permanent;
+    rewrite ^/game/game-058(/index\.html|/)?$ /game/game-064/ permanent;
+    rewrite ^/game/game-059(/index\.html|/)?$ /game/game-065/ permanent;
+
     # 旧详情页 /resource/<id>/ → /<slug>/<id>/：9 个 id 前缀与分类一一对应（1040 条实测）。
     # 新地址由 build.js 的 setItemPaths() 以数据里的 category 为准生成，不依赖前缀约定。
     rewrite ^/resource/(mv-[^/]+)(/index\.html|/)?$ /movie/$1/ permanent;
