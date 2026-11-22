@@ -1070,6 +1070,15 @@
   date: 2015-11-21
   added: 2026-10-04
   image: app-051.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "8.0 MB"
+    format: "MD / DMG"
+    tree: |
+      051-Quicksilver/
+      Quicksilver.2.6.0.dmg
+      APP简介.md
 
 
 - id: app-052
@@ -1082,6 +1091,16 @@
   date: 2016-05-14
   added: 2026-10-04
   image: app-052.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "4.9 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      052-Pine/
+      APP简介.md
+      Pine-0.1.0.zip
 
 
 - id: app-054
@@ -1094,6 +1113,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-054.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "3.2 MB"
+    format: "DMG / MD"
+    tree: |
+      054-MarkEdit/
+      MarkEdit-1.36.0-apple-silicon.dmg
+      APP简介.md
 
 
 - id: app-055
