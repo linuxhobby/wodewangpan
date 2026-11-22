@@ -580,7 +580,20 @@ a.tag:hover { background: var(--brand-soft); }
 .btn--primary { background: var(--brand); border-color: var(--brand); color: var(--surface); }
 .btn--primary:hover { color: var(--surface); opacity: .9; }
 .btn--mini { padding: 1px 6px; font-size: var(--fs-xs); line-height: var(--lh-chip); }
-.btn--more { display: block; width: 100%; margin: 14px 0 4px; padding: 10px; color: var(--brand); }
+/* 首页「查看全部 N 个资源」与分类页「加载更多（剩余 N）」：加粗放大做主行动入口，PC/窄屏同规格 */
+.btn--more {
+  display: block;
+  width: 100%;
+  margin: 14px 0 4px;
+  padding: 14px;
+  color: var(--brand);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  background: var(--brand-soft);
+  border-color: var(--brand);
+}
+.btn--more:hover { background: var(--fill-hover); }
 /* 二维码切换按钮：撑满半栏，未选中的一组比 .btn 更弱一点 */
 .qrbtn { flex: 1; padding: 5px 0; color: var(--muted); }
 .qrbtn.is-on { color: var(--brand); border-color: var(--brand); font-weight: 600; }
