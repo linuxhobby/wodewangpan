@@ -12,7 +12,7 @@
 | 我的网盘.资源推送到 Bluesky | 每小时 `:05` | `push/bluesky/bluesky-post.mjs` | 发帖到 Bluesky | `state/bluesky-posts/posted.json` | `~/.cache/wdp-bsky-post.log` |
 | 我的网盘.夸克分享每日补充更新 | 每天 `16:10` | `tools/quark-cron/share-update.mjs` | 夸克 `saveas-update` 增量转存 | 夸克接口返回的更新清单 | `~/.cache/quark-sync/share-cron.log` |
 | 我的网盘.夸克预存资源搬运 | 每天 `01:40` | `tools/quark-cron/prestore-move.mjs` | 夸克 `move` 目录搬运 | 源/目标目录名实时归一化比对 | `~/.cache/quark-sync/move-cron.log` |
-| 我的网盘.fill-files补文件清单 | 每 2 小时 `:30` | `tools/feishu-reports/wodewangpan-fillfiles-run.mjs` | 写 `data/*.yaml` + build + git push | 按 `added` 升序找无 `files:` 的条目 | `~/.cache/wdp-fillfiles-cron.log` |
+| 我的网盘.fill-files补文件清单 | 每 2 小时 `:30` | `tools/feishu-reports/wodewangpan-fillfiles-run.mjs` | 写 `data/*.yaml` + build + git push | 每个分类各补 1 条（无待补分类跳过），按 `added` 升序、占位在本类内顺延 | `~/.cache/wdp-fillfiles-cron.log` |
 | 我的网盘.TMDB今日热门影视每日同步 | 每天 `03:50` | `tools/quark-cron/trending-daily.mjs` | 建夸克目录 + 出链 + 写 `data/*.yaml` + build + push + 可选光鸭镜像/VPS 重建 | `~/.cache/quark-sync/trending-seen.json` | `~/.cache/wdp-trending-cron.log` |
 | 我的网盘.夸克资源同步 | 每 6 小时 `:10` | `tools/quark-cron/resource-sync.mjs` | 目录改名/出链 + 写 `data/*.yaml` + build + push + 光鸭补链/VPS 重建 | 夸克实时目录与站点 YAML 对账 | `~/.cache/wdp-resource-sync-cron.log` |
 
@@ -134,7 +134,7 @@ python3 -c "import json;print(len(json.load(open('state/telegram-posts/posted.js
 
 ## 5. fill-files 补文件清单（每 2 小时 `:30`）
 
-一条命令完成整轮：对齐远端 → `tools/fill-files.mjs --limit 3` → 校验写入越界 → eslint → 两次 build → 提交推送 → 飞书卡片 → 日志。脚本即权威，不要手工补 `files:`、不要读 AGENTS.md 自行判断。
+一条命令完成整轮：对齐远端 → `tools/fill-files.mjs --per-category` （每分类各补 1 条、无待补跳过）→ 校验写入越界 → eslint → 两次 build → 提交推送 → 飞书卡片 → 日志。脚本即权威，不要手工补 `files:`、不要读 AGENTS.md 自行判断。
 
 ```bash
 node tools/feishu-reports/wodewangpan-fillfiles-run.mjs --dry-run   # 试跑：不写盘、不提交、不发卡
