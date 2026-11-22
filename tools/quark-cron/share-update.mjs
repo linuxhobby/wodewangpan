@@ -1,10 +1,16 @@
 #!/usr/bin/env node
 /**
- * 我的网盘.夸克分享每日补充更新 —— Debian cron 自包含编排脚本
+ * 我的网盘.夸克分享每日补充更新简报 —— WorkBuddy 自动化调用的编排脚本
+ * （原 Debian cron 任务，2026-11-22 迁移；脚本本体仍保留在本仓库，调度权交 WorkBuddy 自动化）
  *
  * 把原 WorkBuddy 自动化 prompt 里的判断逻辑固化为代码，纯 node + CLI，不依赖 LLM。
  * 流程：验登录 → 翻页拉更新清单并去重 → 逐条 saveas-update 增量转存 →
  *       get-share-saved-dir 核验是否补进历史目录（红线）→ 生成 payload → 飞书蓝标卡片。
+ *
+ * 【硬性红线】绝不允许在 夸克网盘/SHARE/ 及其任何分类子目录（如 SHARE/03电视剧）下新建目录：
+ *   唯一网盘写操作是 saveas-update 往该链接上次转存的已有目录补新增文件；
+ *   严禁 create-folder / move / 首次 saveas / 指定新目录；不碰「预存资源」。
+ *   核验发现落点非历史目录（isExistingDir=false）只上报人工，不删、不改、不新建。
  *
  * 用法：
  *   node tools/quark-cron/share-update.mjs --dry        # 只拉清单核验，不转存、不发卡（验 login/路径/翻页）
