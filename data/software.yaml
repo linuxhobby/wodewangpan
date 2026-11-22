@@ -1391,6 +1391,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-068.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "1.0 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      068-Itsycal/
+      APP简介.md
+      Itsycal-0.15.14.zip
 
 
 - id: app-069

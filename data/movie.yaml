@@ -4964,6 +4964,15 @@
   date: 2007-09-20
   added: 2026-10-06
   image: mv-255.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "19.3 GB"
+    format: "MKV / ASS"
+    tree: |
+      255-生化危机 第3部 (2007)  4K UHD/
+      flame-resident.evil.extinction.2007.2160p.uhd.bluray.x265.chs&eng.ass
+      Resident.Evil.Extinction.2007.2160p.UHD.BluRay.x265.10bit.HDR.DTS-HD.MA.TrueHD.7.1.Atmos-SWTYBLZ.mkv
 
 - id: mv-256
   title: "生化危机2：启示录"

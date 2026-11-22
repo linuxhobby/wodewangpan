@@ -220,6 +220,14 @@
   date: 2026-10-14
   added: "2026-10-14 16:28"
   image: cs-007.jpg
+  updated: 2026-11-23
+  files:
+    count: 1
+    size: "5.6 MB"
+    format: "PDF"
+    tree: |
+      007-WorkBuddy超保姆级入门教程，附万字长文图解实操/
+      WorkBuddy 超保姆级入门教程-附图解实操.pdf
 
 - id: cs-008
   title: "有道考神雅思冲7全程班（旗舰版）"
