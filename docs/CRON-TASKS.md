@@ -1,8 +1,8 @@
-# 我的网盘 · 七个常驻 cron 任务
+# 我的网盘 · 常驻任务手册（cron + WorkBuddy 自动化）
 
 > 2026-11-18 定稿。本文合并原两份夸克部署手册，并补入 Telegram / Bluesky 推送、fill-files、TMDB 每日热门与夸克资源同步。
 > 运行机：Debian 13（主机名 `debian13`），仓库 `/home/marco/Documents/Github/wodewangpan`，运行用户 `marco`。
-> **七个任务全部是纯 Node + 系统 cron，不依赖 LLM，也不依赖 WorkBuddy 自动化调度。**
+> **2026-11-22 起：夸克分享每日补充更新（原 16:10 cron）已迁移到 WorkBuddy 自动化「我的网盘.夸克分享每日补充更新简报」，cron 条目已移除；脚本仍在本仓库并由自动化直接调用。其余任务维持原调度方式，同一任务禁止 cron 与自动化双开。**
 
 ## 1. 任务总表
 
@@ -10,7 +10,7 @@
 |---|---|---|---|---|---|
 | 我的网盘.资源推送 Telegram 频道 | 每小时 `:03` | `push/telegram/tg-post.mjs` | 发帖到 `@myquark` | `state/telegram-posts/posted.json` | `~/.cache/wdp-tg-post.log` |
 | 我的网盘.资源推送到 Bluesky | 每小时 `:05` | `push/bluesky/bluesky-post.mjs` | 发帖到 Bluesky | `state/bluesky-posts/posted.json` | `~/.cache/wdp-bsky-post.log` |
-| 我的网盘.夸克分享每日补充更新 | 每天 `16:10` | `tools/quark-cron/share-update.mjs` | 夸克 `saveas-update` 增量转存 | 夸克接口返回的更新清单 | `~/.cache/quark-sync/share-cron.log` |
+| ~~我的网盘.夸克分享每日补充更新~~（已迁 WorkBuddy 自动化） | 每天 `16:10`（自动化 rrule，非 cron） | `tools/quark-cron/share-update.mjs` | 夸克 `saveas-update` 增量转存 | 夸克接口返回的更新清单 | 自动化会话输出（缓存仍在 `~/.cache/quark-sync/`） |
 | 我的网盘.夸克预存资源搬运 | 每天 `01:40` | `tools/quark-cron/prestore-move.mjs` | 夸克 `move` 目录搬运 | 源/目标目录名实时归一化比对 | `~/.cache/quark-sync/move-cron.log` |
 | 我的网盘.fill-files补文件清单 | 每 2 小时 `:30` | `tools/feishu-reports/wodewangpan-fillfiles-run.mjs` | 写 `data/*.yaml` + build + git push | 每个分类各补 1 条（无待补分类跳过），按 `added` 升序、占位在本类内顺延 | `~/.cache/wdp-fillfiles-cron.log` |
 | 我的网盘.TMDB今日热门影视每日同步 | 每天 `03:50` | `tools/quark-cron/trending-daily.mjs` | 建夸克目录 + 出链 + 写 `data/*.yaml` + build + push + 可选光鸭镜像/VPS 重建 | `~/.cache/quark-sync/trending-seen.json` | `~/.cache/wdp-trending-cron.log` |
@@ -189,7 +189,9 @@ tail -f ~/.cache/wdp-resource-sync-cron.log
 - 2026-11-19：本轮遗留的 75 条未确认批次已人工按 batch_id 复核，全部 SUCCEEDED 并写回 `guangya_url`
   （movie 19 条、documentary 56 条）。
 
-## 8. 夸克分享每日补充更新（16:10）
+## 8. 夸克分享每日补充更新（16:10，已迁移至 WorkBuddy 自动化）
+
+> 2026-11-22 迁移：cron 条目已删除，改由 WorkBuddy 自动化「我的网盘.夸克分享每日补充更新简报」每天 16:10 调用本脚本；禁止再把 16:10 cron 写回，避免双跑。
 
 原 LLM prompt 里的判断已固化进 `tools/quark-cron/share-update.mjs`。流程：验登录 → 翻页拉更新清单并按 `share_url` 去重 → 逐条 `saveas-update` 增量转存 → `get-share-saved-dir` 核验是否补进历史目录 → 生成 payload → 飞书蓝卡。
 
@@ -198,10 +200,10 @@ tail -f ~/.cache/wdp-resource-sync-cron.log
 ```bash
 node tools/quark-cron/share-update.mjs --dry       # 只拉清单，不转存、不发卡
 node tools/quark-cron/share-update.mjs --no-send   # 真转存 + 生成 payload，但不发卡
-node tools/quark-cron/share-update.mjs             # 正式（cron 自动跑）
+node tools/quark-cron/share-update.mjs             # 正式（WorkBuddy 自动化自动跑）
 ```
 
-`--no-send` 后看 `~/.cache/quark-sync/share-update-card-*.json`：`dirs` 应是补进历史目录的条目，`skipped` 应是失败或疑似新建目录的条目。判据不对不要启用 cron。
+`--no-send` 后看 `~/.cache/quark-sync/share-update-card-*.json`：`dirs` 应是补进历史目录的条目，`skipped` 应是失败或疑似新建目录的条目。判据不对不要启用自动化。
 
 ### 5.2 红线
 
@@ -253,8 +255,9 @@ node tools/quark-cron/prestore-move.mjs            # 正式（cron 自动跑）
 ## 11. 回退与互斥
 
 - 推送任务：不要同时启用 WorkBuddy 自动化与这套 cron，否则每小时双发。
-- 夸克任务：`bash deploy/install-quark-cron.sh uninstall` 卸掉两条 cron 后，才能把旧 WorkBuddy 自动化从 PAUSED 恢复；两边同时开会对同一链接/目录各操作一次。
-- 卸载推送 cron：`crontab -e` 删除 `wdp-push` 标记块整段；不要误删另外两个夸克块。
+- 夸克分享补存：`bash deploy/install-quark-cron.sh uninstall` 卸掉历史 16:10 cron（或只删 `wdp-quark` 块）后，WorkBuddy 自动化「我的网盘.夸克分享每日补充更新简报」才会单独运行；两边同时开会对同一链接/目录各操作一次，禁止双开。
+- 预存搬运 cron 仍由 `wdp-move` 标记块管理，勿手改：每天 01:40。
+- 卸载推送 cron：`crontab -e` 删除 `wdp-push` 标记块整段；不要误删 `wdp-move` 块。
 
 ## 12. 脚本权威源
 
@@ -271,7 +274,7 @@ node tools/quark-cron/prestore-move.mjs            # 正式（cron 自动跑）
 | vendor 脚本 | `tools/vendor/quark-resource-sync/`、`tools/vendor/quarkclouddrive/` |
 | 飞书卡片直发（唯一实现） | `tools/feishu-reports/feishu-api.mjs` |
 | 飞书卡片（补存 / 搬运 / 补齐 / TMDB） | `tools/feishu-reports/wodewangpan-{share-update,move,fillfiles,trending}-feishu.mjs` |
-| 夸克 cron 幂等安装 | `deploy/install-quark-cron.sh` |
+| 夸克 cron 幂等安装（现仅预存搬运；含历史分享块清理） | `deploy/install-quark-cron.sh` |
 | LLM pending 准备 | `tools/quark-cron/llm-prepare.mjs` |
 | LLM 草稿校验写回 | `tools/quark-cron/llm-apply.mjs` |
 
@@ -283,4 +286,5 @@ node tools/quark-cron/prestore-move.mjs            # 正式（cron 自动跑）
 - TMDB 热门 cron 每轮写 `~/.cache/quark-sync/llm-pending-trending-*.json`，供 LLM 复核新入库条目的标题/简介/海报。
 - WorkBuddy 自动化「我的网盘.资源同步LLM补全」每天 `00:45/06:45/12:45/18:45` 处理非 trending pending。
 - WorkBuddy 自动化「我的网盘.TMDB热门LLM复核」每天 `04:15` 处理 trending pending。
+- 2026-11-22：WorkBuddy 自动化「我的网盘.夸克分享每日补充更新简报」每天 `16:10` 直接调用 `tools/quark-cron/share-update.mjs`，不依赖系统 cron，也不走 LLM 判断。
 - LLM 只能生成草稿 JSON；`llm-apply.mjs` 负责校验、写 YAML、补文件清单、build、push、VPS。校验失败的草稿不写库。

@@ -42,7 +42,7 @@ node tools/list-missing-posters.mjs  # 缺海报盘点（只读，列无 image:/
 | `scripts/lib/render.js` | 全部页面模板与 SEO 输出（meta/JSON-LD/sitemap） |
 | `scripts/lib/assets.js` | 配图/二维码等静态资产处理 |
 | `tools/` | **工具目录（2026-11-17 拆分）**：数据采集与内容生产脚本（fill-files 全家桶、补描述/标题、海报生成、资源导出），依赖采集环境（夸克 CLI / TMDB 凭据）；站点构建不引用本目录，依赖方向单向 tools → scripts/lib |
-| `tools/quark-cron/` | **四条夸克/同步编排脚本**：`share-update.mjs`（16:10）、`prestore-move.mjs`（01:40）、`trending-daily.mjs`（03:50）、`resource-sync.mjs`（每 6 小时 :10），纯 node + CLI、不依赖 LLM；缓存/日志走 `~/.cache/quark-sync/`；七个常驻 cron 任务的统一手册见 `docs/CRON-TASKS.md` |
+| `tools/quark-cron/` | **四条夸克/同步编排脚本**：`share-update.mjs`（16:10）、`prestore-move.mjs`（01:40）、`trending-daily.mjs`（03:50）、`resource-sync.mjs`（每 6 小时 :10），纯 node + CLI、不依赖 LLM；缓存/日志走 `~/.cache/quark-sync/`；分享补存已于 2026-11-22 迁至 WorkBuddy 自动化（每天 16:10），cron 已移除；常驻任务统一手册见 `docs/CRON-TASKS.md` |
 | `deploy/install-quark-cron.sh` | 幂等安装上述两条 cron（标记块 `wdp-quark` / `wdp-move`），`uninstall` 可卸；凭据只走 scp |
 | `tools/fill-files.mjs` | 补「文件清单」`files:` 块（§4 例行任务的主角） |
 | `tools/sort-trees.mjs` | 回填已有 `files.tree` 的行序（只重排，不动内容与日期） |
