@@ -52,7 +52,7 @@ node push/bluesky/bluesky-post.mjs --audit            # 打印不可发条目的
 
 **默认 `latest`：最新入库优先**（用户 2026-11-15 要求）。读全站 `data/*.yaml` 的 `added`，按时间倒序取还没发过的第一条；`added` 相同（同一批入库）时按 id 数值倒序。新资源一入库就排到队首、下一轮优先发，不会压在几百条老资源后面。`added` 覆盖率 100%（现 1040 条），格式 `YYYY-MM-DD` 或 `YYYY-MM-DD HH:MM`，字符串倒序即时间倒序。全部发完报「没有新条目可发」并停止。
 
-**2026-11-22 定稿：两频道各自独立发帖，不同步由飞书告警**：Bluesky 与 TG 都按自己的 `state/**/posted.json` 判重、各自用 `latest` 选片，**不读对方状态、不自动追平**。后发帖的 Bluesky（每小时 `:08`，TG 在 `:03`）跑完后由 cron 接着执行 `tools/feishu-reports/wodewangpan-push-sync.mjs`，只读对比两边已发资源的链接（夸克 / 百度，与判重同口径；id 被复用会单独提示），不同步才发橙色告警飞书卡片给人工修正（附 id、标题、链接与 `--pick <id>` 命令），同步时不发。`--pick` 与 `--strategy weighted|rotate|random` 用法不变。
+**2026-11-22 定稿：两频道各自独立发帖，不同步由飞书告警**：Bluesky 与 TG 都按自己的 `state/**/posted.json` 判重、各自用 `latest` 选片，**不读对方状态、不自动追平**。后发帖的 Bluesky（每小时 `:08`，TG 在 `:03`）跑完后由 cron 接着执行 `tools/feishu-reports/wodewangpan-push-sync.mjs`，各取两边已发资源的**最近 2 条**按链接（夸克 / 百度）对账，不同步才发橙色告警飞书卡片给人工修正（附 id、标题、链接与 `--pick 条目id` 命令），同步时不发；全量历史不参与判定，避免 id 复用误报。`--pick` 与 `--strategy weighted|rotate|random` 用法不变。
 
 **备选 `weighted`：按分类剩余量加权随机**（`--strategy weighted`，2026-11-15 之前是默认）。做法是**按各分类剩余可发条数加权随机**选一个分类，再在该分类内随机挑一条：
 
