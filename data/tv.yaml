@@ -1,4 +1,4 @@
-# 电视剧资源（206 条）
+# 电视剧资源（208 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -4097,3 +4097,72 @@
   date: 2021-11-14
   added: 2026-11-21
   image: tv-206.jpg
+
+- id: tv-207
+  title: "宝珠"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "宝珠 宝珠"]
+  quark_url: "https://pan.quark.cn/s/21cdfa32a5dc"
+  description: "【第 1 季 · 共 14 集】漕运朝堂风云迭起，屠户女金宝珠嫁蒙冤致残的漕运嫡子谢砚。二人先对立后携手，历经风波彼此救赎，揭开党争阴谋，终相守圆满。本剧类型：剧情。2026 年首播，已获续订，仍在播出，全剧 1 季，累计 14 集。播出平台：Mango TV。制片国家/地区：中国。对白语言：汉语普通话。本条目由 TMDB 每日热门榜单自动同步入库，剧情与演职员资料均以 TMDB 官方数据为准，评分会随投票实时变动，资源链接见页面网盘地址。｜TMDB 8.0"
+  date: 2026-11-18
+  added: 2026-11-22
+  image: tv-207.jpg
+  updated: 2026-11-22
+  files:
+    count: 9
+    size: "29.7 GB"
+    format: "MKV×9"
+    tree: |
+      207-宝珠/
+      S01E01.2026.2160p.WEB-DL.H.264.AAC.mkv
+      S01E02.2026.2160p.WEB-DL.H.264.AAC.mkv
+      S01E03.2026.2160p.WEB-DL.H.264.AAC.mkv
+      S01E04.2026.2160p.WEB-DL.H.264.AAC.mkv
+      S01E05.2026.2160p.WEB-DL.H.264.AAC.mkv
+      S01E06.2026.2160p.WEB-DL.H.264.AAC.mkv
+      S01E07.2026.2160p.WEB-DL.H.264.AAC.mkv
+      S01E08.2026.2160p.WEB-DL.H.264.AAC.mkv
+      S01E09.2026.2160p.WEB-DL.H.264.AAC.mkv
+
+- id: tv-208
+  title: "绝望主妇"
+  category: 电视剧
+  tags: ["电视剧", "悬疑", "剧情", "喜剧", "绝望主妇 Desperate Housewives"]
+  quark_url: "https://pan.quark.cn/s/c7c471bcb244"
+  description: "【全剧 8 季 · 共 177 集】清晨的一声枪响，打破紫藤社区长期以来的安宁。Mary Alice Young（Brenda Strong 饰）在家中自杀身亡。故事以她叙述的口吻开始，死后的Mary开始环顾四周关心自己邻居的生活：Susan（泰瑞·海切尔 Teri Hatcher 饰）是一个儿童文学作家，对男人毫无抗拒能力，丈夫因为出轨而被Susan提出离婚，有一个正值青春期的15岁女儿Julie。Lynette（菲丽西提·霍夫曼 Felicity Huffman 饰）是个标准的女强人，为了谁成为照顾家中四个幼儿的人而和丈夫约法三章时起冲突。Bree（玛西亚·克劳斯 Marcia Cross 饰）则是个完美主妇，她对自己的一言一行都要求甚高，却总是忽略了丈夫以及儿女对爱的需要，她很优雅，却冷冰冰。而性感的Gabrielle（艾娃·朗格利亚 Eva Longoria 饰）则有着富有又懂情趣的丈夫Calos，但总是禁受不住诱惑而偷情和重视物质享受的她也有着自己不为人知的过往。Mary的死让这群主妇们开始反省自己日常的生活，并且相约要互相倾诉心事。但她们渐渐发现Mary的死背后埋藏着一个惊天秘密，而新来的邻居Mike则似乎与这件事有关……｜TMDB 7.9"
+  date: 2004-10-03
+  added: 2026-11-22
+  image: tv-208.jpg
+  updated: 2026-11-22
+  files:
+    count: 25
+    size: "594 MB"
+    format: "ASS×23 / RAR / MKV"
+    packed: true
+    tree: |
+      208-绝望主妇-第一季-Season.1/
+      Desperate.Housewives.S01E01.Pilot.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E02.Ah,.But.Underneath.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E03.Pretty.Little.Picture.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E04.Who&#39;s.that.Woman.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E05.Come.in,.Stranger.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E06.Running.to.Stand.Still.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E07.Anything.You.Can.Do.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E08.Guilty.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E09.Suspicious.Minds.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E10.Come.Back.to.Me.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E11.Move.On.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E12.Every.Day.a.Little.Death.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E13.Your.Fault.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E14.Love.Is.in.the.Air.(a.k.a.What.I.Did.for.Love).1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E15.Impossible.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E16.The.Ladies.Who.Lunch.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E17.There.Won&#39;t.Be.Trumpets.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E18.Children.Will.Listen.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E19.Live.Alone.and.Like.It.(a.k.a.An.Unexpected.Song).1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E20.Fear.No.More.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E21.Sunday.in.the.Park.with.George.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E22.Goodbye.For.Now.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E23.One.Wonderful.Day.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.ass
+      Desperate.Housewives.S01E07.Anything.You.Can.Do.1080p.WEB-DL.x265.10bit.AAC.5.1-RCVR.mkv
+      Desperate.Housewives.S01.rar
