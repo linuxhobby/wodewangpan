@@ -4985,6 +4985,15 @@
   date: 2004-09-10
   added: 2026-10-06
   image: mv-256.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "40.5 GB"
+    format: "MKV / ASS"
+    tree: |
+      256-生化危机 第2部 (2004) 4K  UHD/
+      flame-resident.evil.apocalypse.2004.extended.2160p.uhd.bluray.x265.chs&eng.ass
+      Resident Evil Apocalypse 2004 EXTENDED UHD BluRay 2160p HEVC Atmos TrueHD7.1 3Audio-DreamHD.mkv
 
 - id: mv-257
   title: "生化危机"

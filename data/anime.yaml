@@ -846,6 +846,13 @@
   date: 2026-10-11
   added: "2026-10-27 12:31"
   image: an-043.jpg
+  updated: 2026-11-23
+  files:
+    count: 1
+    tree: |
+      043-龙珠超：比鲁斯/
+      龙珠超 比鲁斯 (2026)/
+      Season 1 CR/
 
 - id: an-044
   title: "戴帽子的猫"
