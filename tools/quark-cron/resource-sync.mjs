@@ -121,7 +121,7 @@ for (const c of cats) {
     continue;
   }
   if (!SUPPORTED[c.prefix]) {
-    for (const u of c.unnumbered || []) skipped.push({ name: u.filename, reason: `unsupported_category：${c.prefix} 不在脚本直入范围，已转 LLM 补全链路（无需人工审核）` });
+    for (const u of c.unnumbered || []) skipped.push({ name: u.filename, reason: `unsupported_category：${c.prefix} 不在脚本直入范围，已转自动化任务后续 LLM 补全步骤（本卡不反映其结果）` });
     continue;
   }
   const fresh = (c.unnumbered || []).filter((u) => !u.likely_duplicate_of);
@@ -251,9 +251,18 @@ if (written.length && buildOk) {
 function vpsRebuild(tag) {
   if (!pushed && tag !== 'guangya') return 'VPS 重建跳过（GitHub 未推送）';
   const r = run(`VPS 重建（${tag}）`, 'bash', ['-lc', "ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'"], { timeout: 180000 });
-  const tail = run(`VPS 日志（${tag}）`, 'bash', ['-lc', "ssh site 'tail -3 /var/log/wdwp-autoupdate.log'"], { timeout: 60000 });
-  const last = tail.out.split('\n').filter(Boolean).pop() || '';
-  return r.ok && /发布完成/.test(last) ? `VPS 发布完成 ${last.match(/发布完成：([0-9a-f]+)/)?.[1] || ''}`.trim() : `VPS 重建失败：${(r.out || last).slice(0, 160)}`;
+  const tail = run(`VPS 日志（${tag}）`, 'bash', ['-lc', "ssh site 'tail -5 /var/log/wdwp-autoupdate.log'"], { timeout: 60000 });
+  // 2026-11-23 修复：发布日志之后还会追加「IndexNow 推送完成」，旧版只看最后一行，
+  // 成功也判为失败并把 nginx 自检通过的文案当错误信息展示。改为在最近日志里找
+  // 「发布完成：<hash>」行；nginx syntax/test is successful 属于自检输出，不算失败原因。
+  const done = [...tail.out.matchAll(/(\d{4}-\d{1,2}-\d{1,2}\s+\d{2}:\d{2}:\d{2})?\s*发布完成[：:]\s*([0-9a-f]{7,40})/g)].pop();
+  // 日志行带时间戳时顺便排除「上一轮」的发布记录（VPS 与本机同为 GMT+8，15 分钟窗口足够宽松）
+  const doneAt = done?.[1] ? Date.parse(done[1].replace(' ', 'T')) : NaN;
+  const doneFresh = Number.isFinite(doneAt) && Date.now() - doneAt < 15 * 60 * 1000;
+  if (r.ok && done && doneFresh) return `VPS 发布完成 ${done[2]}`;
+  const realErr = (r.out || '').split('\n').map((l) => l.trim())
+    .filter((l) => l && !/nginx.*(syntax is ok|test is successful)/.test(l) && !/^#?\s*$/.test(l)).pop();
+  return `VPS 重建失败：${(realErr || '日志未见发布完成标记').slice(0, 160)}`;
 }
 const deployText = written.length ? vpsRebuild('主流程') : '无新增，未触发 VPS 即时重建';
 
@@ -304,13 +313,28 @@ if (written.length) {
     g.items.push({ id: w.id, name: w.match?.title || String(w.old_name || '').replace(/^\d+[-.]\s*/, ''), quark: w.url || '', site: `https://www.wodewangpan.top/${slug}/${w.id}/` });
     groupsMap.set(w.prefix, g);
   }
-  // 卡片里的网盘侧数字以改名完成后的夸克实际目录数为准；旧 scan-new 是改名前的快照，会误报「站点多 1」
-  node('scan-new 复核', SCRIPT('scan-new.mjs'), ['--out', AFTER_SCAN_OUT]);
+  // 卡片里的网盘侧数字 = 夸克目录总数；改名只改目录名、不增减目录，本轮 scan-new 的
+  // total 本身就是改名后的实际目录数，复核只是二次确认。
+  // 2026-11-23 修复：旧版忽略复核退出码，复核失败时静默沿用数天前的 scan-after.json，
+  // 把陈旧快照当「复核后真实目录数」，飞书卡据此误报「站点多 14/16/4」。
+  // 现在：复核失败 / 快照不新鲜 / 解析失败一律回退本轮 scan-new，并留下明确日志。
+  const recheck = node('scan-new 复核', SCRIPT('scan-new.mjs'), ['--out', AFTER_SCAN_OUT]);
   let afterCats = cats;
-  try {
-    const after = JSON.parse(fs.readFileSync(AFTER_SCAN_OUT, 'utf8'));
-    if (Array.isArray(after.categories) && after.categories.length) afterCats = after.categories;
-  } catch {}
+  if (!recheck.ok) {
+    log('[对账] scan-new 复核失败，改用本轮 scan-new 目录总数（改名不影响目录数量）');
+  } else {
+    try {
+      const age = Date.now() - fs.statSync(AFTER_SCAN_OUT).mtimeMs;
+      if (age > 10 * 60 * 1000) {
+        log(`[对账] scan-new 复核快照已 ${Math.round(age / 60000)} 分钟前，判为陈旧，改用本轮 scan-new`);
+      } else {
+        const after = JSON.parse(fs.readFileSync(AFTER_SCAN_OUT, 'utf8'));
+        if (Array.isArray(after.categories) && after.categories.length) afterCats = after.categories;
+      }
+    } catch (e) {
+      log(`[对账] scan-new 复核结果不可用（${e.message}），改用本轮 scan-new`);
+    }
+  }
   const reconcile = [];
   for (const p of new Set(written.map((w) => w.prefix))) {
     const file = path.join(REPO, 'data', fileByPrefix[p]);
@@ -325,7 +349,7 @@ if (written.length) {
     groups: [...groupsMap.values()],
     skipped,
     reconcile,
-    footer: `commit ${commit || 'unknown'} ｜ 构建 ${written.length} 资源 ｜ 冒烟 ${smokeText} ｜ ${fillText} ｜ ${pushed ? '已推送 GitHub' : '未推送 GitHub'} ｜ ${deployText} ｜ ${gyText}`,
+    footer: `commit ${commit || 'unknown'} ｜ 构建 ${written.length} 资源 ｜ 冒烟 ${smokeText} ｜ ${fillText} ｜ ${pushed ? '已推送 GitHub' : '未推送 GitHub'} ｜ ${deployText} ｜ ${gyText} ｜ 本卡在第一步末尾发出，LLM 补全/降级兜底由自动化后续步骤执行`,
   };
   const payloadFile = path.join(CACHE, `resource-sync-card-${Date.now()}.json`);
   fs.writeFileSync(payloadFile, JSON.stringify(payload, null, 2), 'utf8');

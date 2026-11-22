@@ -175,9 +175,16 @@ if (!created.length) { log('本轮无新增：按口径不发飞书、不做光�
 function vpsRebuild(tag) {
   const cmd = "ssh site 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'";
   const r = run(`VPS 即时重建（${tag}）`, 'bash', ['-lc', cmd], { timeout: 180000 });
-  const tail = run(`VPS 日志（${tag}）`, 'bash', ['-lc', "ssh site 'tail -3 /var/log/wdwp-autoupdate.log'"], { timeout: 60000 });
-  const last = tail.out.split('\n').filter(Boolean).pop() || '';
-  return { ok: r.ok && /发布完成/.test(last), text: r.ok && /发布完成/.test(last) ? `VPS 发布完成 ${last.match(/发布完成：([0-9a-f]+)/)?.[1] || ''}`.trim() : `VPS 重建失败：${(r.out || last).slice(0, 160)}` };
+  const tail = run(`VPS 日志（${tag}）`, 'bash', ['-lc', "ssh site 'tail -5 /var/log/wdwp-autoupdate.log'"], { timeout: 60000 });
+  // 2026-11-23 修复：日志末尾的「IndexNow 推送完成」会让只取末行的旧判定误报失败；
+  // 改查最近日志中的「发布完成：<hash>」行，nginx 自检输出不当错误信息。
+  const done = [...tail.out.matchAll(/(\d{4}-\d{1,2}-\d{1,2}\s+\d{2}:\d{2}:\d{2})?\s*发布完成[：:]\s*([0-9a-f]{7,40})/g)].pop();
+  const doneAt = done?.[1] ? Date.parse(done[1].replace(' ', 'T')) : NaN;
+  const doneFresh = Number.isFinite(doneAt) && Date.now() - doneAt < 15 * 60 * 1000;
+  const ok = r.ok && !!done && doneFresh;
+  const realErr = (r.out || '').split('\n').map((l) => l.trim())
+    .filter((l) => l && !/nginx.*(syntax is ok|test is successful)/.test(l)).pop();
+  return { ok, text: ok ? `VPS 发布完成 ${done[2]}` : `VPS 重建失败：${(realErr || '日志未见发布完成标记').slice(0, 160)}` };
 }
 const deploy = vpsRebuild('主流程');
 
