@@ -1134,6 +1134,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-055.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "4.5 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      055-MacSymbolicator/
+      APP简介.md
+      MacSymbolicator.zip
 
 
 - id: app-056
@@ -1146,6 +1156,14 @@
   date: 2019-02-06
   added: 2026-10-04
   image: app-056.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "1.1 KB"
+    format: "MD"
+    tree: |
+      056-ImageOptim/
+      APP简介.md
 
 
 - id: app-058
@@ -1158,6 +1176,15 @@
   date: 2016-11-14
   added: 2026-10-04
   image: app-058.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "2.9 MB"
+    format: "MD / DMG"
+    tree: |
+      058-Multi/
+      Multi.3.0.2.dmg
+      APP简介.md
 
 
 - id: app-059
