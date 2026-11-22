@@ -4903,6 +4903,14 @@
   date: 2016-12-23
   added: 2026-10-06
   image: mv-252.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "15.2 GB"
+    format: "MKV"
+    tree: |
+      252-生化危机 第6部 (2016) 4K 蓝光/
+      [生化危机：终章]Resident.Evil.The.Final.Chapter.2016.2160p.BluRay.H265.TrueHD.7.1.Atmos.CHS-ENG.BOBO.mkv
 
 - id: mv-253
   title: "生化危机5：惩罚"

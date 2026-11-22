@@ -2076,6 +2076,22 @@
   date: 2026-10-01
   added: 2026-10-06
   image: tv-112.jpg
+  updated: 2026-11-22
+  files:
+    count: 9
+    size: "57.6 GB"
+    format: "MKV×7 / JPG / NFO"
+    tree: |
+      112-伊甸之东/
+      East of Eden S01E01 - 第 1 集 - 2160p WEB-DL HDR10 H265 DDP 5.1 Atmos.mkv
+      East of Eden S01E02 - 第 2 集 - 2160p WEB-DL HDR10 H265 DDP 5.1 Atmos.mkv
+      East of Eden S01E03 - 第 3 集 - 2160p WEB-DL HDR10 H265 DDP 5.1 Atmos.mkv
+      East of Eden S01E04 - 第 4 集 - 2160p WEB-DL HDR10 H265 DDP 5.1 Atmos.mkv
+      East of Eden S01E05 - 第 5 集 - 2160p WEB-DL HDR10 H265 DDP 5.1 Atmos.mkv
+      East of Eden S01E06 - 第 6 集 - 2160p WEB-DL HDR10 H265 DDP 5.1 Atmos.mkv
+      East of Eden S01E07 - 第 7 集 - 2160p WEB-DL HDR10 H265 DDP 5.1 Atmos.mkv
+      poster.jpg
+      season.nfo
 
 - id: tv-114
   title: "良药苦口 第二季"
