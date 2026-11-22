@@ -20,7 +20,7 @@
  * 规则来源：wodewangpan/AGENTS.md 的 §3 Git 约束、§4 fill-files、§5 数据铁律、§6 发布、§9 验证清单。
  * 2026-11-16 一次性转述进本脚本，此后任务执行不再读 AGENTS.md（只在脚本崩溃时人工翻手册核对）。
  * AGENTS.md 若改动，只需回来同步这几处：
- *   每轮条数与节奏      → LIMIT（每类 1 条，上限=分类数）、飞书 --per-day
+ *   每轮条数与节奏      → LIMIT（每类 1 条，上限=分类数）、飞书 --per-day（动态=待补分类数×12）
  *   files: 字段集合     → FIELD_OK 白名单
  *   eslint 与两次构建   → 第 5、6 段
  *   commit message 格式 → 第 7 段
@@ -101,6 +101,7 @@ const R = {
   entries: [], // {id, kind: 完成|失败|跳过, detail}
   refreshed: [], // 连载轮询真正刷新的条目
   pendingCount: null,
+  pendingCats: null, // 当前有待补条目的分类数，用于动态估算飞书「预计天数」
   serial: { changed: 0, unchanged: 0, fail: 0 },
   serialIssues: [],
   todoEmpty: [],
@@ -174,6 +175,8 @@ function parseToolOutput(out) {
     if (r) refreshed.push({ id: r[1], detail: r[2] });
   }
   const p = out.match(/待补条目：(\d+)\s*个/);
+  // 每类 1 条模式下，工具会打印「每分类 1 条模式：N 个分类有待补条目」
+  const pc = out.match(/每分类 1 条模式：(\d+)\s*个分类有待补条目/);
   const s = out.match(/\[连载轮询\]\s*刷新\s*(\d+)\s*·\s*无变化\s*(\d+)\s*·\s*失败\s*(\d+)/);
   const todo = out.match(/\[待加资源\]\s*盘端仍空\s*\d+\s*条：(.+)$/m);
   const airing = out.match(/^\[追更提醒\].*$/m);
@@ -182,6 +185,7 @@ function parseToolOutput(out) {
     entries,
     refreshed,
     pendingCount: p ? Number(p[1]) : null,
+    pendingCats: pc ? Number(pc[1]) : null,
     serial: s ? { changed: Number(s[1]), unchanged: Number(s[2]), fail: Number(s[3]) } : null,
     todoEmpty: todo && todo[1] !== '无' ? todo[1].split('、').map((x) => x.trim()).filter(Boolean) : [],
     airing: airing && airingHit > 0 ? airing[0].trim() : null,
@@ -290,15 +294,17 @@ function finish(code = 0) {
   if (R.todoEmpty.length) follow.push(`待加资源（盘端仍空，需转存）：${R.todoEmpty.join('、')}`);
   if (R.airing) follow.push(R.airing);
 
+  // 预计天数节奏：每类 1 条 × 12 轮/天，按当前待补分类数动态算；解析不到时保守兜底 12。
+  const perDay = R.pendingCats ? R.pendingCats * 12 : 12;
+
   // ---- 发飞书 ----
   if (DRY || NO_FEISHU) {
-    log(`[飞书] 试跑/跳过，未发送。将用：--status ${R.status} --name "${name}" --detail "${detail}"` +
+    log(`[飞书] 试跑/跳过，未发送。将用：--status ${R.status} --name "${name}" --detail "${detail}" --per-day ${perDay}` +
       (follow.length ? ` --follow "${follow.join('｜')}"` : ''));
     R.feishu = DRY ? '试跑未发' : '已关闭';
   } else {
     const send = () => {
-      // 每类 1 条：12 轮/天 × 最多 9 类，按 90 条/天估算剩余天数（后期分类补齐会自然下降）
-      const a = [FEISHU, '--name', name, '--status', R.status, '--detail', detail, '--per-day', '90'];
+      const a = [FEISHU, '--name', name, '--status', R.status, '--detail', detail, '--per-day', String(perDay)];
       if (follow.length) a.push('--follow', follow.slice(0, 8).join('｜'));
       const r = node(a, { cwd: SCRIPTS, timeout: 180000 });
       return { ok: r.ok, out: r.out };
@@ -444,6 +450,7 @@ const P = parseToolOutput(ff.out);
 R.entries = P.entries;
 R.refreshed = P.refreshed || [];
 R.pendingCount = P.pendingCount;
+R.pendingCats = P.pendingCats;
 R.serial = P.serial || R.serial;
 R.serialIssues = P.serialIssues;
 R.todoEmpty = P.todoEmpty;
