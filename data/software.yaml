@@ -1283,6 +1283,16 @@
   date: 2026-09-08
   added: 2026-10-04
   image: app-063.jpg
+  updated: 2026-11-22
+  files:
+    count: 2
+    size: "55.2 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      063-iTerm2/
+      APP简介.md
+      iTerm2-3_7_3.zip
 
 
 - id: app-064

@@ -2013,6 +2013,26 @@
   date: 2026-03-01
   added: 2026-10-06
   image: tv-110.jpg
+  updated: 2026-11-22
+  files:
+    count: 13
+    size: "59.6 GB"
+    format: "MKV×13"
+    tree: |
+      110-法警小队/
+      S01E01.mkv
+      S01E02.mkv
+      S01E03.mkv
+      S01E04.mkv
+      S01E05.mkv
+      S01E06.mkv
+      S01E07.mkv
+      S01E08.mkv
+      S01E09.mkv
+      S01E10.mkv
+      S01E11.mkv
+      S01E12.mkv
+      S01E13.mkv
 - id: tv-111
   title: "恋爱博士"
   category: 电视剧

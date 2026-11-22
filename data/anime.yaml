@@ -623,6 +623,14 @@
   date: 2026-10-02
   added: "2026-10-22 05:42"
   image: an-037.jpg
+  updated: 2026-11-22
+  files:
+    count: 1
+    size: "3.3 GB"
+    format: "MKV"
+    tree: |
+      037-名侦探柯南-30号杀人事件/
+      名侦探柯南 30号杀人事件 (2026) - 1080p.Netflix.WEB-DL.H.264.AAC 2.0.mkv
 
 - id: an-038
   title: "小黄人与大怪兽"
