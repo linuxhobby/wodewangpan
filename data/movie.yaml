@@ -5006,6 +5006,15 @@
   date: 2002-03-15
   added: 2026-10-06
   image: mv-257.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "25.9 GB"
+    format: "MKV / SSA"
+    tree: |
+      257-生化危机 第1部 (2002) 4K/
+      flame-resident.evil.2002.2160p.uhd.bluray.x265.mkv
+      生化危机 Resident Evil 2002 简中&英文.ssa
 
 - id: mv-258
   title: "猛攻"

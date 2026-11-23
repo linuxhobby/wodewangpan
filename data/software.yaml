@@ -1434,6 +1434,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-070.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "119 MB"
+    format: "DMG / MD"
+    tree: |
+      070-Kap/
+      Kap-3.6.0-arm64.dmg
+      APP简介.md
 
 
 - id: app-071
