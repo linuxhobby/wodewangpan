@@ -326,6 +326,18 @@
   date: 2026-02-12
   added: "2026-10-22 12:48"
   image: cs-012.jpg
+  updated: 2026-11-23
+  files:
+    count: 6
+    format: "PDF×3 / PNG"
+    tree: |
+      012-AI视频模型 Seedance 2.0 学习资料/
+      Seedance 2.0 精选好文/
+      Seedance 2.0 生成案例（以黑神话钟馗AI宣传片为例）/
+      Seedance 2.0 官方教程.pdf
+      Seedance 2.0 使用地址.pdf
+      Seedance 2.0 使用教程.pdf
+      Cover.png
 
 - id: cs-013
   title: "27考研名师资料合集（徐涛+陆寓丰+唐迟+石雷鹏+周洋鑫）"

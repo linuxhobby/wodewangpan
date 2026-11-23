@@ -1,4 +1,4 @@
-# 纪录片资源（109 条）
+# 纪录片资源（110 条）
 # 来源：夸克网盘 SHARE/06纪录片
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -2632,3 +2632,29 @@
       20261018期-广东站.mp4
       20261025-广东站 第2集.mp4
       20261101.广东站第3集.mp4
+
+- id: dc-110
+  title: "人生一串"
+  category: 纪录片
+  tags: ["纪录片", "纪录", "人生一串 人生一串"]
+  quark_url: "https://pan.quark.cn/s/1a053b716fef"
+  description: "【全剧 4 季 · 共 26 集】展现全国各地独具特色的烧烤文化为主题，涉及近30个城市的500多家传奇烧烤摊。与以往的烧烤节目不同，《人生一串》极具市井气息，把镜头从庙堂拉至寻常摊铺，真实地去展现烧烤的乐天内涵与江湖风味。官方标语：致我们 七荤八素的口腹之欲。本剧类型：纪录。2018 年首播，已完结，全剧 4 季，累计 26 集，单集约 30 分钟。｜TMDB 8.2"
+  date: 2018-06-20
+  added: 2026-11-23
+  image: dc-110.jpg
+  updated: 2026-11-23
+  files:
+    count: 9
+    size: "15.7 GB"
+    format: "MP4×6 / JPG×2 / NFO"
+    tree: |
+      110-人生一串-第 1 季 - 2160p WEB-DL H264 AAC/
+      The Story of Chuaner S01E01 - 第 1 集 - 2160p WEB-DL H264 AAC.mp4
+      The Story of Chuaner S01E02 - 第 2 集 - 2160p WEB-DL H264 AAC.mp4
+      The Story of Chuaner S01E03 - 第 3 集 - 2160p WEB-DL H264 AAC.mp4
+      The Story of Chuaner S01E04 - 第 4 集 - 2160p WEB-DL H264 AAC.mp4
+      The Story of Chuaner S01E05 - 第 5 集 - 2160p WEB-DL H264 AAC.mp4
+      The Story of Chuaner S01E06 - 第 6 集 - 2160p WEB-DL H264 AAC.mp4
+      poster.jpg
+      season01-poster.jpg
+      season.nfo

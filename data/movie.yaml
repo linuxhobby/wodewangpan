@@ -1,4 +1,4 @@
-# 电影资源（481 条）
+# 电影资源（482 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -5069,6 +5069,14 @@
   date: 2023-02-22
   added: "2026-10-08 20:10"
   image: mv-261.jpg
+  updated: 2026-11-23
+  files:
+    count: 1
+    size: "5.2 GB"
+    format: "MP4"
+    tree: |
+      261-猎黑行动 (2023)/
+      [猎黑行动].Black.Hunting.Operation.2023.2160p.WEB-DL.HDR.Vivid.H265.10bit.AAC-UBWEB.mp4
 
 - id: mv-262
   title: "狄仁杰之通天帝国"
@@ -8233,3 +8241,21 @@
   date: 2026-11-04
   added: "2026-11-23 15:20"
   image: mv-481.jpg
+
+- id: mv-482
+  title: "波斯王子：时之刃"
+  category: 电影
+  tags: ["电影", "冒险", "奇幻", "动作", "波斯王子：时之刃 Prince of Persia: The Sands of Time"]
+  quark_url: "https://pan.quark.cn/s/db7f7c9d64f2"
+  description: "在中世纪的波斯，一位具有冒险精神的王子和敌国公主联手，阻止狂暴的统治者掀起可怕的沙尘暴毁灭世界。达斯坦王子被垂死的大臣蒙骗，释放了时间之沙。现在，王子和公主必须用神秘的时之刃让沙子回到沙漏中。本片类型：冒险 / 奇幻 / 动作。2010 年上映，片长 116 分钟。制片国家/地区：美国。出品方：Walt Disney Pictures、Jerry Bruckheimer Films。｜TMDB 6.3"
+  date: 2010-05-19
+  added: 2026-11-23
+  image: mv-482.jpg
+  updated: 2026-11-23
+  files:
+    count: 1
+    size: "2.7 GB"
+    format: "MP4"
+    tree: |
+      482-波斯王子：时之刃/
+      波斯王子：时之刃.2010.1080p.国英双语.BD中英双字.mp4
