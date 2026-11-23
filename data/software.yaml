@@ -1519,6 +1519,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-075.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "108 MB"
+    format: "DMG / MD"
+    tree: |
+      075-IINA/
+      IINA.v1.5.0.dmg
+      APP简介.md
 
 
 - id: app-076

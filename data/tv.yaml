@@ -2435,6 +2435,24 @@
   date: 2026-10-09
   added: 2026-10-10
   image: tv-129.jpg
+  updated: 2026-11-23
+  files:
+    count: 10
+    size: "15.5 GB"
+    format: "MKV×10"
+    tree: |
+      129-恋爱充电中/
+      恋爱充电中（韩国）/
+      E01.mkv
+      E02.mkv
+      E03.mkv
+      E04.mkv
+      E05.mkv
+      E06.mkv
+      E07.mkv
+      E08.mkv
+      E09.mkv
+      E10 END.mkv
 
 - id: tv-130
   title: "黑道家族 第二季"
