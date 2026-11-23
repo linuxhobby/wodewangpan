@@ -1604,6 +1604,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-079.jpg
+  updated: 2026-11-24
+  files:
+    count: 2
+    size: "46.4 MB"
+    format: "DMG / MD"
+    tree: |
+      079-Hoppscotch/
+      Hoppscotch_mac_aarch64.dmg
+      APP简介.md
 
 
 - id: app-080
