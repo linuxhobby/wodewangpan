@@ -1,4 +1,4 @@
-# 游戏资源（66 条）
+# 游戏资源（68 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1389,3 +1389,42 @@
       [升级档v1.0.4][0100BCB025968800][23.0.1][中文][US].nsp
       浅夏的ns游戏库.txt
       [整合v1.0.1][0100BCB025968000][22.1.0][中文][US][1G+1U].xci
+
+- id: game-067
+  title: "双人成行 It Takes Two - Switch双人合作动作冒险游戏"
+  category: 游戏
+  tags: ["游戏", "Switch", "动作冒险", "合作", "平台解谜", "中文"]
+  quark_url: "https://pan.quark.cn/s/83a2e918b269"
+  description: "《双人成行》（It Takes Two）由 Hazelight Studios 开发、艺电（Electronic Arts）发行，是一款面向两名玩家的合作动作冒险游戏。故事中，即将离婚的夫妻科迪与小梅被女儿的魔法变成玩偶，需在奇幻世界中相互协作、完成关卡挑战，并修复彼此的关系。游戏以分屏合作方式进行，两名玩家分别操控拥有不同能力的角色，通过平台跳跃、解谜、动作与追逐等多种玩法推进剧情，章节机制随场景变化而更新。本条目对应 Nintendo Switch 中文版本，盘端资源包含中文本体 NSP（v1.0.0，约 7.1GB）、中文升级档 NSP（v1.0.4，约 6.7GB）以及两个中文 DLC 补丁，并附有通关存档，分享目录总量约 26.5GB。资源升级与安装请以盘端实际文件为准，游玩需要两名玩家各自操控一名角色。信息依据 Hazelight 与 EA 官方游戏页及维基百科相关内容整理。"
+  date: 2021-03-26
+  added: 2026-11-23
+  image: game-067.jpg
+  updated: 2026-11-23
+  files:
+    count: 5
+    format: "NSP×2"
+    tree: |
+      067-双人成行 It Takes Two/
+      历史版本[不用下载]/
+      通关存档 包含所有小游戏/
+      DLC2/
+      [本体v1.0.0][010092A0172E4000][14.1.2][中文].nsp
+      [升级档v1.0.4][010092A0172E4800][23.0.0][中文][US].nsp
+
+- id: game-068
+  title: "巫师3：狂猎 完整版 - Switch开放世界角色扮演游戏"
+  category: 游戏
+  tags: ["游戏", "Switch", "角色扮演", "开放世界", "石之心", "血与酒", "中文"]
+  quark_url: "https://pan.quark.cn/s/8b895388f738"
+  description: "《巫师3：狂猎 完整版》（The Witcher 3: Wild Hunt – Complete Edition）由 CD PROJEKT RED 开发，是 2015 年推出的开放世界角色扮演作品，Switch 版于 2019 年 10 月发售。玩家扮演猎魔人杰洛特，在战乱与怪物横行的奇幻大陆上追踪预言之子，通过主线与大量支线任务推进剧情，选择会影响故事走向与结局。完整版收录本体及《石之心》《血与酒》两部资料片和先行推出的附加内容。本条目对应 Nintendo Switch 版本，盘端资源按地区分为港版、美版与欧版（无中文）三组：港版含中文 XCI 本体（v3.2，约 31.9GB）、中文升级档 NSP（v4.04d，约 11.7GB）及 DLC 目录；美版含中文 NSP 本体（v3.7，约 15.5GB）、升级档 NSP（v4.04b，约 10.6GB）及 DLC 目录，分享目录总量约 155GB。具体语言与版本以盘端文件为准。信息依据任天堂官方商品页与 CD PROJEKT RED 官方网站整理。"
+  date: 2015-05-18
+  added: 2026-11-23
+  image: game-068.jpg
+  updated: 2026-11-23
+  files:
+    count: 3
+    tree: |
+      068-巫师3：狂猎 完整版 The Witcher 3 Wild Hunt/
+      港版/
+      美版/
+      欧版（无中文）/
