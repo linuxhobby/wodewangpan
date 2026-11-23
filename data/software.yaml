@@ -1646,6 +1646,15 @@
   date: 2024-08-25
   added: 2026-10-04
   image: app-081.jpg
+  updated: 2026-11-24
+  files:
+    count: 2
+    size: "2.4 MB"
+    format: "MD / DMG"
+    tree: |
+      081-JukeBox/
+      Jukebox.0.9.5.dmg
+      APP简介.md
 
 
 - id: app-082
