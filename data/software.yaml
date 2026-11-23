@@ -1540,6 +1540,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-076.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "6.4 MB"
+    format: "MD / DMG"
+    tree: |
+      076-HostsX/
+      HostsX.dmg
+      APP简介.md
 
 
 - id: app-077

@@ -941,6 +941,14 @@
   date: 2026-07-10
   added: "2026-11-07 03:41"
   image: an-008.jpg
+  updated: 2026-11-23
+  files:
+    count: 1
+    size: "2.8 GB"
+    format: "MP4"
+    tree: |
+      008-八仙！/
+      [4k].mp4
 
 - id: an-012
   title: "青之箱 第一季"
