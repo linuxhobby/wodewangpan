@@ -2593,6 +2593,34 @@
   date: 2006-03-12
   added: "2026-10-10 11:05"
   image: tv-134.jpg
+  updated: 2026-11-24
+  files:
+    count: 21
+    size: "56.5 GB"
+    format: "MKV×21"
+    tree: |
+      134-黑道家族.第六季[全21集][简繁英字幕].The.Sopranos.S06.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV/
+      黑道家族.The.Sopranos.S06E01.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E02.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E03.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E04.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E05.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E06.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E07.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E08.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E09.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E10.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E11.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E12.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E13.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E14.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E15.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E16.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E17.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E18.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E19.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E20.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
+      黑道家族.The.Sopranos.S06E21.2006.1080p.Max.WEB-DL.DDP5.1.H264-ZeroTV.mkv
 
 - id: tv-135
   title: "神探狄仁杰 第一部"
@@ -4414,13 +4442,13 @@
   date: 2026-11-18
   added: 2026-11-22
   image: tv-207.jpg
-  updated: 2026-11-22
+  updated: 2026-11-24
   files:
-    count: 9
-    size: "29.7 GB"
-    format: "MKV×9"
+    count: 11
+    format: "MKV×10"
     tree: |
       207-宝珠/
+      B）宝丨Z（2026）/
       S01E01.2026.2160p.WEB-DL.H.264.AAC.mkv
       S01E02.2026.2160p.WEB-DL.H.264.AAC.mkv
       S01E03.2026.2160p.WEB-DL.H.264.AAC.mkv
@@ -4430,6 +4458,7 @@
       S01E07.2026.2160p.WEB-DL.H.264.AAC.mkv
       S01E08.2026.2160p.WEB-DL.H.264.AAC.mkv
       S01E09.2026.2160p.WEB-DL.H.264.AAC.mkv
+      S01E10.2026.2160p.WEB-DL.H.264.AAC.mkv
 
 - id: tv-208
   title: "绝望主妇"

@@ -1625,6 +1625,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-080.jpg
+  updated: 2026-11-24
+  files:
+    count: 2
+    size: "84.7 MB"
+    format: "DMG / MD"
+    tree: |
+      080-Hello HTTP/
+      HelloHTTP-v1.9.0-macos-ARM64.dmg
+      APP简介.md
 
 
 - id: app-081
