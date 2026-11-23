@@ -88,7 +88,7 @@ elements.push(md([
 ].join('\n')));
 elements.push(hr());
 
-for (const [sev, label, rows] of [['high', '⚠️ 高严重度问题', high], ['medium', '🔶 中严重度问题', medium], ['low', '🔵 低严重度问题', low]]) {
+for (const [label, rows] of [['⚠️ 高严重度问题', high], ['🔶 中严重度问题', medium], ['🔵 低严重度问题', low]]) {
   if (!rows.length) continue;
   elements.push(md([`**${label}（${rows.length}）**`, ...rows.map((f) => `· ${link(f)} — ${clip(f.evidence || '', 110)}`)].join('\n')));
   elements.push(hr());
