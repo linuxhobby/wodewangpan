@@ -1,4 +1,4 @@
-# 游戏资源（68 条）
+# 游戏资源（69 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1428,3 +1428,22 @@
       港版/
       美版/
       欧版（无中文）/
+
+- id: game-069
+  title: "空洞骑士：丝之歌 - Switch类银河恶魔城动作冒险中文版"
+  category: 游戏
+  tags: ["游戏", "Switch", "类银河恶魔城", "动作冒险", "中文"]
+  quark_url: "https://pan.quark.cn/s/26c59c074e19"
+  description: "《空洞骑士：丝之歌》（Hollow Knight: Silksong）由澳大利亚 Team Cherry 开发并发行，是《空洞骑士》的续作，2025-09-04 登陆 Nintendo Switch 等平台，Switch 数字版约 2.9GB，支持简体中文。玩家扮演被掳至丝与歌之国 Pharloom 的大黄蜂，自下而上探索苔藓洞窟、镀金城市等互联区域，以织针近战、丝技与手工道具应对大量敌人与首领战，并可挑战 Steel Soul 模式；配乐由 Christopher Larkin 创作。盘端资源为 Nintendo Switch 中文 NSP：本体 v1.0.27776（约 2.49GB）、升级档 v1.0.30000（约 0.61GB），另有“历史版本[不用下载]”目录，标题 ID 010013C00E930000/0800。平台与形态以盘端文件为准，信息参考任天堂官方商品页与 Steam 商店资料。"
+  date: 2025-09-04
+  added: 2026-11-23
+  image: game-069.jpg
+  updated: 2026-11-24
+  files:
+    count: 3
+    format: "NSP×2"
+    tree: |
+      069-空洞骑士丝之歌 Hollow Knight Silksong/
+      历史版本[不用下载]/
+      [本体v1.0.27776][010013C00E930000][20.3.0][中文].nsp
+      [升级档v1.0.30000][010013C00E930800][22.0.0][中文].nsp
