@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// wdp-scheduler.mjs —— 纯本地常驻调度器，等效 cron：每小时 :03 发 TG、:08 发 Bluesky（随后跑同步检查）
+// wdp-scheduler.mjs —— 纯本地常驻调度器，等效 cron：每小时 :03 发 TG、:08 发 Bluesky（随后自动追平 + 同步检查）
 // 不依赖 WorkBuddy / LLM，只调用本仓库 push/ 下的 Node 脚本。
 // 2026-11-17 并入仓库 deploy/wdp-scheduler/：路径全部按脚本自身位置解析，不再写死。
 import { spawn } from 'node:child_process';
@@ -14,7 +14,15 @@ const LOGDIR = path.join(HERE, 'logs');
 const STATE = path.join(HERE, 'lastrun.json');
 const JOBS = [
   { key: 'tg', minute: 3, script: 'push/telegram/tg-post.mjs', log: 'tg-post.log' },
-  { key: 'bs', minute: 8, script: 'push/bluesky/bluesky-post.mjs', log: 'bsky-post.log', after: 'tools/feishu-reports/wodewangpan-push-sync.mjs', afterLog: 'push-sync.log' },
+  {
+    key: 'bs', minute: 8, script: 'push/bluesky/bluesky-post.mjs', log: 'bsky-post.log',
+    // 顺序不能反：先追平（只补真缺发），再对账告警，告警才反映最终状态
+    after: [
+      'tools/feishu-reports/wodewangpan-push-fix.mjs --apply',
+      'tools/feishu-reports/wodewangpan-push-sync.mjs',
+    ],
+    afterLog: ['push-fix.log', 'push-sync.log'],
+  },
 ];
 
 fs.mkdirSync(LOGDIR, { recursive: true });
@@ -37,13 +45,28 @@ function run(job) {
   child.unref();
   child.on('error', (e) => log(`${job.key} 启动失败: ${e.message}`));
   child.on('exit', () => {
-    if (!job.after) return;
-    const out2 = fs.openSync(path.join(LOGDIR, job.afterLog), 'a');
-    const next = spawn(NODE, [job.after], { cwd: REPO, detached: true, stdio: ['ignore', out2, out2] });
-    next.unref();
-    next.on('error', (e) => log(`${job.key} 同步检查启动失败: ${e.message}`));
-    fs.closeSync(out2);
-    log(`${job.key} 同步检查已启动 pid=${next.pid}`);
+    if (!job.after?.length) return;
+    let i = 0;
+    const runNext = () => {
+      if (i >= job.after.length) return;
+      const script = job.after[i++];
+      const logFile = job.afterLog[i - 1] || job.afterLog[0] || 'after.log';
+      const out2 = fs.openSync(path.join(LOGDIR, logFile), 'a');
+      const [file, ...args] = String(script).split(/\s+/);
+      const next = spawn(NODE, [file, ...args], { cwd: REPO, detached: true, stdio: ['ignore', out2, out2] });
+      next.unref();
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        try { fs.closeSync(out2); } catch {}
+        runNext();
+      };
+      next.on('error', (e) => { log(`${job.key} 后续任务启动失败: ${e.message}`); finish(); });
+      next.on('exit', () => finish());
+      log(`${job.key} 后续任务已启动 pid=${next.pid}: ${file}`);
+    };
+    runNext();
   });
   fs.closeSync(out);
   log(`${job.key} 已启动 pid=${child.pid}`);

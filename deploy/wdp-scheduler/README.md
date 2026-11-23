@@ -1,7 +1,8 @@
 # deploy/wdp-scheduler — TG / Bluesky 推送常驻调度器
 
 **纯本地调度，不依赖 WorkBuddy / LLM**：每小时 :03 发 Telegram、:08 发 Bluesky（间隔 5 分钟），
-Bluesky 发帖进程结束后再跑 `tools/feishu-reports/wodewangpan-push-sync.mjs`（不同步才发飞书告警）。
+Bluesky 发帖进程结束后依次跑 `tools/feishu-reports/wodewangpan-push-fix.mjs --apply`（只补真缺发、不碰节奏错位）
+和 `tools/feishu-reports/wodewangpan-push-sync.mjs`（仍不同步才发飞书告警）。
 直接调用本仓库 `push/telegram/tg-post.mjs` 与 `push/bluesky/bluesky-post.mjs`。
 路径全部按脚本自身位置解析，整个目录放哪都能跑（logs/、lastrun.json、scheduler.pid
 为运行态产物，自动生成在目录内，不入库）。

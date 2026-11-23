@@ -64,6 +64,28 @@ const bsUncertain = listUncertain(bs);
 const uncertain = [...tgUncertain.map(([id]) => ['TG', id]), ...bsUncertain.map(([id]) => ['BS', id])];
 const same = !trueMissingInBs.length && !trueMissingInTg.length && !uncertain.length && !offsetOnly.length;
 
+// --json：给自动追平脚本（wodewangpan-push-fix.mjs）复用**同一套判定**，只输出结构化结果，
+// 不渲染卡片、不发飞书。任何判定口径改动只需改本文件，两个消费者不会漂移。
+if (process.argv.includes('--json')) {
+  const brief = (v) => ({
+    id: v.id, title: v.rec?.title || '', at: v.rec?.at || '', fp: v.fp,
+    quark: v.rec?.quark || '', baidu: v.rec?.baidu || '',
+  });
+  console.log(JSON.stringify({
+    timeStr,
+    recentN: RECENT_N,
+    tgRecent: tgRecent.map(brief),
+    bsRecent: bsRecent.map(brief),
+    trueMissingInBs: trueMissingInBs.map(brief),
+    trueMissingInTg: trueMissingInTg.map(brief),
+    offsetOnly: offsetOnly.map((v) => ({ ...brief(v), side: v.side, otherId: v.other?.id || '', otherAt: v.other?.rec?.at || '' })),
+    uncertain: uncertain.map(([side, id]) => ({ side, id })),
+    same,
+    gapCount: trueMissingInBs.length + trueMissingInTg.length,
+  }));
+  process.exit(0);
+}
+
 const postUrl = (v, platform) => {
   if (platform === 'bs') {
     return v.rec.uri && BS_HANDLE

@@ -112,7 +112,7 @@ crontab -u "$CRON_USER" -l 2>/dev/null | sed "/$BASH/,/$EASH/d" > "$tmp" || true
 {
   echo "$BASH BEGIN (managed by install.sh, 勿手改)"
   echo "3 * * * * cd $MYBOT && $NODE push/telegram/tg-post.mjs >> $LOG/tg-post.log 2>&1"
-  echo "8 * * * * cd $MYBOT && $NODE push/bluesky/bluesky-post.mjs >> $LOG/bsky-post.log 2>&1; $NODE tools/feishu-reports/wodewangpan-push-sync.mjs >> $LOG/push-sync.log 2>&1"
+  echo "8 * * * * cd $MYBOT && $NODE push/bluesky/bluesky-post.mjs >> $LOG/bsky-post.log 2>&1; $NODE tools/feishu-reports/wodewangpan-push-fix.mjs --apply >> $LOG/push-fix.log 2>&1; $NODE tools/feishu-reports/wodewangpan-push-sync.mjs >> $LOG/push-sync.log 2>&1"
   echo "$EASH END"
 } >> "$tmp"
 crontab -u "$CRON_USER" "$tmp"; rm -f "$tmp"
