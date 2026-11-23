@@ -1476,6 +1476,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-072.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "2.6 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      072-KeyCastr/
+      APP简介.md
+      KeyCastr.app.zip
 
 
 - id: app-073

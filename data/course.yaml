@@ -296,6 +296,25 @@
   description: "【视频 · 共 1973 集】一套超大规模的英语启蒙视频资源包，核心是风靡全球的儿歌品牌 Super Simple Songs，另收录自然拼读与各系列英语动画视频，总量接近两千集，覆盖从零基础磨耳朵到拼读入门的完整启蒙阶段。Super Simple Songs 的特点是用语简单、旋律慢、重复度高，每一首儿歌围绕一个日常主题：打招呼、颜色、数字、动物、身体部位、情绪、生活习惯，配上明快的动画画面，孩子跟着唱几遍就能把高频句型记下来，是公认的磨耳朵首选素材。资源包里的自然拼读部分从 26 个字母的字母音讲起，逐步过渡到 CVC 单词拼读、常见字母组合与 sight words，配合儿歌里的韵律感，孩子可以在唱唱跳跳里把拼读规则混熟。动画视频则提供大量可理解的听力输入，语速友好，画面与台词对应度高。资源按系列分类存放，目录清晰，可以按孩子的年龄和水平挑选合适的系列循序渐进。适合 2 到 8 岁孩子的家庭英语启蒙，也适合幼儿园和培训机构的课堂使用。｜主讲：Super Simple Songs 系列"
   added: "2026-10-19 13:58"
   image: cs-011.jpg
+  updated: 2026-11-23
+  files:
+    count: 14
+    tree: |
+      011-【英语启蒙】《Super Simple Songs》儿歌视频-自然拼读-英语动画视频-各系列-1973集/
+      01 - SSS儿歌视频/
+      02 - Super Simple TV 英语频道/
+      03 - Super Simple ABCs 自然拼读/
+      04 - Super Simple Draw 绘画主题/
+      05 - Caitie’s Classroom 凯蒂的教室/
+      06 - Milo’s World 米洛的世界/
+      07 - Super Duper Ball Pit 超级海洋球/
+      08 - Bedtime Lullaby 睡前催眠曲/
+      09 - How To Teach Super Simple Songs 如何教超简单的歌曲/
+      10 - Captain Seasalt & The ABC Pirates 海岸船长和ABC海盗/
+      11 - Super Simple Podcast SSS电台/
+      12 - Teaching Demo 教学演示/
+      13 - 官方发行的7张CD+配套歌词pdf文本/
+      14 - 官网整理总计1201本（歌词、闪卡、练习册、涂色卡、游戏卡）/
 
 
 - id: cs-012

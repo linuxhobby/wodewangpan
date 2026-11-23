@@ -2288,6 +2288,14 @@
   date: 2026-03-01
   added: "2026-10-09 16:51"
   image: tv-120.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    format: "MKV"
+    tree: |
+      120-法警小队（第二季）/
+      法警小队 (2026)/
+      Marshals.S02E01.All.Hat.No.Cattle.2160p.ATV.WEB-DL.DD.5.1.H.265-Qshan.mkv
 
 - id: tv-121
   title: "律界战争"
