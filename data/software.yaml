@@ -1561,6 +1561,15 @@
   date: 2024-03-28
   added: 2026-10-04
   image: app-077.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "87.8 MB"
+    format: "DMG / MD"
+    tree: |
+      077-Hyper/
+      Hyper-3.4.1-mac-arm64.dmg
+      APP简介.md
 
 
 - id: app-078
