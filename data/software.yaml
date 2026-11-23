@@ -1582,6 +1582,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-078.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "3.3 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      078-Ice/
+      APP简介.md
+      Ice.zip
 
 
 - id: app-079
