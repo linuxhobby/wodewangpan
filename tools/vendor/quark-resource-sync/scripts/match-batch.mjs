@@ -6,6 +6,7 @@ import path from 'node:path';
 import { execFile } from 'node:child_process';
 import { cfg, requireCfg, TMP } from './lib/config.mjs';
 import { buildBody, DESC_MIN } from './lib/desc.mjs';
+import { seasonHint } from './lib/season-title.mjs';
 
 const { TMDB_TOKEN, PROXY } = cfg;
 requireCfg(['TMDB_TOKEN']);
@@ -64,29 +65,6 @@ function clean(name) {
   if (en.length < 2) en = null;
 
   return { year, zh, en, season: seasonHint(name) };
-}
-
-const CN_DIGIT = { 零: 0, 一: 1, 二: 2, 两: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9 };
-function cn2num(s) {
-  const t = String(s || '').trim();
-  if (/^\d+$/.test(t)) return Number(t);
-  if (t === '十') return 10;
-  if (t.includes('十')) {
-    const [a, b] = t.split('十');
-    return (a ? CN_DIGIT[a] : 1) * 10 + (b ? CN_DIGIT[b] : 0);
-  }
-  return CN_DIGIT[t] || null;
-}
-
-/** 从目录名里取季数提示；只作多候选时的判别，不拼进 TMDB 查询词 */
-function seasonHint(name) {
-  for (const p of [/第\s*([一二两三四五六七八九十\d]+)\s*[季部]/, /([一二两三四五六七八九十\d]+)\s*[季部](?:[\s.（(]|$)/, /\bS(?:eason)?\s*(\d+)\b/i]) {
-    const m = String(name).match(p);
-    if (!m) continue;
-    const n = cn2num(m[1]);
-    if (n) return n;
-  }
-  return null;
 }
 
 const get = (url, retry = 1) =>

@@ -12,6 +12,7 @@ import { execFile } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { upsertEntry } from '../vendor/quark-resource-sync/scripts/lib/yaml-store.mjs';
+import { seasonTitle } from '../vendor/quark-resource-sync/scripts/lib/season-title.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = process.env.WDP_REPO || path.resolve(HERE, '..', '..');
@@ -96,6 +97,10 @@ async function poster(item, file) {
 const applied = [];
 const rejected = [];
 for (const item of items) {
+  // 夸克目录名里显式写了「第N季/第N部」时，站点标题必须带上；草稿可把 pending 的 dir_name 原样带来，
+  // llm-apply 统一补齐，避免模型漏写导致同剧不同季在站内重名。
+  const driveName = item.dir_name || item.source_name;
+  if (driveName && item.title) item.title = seasonTitle(item.title, driveName);
   const v = validate(item);
   if (!v.ok) { rejected.push({ id: item.id || '(unknown)', errors: v.errs }); continue; }
   const file = CATS[item.category];

@@ -13,6 +13,7 @@ import { cfg, requireCfg, SKILL, CACHE, TMP, QUARK_TASK_DIR } from './lib/config
 import { posterDir } from './lib/site-paths.mjs';
 import { isJpegFile } from '../../../lib/image-check.mjs';
 import { pad3 } from './lib/number.mjs';
+import { driveTitleBase, seasonMark, seasonTitle } from './lib/season-title.mjs';
 import { upsertEntry } from './lib/yaml-store.mjs';
 
 const { PROXY, REPO, SHARE_FID } = cfg;
@@ -116,6 +117,8 @@ if (process.argv.includes('--init')) {
       fid: r.fid,
       old_name: r.filename,
       new_name: `${padded}-${r.filename}`,
+      // 夸克目录名里显式写的「第N季/第N部」留档，写 YAML 时拼进标题（TMDB 命中名通常是裸名）
+      source_season: seasonMark(r.filename),
       added: r.updated_at,
       match: r.match,
       status: 'pending',
@@ -234,9 +237,10 @@ for (const p of batch) {
   // 完整简介（写入上限 700 字，2026-11-12 起从 1200 下调；站点构建护栏 scripts/lib/data.js 的 MAX_DESC 仍留 1200，只兜底不砍存量）；详情页正文不截断，列表卡片与 meta 由构建脚本自行截取
   const spec = /^(tv|dc)-/.test(p.id) ? tvSpec(m) : '';
   const desc = spec + (overview.length > 700 ? overview.slice(0, 700) + '…' : overview) + `｜TMDB ${Number(m?.vote || 0).toFixed(1)}`;
+  const baseTitle = m?.title || driveTitleBase(p.old_name);
   const data = {
     id: p.id,
-    title: m?.title || p.old_name.replace(/^\d+-/, ''),
+    title: seasonTitle(baseTitle, p.source_season || p.old_name),
     category: catMap[p.id.slice(0, 2)],
     tags: [catMap[p.id.slice(0, 2)], ...(m?.genres || []).slice(0, 3), ...(m ? [m.original ? `${m.title} ${m.original}` : m.title] : [])],
     quark_url: p.url,

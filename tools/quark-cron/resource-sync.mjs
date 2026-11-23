@@ -18,6 +18,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { driveTitleBase, seasonTitle } from '../vendor/quark-resource-sync/scripts/lib/season-title.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = process.env.WDP_REPO || path.resolve(HERE, '..', '..');
@@ -96,7 +97,9 @@ try {
   for (const row of matchData) {
     const bad = row.low_confidence || !row.match || (Number(row.match?.vote ?? 0) < 3.5 && !isFresh(row.match));
     if (!bad) continue;
-    const title = row.parsed?.zh || row.parsed?.en || String(row.filename || '').replace(/^\d+[-.]\s*/, '').replace(/\.[a-z0-9]{1,5}$/i, '');
+    // 降级条目的标题来自夸克目录名解析结果，同样要保留盘端显式写的「第N季/第N部」
+    const base = row.parsed?.zh || row.parsed?.en || driveTitleBase(row.filename);
+    const title = seasonTitle(base, row.filename);
     row.match = { title, overview: '本资源来自夸克网盘分享，简介与海报待人工补充。', vote: 0, genres: [] };
     row.low_confidence = true;
     degraded++;
