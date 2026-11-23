@@ -2268,6 +2268,14 @@
   date: 2026-10-07
   added: 2026-10-09
   image: tv-119.jpg
+  updated: 2026-11-23
+  files:
+    count: 1
+    size: "1.4 GB"
+    format: "MKV"
+    tree: |
+      119-莓好遇见你/
+      E01.mkv
 
 - id: tv-120
   title: "法警小队 第二季"

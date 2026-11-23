@@ -1455,6 +1455,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-071.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "97.9 MB"
+    format: "DMG / MD"
+    tree: |
+      071-Jan/
+      Jan_0.8.4_universal.dmg
+      APP简介.md
 
 
 - id: app-072

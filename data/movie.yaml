@@ -5027,6 +5027,15 @@
   date: 2026-09-02
   added: 2026-10-06
   image: mv-258.jpg
+  updated: 2026-11-23
+  files:
+    count: 2
+    size: "23.0 GB"
+    format: "MKV×2"
+    tree: |
+      258-猛攻/
+      Onslaught.2026.1080p.AMZN.WEB-DL.DDP5.1.H.264-Qshan.mkv
+      Onslaught.2026.2160p.iT.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265-Qshan.mkv
 
 - id: mv-259
   title: "绵羊侦探团"
