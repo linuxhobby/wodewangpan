@@ -27,7 +27,7 @@
 ```text
 wodewangpan/
 ├── manager/                     # 本次新增，管理工具独立目录
-│   ├── server.mjs               # Node 原生 http 服务，绑定 127.0.0.1:8787
+│   ├── server.mjs               # Node 原生 http 服务，默认绑定 127.0.0.1:8787，可选局域网白名单
 │   ├── following.mjs            # 清单读写与校验的唯一逻辑，原子写
 │   └── public/
 │       ├── index.html           # 单页界面
@@ -46,7 +46,15 @@ wodewangpan/
 "following:ui": "node manager/server.mjs"
 ```
 
-运行 `npm run following:ui` 后，在 Safari 打开 `http://127.0.0.1:8787`。
+运行 `npm run following:ui` 后，在本机浏览器打开 `http://127.0.0.1:8787`。
+
+需要局域网其他机器用浏览器直接访问时，启动时显式指定监听地址与来源白名单（IP 不写进仓库）：
+
+```bash
+FOLLOWING_UI_HOST=0.0.0.0 FOLLOWING_UI_ALLOW_IPS=<允许的局域网 IP> npm run following:ui
+```
+
+然后那台机器打开 `http://<本机局域网 IP>:8787`。未配置白名单时只允许本机；服务仍无账号鉴权，白名单就是全部访问控制，只放行信任的固定 IP，不要对公网开放。
 
 ## 4. 清单数据格式
 
@@ -82,7 +90,7 @@ wodewangpan/
 
 `manager/server.mjs` 职责：
 
-- 只监听 `127.0.0.1`，不对局域网或公网开放，无需登录鉴权。
+- 默认只监听 `127.0.0.1`；可通过环境变量改为监听局域网地址并限制来源 IP，无需登录鉴权。
 - 提供静态页面与 JSON API。
 - 所有清单读写委托给 `manager/following.mjs`，不另写一套逻辑。
 - 只读 `data/tv.yaml` 用于剧集搜索，绝不写它。
@@ -171,7 +179,7 @@ POST /api/publish            提交推送，需前端二次确认
 - 不自动判定剧集完结，不自动删除资源。
 - 不修改 `data/tv.yaml` 中任何条目的 `category`、`tags`、`updated`。
 - 不替代按 PV 排序的「热榜 TOP 30」，`/hot/` 保持现状。
-- 不提供公网访问或手机端管理入口；若将来需要，另做带 token 的独立服务。
+- 不提供公网访问入口；局域网访问只能按来源 IP 白名单放行固定机器，仍无账号鉴权。
 
 ## 10. 验收清单
 

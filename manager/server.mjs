@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * 本机 Web 管理工具，只监听 127.0.0.1:8787，无鉴权、零新增依赖。
+ * 本机 Web 管理工具，默认只监听 127.0.0.1:8787，无鉴权、零新增依赖。
+ * 需要局域网访问时可用环境变量指定监听地址与来源 IP 白名单，IP 不写进仓库。
  * 四个视图共用一套 API：追热播编排 / 字段编辑 / 连载看板 / 资源删除。
  * 所有清单读写走 manager/following.mjs，资源写盘走 manager/lib/resources.mjs。
  */
@@ -14,8 +15,14 @@ import * as dashboard from './lib/dashboard.mjs';
 import * as actions from './lib/actions.mjs';
 import { MANAGER_PUBLIC, ROOT } from './lib/paths.mjs';
 
-const HOST = '127.0.0.1';
+const HOST = process.env.FOLLOWING_UI_HOST || '127.0.0.1';
 const PORT = Number(process.env.FOLLOWING_UI_PORT) || 8787;
+// 来源白名单：逗号分隔的 IPv4；未配置时只允许本机。IP 不放进仓库，启动时从环境变量传入。
+const ALLOW_IPS = new Set(
+  String(process.env.FOLLOWING_UI_ALLOW_IPS || '').split(',').map((s) => s.trim()).filter(Boolean)
+);
+const isLocal = (ip) => !ip || ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+const isAllowed = (ip) => isLocal(ip) || ALLOW_IPS.has(ip) || ALLOW_IPS.has(ip.replace(/^::ffff:/, ''));
 const categories = loadSite(path.join(ROOT, 'config')).categories;
 // 删除必须先试跑：这里只记本进程内通过试跑的 ID，服务重启后需重新试跑
 const dryPassed = new Set();
@@ -84,6 +91,11 @@ function candidates(q = '') {
 }
 
 async function handle(req, res) {
+  const remote = req.socket.remoteAddress || '';
+  if (!isAllowed(remote)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' }).end('Forbidden');
+    return;
+  }
   const url = new URL(req.url || '/', `http://${HOST}:${PORT}`);
   const p = url.pathname;
   const params = url.searchParams;
@@ -175,5 +187,6 @@ http
     });
   })
   .listen(PORT, HOST, () => {
-    console.log(`追热播管理工具已启动：http://${HOST}:${PORT}`);
+    const extra = ALLOW_IPS.size ? `（另放行 ${ALLOW_IPS.size} 个来源 IP）` : '';
+    console.log(`追热播管理工具已启动：http://${HOST}:${PORT}${extra}`);
   });
