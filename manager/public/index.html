@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>站点管理工具 · 追热播</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__head">
+    <h1>站点管理工具</h1>
+    <p class="sub">本机 127.0.0.1 · 只改当前仓库，不连接 VPS</p>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="管理视图">
+    <button type="button" data-view="following" class="is-on">追热播编排</button>
+    <button type="button" data-view="resources">字段编辑</button>
+    <button type="button" data-view="dashboard">连载看板</button>
+    <button type="button" data-view="delete">资源删除</button>
+  </nav>
+  <div class="topbar__actions">
+    <button type="button" id="btn-build">构建并在浏览器预览</button>
+    <button type="button" id="btn-diff">查看变更</button>
+    <button type="button" id="btn-publish" class="primary">提交推送</button>
+  </div>
+</header>
+
+<main>
+  <!-- 追热播编排 -->
+  <section class="panel is-on" data-panel="following">
+    <div class="cols">
+      <div class="box">
+        <h2>候选电视剧</h2>
+        <div class="searchrow">
+          <input id="fq" type="search" placeholder="按剧名或 ID 搜索，如 tv-216" autocomplete="off">
+          <input id="fnote" type="text" placeholder="加入备注（可选）" maxlength="200">
+        </div>
+        <p class="hint">重名时必须选 ID；已加入或已归档的剧会被拒绝。角标来自连载看板。</p>
+        <div id="fresults" class="list"></div>
+      </div>
+      <div class="box">
+        <div class="box__head">
+          <h2>正在追（可拖拽排序）</h2>
+          <button type="button" id="frefresh" class="mini">刷新</button>
+        </div>
+        <div id="factive" class="list sortable"></div>
+        <details class="archived" id="farchived-box">
+          <summary>归档记录 <span id="farchived-n">0</span></summary>
+          <div id="farchived" class="list"></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 字段编辑 -->
+  <section class="panel" data-panel="resources">
+    <div class="cols cols--editor">
+      <div class="box">
+        <h2>站内资源</h2>
+        <div class="searchrow">
+          <select id="rcat"><option value="">全部分类</option></select>
+          <input id="rq" type="search" placeholder="ID / 标题 / 关键词" autocomplete="off">
+        </div>
+        <div id="rlist" class="list compact"></div>
+      </div>
+      <div class="box" id="reditor-box">
+        <div class="box__head"><h2>可编辑字段</h2><span class="hint" id="rlink"></span></div>
+        <div id="rempty" class="empty">从左侧选一条资源。只开放标题、链接与简介，其余字段不碰。</div>
+        <form id="rform" class="form hidden" autocomplete="off">
+          <fieldset>
+            <legend>标题</legend>
+            <label>主标题<input id="rtitleMain" type="text"></label>
+            <label>副标题（影视类留空）<input id="rtitleSub" type="text"></label>
+            <p class="hint">影视类保持纯片名；工具资料类按「原名 - 客观功能描述」。改影视标题可能影响追更匹配。</p>
+          </fieldset>
+          <fieldset>
+            <legend>网盘链接</legend>
+            <label>夸克网盘<input id="rquark" type="url" placeholder="https://pan.quark.cn/s/..."></label>
+            <label>百度网盘<input id="rbaidu" type="url" placeholder="https://pan.baidu.com/s/..."></label>
+            <label>百度提取码<input id="rpwd" type="text" maxlength="4" placeholder="4 位字母或数字"></label>
+            <label>光鸭网盘<input id="rguangya" type="url" placeholder="https://www.guangyapan.com/s/..."></label>
+            <label class="check"><input id="rdead" type="checkbox"> 已人工核验，清除原死链标记（仅在替换链接后生效）</label>
+          </fieldset>
+          <fieldset>
+            <legend>资源简介</legend>
+            <textarea id="rdesc" rows="9"></textarea>
+            <label class="check"><input id="rkeep" type="checkbox" checked> 保留结尾来源标识 <span id="rsuffix" class="hint"></span></label>
+          </fieldset>
+          <div class="formbar">
+            <button type="button" id="rpreview">预览变更</button>
+            <button type="button" id="rsave" class="primary">保存字段</button>
+          </div>
+          <pre id="rdiff" class="diff" hidden></pre>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 连载看板 -->
+  <section class="panel" data-panel="dashboard">
+    <div class="box">
+      <div class="box__head">
+        <h2>连载状态（只读）</h2>
+        <div class="searchrow">
+          <select id="dcat"><option value="电视剧,动漫">电视剧 + 动漫</option><option value="电视剧">电视剧</option><option value="动漫">动漫</option></select>
+          <button type="button" id="drefresh" class="mini">刷新</button>
+        </div>
+      </div>
+      <p class="hint" id="dsummary"></p>
+      <div class="board" id="dboard"></div>
+    </div>
+  </section>
+
+  <!-- 资源删除 -->
+  <section class="panel" data-panel="delete">
+    <div class="cols cols--editor">
+      <div class="box">
+        <h2>定位资源</h2>
+        <div class="searchrow"><input id="dq" type="search" placeholder="按 ID 或剧名搜索" autocomplete="off"></div>
+        <div id="dresults" class="list compact"></div>
+      </div>
+      <div class="box">
+        <h2>影响预览与执行</h2>
+        <div id="dimpact" class="empty">先搜索并点选一条资源。删除通过现有脚本完成，试跑与真执行分两步。</div>
+        <form id="dform" class="form hidden" autocomplete="off">
+          <dl id="ddetail" class="detail"></dl>
+          <div class="modes">
+            <label class="check"><input type="radio" name="dmode" value="normal" checked> 正常删除（两端网盘 + 站点数据）</label>
+            <label class="check"><input type="radio" name="dmode" value="skip-drive"> 仅删库（网盘已人工处理）</label>
+            <label class="check"><input type="radio" name="dmode" value="no-push"> 只本地提交，不推送</label>
+          </div>
+          <div class="formbar">
+            <button type="button" id="ddry">试跑（不写盘）</button>
+            <label class="confirm">再次输入 ID <input id="dconfirm" type="text" placeholder="与上面 ID 一致"></label>
+            <button type="button" id="dapply" class="danger">试跑通过后删除</button>
+          </div>
+          <pre id="doutput" class="diff" hidden></pre>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog id="modal" class="modal">
+  <div class="modal__head"><strong id="modal-title">变更预览</strong><button type="button" id="modal-close">关闭</button></div>
+  <pre id="modal-body" class="modal__body"></pre>
+  <div class="modal__foot"><button type="button" id="modal-cancel">取消</button><button type="button" id="modal-ok" class="primary hidden">确认</button></div>
+</dialog>
+<div id="toast" class="toast" hidden></div>
+<script src="/app.js"></script>
+</body>
+</html>

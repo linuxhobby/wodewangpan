@@ -3,6 +3,8 @@ node_modules/
 
 # 构建产物（服务器 clone 后自行 npm run build 生成，不入库）
 public/
+# 管理工具前端源码不是站点构建产物，不能被上面的 public/ 规则吞掉
+!manager/public/
 public.new/
 public.old/
 .next/

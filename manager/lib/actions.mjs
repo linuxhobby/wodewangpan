@@ -132,7 +132,11 @@ function reachable(url) {
   });
 }
 
-/** 构建后打开本机预览；预览服务复用 scripts/serve.js，不碰 VPS */
+/**
+ * 构建后打开本机预览；预览服务复用 scripts/serve.js，不碰 VPS。
+ * macOS 用 Safari，Linux（Debian 13pve 等）优先 Firefox，失败再退到 xdg-open。
+ * 无图形环境时只是不自动开，URL 仍返回给界面手动打开。
+ */
 export async function openPreview() {
   const url = 'http://127.0.0.1:4321/following/';
   if (!(await reachable(url))) {
@@ -144,8 +148,16 @@ export async function openPreview() {
     child.unref();
     await new Promise((r) => setTimeout(r, 900));
   }
-  const opened = spawnSync('open', ['-a', 'Safari', url], { cwd: ROOT, timeout: 15000 });
-  return { url, opened: !opened.error && opened.status === 0 };
+  const candidates = process.platform === 'darwin'
+    ? [['open', ['-a', 'Safari', url], 'Safari']]
+    : [['firefox', [url], 'Firefox'], ['xdg-open', [url], '系统默认浏览器']];
+  let lastError = '';
+  for (const [cmd, args, label] of candidates) {
+    const r = spawnSync(cmd, args, { cwd: ROOT, timeout: 15000, stdio: 'ignore' });
+    if (!r.error && r.status === 0) return { url, opened: true, launcher: label };
+    lastError = r.error ? r.error.message : `退出码 ${r.status}`;
+  }
+  return { url, opened: false, launcher: '', error: lastError };
 }
 
 const DELETE_ID = /^[a-z]+-\d+$/;
