@@ -71,7 +71,7 @@ export function search({ cat = '', q = '' } = {}) {
         String(v || '').toLowerCase().includes(keyword)
       );
     })
-    .slice(0, 200)
+    .slice(0, 20)
     .map((it) => ({
       id: it.id,
       title: it.title,

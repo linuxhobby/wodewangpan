@@ -80,7 +80,7 @@ function candidates(q = '') {
     .all()
     .filter((it) => it.category === '电视剧' && !it.dead)
     .filter((it) => !keyword || [it.id, it.title, it.keywords].some((v) => String(v || '').toLowerCase().includes(keyword)))
-    .slice(0, 30)
+    .slice(0, 20)
     .map((it) => ({
       id: it.id,
       title: it.title,

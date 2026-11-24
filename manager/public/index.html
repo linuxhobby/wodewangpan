@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>站点管理工具 · 追热播</title>
-<link rel="stylesheet" href="/style.css?v=2">
+<link rel="stylesheet" href="/style.css?v=3">
 </head>
 <body>
 <header class="topbar">
@@ -35,7 +35,7 @@
           <input id="fq" type="search" placeholder="按剧名或 ID 搜索，如 tv-216" autocomplete="off">
           <input id="fnote" type="text" placeholder="加入备注（可选）" maxlength="200">
         </div>
-        <p class="hint">重名时必须选 ID；已加入或已归档的剧会被拒绝。角标来自连载看板。</p>
+        <p class="hint">默认列出最近入库的 20 部；重名时必须选 ID，已加入或已归档的剧会被拒绝。角标来自连载看板。</p>
         <div id="fresults" class="list"></div>
       </div>
       <div class="box">
@@ -61,6 +61,7 @@
           <select id="rcat"><option value="">全部分类</option></select>
           <input id="rq" type="search" placeholder="ID / 标题 / 关键词" autocomplete="off">
         </div>
+        <p class="hint">默认列出最近入库的 20 个资源，搜索可定位其他条目。</p>
         <div id="rlist" class="list compact"></div>
       </div>
       <div class="box" id="reditor-box">
