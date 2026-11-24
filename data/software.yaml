@@ -1752,6 +1752,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-086.jpg
+  updated: 2026-11-24
+  files:
+    count: 2
+    size: "15.9 MB"
+    format: "DMG / MD"
+    tree: |
+      086-Espanso/
+      Espanso-Mac-Universal.dmg
+      APP简介.md
 
 
 - id: app-087

@@ -2785,6 +2785,15 @@
   date: 2026-10-10
   added: "2026-10-12 04:10"
   image: tv-142.jpg
+  updated: 2026-11-24
+  files:
+    count: 2
+    format: "MKV"
+    tree: |
+      142-百日谎言 (2026)/
+      Season 1/
+      百日谎言 100일의 거짓말 (2026)/
+      百日谎言.100.Days.of.Deception.2026.S01E13.1080p.NF.WEB-DL.AAC2.0.H.264.mkv
 
 - id: tv-143
   title: "雷霆令"
