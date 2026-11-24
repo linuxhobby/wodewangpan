@@ -4706,7 +4706,7 @@
   image: tv-212.jpg
 
 - id: tv-213
-  title: "黄蜂"
+  title: "黄蜂 第一季"
   category: 电视剧
   tags: ["电视剧", "剧情", "悬疑", "黄蜂 Yellowjackets"]
   quark_url: "https://pan.quark.cn/s/947026710fae"
@@ -4714,7 +4714,7 @@
   date: 2021-11-14
   added: 2026-11-23
   image: tv-213.jpg
-  updated: 2026-11-23
+  updated: 2026-11-24
   files:
     count: 10
     size: "51.3 GB"
@@ -4787,7 +4787,7 @@
   image: tv-215.jpg
 
 - id: tv-216
-  title: "黄蜂"
+  title: "黄蜂 第二季"
   category: 电视剧
   tags: ["电视剧", "剧情", "悬疑", "黄蜂 Yellowjackets"]
   quark_url: "https://pan.quark.cn/s/978c54942749"
