@@ -1,4 +1,4 @@
-# 电视剧资源（217 条）
+# 电视剧资源（218 条）
 # 来源：夸克网盘 SHARE/03电视剧
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 - id: tv-008
@@ -4966,3 +4966,30 @@
   date: 2026-11-23
   added: 2026-11-24
   image: tv-217.jpg
+
+- id: tv-218
+  title: "黄蜂 第三季"
+  category: 电视剧
+  tags: ["电视剧", "剧情", "悬疑", "黄蜂 Yellowjackets"]
+  quark_url: "https://pan.quark.cn/s/35c47d985eba"
+  description: "【全剧 4 季 · 共 39 集】这个项目融合了求生题材、恐怖故事以及成长故事等多种元素。故事的主角是一群才华横溢的高中女生足球队运动员。一场飞机失事之后，这群有着天赋的女孩子们成为了幸存者，试图在安大略省的山区里寻找新生。这是一个关于整个群体集体求生的故事，也将会观察她们在事故25年之后试图重新团结起来的生活。原来过去的事情并不会那样被轻易抹掉，而曾在山区里发生的事也远远没有结束。｜TMDB 7.4"
+  date: 2021-11-14
+  added: 2026-11-24
+  image: tv-218.jpg
+  updated: 2026-11-25
+  files:
+    count: 10
+    size: "35.0 GB"
+    format: "MKV×10"
+    tree: |
+      218-黄蜂-第三季-Season 03/
+      Yellowjackets.S03E01.2160p.NowPlayer.WEB-DL.DD5.1.H.265.mkv
+      Yellowjackets.S03E02.2160p.NowPlayer.WEB-DL.DD5.1.H.265.mkv
+      Yellowjackets.S03E03.2160p.NowPlayer.WEB-DL.DD5.1.H.265.mkv
+      Yellowjackets.S03E04.2160p.NowPlayer.WEB-DL.DD2.0.H.265.mkv
+      Yellowjackets.S03E05.2160p.NowPlayer.WEB-DL.DD5.1.H.265.mkv
+      Yellowjackets.S03E06.2160p.NowPlayer.WEB-DL.DD5.1.H.265.mkv
+      Yellowjackets.S03E07.2160p.NowPlayer.WEB-DL.DD5.1.H.265.mkv
+      Yellowjackets.S03E08.2160p.NowPlayer.WEB-DL.DD5.1.H.265.mkv
+      Yellowjackets.S03E09.2160p.NowPlayer.WEB-DL.DD5.1.H.265.mkv
+      Yellowjackets.S03E10.2160p.NowPlayer.WEB-DL.DD5.1.H.265.mkv
