@@ -1880,6 +1880,15 @@
   date: 2015-10-10
   added: 2026-10-04
   image: app-092.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "25.4 MB"
+    format: "DMG / MD"
+    tree: |
+      092-CotEditor/
+      CotEditor_7.1.1.dmg
+      APP简介.md
 
 
 - id: app-093
