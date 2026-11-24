@@ -520,7 +520,6 @@ git push origin main
   - ⚠️ Windows 下别用 `execSync('ssh hty22 \x27…\x27')`：本地 `cmd.exe` 会吃掉单引号、把远端命令整体当一个文件名（`No such file or directory`），命令里的 `|` 也会被拼进参数后在远端当管道执行。正解是把整条远端命令**作为单个 argv 元素**用 `spawnSync('ssh', ['hty22', remoteCmd])` 传，`remoteCmd` 内部自己用 `bash -c '…'` 包好。
   - **DNS 待办（2026-11-03 核查）**：apex `wodewangpan.top` 与 `www.yuancaileida.com` 已指向 hty22，但 **`www.wodewangpan.top` 的解析还没切过来**，走 www 域名的用户目前打不开站（hty22 自身服务 www 完全正常，首页/详情页/robots/sitemap 都是 200）。解析由将军在 DNS 控制台手动改；改完这条待办即可删掉。
   - 除 `hty22` 外**不要连任何其它 VPS 做发布或取数据**：迁移前的旧主机已彻底下线、按将军要求不再提及，它上面的历史 nginx 日志也随之下线（hty22 的日志从 2026-11-03 起算，周报要 11-10 才有完整 7 天窗口）。
-  - 注意 `rc`（172.245.159.232）是另一台机器（微信公众号发布引擎），与本站无关，别一起改。
 
 ### 9. 飞书推送（仅当本轮有新资源入库时）
 
