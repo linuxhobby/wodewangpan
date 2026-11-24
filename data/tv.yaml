@@ -2682,6 +2682,26 @@
   date: 2026-10-09
   added: 2026-10-11
   image: tv-137.jpg
+  updated: 2026-11-24
+  files:
+    count: 12
+    size: "27.5 GB"
+    format: "MKV×12"
+    tree: |
+      137-Doctor X：白色黑手党时代/
+      Doctor X：白色黑手党时代(2026)/
+      Doctor.X.Mafia.in.White.S01E01.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E02.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E03.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E04.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E05.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E06.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E07.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E08.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E09.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E10.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E11.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
+      Doctor.X.Mafia.in.White.S01E12.2026.1080p.NF.WEB-DL.AAC.2.0.H.264.mkv
 
 - id: tv-138
   title: "我不是大师"
@@ -3642,12 +3662,14 @@
   date: 2026-11-05
   added: "2026-11-09 12:19"
   image: tv-101.jpg
-  updated: 2026-11-11
+  updated: 2026-11-24
   files:
-    count: 11
-    format: "MKV×10"
+    count: 30
+    format: "MKV×27"
     tree: |
       101-谷雨（2026）/
+      Season 1（HQ.DV.60fps）/
+      Season 1（HQ.HDR.60fps）/
       Season 1/
       S01E01.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
       S01E02.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
@@ -3659,6 +3681,23 @@
       S01E08.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
       S01E09.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
       S01E10.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E11.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E12.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E13.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E14.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E15.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E16.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E17.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E18.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E19.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E20.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E21.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E22.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E23.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E24.2026.2160p.60fps.WEB-DL.HDR.H.265.10bit.AAC.mkv
+      S01E28.2026.2160p.WEB-DL.H.265.AAC.mkv
+      S01E29.2026.2160p.WEB-DL.H.265.AAC.mkv
+      S01E30.2026.2160p.WEB-DL.H.265.AAC.mkv
 
 - id: tv-102
   title: "异能研究所"

@@ -1667,6 +1667,15 @@
   date: 2021-02-16
   added: 2026-10-04
   image: app-082.jpg
+  updated: 2026-11-24
+  files:
+    count: 2
+    size: "45.8 MB"
+    format: "DMG / MD"
+    tree: |
+      082-Handbrake/
+      HandBrake-1.11.2.dmg
+      APP简介.md
 
 
 - id: app-083
