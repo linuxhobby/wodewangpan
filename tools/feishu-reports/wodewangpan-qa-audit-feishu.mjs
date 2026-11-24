@@ -16,7 +16,7 @@
  *   --date <8位日期> 指定报告日期（仅用于卡片标题展示，默认从 --report 文件名或 meta.date 推）
  *   --dry-run        不发送，只把卡片 JSON 打到 stdout
  *
- * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env → feishu-api.mjs 内置默认值。
+ * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env（缺值报错）。
  */
 import fs from 'node:fs';
 import path from 'node:path';

@@ -564,7 +564,7 @@ for (const group of rounds) {
       //   · 盘端只剩它们时 = 资源还没到位（TMDB 今日热门建的就是这种空目录）→ 整条跳过、一个字不写；
       //   · 否则把它们从清单里剔掉，count / tree / format 只统计真实内容（AGENTS.md §5：宁缺勿假）。
       // ⚠ 新增/改名占位文件时必须同步改这里，否则占位 md 会被当成真实资源写进 files: 假清单。
-      //   权威定义在 C:/Users/marco/.workbuddy/skills/quark-resource-sync/scripts/lib/placeholder.mjs（跨仓库，无法 import）。
+      //   权威定义在 quark-resource-sync skill 的 scripts/lib/placeholder.mjs（本仓库 vendor 内有副本，跨仓库无法 import）。
       // 下钻（最多 2 级）与剔占位的口径只在 locateContent 一份，连载轮询共用（2026-11-10 定稿）。
       const loc = await locateContent({ url: item.url, id: item.id }, root.files);
       if (loc.error) {

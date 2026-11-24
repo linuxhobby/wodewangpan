@@ -25,3 +25,6 @@ jobs:
 
       # 3) 样式体检：漏样式 / 死样式 / 在样式块写死数值（违反 :root 设计令牌即失败）
       - run: npm run audit:css
+
+      # 4) 公开仓信息暴露门禁：IPv4 / 飞书账号标识 / 邮箱（白名单见脚本）
+      - run: npm run check:secrets

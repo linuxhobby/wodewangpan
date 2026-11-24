@@ -152,7 +152,7 @@ if (same) {
 }
 if (DRY) {
   console.log(JSON.stringify(card, null, 2));
-  console.log(`[dry-run] 接收人 ${feishuConfig().to}`);
+  console.log(`[dry-run] 接收人 ${feishuConfig().to || '<未配置 FEISHU_TO>'}`);
   process.exit(0);
 }
 const stamp = now.toISOString().replace(/[-:T]/g, '').slice(0, 12);

@@ -19,7 +19,7 @@ export const firstPresent = (...c) => { for (const p of c) { try { fs.statSync(p
 
 // 分类轮转/加权的展示顺序；数据里出现 CAT_ORDER 之外的新分类会自动排到后面，不用改这里。
 export const CAT_ORDER = ['电影', '电视剧', '纪录片', '动漫', '游戏', '软件', '课程', '电子书', '其他'];
-export const DEFAULT_REPO = 'C:/Users/marco/Github/wodewangpan';
+export const DEFAULT_REPO = path.join(HOME, 'Documents', 'Github', 'wodewangpan');
 export const DEFAULT_SITE_URL = 'https://www.wodewangpan.top';
 
 // ---------- CLI ----------

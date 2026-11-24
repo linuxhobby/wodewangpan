@@ -346,7 +346,7 @@ lastmod），且幂等（复跑打印「重排 0 条」）。
 正常情况不用管：VPS cron `30 */2 * * * /usr/local/bin/wdwp-autoupdate` 每 2 小时的 30 分自动
 `git fetch → 构建 → 原子替换 public → reload nginx → IndexNow 推送`。
 
-**主机别名是 `site`**（= `hty22` = `38.190.227.56:37212`，`~/.ssh/config` 里同一条 Host 记录）。
+**主机用 SSH 别名 `site`**（真实地址只放在本机 `~/.ssh/config`，不要写进仓库）。
 本机**没有** `www` 别名，早期文档里的 `ssh www ...` 一律执行不了；`rc` 是另一台机（微信发布用），
 不要拿它做站点发布。
 

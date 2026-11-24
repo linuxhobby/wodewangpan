@@ -14,6 +14,7 @@
     "new": "node tools/new-resource.js",
     "audit:css": "node scripts/audit-css.js",
     "lint": "eslint scripts tools theme/assets",
+    "check:secrets": "node scripts/check-secrets.mjs",
     "list:short": "node tools/list-short-desc.mjs",
     "check:images": "node scripts/check-images.mjs"
   },

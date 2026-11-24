@@ -27,7 +27,7 @@
 //   node baidu-share-links.mjs --cats 04电影,03电视剧  # 限定分类（默认全部有镜像的分类，无目录自动跳过）
 //
 // 退出码：0 成功/无事可做；3 接口仍被限（可重试）；4 前置条件/校验失败；5 构建失败；6 推送失败
-// 报告：C:/Users/marco/.workbuddy/quark-sync-cache/baidu-share-links-last.json
+// 报告：~/.cache/quark-sync/baidu-share-links-last.json
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
@@ -35,9 +35,9 @@ import { execFile, execFileSync } from 'node:child_process';
 // 占位 md 不算资源目录：识别正则与写入侧（trending-sync / mirror-baidu）共用同一份定义
 import { PLACEHOLDER_RE } from './lib/placeholder.mjs';
 
-const REPO = process.env.REPO || 'C:/Users/marco/Github/wodewangpan';
-const CACHE = process.env.QWS_CACHE || 'C:/Users/marco/.workbuddy/quark-sync-cache';
-const BDPAN = process.env.BD_PAN_CLI || path.join(os.homedir(), 'AppData', 'Local', 'bdpan', 'bdpan.exe');
+const REPO = process.env.REPO || path.join(os.homedir(), 'Documents', 'Github', 'wodewangpan');
+const CACHE = process.env.QWS_CACHE || path.join(os.homedir(), '.cache', 'quark-sync');
+const BDPAN = process.env.BD_PAN_CLI || path.join(os.homedir(), '.local', 'bin', 'bdpan');
 const BAIDU_ROOT = '/apps/bdpan';
 const CALL_GAP_MS = 900;            // 百度接口间隔，防风控
 const REPORT = path.join(CACHE, 'baidu-share-links-last.json');
@@ -318,7 +318,7 @@ report.push = { ok: true, hash, rebased };
 
 // 7) VPS 即时重建
 try {
-  const vps = execFileSync('ssh', ['hty22', 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'],
+  const vps = execFileSync('ssh', [process.env.WDP_VPS_HOST || 'site', 'flock -w 120 /tmp/wdwp-autoupdate.lock wdwp-autoupdate'],
     { encoding: 'utf8', timeout: 240000, maxBuffer: 16e6 });
   const m = vps.match(/发布完成：([0-9a-f]{7,})/);
   report.vps = m ? { ok: true, commit: m[1] } : { ok: false, tail: vps.trim().slice(-300) };

@@ -511,15 +511,15 @@ git commit -m "feat: 同步夸克新增资源 <数量> 条（<分类>+id 范围�
 git push origin main
 ```
 
-- 身份已固化在仓库本地配置（`linuxhobby <marco.chan@ymail.com>`），无需 `-c` 覆盖。
+- 提交身份用仓库本地 git 配置，无需 `-c` 覆盖；不要在文档里复述邮箱。
 - 逐条改动可一次提交；提交信息里写清分类与 id 范围，便于回溯。
 - **先看 `git status` 有没有「别人的」未提交改动**（另一会话可能正在做软件图标、剧集回填等）：确有无关改动时，**拆成两个 commit**，别一股脑塞进本次同步的提交里；在收尾报告里点明顺手带了哪些、以及哪些仍未提交（如 `scripts/*.mjs` 工具改动不属于 `data/ static/images/`，可不提交）。
 - 推送失败（网络/凭据）时**不要静默跳过**：在收尾报告里明确标注「GitHub 未推送」及原因，并提示用户稍后手动 `git push`。
 - 服务器侧构建脚本 `deploy/site-autoupdate.sh` 拉取该仓库自动重建；推送成功即视同"上线流程已触发"。
-- **VPS 主机别名是 `hty22`**（38.190.227.56:37212，**唯一现网主机**；`/opt/wodewangpan` + `/usr/local/bin/wdwp-autoupdate` + `/usr/local/bin/site-weekly-report.py` 均已就位，构建一次约 42 秒）。⚠️ 重建脚本实名是 **`wdwp-autoupdate`**（不是 `site-autoupdate`，机器上没有那个文件）；它**内部自带临时目录原子替换**（`public.new` → 换 `public`），不需要外部 `flock`。crontab 为 `0 */3 * * * /usr/local/bin/wdwp-autoupdate >> /var/log/wdwp-autoupdate.log 2>&1`（每 3 小时；无新提交时脚本自己 `exit 0`）。**即时强制重建**：`ssh hty22 "bash -c 'FORCE=1 /usr/local/bin/wdwp-autoupdate; tail -n 25 /var/log/wdwp-autoupdate.log'"`（`FORCE=1` 才会即使 LOCAL=REMOTE 也重建；有新 commit 时不加 FORCE 也会拉取重建）。日志 `/var/log/wdwp-autoupdate.log`，成功尾部为「发布完成：<短 hash>」；站点配置在 `/etc/wdwp-autoupdate.conf`（`SITE_DIR`/`BASE_URL`）。院采雷达是另一个站用 `ycld-autoupdate`，别混。
-  - ⚠️ Windows 下别用 `execSync('ssh hty22 \x27…\x27')`：本地 `cmd.exe` 会吃掉单引号、把远端命令整体当一个文件名（`No such file or directory`），命令里的 `|` 也会被拼进参数后在远端当管道执行。正解是把整条远端命令**作为单个 argv 元素**用 `spawnSync('ssh', ['hty22', remoteCmd])` 传，`remoteCmd` 内部自己用 `bash -c '…'` 包好。
-  - **DNS 待办（2026-11-03 核查）**：apex `wodewangpan.top` 与 `www.yuancaileida.com` 已指向 hty22，但 **`www.wodewangpan.top` 的解析还没切过来**，走 www 域名的用户目前打不开站（hty22 自身服务 www 完全正常，首页/详情页/robots/sitemap 都是 200）。解析由将军在 DNS 控制台手动改；改完这条待办即可删掉。
-  - 除 `hty22` 外**不要连任何其它 VPS 做发布或取数据**：迁移前的旧主机已彻底下线、按将军要求不再提及，它上面的历史 nginx 日志也随之下线（hty22 的日志从 2026-11-03 起算，周报要 11-10 才有完整 7 天窗口）。
+- **VPS 用 SSH 别名 `site`**（真实地址只放本机 SSH 配置，不写进仓库；站点目录与发布脚本见 `AGENTS.md` §6 与 `deploy/wdwp-autoupdate.sh`）。⚠️ 重建脚本实名是 **`wdwp-autoupdate`**（不是 `site-autoupdate`，机器上没有那个文件）；它**内部自带临时目录原子替换**（`public.new` → 换 `public`），不需要外部 `flock`。**即时强制重建**：`ssh site 'FORCE=1 /usr/local/bin/wdwp-autoupdate; tail -n 25 /var/log/wdwp-autoupdate.log'`（`FORCE=1` 才会即使 LOCAL=REMOTE 也重建；有新 commit 时不加 FORCE 也会拉取重建）。成功尾部为「发布完成：<短 hash>」。另一个站用各自的更新脚本，别混。
+  - ⚠️ 某些本地 shell 会吃掉单引号、把远端命令整体当一个文件名（`No such file or directory`），命令里的 `|` 也会被拼进参数后在远端当管道执行。正解是把整条远端命令**作为单个 argv 元素**用 `spawnSync('ssh', ['site', remoteCmd])` 传，`remoteCmd` 内部自己用 `bash -c '…'` 包好。
+  - **DNS 待办（2026-11-03 核查）**：apex `wodewangpan.top` 已指向现网主机，但 **`www.wodewangpan.top` 的解析还没切过来**，走 www 域名的用户目前打不开站（主机自身服务 www 完全正常，首页/详情页/robots/sitemap 都是 200）。解析由将军在 DNS 控制台手动改；改完这条待办即可删掉。
+  - 除 `site` 外不要连任何其它主机做发布或取数据：迁移前的旧主机已彻底下线、按将军要求不再提及，它上面的历史日志也随之下线（现网日志从 2026-11-03 起算，周报要 11-10 才有完整 7 天窗口）。
 
 ### 9. 飞书推送（仅当本轮有新资源入库时）
 
@@ -570,7 +570,7 @@ node scripts/notify-feishu.mjs --input "<payload 绝对路径>"   # 加 --dry-ru
 成功打印 `[飞书] ✓ 已推送 N 条 (message_id om_...)`。
 
 - 底层走 `lark-cli` 的 bot 身份 `--msg-type interactive`；lark-cli 是 sh 包装脚本，Windows 下不能直接 CreateProcess，脚本已改为调用其底层 `node + run.js`（路径自动探测 `~/.workbuddy` / `~/.workbuddy` / `~/.codebuddy`），无需手动指定。
-- 接收人默认 `ou_5c0d1b0b62e3bef0ffa84b7b496c18f5`（将军，当前 lark-cli 应用 `cli_aa56dbd9dab8dd0f` 内 open_id，2026-10-28 实测可送达；旧值 `ou_0764f86861e2cf5828510280f4372df8` 已因应用变更报 99992361 失效），可用环境变量 / `config.env` 的 `FEISHU_TO` 覆盖。
+- 接收人只从环境变量 / `config.env` 的 `FEISHU_TO` 读，不写进仓库；历史硬编码的 open_id 因应用变更已失效，不要再复用。
 - **推送失败不致命**：最多重试 1 次，仍失败只在收尾报告里标注「飞书推送失败 + 报错」，不回滚已完成的入库与 GitHub 推送。
 
 ## 网盘改名 / 分享失效后的修复流程（2026-10-12 新增）

@@ -29,7 +29,8 @@
  *   专用通道找不到凭据时**直接失败**，绝不回退默认应用或 lark-cli，避免反馈发错地方。
  *
  * 目标：用户本人 union_id（同一组织下跨应用通用；open_id 按应用隔离不能跨应用用）。
- *   可用环境变量 FEISHU_TARGET_UNION 覆盖。
+ *   从 FEISHU_TARGET_UNION 或 config.json 的 target_union 读，不写进仓库。
+ * lark-cli 回退通道的 open_id 从 FEISHU_TARGET_OPEN_ID 读。
  * 失败处理：最多重试 1 次；最终仍失败打印错误并以退出码 0 结束（绝不阻断机器人本体）。
  */
 import fs from 'node:fs';
@@ -40,10 +41,10 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = (() => { try { return path.dirname(fileURLToPath(import.meta.url)); } catch { return process.cwd(); } })();
 
-const TARGET_UNION = process.env.FEISHU_TARGET_UNION || 'on_64114d6dcd3276815fc62360b2727b8e';
-// lark-cli 回退走 feishu 连接器（旧应用），仍用旧应用视角的 open_id
-const TARGET_OPEN_ID = 'ou_0764f86861e2cf5828510280f4372df8';
-const LARK = process.env.LARK_CLI || 'C:/Users/marco/.workbuddy/binaries/node/cli-connector-packages/lark-cli';
+const TARGET_UNION = process.env.FEISHU_TARGET_UNION || '';
+// lark-cli 回退走 feishu 连接器（旧应用），收件人用旧应用视角的 open_id
+const TARGET_OPEN_ID = process.env.FEISHU_TARGET_OPEN_ID || '';
+const LARK = process.env.LARK_CLI || 'lark-cli';
 const FEISHU_API = 'https://open.feishu.cn';
 const MAX_TITLE_LEN = 40;
 
@@ -215,6 +216,14 @@ async function main() {
   if (profile && !creds) {
     const tag = profile.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
     console.error(`[feishu] 专用通道 ${profile} 缺凭据：请配置 ~/.workbuddy/feishu-app-${profile}.json（app_id / app_secret）或 FEISHU_${tag}_APP_ID / FEISHU_${tag}_APP_SECRET；为避免发错应用，本次不推送`);
+    process.exit(1);
+  }
+  if (creds && !creds.targetUnion && !TARGET_UNION) {
+    console.error('[feishu] 缺少收件人 union_id：请配置 FEISHU_TARGET_UNION 或 config.json 的 target_union，本次不推送');
+    process.exit(1);
+  }
+  if (!creds && !TARGET_OPEN_ID) {
+    console.error('[feishu] 缺少收件人 open_id：请配置 FEISHU_TARGET_OPEN_ID，本次不推送');
     process.exit(1);
   }
   const mode = creds ? `自定义应用(${creds.appId}${profile ? '/' + profile : ''})` : 'lark-cli 回退';

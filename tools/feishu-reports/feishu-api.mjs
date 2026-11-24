@@ -10,7 +10,6 @@ import os from 'node:os';
 import path from 'node:path';
 
 const ENV_FILE = path.join(os.homedir(), '.config', 'wodewangpan-feishu.env');
-const DEFAULT_TO = 'ou_5c0d1b0b62e3bef0ffa84b7b496c18f5';
 const TOKEN_URL = 'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal';
 const SEND_URL = 'https://open.feishu.cn/open-apis/im/v1/messages';
 
@@ -35,7 +34,7 @@ export function feishuConfig() {
   return {
     appId: pick('FEISHU_APP_ID'),
     appSecret: pick('FEISHU_APP_SECRET'),
-    to: pick('FEISHU_TO') || DEFAULT_TO,
+    to: pick('FEISHU_TO'),
   };
 }
 
@@ -59,6 +58,9 @@ export async function sendInteractiveCard(card, { to = '', idempotencyKey = '' }
   const cfg = feishuConfig();
   if (!cfg.appId || !cfg.appSecret) {
     throw new Error('缺少 FEISHU_APP_ID / FEISHU_APP_SECRET，请写入 ~/.config/wodewangpan-feishu.env');
+  }
+  if (!to && !cfg.to) {
+    throw new Error('缺少 FEISHU_TO，请写入 ~/.config/wodewangpan-feishu.env 或设为环境变量');
   }
   const tokenRes = await postJson(TOKEN_URL, { app_id: cfg.appId, app_secret: cfg.appSecret });
   if (tokenRes.code !== 0 || !tokenRes.tenant_access_token) {

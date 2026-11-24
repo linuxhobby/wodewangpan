@@ -189,8 +189,6 @@ node ~/.workbuddy/skills/quark-resource-sync/scripts/reshare-batch.mjs --from-ch
 
 权威只有两处：站点访问日志（蜘蛛来没来、抓了啥、返回啥）+ 各家站长后台（精确收录量）。**别从数据中心 IP 跑 `site:` 查询**（Google/百度返空或验证码，Bing 返查询词回显假阳性）。
 
-> 姊妹站（院采雷达）同类问题在 `~/Documents/GitHub/yuancaileida/docs/SEO-收录与流量.md`。
-
 ---
 
 ## 八、功能模块

@@ -12,7 +12,7 @@
 //   · mirror-baidu.mjs     —— 兜底补齐百度存量目录（--fill-placeholders）
 //   · baidu-share-links.mjs—— 识别「这目录只有占位、不是资源」
 //
-// ⚠ 站点仓库 C:/Users/marco/Github/wodewangpan/scripts/fill-files.mjs 里还有一份同义正则
+// ⚠ 站点仓库 tools/fill-files.mjs 里还有一份同义正则
 //   （PLACEHOLDER_FILE_RE：剔除占位与上传桩、只在「盘端只剩占位」时整条跳过）。它在另一个仓库、无法 import 本模块，
 //   新增/改名占位文件、或新增后缀规则时必须同步改它，否则占位 md 会被当成真实资源写进 files: 假清单（AGENTS.md §5 红线）。
 export const PLACEHOLDER_FILES = [

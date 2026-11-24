@@ -32,7 +32,7 @@
  *
  * 进度段（📊 补齐进度）按分类逐行给「已完成 / 待补」，末行给合计与预计天数——
  * 数字全部由脚本自己扫 data/*.yaml，口径与 tools/fill-files.mjs 的待补队列一致。
- * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env → 内置默认值。
+ * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env（缺值报错）。
  * 发送走飞书开放 API 直连，不依赖 lark-cli / WorkBuddy。
  */
 import fs from 'node:fs';

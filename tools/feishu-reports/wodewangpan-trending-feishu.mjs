@@ -20,7 +20,7 @@
  *
  * 参数：
  *   --report <路径>   trending-sync 机读报告，默认 ~/.cache/quark-sync/trending-last.json
- *   --repo <路径>     站点仓库，默认 C:/Users/marco/Github/wodewangpan
+ *   --repo <路径>     站点仓库，默认 ~/Documents/Github/wodewangpan
  *   --status <文本>   note 状态行首项，默认取报告结果自动判定（成功 / 部分成功 / 无新增）
  *   --smoke <文本>    本地冒烟结果，如「12/12」；不传则该段不出现
  *   --deploy <文本>   VPS 发布结果，如「VPS 发布完成 441af38」或「VPS 重建失败：ssh 超时」
@@ -32,7 +32,7 @@
  *   --per-day / --no-reconcile  关掉编号对账段
  *   --dry-run         只打印卡片 JSON
  *
- * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env → 内置默认值；发卡走飞书开放 API。
+ * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env（缺值报错）；发卡走飞书开放 API。
  * 百度链路已于 2026-11-08 停止，卡片不出现任何百度相关字段。
  */
 import fs from 'node:fs';

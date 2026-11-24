@@ -9,7 +9,7 @@
  * 只把搬运到的目录名原样列出来（每条带 [目标分类名] 标签）。
  *
  * 用法：
- *   node C:/Users/marco/Scripts/wodewangpan-move-feishu.mjs \
+ *   node tools/feishu-reports/wodewangpan-move-feishu.mjs \
  *     --names "[01游戏] 艾尔登法环｜[04电影] 某电影" \
  *     --status 部分成功 \
  *     --skipped "[02应用] 3 项重复，无新资源" \
@@ -26,7 +26,7 @@
  *   --title <文本>    卡片蓝色头部标题，默认「我的网盘.预存资源搬运简报」。
  *   --dry-run         只打印将要发送的卡片 JSON，不发送。
  *
- * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env → 内置默认值。
+ * 接收人：环境变量 FEISHU_TO → ~/.config/wodewangpan-feishu.env（缺值报错）。
  * 发送走飞书开放 API 直连，不依赖 lark-cli / WorkBuddy。
  */
 import { feishuConfig, sendInteractiveCard } from './feishu-api.mjs';
