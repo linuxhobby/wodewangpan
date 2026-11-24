@@ -10,7 +10,7 @@ export default [
   // vendor 是第三方 skill 原样副本，不参与本站 lint（本地改造文件已单独检查）
   { ignores: ['tools/vendor/**'] },
   {
-    files: ['scripts/**/*.{js,mjs}', 'tools/**/*.{js,mjs}', 'theme/assets/**/*.js'],
+    files: ['scripts/**/*.{js,mjs}', 'tools/**/*.{js,mjs}', 'manager/**/*.{js,mjs}', 'theme/assets/**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

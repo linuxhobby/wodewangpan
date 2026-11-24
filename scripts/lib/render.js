@@ -1318,6 +1318,48 @@ ${rows.map(row).join('\n')}
   });
 }
 
+/* ── 追热播虚拟栏目 /following/ ─────────────────────────── */
+/** 站长人工指定的剧集清单，只在构建期展开成卡片；不进 sitemap / RSS，也不改任何资源 URL。
+ *  清单里 ID 已失效、资源被删或标记 dead 时直接跳过，不留死链入口。 */
+export function followingPage(ctx) {
+  const { site, items, images, baseUrl, following } = ctx;
+  const byId = new Map((items || []).map((it) => [it.id, it]));
+  const chosen = ((following && following.active) || [])
+    .map((entry) => byId.get(String(entry?.id || '')))
+    .filter((it) => it && !it.dead);
+  const body = `<h1 class="page__title page__title--doc">追热播<span class="page__n">${chosen.length} 部</span></h1>
+<div class="card-page">
+${chosen.length
+  ? `<p class="muted">站长人工挑选的正在追的剧，按编排顺序展示；播完会移出，这里不留死链。</p>
+<ul class="grid">
+${chosen.map((it) => cardHtml(it, images || new Map())).join('\n')}
+</ul>`
+  : '<p class="muted">暂无追热播剧集。清单建立后，这里会按站长指定的顺序展示。</p>'}
+</div>`;
+  return layout({
+    ...ctx,
+    title: '追热播',
+    description: `${site.title}正在追的热播剧集，由站长人工挑选并按顺序展示。`,
+    activeCat: '',
+    body,
+    canonicalPath: '/following/',
+    footNavCurrent: '/following/',
+    keywords: '追热播,热播剧,追剧,网盘资源',
+    jsonLd: chosen.length
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          itemListElement: chosen.map((it, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            url: `${baseUrl}${itemHref(it.id)}`,
+            name: it.title,
+          })),
+        }
+      : null,
+  });
+}
+
 /** /all/ 页底部的标签出口：那一页没有「当前标签」，用全站资源数最多的前 20 个当导航 */
 const TAG_CLOUD_MAX = 20;
 function tagCloudHtml(tags) {

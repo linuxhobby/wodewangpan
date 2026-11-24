@@ -16,6 +16,8 @@ export const FOOT_NAV = [
   { href: '/', label: '网站首页', type: 'home', abs: true },
   { href: '/about/', label: '关于本站', type: 'about' },
   { href: '/all/', label: '全部资源', type: 'all' },
+  // 虚拟栏目：不是分类，不进 sitemap，播完即可下线；页脚留常驻入口
+  { href: '/following/', label: '追热播', type: 'following' },
   { href: '/tags/', label: '标签索引', type: 'tags' },
   { href: '/sitemap.xml', label: '网站地图', type: 'sitemap', abs: true },
   { href: '/rss/', label: 'RSS订阅', type: 'rss' },

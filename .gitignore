@@ -16,6 +16,9 @@ baidu_verify_*.html
 # IndexNow 密钥：协议要求可公开访问，但值不入库（VPS 上放 /opt/indexnow/key.txt，由 nginx 映射成 /key.txt）
 static/key.txt
 
+# 追热播实际清单（站长选片，仅本机；发布时由管理工具导出到 following.example.json）
+config/following.json
+
 # 本地环境
 .env
 *.log

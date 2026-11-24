@@ -35,6 +35,7 @@ import {
   contactPage,
   allPage,
   hotPage,
+  followingPage,
   rssPage,
   feedXml,
   notFoundPage,
@@ -47,6 +48,7 @@ import {
   itemHref,
 } from './lib/render.js';
 import { setCategoryPaths } from './lib/nav.js';
+import { readFollowingManifest } from './lib/following-manifest.mjs';
 import { createWriter, prune } from './lib/buildfs.js';
 import { patchAppCardVersion, copyExtraStaticFiles, pruneOldOgVersions } from './lib/postprocess.js';
 
@@ -99,7 +101,7 @@ const total = items.length;
 /** 一级目录保留名：分类 slug 撞上这些名字会与静态资源 / 独立页互相覆盖（构建不报错，必须提前拦）。
  *  slug 必须是英文小写：categorySlug() 未配别名时会回落中文，不能拿它当 URL 目录。 */
 const RESERVED_TOP_DIRS = new Set([
-  'about', 'all', 'assets', 'contact', 'hot', 'img', 'og', 'privacy', 'promo',
+  'about', 'all', 'assets', 'contact', 'following', 'hot', 'img', 'og', 'privacy', 'promo',
   'qr', 'rss', 'tag', 'tags',
 ]);
 {
@@ -332,6 +334,12 @@ for (const dir of [prevDir, outDir]) {
 }
 if (hotStats) console.log('  · 已读取访问统计快照，热门榜按真实数据静态渲染');
 
+// 追热播是虚拟栏目：清单不存在就渲染空状态；不进 sitemap / RSS，也不改资源 URL
+const following = readFollowingManifest(configDir);
+if (following.active.length) {
+  console.log(`  · 追热播清单：${following.active.length} 部（来源 ${following.source}）`);
+}
+
 // 列表页与分类 RSS 各自都要按分类取子集，分组一次省掉两遍 filter
 const byCat = new Map(categories.map((c) => [c, []]));
 for (const it of items) {
@@ -405,6 +413,7 @@ console.log('生成关于本站 / RSS 页面…');
   }
 }
 write(path.join(outDir, 'hot', 'index.html'), hotPage({ ...ctxBase, hotStats }));
+write(path.join(outDir, 'following', 'index.html'), followingPage({ ...ctxBase, following }));
 write(path.join(outDir, 'about', 'index.html'), aboutPage(ctxBase));
 write(path.join(outDir, 'privacy', 'index.html'), privacyPage(ctxBase));
 write(path.join(outDir, 'contact', 'index.html'), contactPage(ctxBase));
