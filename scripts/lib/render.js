@@ -211,7 +211,7 @@ export function tagHref(tag) {
 function catNav(categories, counts, activeCat, total) {
   const items = [
     `<a class="cat${activeCat ? '' : ' is-on'}" href="/">全部<span class="cat__n">${total}</span></a>`,
-    `<a class="cat" href="/following/" title="持续更新中～">追热播</a>`,
+    `<a class="cat cat--following" href="/following/" title="持续更新中～">追热播</a>`,
     ...categories.map(
       (c) =>
         `<a class="cat${c === activeCat ? ' is-on' : ''}" href="${catHref(c)}">${esc(c)}<span class="cat__n">${counts.get(c) || 0}</span></a>`

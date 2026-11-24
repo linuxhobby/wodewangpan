@@ -179,6 +179,18 @@ body.page--wide { --page-max: var(--page-wide); }
 .cat.is-on { background: var(--brand); border-color: var(--brand); color: var(--surface); font-weight: 600; }
 /* 选中态是品牌色实底，计数跟着反白才看得清 */
 .cat.is-on .cat__n { color: var(--surface); opacity: .8; }
+/* 追热播是常驻虚拟栏目：弱底 + 品牌描边 + 金色圆点，与普通分类胶囊和实底选中态都区分开 */
+.cat--following { background: var(--brand-soft); border-color: var(--brand); color: var(--brand); font-weight: 700; }
+.cat--following::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 6px;
+  border-radius: var(--r-pill);
+  background: var(--rank-gold);
+  vertical-align: middle;
+}
 
 /* ── 列表页 ──────────────────────────── */
 /* 所有页面的 H1 共用 :root 的顶部节奏：margin / 行高 / 换行行距全站一致，
