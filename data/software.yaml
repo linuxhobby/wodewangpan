@@ -1858,6 +1858,16 @@
   date: 2011-03-01
   added: 2026-10-04
   image: app-091.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "172 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      091-Cyberduck/
+      APP简介.md
+      Cyberduck-9.5.4.45528.zip
 
 
 - id: app-092
