@@ -1836,6 +1836,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-090.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "40.1 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      090-DevToysMac/
+      APP简介.md
+      DevToys.app.zip
 
 
 - id: app-091
