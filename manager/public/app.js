@@ -182,7 +182,8 @@ async function openResource(id) {
     const { resource: x } = await api(`/api/resource?id=${encodeURIComponent(id)}`);
     rCurrent = id;
     $('rempty').hidden = true;
-    $('rform').hidden = false;
+    // 表单初始靠 class="hidden" 隐藏，只改 hidden 属性不够，必须移除 class
+    $('rform').classList.remove('hidden');
     $('rlink').innerHTML = `<a href="${esc(x.href)}" target="_blank" rel="noopener">查看详情页</a> · ${esc(x.category)} · ${esc(x.file)}`;
     $('rtitleMain').value = x.titleMain;
     $('rtitleSub').value = x.titleSub;
@@ -282,7 +283,7 @@ async function openDelete(id) {
     dCurrent = id;
     dDryOk = false;
     $('dimpact').hidden = true;
-    $('dform').hidden = false;
+    $('dform').classList.remove('hidden');
     $('ddetail').innerHTML = [
       ['ID', x.id], ['标题', x.title], ['分类', x.category], ['YAML 条目', x.file], ['配图', x.image],
       ['夸克链接', x.quark_url || '—'], ['百度链接', x.baidu_url || '—'], ['光鸭链接', x.guangya_url || '—'],
