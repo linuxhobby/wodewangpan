@@ -2765,6 +2765,16 @@
   date: 2026-03-05
   added: "2026-10-12 04:10"
   image: tv-141.jpg
+  updated: 2026-11-24
+  files:
+    count: 3
+    size: "4.9 GB"
+    format: "MKV×3"
+    tree: |
+      141-消失的丹麦女孩：这位朋友，那位凶手 A Friend, A Murderer (2026)/
+      En.ven.en.morder.S01E01.2026.1080p.Netflix.WEB-DL.AVC.DDP.5.1.Atmos-DBTV.mkv
+      En.ven.en.morder.S01E02.2026.1080p.Netflix.WEB-DL.AVC.DDP.5.1.Atmos-DBTV.mkv
+      En.ven.en.morder.S01E03.2026.1080p.Netflix.WEB-DL.AVC.DDP.5.1.Atmos-DBTV.mkv
 
 - id: tv-142
   title: "百日谎言"

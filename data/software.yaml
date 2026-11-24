@@ -1731,6 +1731,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-085.jpg
+  updated: 2026-11-24
+  files:
+    count: 2
+    size: "38.5 MB"
+    format: "DMG / MD"
+    tree: |
+      085-Flameshot/
+      Flameshot-14.0-macos-arm64.dmg
+      APP简介.md
 
 
 - id: app-086
