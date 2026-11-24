@@ -2863,6 +2863,19 @@
   date: 2026-10-11
   added: "2026-10-12 19:47"
   image: tv-144.jpg
+  updated: 2026-11-24
+  files:
+    count: 6
+    size: "29.9 GB"
+    format: "MKV×6"
+    tree: |
+      144-Treasure Island (2026)/
+      Treasure.Island.2026.S01E01.Chapter.1.The.Admiral.Benbow.2160p.AMZN.WEB-DL.DDP5.1.H.265-Qshan.mkv
+      Treasure.Island.2026.S01E02.Chapter.2.Great.Britain.2160p.AMZN.WEB-DL.DDP5.1.H.265-Qshan.mkv
+      Treasure.Island.2026.S01E03.Chapter.3.The.Wide.Eternal.Sea.2160p.AMZN.WEB-DL.DDP5.1.H.265-Qshan.mkv
+      Treasure.Island.2026.S01E04.Chapter.4.San.Domingue.2160p.AMZN.WEB-DL.DDP5.1.H.265-Qshan.mkv
+      Treasure.Island.2026.S01E05.Chapter.5.Skeleton.Island.2160p.AMZN.WEB-DL.DDP5.1.H.265-Qshan.mkv
+      Treasure.Island.2026.S01E06.Chapter.6.A.Princesa.De.Aveiro.2160p.AMZN.WEB-DL.DDP5.1.H.265-Qshan.mkv
 
 - id: tv-146
   title: "陷阱"

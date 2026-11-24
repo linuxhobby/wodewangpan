@@ -1794,6 +1794,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-088.jpg
+  updated: 2026-11-24
+  files:
+    count: 2
+    size: "125 MB"
+    format: "DMG / MD"
+    tree: |
+      088-Elephicon/
+      Elephicon-4.2.0-darwin-arm64.dmg
+      APP简介.md
 
 
 - id: app-089
