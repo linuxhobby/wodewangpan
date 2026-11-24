@@ -2746,6 +2746,15 @@
   date: 2026-09-28
   added: "2026-10-11 19:55"
   image: tv-140.jpg
+  updated: 2026-11-24
+  files:
+    count: 2
+    size: "1.5 GB"
+    format: "MKV×2"
+    tree: |
+      140-无可替代（2026）/
+      18.mkv
+      20.mkv
 
 - id: tv-141
   title: "消失的丹麦女孩：这位朋友，那位凶手"
