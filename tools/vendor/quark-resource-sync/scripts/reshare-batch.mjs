@@ -162,6 +162,12 @@ if (APPLY && done.length) {
     let text = fs.readFileSync(p, 'utf8');
     let n = 0;
     for (const r of done.filter((x) => x.file === f)) {
+      // --ids 手动模式没有 from-check 报告里的 old_url，现场从 YAML 读该 id 当前的 quark_url
+      if (!r.old_url) {
+        const doc = yaml.load(text) || [];
+        const entry = doc.find((e) => e && String(e.id) === String(r.id));
+        if (entry?.quark_url) r.old_url = String(entry.quark_url);
+      }
       if (!r.old_url || r.old_url === r.new_url) continue;
       const all = text.split(r.old_url).length - 1;
       if (all !== 1) {
