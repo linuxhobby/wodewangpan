@@ -2726,6 +2726,14 @@
   date: 2026-07-11
   added: "2026-10-11 11:45"
   image: tv-139.jpg
+  updated: 2026-11-24
+  files:
+    count: 1
+    size: "10.3 GB"
+    format: "MKV"
+    tree: |
+      139-全城追缉 (2026电视剧)/
+      2026.2160p.TX.WEB-DL.HDR.60fps.HEVC.DDP 2.0-WF.mkv
 
 - id: tv-140
   title: "无可替代"
