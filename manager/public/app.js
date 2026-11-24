@@ -349,3 +349,4 @@ $('btn-publish').addEventListener('click', async () => {
 
 loadFollowing().catch((e) => toast(e.message, true));
 initResources().catch((e) => toast(e.message, true));
+searchCandidates().catch((e) => toast(e.message, true));
