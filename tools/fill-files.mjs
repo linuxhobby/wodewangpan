@@ -168,19 +168,21 @@ const notReadyFile =
   path.join(os.homedir(), '.cache', 'quark-sync', 'fill-files-notready.json');
 
 /**
- * 取数口径（2026-11-11 起可切换）。
- *   · share（默认）：夸克分享详情接口，客态访问、无需网盘授权，反映**访客实际能拿到什么**。
- *   · drive：登录态网盘目录（CLI browse --all），反映**盘端真实内容**。
- * 切换原因：夸克会对分享链接里的文件做**文件级屏蔽**——同一个目录，登录态看到 9 集、访客只看到 2 份
- * 说明文件（实测 tv-016 / tv-058 / tv-078 / tv-123 / dc-086）。这类条目按 share 口径写出来的清单
- * 不是「资源不完整」，而是「平台不给访客看」，所以允许对指定条目改读盘端真实目录。
+ * 取数口径（2026-11-11 可切换；2026-11-25 默认值改为 drive）。
+ *   · drive（默认）：登录态网盘目录（CLI browse --all），反映**盘端真实内容**。
+ *   · share：夸克分享详情接口，客态访问、无需网盘授权，反映**访客实际能拿到什么**。
+ * 默认改 drive 的原因（2026-11-25）：夸克对分享链接做**文件级屏蔽**——同一目录登录态有全集、
+ * 访客只看到 2 份说明文件。之前默认 share 把 28 条判成占位，实际 20 条盘端有真资源（误判率 71%），
+ * 客态 share 只能反映「平台给不给访客看」，不能用来判断资源是否到位。默认走盘端才是真实清单。
+ * ⚠ share 仍保留为可选回退（`--source share`）：仅当登录态不可用、或需复核访客可见范围时用。
  * ⚠ 只换「取一个目录的直接子项」这一层：下钻、剔占位、聚合、排序、签名比对仍只有
  *   locateContent + aggregate + lib/tree-sort 一份实现。两套源写出来的 files 块必须同构，
  *   否则连载轮询会因口径差误判「盘端变了」，每轮重写并伪造 updated（AGENTS.md §5 第一红线）。
- * ⚠ 默认值不改：例行轮（--limit 3）仍走 share，只有 --source drive
- *   或 id 在 config/drive-source-ids.json 里的条目才走盘端。
+ *   2026-11-25 已实测同批条目两种口径的连载轮询结果一致，默认切 drive 不污染轮询。
+ * ⚠ 走 drive 需要 config/drive-fids.json 里有该 id 的盘端 fid：当前 945 条有映射，
+ *   140 条（多为新入库）缺映射会打印提示并自动回落 share，重跑 scan-drive-fids.mjs 可补全。
  */
-const SOURCE = String(getArg('source', 'share')).toLowerCase();
+const SOURCE = String(getArg('source', 'drive')).toLowerCase();
 const DRIVE_MAP_FILE = path.join(root, 'config', 'drive-fids.json');
 const DRIVE_IDS_FILE = path.join(root, 'config', 'drive-source-ids.json');
 let driveMap = null;
