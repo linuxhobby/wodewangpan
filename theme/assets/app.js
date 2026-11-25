@@ -289,7 +289,7 @@ import { esc, tileHtml } from './card.js';
     }
   });
 
-  // 复制类按钮：网盘链接 / 提取码 / 资源包 / 海报图片
+  // 复制类按钮：网盘链接 / 提取码 / 资源包 / 资源页网址 / 海报图片
   document.addEventListener('click', function (e) {
     // 「复制海报」要在复制文本分支之前判定：它只写图片，不带文本；
     // 即使以后按钮又带上 data-copy，也不能被下面的纯文本分支截走
@@ -302,7 +302,7 @@ import { esc, tileHtml } from './card.js';
     var copyBtn = e.target.closest('[data-copy]');
     if (copyBtn) {
       copyPacket(copyBtn, copyBtn.getAttribute('data-copy'), copyBtn.getAttribute('data-poster'));
-      // 只有转存区的复制算「转存意向」；分享面板的「复制资源信息」是传播行为，不混进同一指标
+      // 只有转存区的复制算「转存意向」；分享面板的复制是传播行为，不混进同一指标
       if (copyBtn.closest('.linkrow')) track('copy');
       return;
     }
