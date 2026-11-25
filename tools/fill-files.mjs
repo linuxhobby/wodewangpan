@@ -208,11 +208,17 @@ function loadDriveIds() {
   return driveIds;
 }
 /** 本条是否走登录态盘端口径 */
+let driveFallbackWarned = new Set();
 function useDrive(id) {
   if (SOURCE !== 'drive' && !loadDriveIds().has(id)) return false;
   const hit = loadDriveMap()[id];
   if (!hit || !hit.fid) {
-    console.log(`  ${id} 指定了 drive 口径但 config/drive-fids.json 里没有它的盘端目录 fid，回落 share`);
+    // ⚠ 必须走 stderr：调用点在「<id> … 」前缀行已写出之后，若用 console.log 会把
+    // 状态词（完成/失败/跳过）挤到无 id 的续行，编排脚本的解析会漏计写入条数。
+    if (!driveFallbackWarned.has(id)) {
+      driveFallbackWarned.add(id);
+      console.error(`  ${id} 指定了 drive 口径但 config/drive-fids.json 里没有它的盘端目录 fid，回落 share`);
+    }
     return false;
   }
   return true;

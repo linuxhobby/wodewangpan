@@ -165,14 +165,29 @@ function itemLabel(id, byId) {
 function parseToolOutput(out) {
   const entries = [];
   const refreshed = [];
+  // 防御：若工具在「<id> … 」前缀行中途打印了别的行（如 drive 映射缺失回落警告），
+  // 状态词会被挤到无 id 的续行；此时继承上一个前缀 id，避免漏计写入条数。
+  let lastId = null;
   for (const line of out.split(/\r?\n/)) {
     const m = line.match(/^(\S+)\s*…\s*(完成|失败|跳过)（(.*)）\s*$/);
     if (m) {
       entries.push({ id: m[1], kind: m[2], detail: m[3] });
+      lastId = m[1];
+      continue;
+    }
+    const c = line.match(/^\s*(完成|失败|跳过)（(.*)）\s*$/);
+    if (c && lastId) {
+      entries.push({ id: lastId, kind: c[1], detail: c[2] });
       continue;
     }
     const r = line.match(/^(\S+)\s*…\s*已刷新（(.*)）\s*$/);
-    if (r) refreshed.push({ id: r[1], detail: r[2] });
+    if (r) {
+      refreshed.push({ id: r[1], detail: r[2] });
+      lastId = r[1];
+      continue;
+    }
+    const pfx = line.match(/^(\S+)\s*…\s/);
+    if (pfx) lastId = pfx[1];
   }
   const p = out.match(/待补条目：(\d+)\s*个/);
   // 每类 1 条模式下，工具会打印「每分类 1 条模式：N 个分类有待补条目」
