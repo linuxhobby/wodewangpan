@@ -1943,6 +1943,15 @@
   date: 2026-05-16
   added: 2026-10-04
   image: app-095.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "159 MB"
+    format: "DMG / MD"
+    tree: |
+      095-Bruno/
+      bruno_4.2.1_arm64_mac.dmg
+      APP简介.md
 
 
 - id: app-096
@@ -1955,6 +1964,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-096.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "104 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      096-Browserosaurus/
+      APP简介.md
+      Browserosaurus-darwin-arm64-20.12.0.zip
 
 
 - id: app-097
@@ -1967,6 +1986,16 @@
   date: 2012-10-31
   added: 2026-10-04
   image: app-097.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "268 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      097-Brooklyn/
+      APP简介.md
+      Brooklyn.saver.zip
 
 
 - id: app-098
@@ -1979,6 +2008,16 @@
   date: 2017-02-14
   added: 2026-10-04
   image: app-098.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "7.5 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      098-Cork/
+      APP简介.md
+      Cork.zip
 
 
 - id: app-099
@@ -1991,6 +2030,16 @@
   date: 2019-02-19
   added: 2026-10-04
   image: app-099.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "762 KB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      099-Hidden Bar/
+      APP简介.md
+      Hidden-Bar-v1.11.1-macos.zip
 
 
 - id: app-101
@@ -2003,6 +2052,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-101.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "5.8 MB"
+    format: "ZIP / MD"
+    packed: true
+    tree: |
+      101-Calendr/
+      APP简介.md
+      Calendr.zip
 
 
 - id: app-102
@@ -2015,6 +2074,16 @@
   date: 2021-05-16
   added: 2026-10-04
   image: app-102.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "4.2 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      102-Gray/
+      APP简介.md
+      Gray.zip
 
 
 - id: app-103
@@ -2027,6 +2096,16 @@
   date: 2019-10-13
   added: 2026-10-04
   image: app-103.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "1.5 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      103-Free Ruler/
+      APP简介.md
+      free-ruler-2.0.19.zip
 
 
 - id: app-104
@@ -2039,6 +2118,16 @@
   date: 2011-06-08
   added: 2026-10-04
   image: app-104.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "1.2 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      104-Flycut/
+      APP简介.md
+      Flycut.1.9.6.zip
 
 
 - id: app-107
@@ -2051,6 +2140,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-107.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "4.4 MB"
+    format: "MD / DMG"
+    tree: |
+      107-CalendarX/
+      CalendarX.dmg
+      APP简介.md
 
 
 - id: app-110
@@ -2063,6 +2161,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-110.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "6.1 MB"
+    format: "MD / DMG"
+    tree: |
+      110-BatteryBoi/
+      BatteryBoi-v2.4.1.dmg
+      APP简介.md
 
 
 - id: app-112
@@ -2075,6 +2182,15 @@
   date: 2025-11-24
   added: 2026-10-04
   image: app-112.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "789 KB"
+    format: "MD / PKG"
+    tree: |
+      112-Background Music/
+      APP简介.md
+      BackgroundMusic-0.5.0.pkg
 
 
 - id: app-113
@@ -2087,6 +2203,15 @@
   date: 2017-03-22
   added: 2026-10-04
   image: app-113.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "16.9 MB"
+    format: "DMG / MD"
+    tree: |
+      113-Aural/
+      AuralPlayer-4.0.0-preview28.dmg
+      APP简介.md
 
 
 - id: app-115
@@ -2099,6 +2224,16 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-115.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "718 KB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      115-AnyBar/
+      APP简介.md
+      AnyBar-0.2.3.zip
 
 
 - id: app-117
@@ -2111,6 +2246,16 @@
   date: 2024-09-14
   added: 2026-10-04
   image: app-117.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "5.2 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      117-AltTab/
+      APP简介.md
+      AltTab-11.8.0.zip
 
 
 - id: app-118
@@ -2123,6 +2268,16 @@
   date: 2026-06-23
   added: 2026-10-04
   image: app-118.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "6.3 MB"
+    format: "MD / ZIP"
+    packed: true
+    tree: |
+      118-Aerial/
+      APP简介.md
+      Aerial.saver.zip
 
 
 - id: app-119
@@ -2135,6 +2290,15 @@
   date: 2026-10-04
   added: 2026-10-04
   image: app-119.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "5.9 MB"
+    format: "MD / DMG"
+    tree: |
+      119-Alacritty/
+      Alacritty-v0.17.0.dmg
+      APP简介.md
 
 
 - id: app-120
@@ -2147,6 +2311,14 @@
   date: 2026-10-07
   added: 2026-10-07
   image: app-120.jpg
+  updated: 2026-11-25
+  files:
+    count: 3
+    tree: |
+      120-OBS-Studio/
+      OBS-Studio-32.2.2-macOS-Apple.dmg/
+      OBS-Studio-32.2.2-macOS-Intel.dmg/
+      OBS-Studio-32.2.2-Windows-x64-Installer.exe/
 
 
 - id: app-121
@@ -2159,6 +2331,14 @@
   date: 2026-10-07
   added: 2026-10-07
   image: app-121.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "7.1 MB"
+    format: "EXE"
+    tree: |
+      121-PortableApps/
+      PortableApps.com_Platform_Setup_30.5.paf.exe
 
 
 - id: app-122
@@ -2171,6 +2351,15 @@
   date: 2026-10-07
   added: 2026-10-07
   image: app-122.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "27.0 MB"
+    format: "RAR"
+    packed: true
+    tree: |
+      122-CF-WP1200CF-WP1200 V2 CF-WP1200 PRO CF-WP1200-M windows蓝牙驱动/
+      CF-WP1200-CF-WP1200V2-CF-WP1200-PRO-CF-WP1200-M-windows-蓝牙驱动.rar
 
 
 - id: app-124
@@ -2183,6 +2372,15 @@
   date: 2026-10-07
   added: 2026-10-07
   image: app-124.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "81.2 MB"
+    format: "ZIP"
+    packed: true
+    tree: |
+      124-Office Tool/
+      Office Tool.zip
 
 
 - id: app-125
@@ -2195,6 +2393,16 @@
   date: 2026-10-08
   added: "2026-10-08 20:10"
   image: app-125.jpg
+  updated: 2026-11-25
+  files:
+    count: 3
+    size: "96.6 MB"
+    format: "DMG×2 / EXE"
+    tree: |
+      125-RevPDF/
+      RevPDF_Editor_arm64.dmg
+      RevPDF_Editor_x64.dmg
+      revpdf_editor_winx64.exe
 
 - id: app-126
   title: "百度网盘 - 云存储与文件同步客户端"
@@ -2206,6 +2414,14 @@
   date: 2026-10-09
   added: "2026-10-09 19:44"
   image: app-126.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "412 MB"
+    format: "DMG"
+    tree: |
+      126-百度网盘/
+      BaiduNetdisk_mac_8.8.8_arm64.dmg
 
 - id: app-127
   title: "TikTok 国际版 - 海外短视频社区客户端"
@@ -2217,6 +2433,13 @@
   date: 2026-10-19
   added: "2026-10-19 17:05"
   image: app-127.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    tree: |
+      127-TIKTOK免插卡国际版/
+      安卓/
+      IOS【需自签】/
 
 - id: app-128
   title: "批量图片压缩调整大小"
@@ -2228,6 +2451,15 @@
   date: 2024-06-02
   added: "2026-10-26 16:22"
   image: app-128.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "28.0 MB"
+    format: "ZIP"
+    packed: true
+    tree: |
+      128-批量图片压缩调整大小/
+      caesium_image_compressor_2.7.1_Portable.zip
 
 - id: app-129
   title: "夸克网盘 - 多端云存储与文件备份"
@@ -2239,6 +2471,16 @@
   date: 2026-10-27
   added: "2026-10-28 08:11"
   image: app-129.jpg
+  updated: 2026-11-25
+  files:
+    count: 3
+    size: "16.9 MB"
+    format: "APK / DMG / EXE"
+    tree: |
+      129-夸克网盘/
+      QuarkCloudDrive_TV_2.9.1702_20260428162219_release.apk
+      QuarkCloudDriveMac_V7.4.2.822_mac_pf30003_(zh-cn)_releasemini_(Build3004627).dmg
+      QuarkCloudDrivePC_V7.4.2.822_pc_pf30001_(zh-cn)_releasemini_(Build3241961-1001-x64).exe
 
 - id: app-031
   title: "Tailscale - WireGuard 零配置组网"
@@ -2278,6 +2520,14 @@
   date: 2018-11-13
   added: "2026-10-09 16:04"
   image: app-134.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "4.2 GB"
+    format: "ISO"
+    tree: |
+      134-windows10/
+      cn_windows_10_enterprise_ltsc_2019_x64_dvd_9c09ff24.iso
 
 - id: app-135
   title: "Windows 11 26H2 中文版"
@@ -2290,6 +2540,14 @@
   date: 2026-10-01
   added: "2026-10-09 16:03"
   image: app-135.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "8.5 GB"
+    format: "ISO"
+    tree: |
+      135-windows11/
+      Windows11_Client_x64_zh-cn_26300_9457.iso
 
 - id: app-130
   title: "Fedora 44 Workstation - Linux 桌面 Live 镜像"
@@ -2302,6 +2560,14 @@
   date: 2026-04-28
   added: "2026-10-09 16:02"
   image: app-130.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "2.7 GB"
+    format: "ISO"
+    tree: |
+      130-Fedora/
+      Fedora-Workstation-Live-44-1.7.x86_64.iso
 
 - id: app-131
   title: "Debian 13.7 - DVD 安装盘iso镜像以及torrent 种子"
@@ -2314,6 +2580,15 @@
   date: 2026-09-12
   added: "2026-10-09 16:01"
   image: app-131.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "3.7 GB"
+    format: "ISO"
+    tree: |
+      131-debian/
+      debian-13.7.0-amd64-DVD-1.iso
+      debian-13.7.0-amd64-DVD-1.iso.torrent
 
 - id: app-132
   title: "Ubuntu - 26.04.1 桌面版安装镜像"
@@ -2347,6 +2622,14 @@
   date: 2026-10-07
   added: "2026-10-09 19:41"
   image: app-133.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "4.4 GB"
+    format: "ISO"
+    tree: |
+      133-openSUSE/
+      openSUSE-Tumbleweed-DVD-x86_64-Snapshot20261007-Media.iso
 
 
 - id: app-138
@@ -2360,6 +2643,13 @@
   date: 2024-11-15
   added: "2026-10-23 17:15"
   image: app-138.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    tree: |
+      138-中国CMCC-RAX-3000M刷机套件/
+      bl-mt798x-release-20241115/
+      etc/
 
 
 - id: app-139
@@ -2373,6 +2663,16 @@
   date: 2022-09-27
   added: "2026-10-23 17:15"
   image: app-139.jpg
+  updated: 2026-11-25
+  files:
+    count: 4
+    format: "IMG"
+    tree: |
+      139-黑群晖DMS918刷机套件/
+      1)ChipEasy芯片无忧_V1.6_Beta3/
+      2)WinImage_9.0中文专业版/
+      4)Win32DiskImager_V0.8_Binary/
+      DS918-701-42962.img
 
 - id: app-140
   title: "Proxmox VE 8.4 虚拟化系统镜像"
