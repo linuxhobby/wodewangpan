@@ -1,4 +1,4 @@
-# 纪录片资源（112 条）
+# 纪录片资源（114 条）
 # 来源：夸克网盘 SHARE/06纪录片
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -2707,3 +2707,52 @@
       poster.jpg
       season03-poster.jpg
       season.nfo
+
+- id: dc-113
+  title: "中国酿造"
+  category: 纪录片
+  tags: ["纪录片", "中国酿造"]
+  quark_url: "https://pan.quark.cn/s/045b44544b87"
+  description: "本资源来自夸克网盘分享，简介与海报待人工补充。｜TMDB 0.0"
+  date: 2026-11-25
+  added: 2026-11-25
+  updated: 2026-11-25
+  files:
+    count: 7
+    size: "5.7 GB"
+    format: "MKV×7"
+    tree: |
+      113-中国酿造 (2023)/
+      [中国酿造].China.Brew.2023.S01E01.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+      [中国酿造].China.Brew.2023.S01E02.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+      [中国酿造].China.Brew.2023.S01E03.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+      [中国酿造].China.Brew.2023.S01E04.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+      [中国酿造].China.Brew.2023.S01E05.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+      [中国酿造].China.Brew.2023.S01E06.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+      [中国酿造].China.Brew.2023.S01E07.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+
+- id: dc-114
+  title: "长命百二岁"
+  category: 纪录片
+  tags: ["纪录片", "长命百二岁"]
+  quark_url: "https://pan.quark.cn/s/b4369326194e"
+  description: "本资源来自夸克网盘分享，简介与海报待人工补充。｜TMDB 0.0"
+  date: 2026-11-25
+  added: 2026-11-25
+  updated: 2026-11-25
+  files:
+    count: 10
+    size: "8.0 GB"
+    format: "MP4×10"
+    tree: |
+      114-长命百二岁 長命百二歲 (2018)/
+      长命百二岁.As.Long.As.You.Live.S01E01.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
+      长命百二岁.As.Long.As.You.Live.S01E02.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
+      长命百二岁.As.Long.As.You.Live.S01E03.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
+      长命百二岁.As.Long.As.You.Live.S01E04.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
+      长命百二岁.As.Long.As.You.Live.S01E05.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
+      长命百二岁.As.Long.As.You.Live.S01E06.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
+      长命百二岁.As.Long.As.You.Live.S01E07.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
+      长命百二岁.As.Long.As.You.Live.S01E08.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
+      长命百二岁.As.Long.As.You.Live.S01E09.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
+      长命百二岁.As.Long.As.You.Live.S01E010.2018.1080p.WEB-DL.H264.AAC-DJWEB.mp4
