@@ -17,14 +17,15 @@
 | 我的网盘.fill-files补文件清单 | 每 2 小时 `:30` | `tools/feishu-reports/wodewangpan-fillfiles-run.mjs` | 写 `data/*.yaml` + build + git push | 每个分类各补 1 条（无待补分类跳过），按 `added` 升序、占位在本类内顺延 | `~/.cache/wdp-fillfiles-cron.log` |
 | 我的网盘.TMDB今日热门影视每日同步 | 每天 `03:50` | `tools/quark-cron/trending-daily.mjs` | 建夸克目录 + 出链 + 写 `data/*.yaml` + build + push + 可选光鸭镜像/VPS 重建 | `~/.cache/quark-sync/trending-seen.json` | `~/.cache/wdp-trending-cron.log` |
 | 我的网盘.夸克资源同步 | 每 6 小时 `:10` | `tools/quark-cron/resource-sync.mjs` | 目录改名/出链 + 写 `data/*.yaml` + build + push + 光鸭补链/VPS 重建 | 夸克实时目录与站点 YAML 对账 | `~/.cache/wdp-resource-sync-cron.log` |
+| 我的网盘.缓存清理 | 每天 `04:20` | `tools/quark-cron/prune-cache.mjs --apply` | 只删 `~/.cache/quark-sync/` 里超 7 天的缓存文件，不写站点数据 | 状态锚点白名单永不删；`llm-pending-*.json` 需条目已全部入库才可删 | `~/.cache/quark-sync/prune-cache.log` |
 
 共同原则：
 
 1. 凭据只在运行机本地、权限 `600`，**不进 git**，也不写进本文。
 2. `posted.json` 留在仓库工作区但已从 git 取消跟踪；删掉会重复发帖。
-3. 夸克中间产物只落 `~/.cache/quark-sync/`，可随时清理，不影响判重。
+3. 夸克中间产物只落 `~/.cache/quark-sync/`，由缓存清理任务保留最近 7 天；**状态锚点例外，永不删除**（见 §2.5）。
 4. 所有 cron 用标记块管理，幂等替换，不碰块外条目。
-5. 两条推送任务不碰网盘；两条夸克定点任务不写 `data/*.yaml`、不发帖；fill-files 写 `data/*.yaml` 并 build/push 但不 ssh；TMDB 与资源同步会写 `data/*.yaml`、build/push、VPS 即时重建，TMDB 还做光鸭镜像、资源同步做光鸭补链。
+5. 两条推送任务不碰网盘；两条夸克定点任务不写 `data/*.yaml`、不发帖；fill-files 写 `data/*.yaml` 并 build/push 但不 ssh；TMDB 与资源同步会写 `data/*.yaml`、build/push、VPS 即时重建，TMDB 还做光鸭镜像、资源同步做光鸭补链；缓存清理只删缓存、不碰站点数据。
 6. 下载/合成的海报必须验真实图片类型（`tools/lib/image-check.mjs` 读文件头）：`.jpg` 必须是 JPEG，官方图标允许 PNG/JPEG/WebP/GIF；HTML 或体积够大的伪图一律不写 `image:`。
 7. 两条推送**各自独立发帖**（都按 `latest` 选片），工具不自动追平；后发帖的 Bluesky（`:08`）之后跑同步检查，各取两边 `posted.json` 最近 2 条按资源链接（夸克 / 百度）对账，不同步发飞书橙色卡片给人工用 `--pick 条目id` 修正，同步时不发；全量历史不参与判定，避免 id 复用误报。判差与 CodeBuddy / WorkBuddy 自动化无关。
 
@@ -67,43 +68,43 @@ TMDB 同步依赖的 `quark-resource-sync` 同样 vendor 在 `tools/vendor/quark
 
 ### 2.5 缓存与状态目录
 
-- `~/.cache/quark-sync/`：`candidates.json`、`results.json`、`verify.json`、`share-update-card-*.json`、`prestore-move-*.md`、两条 cron 日志。可用 `QK_CACHE_DIR` 覆盖。
+- `~/.cache/quark-sync/`：同步流水线的工作目录，按职责分四类：
+  - **状态锚点（永不删）**：`trending-seen.json`（已收录 TMDB id 台账）、`trending-last.json`（上轮成功时间锚，90 分钟幂等）、`fill-files-notready.json`（已确认空目录的 id，6h TTL）、`guangya-sync-last.json` 等。删掉会导致重复收录或重复跑。
+  - **任务交接件**：`llm-pending-*.json`（待 LLM 补全的条目，**判断某条是否已处理的唯一凭据**）、`llm-apply-*.json`（写入报告）、`llm-drafts-*.json`（草稿）、`*-card-*.json`（飞书卡片 payload）、`scan-*.json` / `match.json` / `plan-*.json`（一轮扫描与匹配的中间产物）。
+  - **传输缓冲**：`quark-tasks/`（夸克 CLI 的 `--task-dir` 落点，`api.jsonl` 接口日志 + `browse/*.jsonl` 目录列举结果）。`Authorization` 已被 CLI 脱敏为 `<redacted>`。
+  - **临时残留**：`poster-tmp/`、`llm-poster-*.img` 等海报下载中间物。
+- **保留期 7 天**，由每天 `04:20` 的 `tools/quark-cron/prune-cache.mjs --apply` 执行（cron 块 `wdp-prune`，随 `deploy/install-quark-cron.sh` 幂等安装）。脚本默认 dry-run，加 `--apply` 才真删；`--days N` 可改保留期。
+  - 安全约束：状态锚点走白名单永不删除；`llm-pending-*.json` 只有在「该批条目已全部入库」时才可删——`llm-prepare` 生成 pending 时已改过盘端目录名（加了编号前缀），pending 一旦被删而条目又没入库，那条资源就再也不会被 `scan-new` 发现，会永久丢失。
+  - 删除失败不中断：工具层有「批量删除」守卫（统计单次 request 内累计删除次数，超阈值抛 `SAFE_DELETE_BULK_CONFIRM_REQUIRED`），删不掉的文件跳过即可。
 - `~/.cache/wdp-fillfiles-*.log` 与 `~/.cache/wdp-fillfiles.lock`：fill-files 的运行日志与互斥锁，直接落在已存在的 `~/.cache/`，不新建目录。
 - `state/telegram-posts/posted.json`、`state/bluesky-posts/posted.json`：判重唯一依据，已从 git 取消跟踪。
 
 ## 3. crontab 全文
 
+> 2026-11-26 实机核对：当前 crontab 只有 `wdp-push`、`wdp-move`、`wdp-prune` 三个标记块
+> （fill-files 与 TMDB 同步已交 WorkBuddy 自动化，分享补存 2026-11-22 也已迁自动化，
+> 历史块 `wdp-quark` / `wdp-fill` / `wdp-trending` / `wdp-sync` 均已移除）。
+> 下面只列实际存在的块，其余按「已迁自动化」理解。
+
 ```cron
 # >>> wdp-push (managed, 勿手改)
-PATH=/usr/bin:/bin
-3 * * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node push/telegram/tg-post.mjs >> /home/marco/.cache/wdp-tg-post.log 2>&1
-8 * * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node push/bluesky/bluesky-post.mjs >> /home/marco/.cache/wdp-bsky-post.log 2>&1; /usr/bin/node tools/feishu-reports/wodewangpan-push-fix.mjs --apply >> /home/marco/.cache/wdp-push-fix.log 2>&1; /usr/bin/node tools/feishu-reports/wodewangpan-push-sync.mjs >> /home/marco/.cache/wdp-push-sync.log 2>&1
+PATH=/home/marco/.local/bin:/usr/local/bin:/usr/bin:/bin
+3 * * * * cd /home/marco/Documents/Github/wodewangpan && /home/marco/.local/bin/node push/telegram/tg-post.mjs >> /home/marco/.cache/wdp-tg-post.log 2>&1
+5 * * * * cd /home/marco/Documents/Github/wodewangpan && /home/marco/.local/bin/node push/bluesky/bluesky-post.mjs >> /home/marco/.cache/wdp-bsky-post.log 2>&1; /home/marco/.local/bin/node tools/feishu-reports/wodewangpan-push-fix.mjs --apply >> /home/marco/.cache/wdp-push-fix.log 2>&1; /home/marco/.local/bin/node tools/feishu-reports/wodewangpan-push-sync.mjs >> /home/marco/.cache/wdp-push-sync.log 2>&1
 # <<< wdp-push
-# >>> wdp-quark BEGIN (managed, 勿手改)
-10 16 * * * cd /home/marco/Documents/Github/wodewangpan && QK_CACHE_DIR=/home/marco/.cache/quark-sync /usr/bin/node tools/quark-cron/share-update.mjs >> /home/marco/.cache/quark-sync/share-cron.log 2>&1
-# <<< wdp-quark END
 # >>> wdp-move BEGIN (managed, 勿手改)
-40 1 * * * cd /home/marco/Documents/Github/wodewangpan && QK_CACHE_DIR=/home/marco/.cache/quark-sync /usr/bin/node tools/quark-cron/prestore-move.mjs >> /home/marco/.cache/quark-sync/move-cron.log 2>&1
+40 1 * * * cd /home/marco/Documents/Github/wodewangpan && QK_CACHE_DIR=/home/marco/.cache/quark-sync /home/marco/.local/bin/node tools/quark-cron/prestore-move.mjs >> /home/marco/.cache/quark-sync/move-cron.log 2>&1
 # <<< wdp-move END
-# >>> wdp-fill (managed, 勿手改)
-PATH=/usr/bin:/bin
-30 */2 * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node tools/feishu-reports/wodewangpan-fillfiles-run.mjs >> /home/marco/.cache/wdp-fillfiles-cron.log 2>&1
-# <<< wdp-fill
-# >>> wdp-trending (managed, 勿手改)
-PATH=/usr/bin:/bin
-50 3 * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node tools/quark-cron/trending-daily.mjs >> /home/marco/.cache/wdp-trending-cron.log 2>&1
-# <<< wdp-trending
-# >>> wdp-sync (managed, 勿手改)
-PATH=/usr/bin:/bin
-10 */6 * * * cd /home/marco/Documents/Github/wodewangpan && /usr/bin/node tools/quark-cron/resource-sync.mjs >> /home/marco/.cache/wdp-resource-sync-cron.log 2>&1
-# <<< wdp-sync
+# >>> wdp-prune BEGIN (managed, 勿手改)
+20 4 * * * cd /home/marco/Documents/Github/wodewangpan && WDP_CACHE_DIR=/home/marco/.cache/quark-sync /home/marco/.local/bin/node tools/quark-cron/prune-cache.mjs --apply >> /home/marco/.cache/quark-sync/prune-cache.log 2>&1
+# <<< wdp-prune END
 ```
 
-- `wdp-push` / `wdp-fill` / `wdp-trending` / `wdp-sync` 块由人工按上面全文维护（`crontab -e`）。
-- 两条夸克 cron 用仓库脚本幂等安装：
+- `wdp-push` 块由人工维护（`crontab -e`）。
+- 夸克定点任务与缓存清理用仓库脚本幂等安装：
 
 ```bash
-bash deploy/install-quark-cron.sh            # 安装/刷新，只覆盖 wdp-quark / wdp-move 两个块
+bash deploy/install-quark-cron.sh            # 安装/刷新，覆盖 wdp-move / wdp-prune 两个块（并清掉历史 wdp-quark）
 bash deploy/install-quark-cron.sh uninstall  # 只卸这两条，保留 wdp-push
 crontab -l
 ```

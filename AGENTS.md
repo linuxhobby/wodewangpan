@@ -19,7 +19,8 @@ node tools/quark-cron/share-update.mjs --dry    # 夸克每日补存 dry 自检�
 node tools/quark-cron/prestore-move.mjs --dry   # 预存搬运 dry 自检（不 move）
 node tools/quark-cron/trending-daily.mjs --dry-run  # TMDB 同步配置/状态检查
 node tools/quark-cron/resource-sync.mjs --dry-run   # 资源同步扫描+匹配（不写盘）
-bash deploy/install-quark-cron.sh               # 幂等安装两条夸克 cron
+node tools/quark-cron/prune-cache.mjs              # 缓存清理 dry-run（默认只保留 7 天，不删）
+bash deploy/install-quark-cron.sh               # 幂等安装夸克定点 cron + 缓存清理 cron
 node tools/fill-files.mjs --per-category # 补文件清单：每分类 1 条（见 §4）
 node tools/sort-trees.mjs --dry-run # 预览/回填目录树排序（见 §4）
 node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
@@ -42,8 +43,9 @@ node tools/list-missing-posters.mjs  # 缺海报盘点（只读，列无 image:/
 | `scripts/lib/render.js` | 全部页面模板与 SEO 输出（meta/JSON-LD/sitemap） |
 | `scripts/lib/assets.js` | 配图/二维码等静态资产处理 |
 | `tools/` | **工具目录（2026-11-17 拆分）**：数据采集与内容生产脚本（fill-files 全家桶、补描述/标题、海报生成、资源导出），依赖采集环境（夸克 CLI / TMDB 凭据）；站点构建不引用本目录，依赖方向单向 tools → scripts/lib |
-| `tools/quark-cron/` | **四条夸克/同步编排脚本**：`share-update.mjs`（16:10）、`prestore-move.mjs`（01:40）、`trending-daily.mjs`（03:50）、`resource-sync.mjs`（每 6 小时 :10），纯 node + CLI、不依赖 LLM；缓存/日志走 `~/.cache/quark-sync/`；分享补存已于 2026-11-22 迁至 WorkBuddy 自动化（每天 16:10），cron 已移除；常驻任务统一手册见 `docs/CRON-TASKS.md` |
-| `deploy/install-quark-cron.sh` | 幂等安装上述两条 cron（标记块 `wdp-quark` / `wdp-move`），`uninstall` 可卸；凭据只走 scp |
+| `tools/quark-cron/` | **夸克/同步编排脚本**：`share-update.mjs`（16:10，已迁 WorkBuddy 自动化）、`prestore-move.mjs`（01:40）、`trending-daily.mjs`（03:50）、`resource-sync.mjs`（每 6 小时 :10）、`prune-cache.mjs`（04:20，缓存清理）、`llm-apply.mjs`（LLM 补全写回），纯 node + CLI、不依赖 LLM；缓存/日志走 `~/.cache/quark-sync/`；常驻任务统一手册见 `docs/CRON-TASKS.md` |
+| `tools/quark-cron/prune-cache.mjs` | 清理 `~/.cache/quark-sync/` 里超 7 天的缓存（默认 dry-run，`--apply` 才删）。**状态锚点白名单永不删**；`llm-pending-*.json` 需条目已全部入库才可删（删了未入库的条目会永久丢资源，因为盘端目录已被改名编号、scan-new 不再捡起） |
+| `deploy/install-quark-cron.sh` | 幂等安装夸克定点 cron（标记块 `wdp-move`）与缓存清理 cron（`wdp-prune`，每天 04:20），并清掉历史 `wdp-quark` 块；`uninstall` 可卸；凭据只走 scp |
 | `tools/fill-files.mjs` | 补「文件清单」`files:` 块（§4 例行任务的主角） |
 | `tools/sort-trees.mjs` | 回填已有 `files.tree` 的行序（只重排，不动内容与日期） |
 | `tools/scan-drive-fids.mjs` | 扫夸克 SHARE 目录，生成 `config/drive-fids.json`（id → 盘端目录 fid），`--source drive` 口径依赖它 |
