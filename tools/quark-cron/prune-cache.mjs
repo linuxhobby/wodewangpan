@@ -4,21 +4,25 @@
  *
  * 这个目录是同步流水线的工作目录，四类内容：
  *   ① 状态锚点  trending-seen / trending-last / fill-files-notready …  → 永不删
- *   ② 任务交接件 llm-pending / llm-apply / llm-drafts / *-card / scan-*.json → 可删
- *   ③ 传输缓冲  quark-tasks/（夸克 CLI 的 api.jsonl + browse/*.jsonl）→ 可删
- *   ④ 临时残留  poster-tmp/*.img、llm-poster-*.img、check-*.png 等 → 可删
+ *   ② 任务交接件 llm-pending / llm-apply / llm-drafts / *-card / scan-*.json → 7 天
+ *   ③ 传输缓冲  quark-tasks/（夸克 CLI 的 api.jsonl + browse/*.jsonl）→ 3 天
+ *   ④ 临时残留  poster-tmp/*.img、llm-poster-*.img、check-*.png 等 → 7 天
  *
  * 用法：
  *   node tools/quark-cron/prune-cache.mjs            # dry-run，只报告不删（默认）
  *   node tools/quark-cron/prune-cache.mjs --apply     # 真删
- *   node tools/quark-cron/prune-cache.mjs --days 3    # 自定义保留天数
+ *   node tools/quark-cron/prune-cache.mjs --days 3    # 自定义交接件保留天数
+ *   node tools/quark-cron/prune-cache.mjs --tasks-days 1   # 自定义传输缓冲保留天数
+ *   node tools/quark-cron/prune-cache.mjs --api-max-mb 4   # api.jsonl 体积上限
  *   node tools/quark-cron/prune-cache.mjs --apply --keep-pending
  *
  * 安全约束：
  *   - 状态锚点走白名单，永远不删（删了会重复收录 / 重复跑）。
- *   - llm-pending-*.json 只有在「该批条目已全部入库」时才可删。
- *     llm-prepare 生成 pending 时已经改过盘端目录名（加了编号前缀），
- *     所以一旦 pending 被删、条目又没入库，那条资源就再也不会被 scan-new 发现 —— 永久丢失。
+ *   - llm-pending-*.json 要同时满足「条目已入库」且「元数据已补全」才可删。
+ *     ① llm-prepare 生成 pending 时已经改过盘端目录名（加了编号前缀），
+ *        所以一旦 pending 被删、条目又没入库，那条资源就再也不会被 scan-new 发现 —— 永久丢失。
+ *     ② 条目入库了但 LLM 补全失败（描述残缺 / 缺海报）时，pending 就是「重试这张草稿」
+ *        的唯一凭据，删掉后该条目的补全机会永久消失。
  *   - 删除失败不中断（工具层有「批量删除」守卫，单轮累计删太多会抛
  *     SAFE_DELETE_BULK_CONFIRM_REQUIRED），单个文件删不掉就跳过。
  */
@@ -29,7 +33,9 @@ import os from 'node:os';
 
 const CACHE = process.env.WDP_CACHE_DIR || process.env.QK_CACHE_DIR
   || path.join(os.homedir(), '.cache', 'quark-sync');
-const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..');
+// REPO 默认真仓库根，可用 WDP_REPO 覆盖（便于在隔离目录里做删除行为测试）。
+const REPO = process.env.WDP_REPO
+  || path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..');
 
 const argv = process.argv.slice(2);
 const has = (f) => argv.includes(f);
@@ -39,13 +45,24 @@ const val = (f, d) => {
 };
 const APPLY = has('--apply');
 // 注意：不能用 `Number(x) || 7`，那样 --days 0 会被当成 falsy 变回 7。
-const DAYS = (() => {
-  const raw = val('--days', null);
-  const n = raw === null ? 7 : Number(raw);
-  return Number.isFinite(n) && n >= 0 ? n : 7;
-})();
+const numArg = (flag, dflt) => {
+  const raw = val(flag, null);
+  if (raw === null) return dflt;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? n : dflt;
+};
+const DAYS = numArg('--days', 7);
+/**
+ * 传输缓冲（quark-tasks/）单独用更短的保留期。
+ * 它是纯接口日志、占了缓存目录 93% 的空间，但跟「安全凭据」性质完全不同，
+ * 用同一个天数属于粗放管理。默认 3 天。
+ */
+const TASKS_DAYS = numArg('--tasks-days', 3);
+/** api.jsonl 的体积上限（MB）：它是持续追加的单文件，mtime 永远是最新，按时间判定对它无效。 */
+const API_MAX_MB = numArg('--api-max-mb', 8);
 const KEEP_PENDING = has('--keep-pending');
 const CUTOFF = Date.now() - DAYS * 86400 * 1000;
+const TASKS_CUTOFF = Date.now() - TASKS_DAYS * 86400 * 1000;
 
 /** 状态锚点：永不删。误删会导致重复收录或重复跑。 */
 const PROTECTED = new Set([
@@ -115,7 +132,7 @@ const fmtAge = (ms) => {
 };
 
 /**
- * 读出 data/*.yaml 里已收录条目的 id 与标题关键词。
+ * 读出 data/*.yaml 里已收录条目的 id、标题与元数据完备情况。
  * 除了 id，还要收集标题：pending 里记的 id 可能是历史撞号前的旧编号
  * （如 llm-pending-202611200516 三本书都记成 bk-023，实际入库编号是 bk-026/027/028），
  * 只按 id 匹配会把「早已入库」误判成「未入库」，导致文件永远删不掉。
@@ -123,8 +140,9 @@ const fmtAge = (ms) => {
 function loadIngested() {
   const ids = new Set();
   const titles = [];
+  const meta = new Map(); // id → { hasImage, descLen, title }
   const dataDir = path.join(REPO, 'data');
-  if (!fs.existsSync(dataDir)) return { ids, titles };
+  if (!fs.existsSync(dataDir)) return { ids, titles, meta };
   for (const f of fs.readdirSync(dataDir)) {
     if (!f.endsWith('.yaml')) continue;
     const txt = fs.readFileSync(path.join(dataDir, f), 'utf8');
@@ -132,8 +150,19 @@ function loadIngested() {
     // 写死 {2,3} 会漏掉全部 game-*，导致已入库的条目被误判成「未入库」。
     for (const m of txt.matchAll(/^\s*-?\s*id:\s*([a-z]+-\d{3})\s*$/gm)) ids.add(m[1]);
     for (const m of txt.matchAll(/^\s*title:\s*"?([^"\n]+)"?\s*$/gm)) titles.push(m[1].trim());
+    // 按条目块解析元数据（description 可能是多行折行 YAML，用块级正则整体取）
+    for (const blk of txt.split(/^- id: /m).slice(1)) {
+      const id = blk.match(/^([a-z]+-\d{3})/)?.[1];
+      if (!id) continue;
+      const dq = blk.match(/^\s*description:\s*"([\s\S]*?)"\s*$/m);
+      const desc = (dq ? dq[1] : (blk.match(/^\s*description:\s*([^\n]*)/m) || [])[1]) || '';
+      const hasImage = /^\s*image:\s*\S+/m.test(blk);
+      const title = (blk.match(/^\s*title:\s*"([^"]*)"/m) || [])[1]
+        || (blk.match(/^\s*title:\s*([^\n]*)/m) || [])[1] || '';
+      meta.set(id, { hasImage, descLen: desc.length, title });
+    }
   }
-  return { ids, titles };
+  return { ids, titles, meta };
 }
 
 /** 从盘端目录名里抽出可与标题比对的核心词：去掉编号前缀和括号里的作者/副信息。 */
@@ -146,8 +175,15 @@ function titleKeywords(dirName) {
 }
 
 /**
- * 判断一份 pending 是否「可以安全删除」。
- * 保守起见：条目为空、或任一条目还没入库 → 不删。
+ * 判断一份 pending 是否「可以安全删除」。保守起见，任何一条不满足就整体保留。
+ *
+ * 两条独立的删除前提，缺一不可：
+ *   ① 条目已入库 —— llm-prepare 生成 pending 时已经改过盘端目录名（加了编号前缀），
+ *      pending 一旦被删而条目又没入库，那条资源就再也不会被 scan-new 发现，永久丢失。
+ *   ② 元数据已补全 —— 条目入库了但 LLM 补全失败（标题/描述/海报残缺）时，
+ *      pending 就是「重试这张草稿」的唯一凭据，删掉后该条目的补全机会永久消失。
+ *      实测全站 1110 条 description 最短 159 字、0 条占位、0 条缺 image，
+ *      所以这里的阈值取 description ≥ 100 字（有 59 字余量）不会误伤正常条目。
  */
 function pendingIsSafe(file, ingested) {
   if (KEEP_PENDING) return false;
@@ -161,12 +197,20 @@ function pendingIsSafe(file, ingested) {
   if (items.length === 0) return true; // 空 pending 无信息量
   return items.every((it) => {
     if (!it) return false;
-    // 优先按 id 判定
-    if (it.id && ingested.ids.has(it.id)) return true;
-    // id 对不上（历史撞号 / 顺延编号）时，退而按盘端目录名与站内标题做关键词匹配
-    const kws = titleKeywords(it.dir_name || it.old_name || it.title);
-    if (!kws.length) return false;
-    return kws.some((kw) => ingested.titles.some((t) => t.includes(kw)));
+    // 先按 id 定位站内条目；id 对不上（历史撞号 / 顺延编号）时退而按标题关键词匹配
+    let rec = it.id ? ingested.meta.get(it.id) : null;
+    if (!rec) {
+      const kws = titleKeywords(it.dir_name || it.old_name || it.title);
+      if (!kws.length) return false;
+      const hit = ingested.titles.find((t) => kws.some((kw) => t.includes(kw)));
+      if (!hit) return false;
+      // 标题匹配到的那条：按标题反查其 id 再取元数据
+      rec = [...ingested.meta.entries()].find(([, m]) => m.title === hit)?.[1];
+      if (!rec) return false;
+    }
+    // ② 元数据完整性：描述过短 / 缺海报 = 补全没成功，pending 必须留着
+    if (!rec.hasImage || rec.descLen < 100) return false;
+    return true;
   });
 }
 
@@ -210,7 +254,7 @@ for (const name of fs.readdirSync(CACHE)) {
   if (!isPrunable(name)) { stats.kept++; stats.keptBytes += st.size; continue; }
   if (st.mtimeMs >= CUTOFF) { stats.kept++; stats.keptBytes += st.size; continue; }
   if (/^llm-pending-.*\.json$/.test(name) && !pendingIsSafe(p, ingested)) {
-    console.log(`  保留 ${name}（条目尚未全部入库，删了会永久丢资源）`);
+    console.log(`  保留 ${name}（条目未入库或元数据未补全，删了会永久丢资源/丢补全机会）`);
     stats.kept++; stats.keptBytes += st.size;
     continue;
   }
@@ -229,18 +273,29 @@ for (const f of walk(CACHE, [], true)) {
   } catch {
     continue;
   }
-  // 子目录里的 llm-pending 也走同一套入库检查
-  if (/^llm-pending-.*\.json$/.test(base) && st.mtimeMs < CUTOFF && !pendingIsSafe(f, ingested)) {
-    console.log(`  保留 ${rel}（条目尚未全部入库，删了会永久丢资源）`);
+  // 传输缓冲走更短的独立保留期：纯接口日志，占缓存目录 93% 空间，
+  // 但跟「安全凭据」性质完全不同，不该和 pending 用同一个天数。
+  const inTasks = rel === 'quark-tasks' || rel.startsWith(`quark-tasks${path.sep}`);
+  const cutoff = inTasks ? TASKS_CUTOFF : CUTOFF;
+  // api.jsonl 是持续追加的单文件（appendFileSync 每次开-写-关），mtime 永远是最新，
+  // 按时间判定对它完全无效 —— 它会无限增长。改用体积上限控制。
+  if (inTasks && base === 'api.jsonl' && st.size > API_MAX_MB * 1024 * 1024) {
+    actions.push({ path: f, size: st.size, age: Date.now() - st.mtimeMs, name: rel, truncate: true });
+    continue;
+  }
+  // 子目录里的 llm-pending 也走同一套入库 + 元数据检查
+  if (/^llm-pending-.*\.json$/.test(base) && st.mtimeMs < cutoff && !pendingIsSafe(f, ingested)) {
+    console.log(`  保留 ${rel}（条目未入库或元数据未补全，删了会永久丢资源/丢补全机会）`);
     stats.kept++; stats.keptBytes += st.size;
     continue;
   }
-  if (st.mtimeMs >= CUTOFF) { stats.kept++; stats.keptBytes += st.size; continue; }
+  if (st.mtimeMs >= cutoff) { stats.kept++; stats.keptBytes += st.size; continue; }
   actions.push({ path: f, size: st.size, age: Date.now() - st.mtimeMs, name: rel });
 }
 
 console.log(`缓存目录：${CACHE}`);
-console.log(`保留期：${DAYS} 天（早于 ${new Date(CUTOFF).toLocaleString('zh-CN')} 的可删）`);
+console.log(`保留期：交接件/临时残留 ${DAYS} 天（早于 ${new Date(CUTOFF).toLocaleString('zh-CN')} 的可删）`);
+console.log(`      传输缓冲 quark-tasks/ ${TASKS_DAYS} 天（早于 ${new Date(TASKS_CUTOFF).toLocaleString('zh-CN')} 的可删），api.jsonl 体积上限 ${API_MAX_MB} MB`);
 console.log(`模式：${APPLY ? '实际删除 (--apply)' : '试运行 (dry-run，加 --apply 才真删)'}`);
 console.log('');
 
@@ -253,14 +308,21 @@ if (!actions.length) {
 // 按大小倒序，方便看大头
 actions.sort((a, b) => b.size - a.size);
 for (const a of actions) {
-  console.log(`  ${fmtSize(a.size).padStart(9)}  ${fmtAge(a.age).padStart(6)}  ${a.name}`);
+  const how = a.truncate ? '  截断' : '  删除';
+  console.log(`${how} ${fmtSize(a.size).padStart(9)}  ${fmtAge(a.age).padStart(6)}  ${a.name}`);
 }
 console.log('');
 
 if (APPLY) {
   for (const a of actions) {
     try {
-      fs.rmSync(a.path, { force: true });
+      if (a.truncate) {
+        // 截断而非删除：保留文件本身（CLI 随时可能再往里追加），
+        // 只清空内容。写入方是 appendFileSync（每次开-写-关），不存在 fd 泄漏。
+        fs.truncateSync(a.path, 0);
+      } else {
+        fs.rmSync(a.path, { force: true });
+      }
       stats.deleted++;
       stats.deletedBytes += a.size;
     } catch (e) {
@@ -290,8 +352,9 @@ if (APPLY) {
       } catch { /* 忽略 */ }
     }
   } catch { /* 忽略 */ }
-  console.log(`已删除 ${stats.deleted} 个文件，释放 ${fmtSize(stats.deletedBytes)}${stats.failed ? `；${stats.failed} 个删不掉已跳过` : ''}`);
+  console.log(`已处理 ${stats.deleted} 个文件，释放 ${fmtSize(stats.deletedBytes)}${stats.failed ? `；${stats.failed} 个处理失败已跳过` : ''}`);
 } else {
-  console.log(`试运行结束：将删除 ${actions.length} 个文件，释放约 ${fmtSize(actions.reduce((s, a) => s + a.size, 0))}`);
+  const trunc = actions.filter((a) => a.truncate).length;
+  console.log(`试运行结束：将处理 ${actions.length} 个文件，释放约 ${fmtSize(actions.reduce((s, a) => s + a.size, 0))}${trunc ? `（其中 ${trunc} 个是清空内容而非删除）` : ''}`);
 }
 console.log(`  保留 ${stats.kept} 个文件（${fmtSize(stats.keptBytes)}），其中状态锚点 ${stats.protected} 个未动`);

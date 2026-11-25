@@ -17,13 +17,13 @@
 | 我的网盘.fill-files补文件清单 | 每 2 小时 `:30` | `tools/feishu-reports/wodewangpan-fillfiles-run.mjs` | 写 `data/*.yaml` + build + git push | 每个分类各补 1 条（无待补分类跳过），按 `added` 升序、占位在本类内顺延 | `~/.cache/wdp-fillfiles-cron.log` |
 | 我的网盘.TMDB今日热门影视每日同步 | 每天 `03:50` | `tools/quark-cron/trending-daily.mjs` | 建夸克目录 + 出链 + 写 `data/*.yaml` + build + push + 可选光鸭镜像/VPS 重建 | `~/.cache/quark-sync/trending-seen.json` | `~/.cache/wdp-trending-cron.log` |
 | 我的网盘.夸克资源同步 | 每 6 小时 `:10` | `tools/quark-cron/resource-sync.mjs` | 目录改名/出链 + 写 `data/*.yaml` + build + push + 光鸭补链/VPS 重建 | 夸克实时目录与站点 YAML 对账 | `~/.cache/wdp-resource-sync-cron.log` |
-| 我的网盘.缓存清理 | 每天 `04:20` | `tools/quark-cron/prune-cache.mjs --apply` | 只删 `~/.cache/quark-sync/` 里超 7 天的缓存文件，不写站点数据 | 状态锚点白名单永不删；`llm-pending-*.json` 需条目已全部入库才可删 | `~/.cache/quark-sync/prune-cache.log` |
+| 我的网盘.缓存清理 | 每天 `04:20` | `tools/quark-cron/prune-cache.mjs --apply` | 只删 `~/.cache/quark-sync/` 里的过期缓存，不写站点数据 | 分级保留：状态锚点永不删；交接件 7 天；传输缓冲 3 天；`llm-pending-*.json` 需条目已入库**且元数据已补全**才可删 | `~/.cache/quark-sync/prune-cache.log` |
 
 共同原则：
 
 1. 凭据只在运行机本地、权限 `600`，**不进 git**，也不写进本文。
 2. `posted.json` 留在仓库工作区但已从 git 取消跟踪；删掉会重复发帖。
-3. 夸克中间产物只落 `~/.cache/quark-sync/`，由缓存清理任务保留最近 7 天；**状态锚点例外，永不删除**（见 §2.5）。
+3. 夸克中间产物只落 `~/.cache/quark-sync/`，由缓存清理任务**分级保留**（交接件 7 天、传输缓冲 3 天）；**状态锚点例外，永不删除**（见 §2.5）。
 4. 所有 cron 用标记块管理，幂等替换，不碰块外条目。
 5. 两条推送任务不碰网盘；两条夸克定点任务不写 `data/*.yaml`、不发帖；fill-files 写 `data/*.yaml` 并 build/push 但不 ssh；TMDB 与资源同步会写 `data/*.yaml`、build/push、VPS 即时重建，TMDB 还做光鸭镜像、资源同步做光鸭补链；缓存清理只删缓存、不碰站点数据。
 6. 下载/合成的海报必须验真实图片类型（`tools/lib/image-check.mjs` 读文件头）：`.jpg` 必须是 JPEG，官方图标允许 PNG/JPEG/WebP/GIF；HTML 或体积够大的伪图一律不写 `image:`。
@@ -73,9 +73,24 @@ TMDB 同步依赖的 `quark-resource-sync` 同样 vendor 在 `tools/vendor/quark
   - **任务交接件**：`llm-pending-*.json`（待 LLM 补全的条目，**判断某条是否已处理的唯一凭据**）、`llm-apply-*.json`（写入报告）、`llm-drafts-*.json`（草稿）、`*-card-*.json`（飞书卡片 payload）、`scan-*.json` / `match.json` / `plan-*.json`（一轮扫描与匹配的中间产物）。
   - **传输缓冲**：`quark-tasks/`（夸克 CLI 的 `--task-dir` 落点，`api.jsonl` 接口日志 + `browse/*.jsonl` 目录列举结果）。`Authorization` 已被 CLI 脱敏为 `<redacted>`。
   - **临时残留**：`poster-tmp/`、`llm-poster-*.img` 等海报下载中间物。
-- **保留期 7 天**，由每天 `04:20` 的 `tools/quark-cron/prune-cache.mjs --apply` 执行（cron 块 `wdp-prune`，随 `deploy/install-quark-cron.sh` 幂等安装）。脚本默认 dry-run，加 `--apply` 才真删；`--days N` 可改保留期。
-  - 安全约束：状态锚点走白名单永不删除；`llm-pending-*.json` 只有在「该批条目已全部入库」时才可删——`llm-prepare` 生成 pending 时已改过盘端目录名（加了编号前缀），pending 一旦被删而条目又没入库，那条资源就再也不会被 `scan-new` 发现，会永久丢失。
-  - 删除失败不中断：工具层有「批量删除」守卫（统计单次 request 内累计删除次数，超阈值抛 `SAFE_DELETE_BULK_CONFIRM_REQUIRED`），删不掉的文件跳过即可。
+- **保留期分级**，由每天 `04:20` 的 `tools/quark-cron/prune-cache.mjs --apply` 执行（cron 块 `wdp-prune`，随 `deploy/install-quark-cron.sh` 幂等安装）。脚本默认 dry-run，加 `--apply` 才真删。
+  | 类别 | 保留期 | 参数 |
+  |---|---|---|
+  | 状态锚点 | **永不删** | 白名单 |
+  | 任务交接件 / 临时残留 | 7 天 | `--days N` |
+  | 传输缓冲 `quark-tasks/` | 3 天 | `--tasks-days N` |
+  | `api.jsonl` 体积上限 | 8 MB 超限即清空 | `--api-max-mb N` |
+  - **为什么分级**：交接件是「安全凭据」，误删会丢资源；传输缓冲是纯接口日志、占缓存目录 93% 空间，性质完全不同，用同一个天数属粗放管理。实测 pending→apply 处理延迟中位 11 分钟、P90 6.5 小时、最大 12.6 小时，7 天有 14 倍余量。
+  - **`api.jsonl` 必须按体积而非时间管理**：它是 CLI 用 `appendFileSync` 持续追加的单文件（每次开-写-关，无 fd 泄漏），mtime 永远最新，按时间判定对它完全无效、会无限增长。超限时**清空内容而非删除文件**（保留文件本身供 CLI 继续追加）。
+  - 安全约束：
+    - 状态锚点走白名单永不删除。
+    - `llm-pending-*.json` 要**同时**满足「条目已入库」且「元数据已补全（描述 ≥100 字 + 有 image）」才可删——
+      - ① `llm-prepare` 生成 pending 时已改过盘端目录名（加了编号前缀），pending 一旦被删而条目又没入库，那条资源就再也不会被 `scan-new` 发现，会永久丢失；
+      - ② 条目入库了但 LLM 补全失败（描述残缺 / 缺海报）时，pending 就是「重试这张草稿」的唯一凭据，删掉后补全机会永久消失。
+      - 阈值依据：实测全站 1110 条 description 最短 159 字、0 条占位、0 条缺 image，故 100 字下限有 59 字余量。
+    - `rename-records/`（盘端改名审计日志）整目录跳过，永不删。
+    - 删除失败不中断：工具层有「批量删除」守卫（统计单次 request 内累计删除次数，超阈值抛 `SAFE_DELETE_BULK_CONFIRM_REQUIRED`），删不掉的文件跳过即可。
+  - 测试用环境变量：`WDP_CACHE_DIR`（缓存目录）、`WDP_REPO`（站点根，用于隔离验证删除行为）。
 - `~/.cache/wdp-fillfiles-*.log` 与 `~/.cache/wdp-fillfiles.lock`：fill-files 的运行日志与互斥锁，直接落在已存在的 `~/.cache/`，不新建目录。
 - `state/telegram-posts/posted.json`、`state/bluesky-posts/posted.json`：判重唯一依据，已从 git 取消跟踪。
 
