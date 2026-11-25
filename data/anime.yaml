@@ -1,4 +1,4 @@
-# 动漫资源（55 条）
+# 动漫资源（56 条）
 # 来源：夸克网盘 SHARE/05动漫
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -1267,3 +1267,23 @@
       217.mkv
       218.mkv
       219.mkv
+
+- id: an-002
+  title: "杀戮都市：O GANTZ:O (2016) 4K 3DCG科幻动画电影"
+  category: 动漫
+  tags: ["动漫", "动画电影", "科幻", "动作", "3DCG", "4K"]
+  quark_url: "https://pan.quark.cn/s/3fbd8503eb4c"
+  description: "《杀戮都市：O》（GANTZ:O）是 2016 年 10 月 14 日在日本上映的三维 CG 科幻动画电影，由川村泰与佐藤敬一联合执导、黑岩勉编剧，Digital Frontier 负责制作，改编自奥浩哉漫画《杀戮都市》的大阪篇。故事讲述高中生玄野计与加藤胜在意外身亡后被传送至神秘房间，黑球 GANTZ 向其指派猎杀外星生物的任务，二人据此在大阪与滑瓢等妖怪军团交战，以完成任务换取重生机会。影片采用全 3DCG 技术呈现机械装备、紧身战斗服与怪物对战场景，配音阵容包括梶裕贵、小野大辅、早见沙织、市道真央等。盘端资源为 2160p 蓝光压制 MKV 文件（约 15.3GB），附外挂字幕与海报图。片名、年份与类型参考 TMDB（编号 396263）及公开影视资料。"
+  date: 2016-10-14
+  added: 2026-11-25
+  image: an-002.jpg
+  updated: 2026-11-25
+  files:
+    count: 3
+    size: "14.3 GB"
+    format: "SRT / JPG / MKV"
+    tree: |
+      002-杀戮都市：O (2016) 4K/
+      Gantz：O .jpg
+      Gantz.O.2016.2160p.BluRay.x264.DTS-WiKi.mkv
+      Gantz.O.2016.2160p.BluRay.x264.DTS-WiKi.srt

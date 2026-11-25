@@ -1,4 +1,4 @@
-# 游戏资源（73 条）
+# 游戏资源（76 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1530,3 +1530,63 @@
       1DLC/
       [本体v1.0.0][0100B1C0249B4000][22.1.0][中文].nsp
       [升级档v1.0.1][0100B1C0249B4800][22.5.0][中文].nsp
+
+- id: game-074
+  title: "合金装备崛起复仇 - Xbox360移植动作游戏数据包"
+  category: 游戏
+  tags: ["游戏", "Xbox360", "动作", "移植", "单机", "数据包"]
+  quark_url: "https://pan.quark.cn/s/ba7a1e689e8a"
+  description: "《合金装备崛起：复仇》（Metal Gear Rising: Revengeance）由 PlatinumGames 与 Kojima Productions 联合开发、Konami 发行，主机版于 2013 年 2 月在 PlayStation 3 与 Xbox 360 推出，PC 版于 2014 年 1 月上线 Steam。游戏以《合金装备》系列角色雷电为主角，讲述这位改造人战士受雇于民间军事公司执行任务，卷入神秘势力操纵的阴谋。作品以高速近身战为核心，玩家可操控高频振动刀进行斩击，借助斩击模式精确切断敌人肢体并吸取能量，强调节奏与时机把握。盘端资源为一个约 7.68GB 的数据包压缩文件及安装说明文本，目录标注为 Xbox360 移植版本；具体运行方式与兼容性以盘端安装说明为准。发行与玩法信息参考 PlatinumGames 官方网站、Steam 商店及公开游戏资料库，平台形态以盘端文件为准。"
+  date: 2013-02-19
+  added: 2026-11-25
+  image: game-074.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "7.2 GB"
+    format: "ZIP / TXT"
+    packed: true
+    tree: |
+      074-合金装备崛起复仇 Metal Gear Rising Revengeance - Xbox360移植/
+      安装说明.txt
+      数据包.zip
+
+- id: game-075
+  title: "宝可梦传说Z-A Pokémon Legends Z-A - Switch简体中文动作角色扮演"
+  category: 游戏
+  tags: ["游戏", "Switch", "宝可梦", "角色扮演", "动作", "中文"]
+  quark_url: "https://pan.quark.cn/s/033586a05566"
+  description: "《宝可梦传说 Z-A》（Pokémon Legends: Z-A）由 Game Freak 开发、任天堂与宝可梦公司发行，于 2025 年 10 月 16 日登陆 Nintendo Switch，并同步推出画面与帧率增强的 Nintendo Switch 2 版本。游戏舞台设定在卡洛斯地区的密阿雷市，围绕城市再开发计划展开；白天可在野生区域捕捉与培养宝可梦，夜晚则进入 Z-A 皇家竞技，通过挑战逐步从 Z 级升至 A 级。本作在系列正统作品中引入实时战斗机制，宝可梦可依指令即时出招，超级进化也在剧情中扮演重要角色。盘端资源为 Switch 简体中文版本，包含本体 NSP（标题 ID 0100F43008C44000，v1.0.0）、升级档 NSP（v2.0.2）、DLC 文件以及存档修改器与运行环境组件，另附历史版本目录。平台与版本以盘端文件为准，发行信息参考宝可梦官方网站。"
+  date: 2025-10-16
+  added: 2026-11-25
+  image: game-075.jpg
+  updated: 2026-11-25
+  files:
+    count: 5
+    format: "NSP×2"
+    tree: |
+      075-宝可梦传说Z-A Pokémon Legends Z-A/
+      存档修改器及运行环境/
+      历史版本[不用下载]/
+      DLC1/
+      [本体v1.0.0][0100F43008C44000][20.1.5][中文][US].nsp
+      [升级档v2.0.2][0100F43008C44800][21.2.0][中文][US].nsp
+
+- id: game-076
+  title: "使命召唤9黑色行动2 - PC移植第一人称射击"
+  category: 游戏
+  tags: ["游戏", "PC", "第一人称射击", "移植", "单机"]
+  quark_url: "https://pan.quark.cn/s/3b2891d66783"
+  description: "《使命召唤：黑色行动 2》（Call of Duty: Black Ops II）由 Treyarch 开发、动视发行，于 2012 年 11 月 13 日登陆 Windows、PlayStation 3 与 Xbox 360，是《使命召唤》系列第九部作品。剧情跨越 1980 年代与 2025 年两条时间线，玩家分别扮演弗兰克·伍兹与大卫·梅森，追查尼加拉瓜军火商劳尔·梅内德斯引发的第二次冷战危机。作品引入分支剧情与 Strike Force 指挥关卡，玩家选择会影响关卡走向与结局；多人模式、僵尸模式与武器自定义系统也构成主要内容。盘端资源目录标注为 PC 移植版、语言待确认，内含安装说明文本与一个体积较小的移植 NSP 文件，实际游戏内容与运行方式以盘端安装说明为准。发行与玩法信息参考 Steam 商店与维基百科，平台形态以盘端文件为准。"
+  date: 2012-11-13
+  added: 2026-11-25
+  image: game-076.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "259 KB"
+    format: "TXT / NSP"
+    tree: |
+      076-使命召唤9黑色行动2 Call of Duty Black Ops II - PC移植 - 语言待确认/
+      [移植游戏][05D5E871FDCAE000][v0].nsp
+      安装说明.txt
