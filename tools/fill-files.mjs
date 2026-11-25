@@ -27,14 +27,19 @@
 // 队列顺序：待补条目按 added（入库时间）升序扫描，最老的资源先补；缺 added 的排最后。
 // 写入额度：--limit 是「本次要写几条」，不是「本次看几条」。占位目录 / 抓取失败不占额度，
 // 自动顺延下一条（否则 --limit 1 会被队首一个空目录永久堵死，每天 0 产出）。
-// 最多尝试条数由 --tries 兜底（默认每条额度试 20 个，防止全库空目录时空转打接口）。
+// 最多尝试次数由 --tries 兜底（默认每个写入额度 20 次请求，防止全库空目录时空转打接口）。
 //
 // 每个分类补齐 1 条（--per-category，2026-11-22 起为编排脚本默认口径）：
 //   不再全局按 added 取前 N 条——那样电影分类会连续霸占整轮额度，其他分类长期饿死。
 //   改为按分类分组，每个有待补条目的分类各取 added 升序的 1 条；该条占位/抓取失败时
-//   在**本分类内**顺延下一条，补成 1 条即转下一个分类；某分类无待补条目则直接跳过。
-//   每类最多写 1 条、每类最多试 --tries 个候选；--limit 在此模式下被忽略（额度=分类数）。
-//   --only / --ids 是定向用法，per-category 对它们不生效（仍按各自口径处理）。
+//   在**本分类内**继续顺延下一条，**占位/失败不消耗该类的候选额度**（2026-11-25 修）。
+//   历史 bug：原先每类最多试 20 个候选，movie 队头 20 条恰好全是占位目录，
+//   导致队尾真实资源永远排不到、连续多轮「movie 未补」；现在改为：
+//     · 各分类**轮流**试 1 条（防止某类把全局预算吃光），补成 1 条即退出该类；
+//     · 占位/失败继续顺延，只有全局请求预算（写入额度数 × --tries）用尽或全类扫完才停。
+//   --limit 在此模式下被忽略（额度=分类数）；--only / --ids 是定向用法，per-category 对它们不生效。
+//   刚确认为占位的 id 记入 ~/.cache/quark-sync/fill-files-notready.json，TTL（默认 6 小时）内
+//   直接跳过、不发请求也不消耗预算；资源到位后最快下下轮自动被重新检查。
 //
 // 用法：
 //   node scripts/fill-files.mjs --limit 30            # 本次最多补 30 条（默认，全局 added 升序）
@@ -44,7 +49,8 @@
 //   node scripts/fill-files.mjs --ids mv-427,tv-086   # 只补指定 id（同步任务入库后当场补；已有 files: 的自动跳过）
 //   node scripts/fill-files.mjs --dry-run             # 只抓取打印，不写文件
 //   node scripts/fill-files.mjs --limit 50 --delay 4000  # 请求更慢更稳
-//   node scripts/fill-files.mjs --limit 5 --tries 30  # 每条额度最多试 30 个候选
+//   node scripts/fill-files.mjs --limit 5 --tries 30  # 每条额度的请求预算 30 次（占位也发请求，但不占写入额度）
+//   node scripts/fill-files.mjs --recheck-hours 0     # 临时关掉空目录缓存（每次都重新抓）
 //   node scripts/fill-files.mjs --serials 1 --limit 0 # 只跑连载轮询（调试）
 //   node scripts/fill-files.mjs --serials 0           # 临时关掉连载轮询
 //   node scripts/fill-files.mjs --airing 0            # 临时关掉追更提醒
@@ -131,8 +137,17 @@ const serialsN = Math.max(0, Number(getArg('serials', 1)) || 0);
 const todoN = Math.max(0, Number(getArg('todo', 3)) || 0);
 // 连载轮询时顺带查 TMDB 播出事件（默认开；0 = 关闭）。只读、不写数据、零额外夸克请求。
 const airingN = Math.max(0, Number(getArg('airing', 1)) || 0);
-// 每写入 1 条允许尝试的候选数上限（占位/失败顺延的兜底，避免空转打爆接口）
+// 每写入 1 条允许的请求数上限（占位/失败顺延的兜底，避免空转打爆接口）。
+// 注意这是「总请求预算」而不是「每类看几个候选」：占位/失败照样发请求，但不应该把
+// 后面的真实资源永久挡在队头（2026-11-25 修）。
 const triesPerWrite = Math.max(1, Number(getArg('tries', 20)) || 20);
+// 刚确认为空目录的 id 记入缓存，TTL 内不再发请求（默认 6 小时 = 3 轮例行任务）。
+// 否则 queue 修好后每轮仍要把同一批占位目录重抓一遍，真实资源永远排在请求预算之后。
+// 用环境变量可改缓存位置（便于隔离测试）；--recheck-hours 0 关闭缓存。
+const recheckHours = Math.max(0, Number(getArg('recheck-hours', 6)) || 0);
+const notReadyFile =
+  process.env.WDP_FILLFILES_NOTREADY_FILE ||
+  path.join(os.homedir(), '.cache', 'quark-sync', 'fill-files-notready.json');
 
 /**
  * 取数口径（2026-11-11 起可切换）。
@@ -235,6 +250,32 @@ function fetchDetail(url, pdirFid = '', page = 1) {
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/** 空目录缓存：{ id: ISO 时间戳 }。只留 TTL 内的记录，过期自动重新检查。 */
+function loadNotReady(nowMs) {
+  if (recheckHours <= 0) return new Map();
+  try {
+    const obj = JSON.parse(fs.readFileSync(notReadyFile, 'utf8'));
+    const out = new Map();
+    for (const [id, ts] of Object.entries(obj)) {
+      const t = Date.parse(ts);
+      if (Number.isFinite(t) && nowMs - t < recheckHours * 3600_000) out.set(id, ts);
+    }
+    return out;
+  } catch {
+    return new Map();
+  }
+}
+
+function saveNotReady(map) {
+  if (recheckHours <= 0 || dryRun) return;
+  try {
+    fs.mkdirSync(path.dirname(notReadyFile), { recursive: true });
+    fs.writeFileSync(notReadyFile, `${JSON.stringify(Object.fromEntries(map), null, 2)}\n`);
+  } catch (e) {
+    console.log(`  [提醒] 空目录缓存写入失败（不影响本轮补齐）：${e.message}`);
+  }
+}
 /** 单目录最多翻几页（50 条/页）：绝大多数目录一页就够，超大目录封顶 150 条 */
 const MAX_PAGES = 3;
 /** drive 口径的中间产物目录（browse 的 JSONL 落这里，绝不落在仓库里，免得污染 git status） */
@@ -481,7 +522,7 @@ console.log(
       ? `指定 ${wantedIds.length} 个 id`
       : perCatMode
         ? '每个分类各补 1 条（占位/失败在本分类内顺延，无待补分类跳过）'
-        : `补 ${limit} 条（占位/失败顺延，最多试 ${limit * triesPerWrite} 个）`
+        : `补 ${limit} 条（占位/失败顺延，最多 ${limit * triesPerWrite} 次请求）`
   } · 按 added 升序 · 间隔 ${delayMs}ms · updated=${today}`
 );
 const all = collectPending();
@@ -500,12 +541,12 @@ if (wantedIds) {
   console.log(`待补条目：${all.length} 个\n`);
 }
 // --limit 是「写入额度」而不是「查看条数」：占位目录 / 抓取失败不占额度，自动顺延下一条，
-// 直到写满额度，或试到 --tries 的兜底上限（防止全库都是空目录时空转打接口）。
+// 直到写满额度，或全局请求预算用尽（--tries × 写入额度，防止全库都是空目录时空转打接口）。
 // --ids 是同步任务入库后当场补的那几条，指定的全部试完，不受额度约束。
 //
 // 每分类 1 条（perCatMode）：把 pending 按 file 分组，每组即一个分类的候选队列（组内已按
-// added 升序）。writeCap = 有待补条目的分类数（每类最多写 1 条）；每类最多试 triesPerWrite
-// 个候选。主循环改为「外层遍历分类、内层在本分类内顺延」，补成 1 条即转下一个分类。
+// added 升序）。writeCap = 有待补条目的分类数（每类最多写 1 条）。各分类**轮流**试 1 条，
+// 占位/失败继续在本类内往后顺延，直到本类写满 1 条或全局预算用尽。
 let writeCap;
 let maxTries;
 let groups = null; // perCatMode 下：Array<Array<pendingItem>>，每个子数组是一个分类的候选
@@ -518,7 +559,7 @@ if (perCatMode) {
   groups = [...byFile.values()];
   writeCap = groups.length;
   maxTries = writeCap * triesPerWrite;
-  console.log(`每分类 1 条模式：${writeCap} 个分类有待补条目 · 每类最多试 ${triesPerWrite} 个候选\n`);
+  console.log(`每分类 1 条模式：${writeCap} 个分类有待补条目 · 全局最多请求 ${maxTries} 次（占位/失败继续在本类顺延）\n`);
 } else {
   writeCap = wantedIds ? Infinity : limit;
   maxTries = wantedIds ? pending.length : Math.min(pending.length, writeCap * triesPerWrite);
@@ -532,88 +573,119 @@ let fail = 0;
 let skip = 0;
 const failed = [];
 const notReady = [];
+// 空目录缓存：TTL 内直接跳过，不发请求、不消耗全局预算（2026-11-25）
+const nowMs = Date.now();
+const notReadyMap = loadNotReady(nowMs);
+if (notReadyMap.size) {
+  console.log(`空目录缓存：${notReadyMap.size} 条在 ${recheckHours}h 内跳过，不占请求预算\n`);
+}
 
-// 外层：每个分类一组；内层：本分类内按 added 升序顺延。非 perCatMode 时 groups=null，
-// 用一次性的单元素遍历模拟原来的全局线性队列，原有行为逐字不变。
-const rounds = perCatMode ? groups : [pending];
-let catOk = 0; // 当前分类已写入条数（perCatMode 下到 1 就跳出内层）
-for (const group of rounds) {
-  if (!perCatMode && ok >= writeCap) break;
-  catOk = 0;
-  let catTried = 0;
-  for (const item of group) {
-    if (ok >= writeCap) break;
-    if (perCatMode && catOk >= 1) break; // 本分类已补 1 条，转下一个分类
-    if (tried >= maxTries) break;
-    if (perCatMode && catTried >= triesPerWrite) break; // 本分类候选试够，跳过
-    tried++;
-    catTried++;
-    process.stdout.write(`${item.id} … `);
+/** 试一个候选：返回 ok / skip / fail。占位与失败都不写盘，由调用方继续在本类顺延。 */
+async function tryOne(item) {
+  try {
     // 根目录往往只装一个总文件夹：按 locateContent 的口径下钻（最多 2 级）拿真实内容清单
-    let root = await fetchAll({ url: item.url, id: item.id });
+    const root = await fetchAll({ url: item.url, id: item.id });
     if (!root.files) {
       const msg = root.error || '分享内容为空';
       console.log(`失败（${msg}）`);
       fail++;
       failed.push(`${item.id}: ${msg}`);
-    } else {
-      // 占位说明文件（trending-sync / 夸克同步建目录时预置，2026-11-08 起两份）：
-      //   · 更新通知「资源在24小时内更新-请先转存-更新会自动通知.md」
-      //   · 缺失反馈「资源缺失反馈请加QQ群1045824859.md」
-      // 是我们自己的工作流产物，不属于资源内容：
-      //   · 盘端只剩它们时 = 资源还没到位（TMDB 今日热门建的就是这种空目录）→ 整条跳过、一个字不写；
-      //   · 否则把它们从清单里剔掉，count / tree / format 只统计真实内容（AGENTS.md §5：宁缺勿假）。
-      // ⚠ 新增/改名占位文件时必须同步改这里，否则占位 md 会被当成真实资源写进 files: 假清单。
-      //   权威定义在 quark-resource-sync skill 的 scripts/lib/placeholder.mjs（本仓库 vendor 内有副本，跨仓库无法 import）。
-      // 下钻（最多 2 级）与剔占位的口径只在 locateContent 一份，连载轮询共用（2026-11-10 定稿）。
-      const loc = await locateContent({ url: item.url, id: item.id }, root.files);
-      if (loc.error) {
-        console.log(`失败（${loc.error}）`);
-        fail++;
-        failed.push(`${item.id}: ${loc.error}`);
-        if (delayMs) await sleep(delayMs);
-        continue;
-      }
-      const real = loc.files;
-      const prefix = loc.prefix;
-      if (!real.length) {
-        console.log('跳过（盘端只有占位说明文件，资源还没到位）');
-        skip++;
-        notReady.push(item.id);
-        if (delayMs) await sleep(delayMs);
-        continue;
-      }
-      // count 用实际拿到的条目数：子目录查询的 file_num 不可靠
-      const agg = aggregate({ files: real }, real.length);
-      if (prefix.length && agg?.tree) agg.tree = [...prefix, ...agg.tree.split('\n')].join('\n');
-      if (!agg) {
-        console.log('跳过（分享内容为空）');
-        fail++;
-        failed.push(`${item.id}: 分享内容为空`);
-      } else {
-        const parts = [];
-        if (agg.count) parts.push(`${agg.count} 项`);
-        if (agg.size) parts.push(agg.size);
-        if (agg.format) parts.push(agg.format);
-        console.log(`完成（${parts.join(' · ') || '有内容'}）`);
-        if (!dryRun) {
-          // 新增行沿用插入点那一行的行尾，与上下文保持一致
-          const after = item.lines[item.at];
-          const nl = /\r\n$/.test(after) ? '\r\n' : '\n';
-          const snippet = toYamlLines(agg, !item.hasUpdated).map((l) => l + nl);
-          item.lines.splice(item.at + 1, 0, ...snippet);
-          for (const other of pending) {
-            if (other.file === item.file && other.at > item.at) other.at += snippet.length;
-          }
-          dirtyFiles.add(item.file);
-        }
-        ok++;
-        catOk++;
-      }
+      return 'fail';
     }
-    if (delayMs) await new Promise((r) => setTimeout(r, delayMs));
+    // 占位说明文件（trending-sync / 夸克同步建目录时预置，2026-11-08 起两份）：
+    //   · 更新通知「资源在24小时内更新-请先转存-更新会自动通知.md」
+    //   · 缺失反馈「资源缺失反馈请加QQ群1045824859.md」
+    // 是我们自己的工作流产物，不属于资源内容：
+    //   · 盘端只剩它们时 = 资源还没到位（TMDB 今日热门建的就是这种空目录）→ 整条跳过、一个字不写；
+    //   · 否则把它们从清单里剔掉，count / tree / format 只统计真实内容（AGENTS.md §5：宁缺勿假）。
+    // ⚠ 新增/改名占位文件时必须同步改这里，否则占位 md 会被当成真实资源写进 files: 假清单。
+    //   权威定义在 quark-resource-sync skill 的 scripts/lib/placeholder.mjs（本仓库 vendor 内有副本，跨仓库无法 import）。
+    // 下钻（最多 2 级）与剔占位的口径只在 locateContent 一份，连载轮询共用（2026-11-10 定稿）。
+    const loc = await locateContent({ url: item.url, id: item.id }, root.files);
+    if (loc.error) {
+      console.log(`失败（${loc.error}）`);
+      fail++;
+      failed.push(`${item.id}: ${loc.error}`);
+      return 'fail';
+    }
+    const real = loc.files;
+    const prefix = loc.prefix;
+    if (!real.length) {
+      console.log('跳过（盘端只有占位说明文件，资源还没到位）');
+      skip++;
+      notReady.push(item.id);
+      notReadyMap.set(item.id, new Date().toISOString());
+      return 'skip';
+    }
+    // count 用实际拿到的条目数：子目录查询的 file_num 不可靠
+    const agg = aggregate({ files: real }, real.length);
+    if (prefix.length && agg?.tree) agg.tree = [...prefix, ...agg.tree.split('\n')].join('\n');
+    if (!agg) {
+      console.log('跳过（分享内容为空）');
+      fail++;
+      failed.push(`${item.id}: 分享内容为空`);
+      return 'fail';
+    }
+    const parts = [];
+    if (agg.count) parts.push(`${agg.count} 项`);
+    if (agg.size) parts.push(agg.size);
+    if (agg.format) parts.push(agg.format);
+    console.log(`完成（${parts.join(' · ') || '有内容'}）`);
+    if (!dryRun) {
+      // 新增行沿用插入点那一行的行尾，与上下文保持一致
+      const after = item.lines[item.at];
+      const nl = /\r\n$/.test(after) ? '\r\n' : '\n';
+      const snippet = toYamlLines(agg, !item.hasUpdated).map((l) => l + nl);
+      item.lines.splice(item.at + 1, 0, ...snippet);
+      for (const other of pending) {
+        if (other.file === item.file && other.at > item.at) other.at += snippet.length;
+      }
+      dirtyFiles.add(item.file);
+    }
+    ok++;
+    notReadyMap.delete(item.id);
+    return 'ok';
+  } finally {
+    if (delayMs) await sleep(delayMs);
   }
 }
+
+// 非 perCatMode 时 rounds=[pending]，单组队列 = 原有全局线性口径（行为不变）。
+// perCatMode 时各组轮流一次试 1 条：占位/失败只推进该组游标，不消耗写入额度；
+// 某类先补满就退出，全局请求预算用尽或所有组扫完则停。
+const rounds = perCatMode ? groups : [pending];
+const cursors = rounds.map(() => 0);
+const written = rounds.map(() => 0);
+const perGroupCap = perCatMode ? 1 : writeCap;
+let active = rounds.length;
+while (active > 0) {
+  if (!perCatMode && ok >= writeCap) break;
+  let progressed = false;
+  for (let gi = 0; gi < rounds.length; gi++) {
+    const group = rounds[gi];
+    if (written[gi] >= perGroupCap || cursors[gi] >= group.length) continue;
+    const item = group[cursors[gi]++];
+    // TTL 内已确认空的目录：打印后直接跳过，不发请求也不占全局预算（2026-11-25）
+    if (notReadyMap.has(item.id)) {
+      console.log(`${item.id} … 跳过（空目录缓存内，${recheckHours}h 后复查）`);
+      skip++;
+      notReady.push(item.id);
+      progressed = true;
+      continue;
+    }
+    if (tried >= maxTries) continue; // 预算用尽；缓存内的仍能在上面被跳过
+    tried++;
+    process.stdout.write(`${item.id} … `);
+    const result = await tryOne(item);
+    if (result === 'ok') {
+      written[gi]++;
+      if (perCatMode) active--;
+    }
+    progressed = true;
+  }
+  if (!progressed) break;
+}
+saveNotReady(notReadyMap);
 
 if (!dryRun) {
   for (const file of dirtyFiles) {
