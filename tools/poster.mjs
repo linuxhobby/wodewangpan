@@ -562,6 +562,154 @@ const ecomText = `
   ${text(240, 650, '快速打通全域成交闭环', 19, '#5a1428', { opacity: 0.78 })}
   ${text(240, 692, '电商运营  ·  短视频  ·  直播带货', 13, '#5a1428', { opacity: 0.6, spacing: 1.6 })}`;
 
+// ── dance：舞蹈教程合集（cs-040）——粉紫亮底 + 镜面分解人形 ──
+// 主视觉：中央一枚舞者剪影（单腿抬起、手臂延伸），四角各一列「分解动作」小格，
+// 呼应「镜面分解教学」；方格内是音符，表示配乐跟练。
+const danceFigure = (cx, cy, s, fill, op) => `
+  <g fill="${fill}" fill-opacity="${op}" transform="translate(${cx} ${cy}) scale(${s})">
+    <circle cx="2" cy="-50" r="11"/>
+    <path d="M-2 -38 C-14 -34 -17 -20 -14 -4 L-16 20 L-4 20 L0 -4 L2 -4 L6 20 L18 18 L14 -8 C17 -24 12 -34 2 -38 Z"/>
+    <path d="M-11 -30 C-26 -38 -36 -50 -40 -62 L-30 -66 C-26 -54 -18 -44 -6 -40 Z"/>
+    <path d="M11 -30 C26 -34 38 -26 44 -14 L35 -8 C30 -18 22 -24 12 -24 Z"/>
+    <path d="M-8 20 L-16 40 L-28 52 L-22 58 L-8 46 L0 26 Z"/>
+    <path d="M12 18 L28 30 L34 48 L26 50 L20 34 L6 26 Z"/>
+  </g>`;
+
+const danceNote = (cx, cy, s, fill, op) => `
+  <g fill="${fill}" fill-opacity="${op}" transform="translate(${cx} ${cy}) scale(${s})">
+    <ellipse cx="0" cy="0" rx="6.5" ry="5" transform="rotate(-18)"/>
+    <path d="M6 -2 L6 -20" stroke="${fill}" stroke-opacity="${op}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M6 -20 C13 -17 15 -11 13 -6" stroke="${fill}" stroke-opacity="${op}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  </g>`;
+
+const danceArt = `
+  <circle cx="240" cy="272" r="150" fill="#ffffff" fill-opacity=".42"/>
+  <circle cx="240" cy="272" r="150" fill="none" stroke="#ffffff" stroke-opacity=".9" stroke-width="1.6"/>
+  <circle cx="240" cy="272" r="121" fill="none" stroke="#8e2f7a" stroke-opacity=".26" stroke-width="1.4" stroke-dasharray="3 9"/>
+  <g stroke="#c2418f" stroke-opacity=".34" stroke-width="1.8" fill="none">
+    <path d="M240 272 L110 176 M240 272 L370 176 M240 272 L110 368 M240 272 L370 368"/>
+  </g>
+  <g fill="#ffffff" fill-opacity=".9">
+    <rect x="92" y="152" width="40" height="48" rx="9"/>
+    <rect x="92" y="344" width="40" height="48" rx="9"/>
+    <rect x="348" y="152" width="40" height="48" rx="9"/>
+    <rect x="348" y="344" width="40" height="48" rx="9"/>
+  </g>
+  ${danceNote(112, 176, 1, '#c2418f', '.8')}
+  ${danceNote(112, 368, 1, '#c2418f', '.8')}
+  ${danceNote(368, 176, 1, '#c2418f', '.8')}
+  ${danceNote(368, 368, 1, '#c2418f', '.8')}
+  ${danceFigure(112, 186, 0.42, '#c2418f', '.8')}
+  ${danceFigure(112, 378, 0.42, '#c2418f', '.8')}
+  ${danceFigure(368, 186, 0.42, '#c2418f', '.8')}
+  ${danceFigure(368, 378, 0.42, '#c2418f', '.8')}
+  <circle cx="240" cy="272" r="88" fill="#ffffff" fill-opacity=".97"/>
+  <circle cx="240" cy="272" r="88" fill="none" stroke="#c2418f" stroke-opacity=".3" stroke-width="1.6"/>
+  ${danceFigure(240, 268, 0.92, '#a83079', '.95')}
+  <g fill="#c2418f" fill-opacity=".7">
+    <circle cx="150" cy="122" r="4"/>
+    <circle cx="332" cy="122" r="4"/>
+    <circle cx="150" cy="422" r="4"/>
+    <circle cx="332" cy="422" r="4"/>
+  </g>`;
+
+const danceText = `
+  ${text(240, 548, '各种舞蹈教程', 40, '#5c1249', { weight: 700 })}
+  ${text(240, 606, '零基础合集', 50, '#5c1249', { weight: 700 })}
+  ${text(240, 650, '镜面分解 · 慢速拆解 · 热门编舞', 19, '#5c1249', { opacity: 0.78 })}
+  ${text(240, 692, '新手基础  ·  网红热门  ·  手势舞  ·  韩舞', 13, '#5c1249', { opacity: 0.6, spacing: 1.6 })}`;
+
+// ── martial：中华武术课程合集（cs-039）——暖金亮底 + 拳种圆环 ──
+// 主视觉：中央太极人形（抱球势），环绕八个代表拳种的小圆点，呼应「多拳种合集」。
+const martialOrbit = [0, 45, 90, 135, 180, 225, 270, 315]
+  .map((a) => {
+    const rad = (a * Math.PI) / 180;
+    const x = 240 + 122 * Math.cos(rad);
+    const y = 272 + 122 * Math.sin(rad);
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="17" fill="#ffffff" fill-opacity=".95"/>
+  <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="17" fill="none" stroke="#a8531a" stroke-opacity=".3" stroke-width="1.4"/>
+  <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="#b4601f"/>`;
+  })
+  .join('\n  ');
+
+const martialArt = `
+  <circle cx="240" cy="272" r="150" fill="#ffffff" fill-opacity=".44"/>
+  <circle cx="240" cy="272" r="150" fill="none" stroke="#ffffff" stroke-opacity=".9" stroke-width="1.6"/>
+  <circle cx="240" cy="272" r="104" fill="none" stroke="#a8531a" stroke-opacity=".22" stroke-width="1.4" stroke-dasharray="3 9"/>
+  ${martialOrbit}
+  <g fill="none" stroke="#b4601f" stroke-opacity=".4" stroke-width="1.6">
+    <path d="M240 150 L240 186 M240 358 L240 394 M118 272 L154 272 M326 272 L362 272"/>
+  </g>
+  <circle cx="240" cy="272" r="76" fill="#ffffff" fill-opacity=".97"/>
+  <circle cx="240" cy="272" r="76" fill="none" stroke="#b4601f" stroke-opacity=".3" stroke-width="1.6"/>
+  <g fill="#9c4d17">
+    <circle cx="240" cy="222" r="12"/>
+    <path d="M240 234 C227 238 222 252 223 266 L218 302 L231 303 L236 276 L244 276 L249 303 L262 302 L257 266 C258 252 253 238 240 234 Z"/>
+  </g>
+  <g fill="none" stroke="#9c4d17" stroke-width="7.5" stroke-linecap="round">
+    <path d="M225 254 C212 266 210 280 218 288"/>
+    <path d="M255 254 C268 266 270 280 262 288"/>
+  </g>
+  <circle cx="240" cy="292" r="15" fill="#b4601f"/>
+  <circle cx="240" cy="292" r="15" fill="none" stroke="#ffffff" stroke-opacity=".55" stroke-width="1.6"/>
+  <g fill="none" stroke="#b4601f" stroke-opacity=".5" stroke-width="2" stroke-dasharray="4 6">
+    <circle cx="240" cy="292" r="22"/>
+  </g>
+  <g fill="none" stroke="#b4601f" stroke-opacity=".55" stroke-width="2.6" stroke-linecap="round">
+    <path d="M150 122 L168 114 M330 122 L348 114 M150 422 L168 430 M330 422 L348 430"/>
+  </g>
+  <g fill="#b4601f" fill-opacity=".6">
+    <circle cx="186" cy="106" r="4"/>
+    <circle cx="294" cy="106" r="4"/>
+    <circle cx="186" cy="438" r="4"/>
+    <circle cx="294" cy="438" r="4"/>
+  </g>`;
+
+const martialText = `
+  ${text(240, 548, '中华武术', 46, '#5c2f0c', { weight: 700 })}
+  ${text(240, 606, '系列课程合集', 42, '#5c2f0c', { weight: 700 })}
+  ${text(240, 650, '太极 · 八极 · 咏春 · 散打 · 柔术', 19, '#5c2f0c', { opacity: 0.78 })}
+  ${text(240, 692, '三十余门课程  ·  分节教学  ·  MP4 视频', 13, '#5c2f0c', { opacity: 0.6, spacing: 1.6 })}`;
+
+// ── vocab：一个月记忆 20000 单词（cs-035）——湖蓝亮底 + 词根拼装 ──
+// 主视觉：中央词根方块，四周飞散的词缀小片，呼应「象形记忆 + 词根词缀」。
+const vocabChips = [
+  ['PHOTO', 150, 168], ['GRAPH', 330, 168], ['BIO', 150, 376], ['PORT', 330, 376],
+];
+const vocabChipsSvg = vocabChips
+  .map(([w, x, y]) => `<rect x="${x - 32}" y="${y - 13}" width="64" height="26" rx="7" fill="#ffffff" fill-opacity=".92"/>
+  <rect x="${x - 32}" y="${y - 13}" width="64" height="26" rx="7" fill="none" stroke="#12608f" stroke-opacity=".28" stroke-width="1.3"/>
+  ${text(x, y + 5, w, 12, '#12608f', { weight: 700, spacing: 1.2 })}`)
+  .join('\n  ');
+
+const vocabArt = `
+  <circle cx="240" cy="272" r="150" fill="#ffffff" fill-opacity=".44"/>
+  <circle cx="240" cy="272" r="150" fill="none" stroke="#ffffff" stroke-opacity=".9" stroke-width="1.6"/>
+  <circle cx="240" cy="272" r="118" fill="none" stroke="#12608f" stroke-opacity=".24" stroke-width="1.4" stroke-dasharray="3 9"/>
+  <g stroke="#12608f" stroke-opacity=".32" stroke-width="1.8" fill="none" stroke-dasharray="4 6">
+    <path d="M240 272 L182 182 M240 272 L298 182 M240 272 L182 362 M240 272 L298 362"/>
+  </g>
+  ${vocabChipsSvg}
+  <rect x="180" y="222" width="120" height="100" rx="16" fill="#ffffff" fill-opacity=".97"/>
+  <rect x="180" y="222" width="120" height="100" rx="16" fill="none" stroke="#12608f" stroke-opacity=".3" stroke-width="1.6"/>
+  ${text(240, 288, '词根', 38, '#0e3f60', { weight: 700 })}
+  ${text(240, 310, 'ROOT & AFFIX', 11, '#12608f', { weight: 600, spacing: 1.6 })}
+  <g fill="#12608f" fill-opacity=".5">
+    <circle cx="240" cy="182" r="4"/>
+    <circle cx="240" cy="362" r="4"/>
+    <circle cx="160" cy="272" r="4"/>
+    <circle cx="320" cy="272" r="4"/>
+  </g>
+  <g fill="none" stroke="#12608f" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round">
+    <path d="M118 132 L134 124 M362 132 L346 124 M118 412 L134 420 M362 412 L346 420"/>
+  </g>`;
+
+const vocabText = `
+  ${text(240, 548, '一个月记忆', 38, '#0d3b5c', { weight: 700 })}
+  ${text(240, 606, '20000 单词', 50, '#0d3b5c', { weight: 700 })}
+  ${text(240, 650, '象形记忆 · 词根词缀 · 美语发音', 19, '#0d3b5c', { opacity: 0.78 })}
+  ${text(240, 692, '音频 + PDF 讲义  ·  听说读写全套视频', 13, '#0d3b5c', { opacity: 0.6, spacing: 1.6 })}`;
+
 const SCENES = {
   ecom: {
     bg1: '#fff0f2', bg2: '#ffb08c', halo: '#ffffff', plate: '#ffffff', plateOpacity: '.46',
@@ -617,6 +765,41 @@ const SCENES = {
     layout: {
       lines: [{ y: 556, size: 52, weight: 700 }],
       sub: { y: 612, size: 20, opacity: 0.9 }, foot: { y: 668, size: 13, opacity: 0.62, spacing: 1.6 },
+    },
+  },
+  // 2026-11-26：cs-035 / cs-039 / cs-040 原配图是资源站带水印的错图（cs-035 与 cs-040
+  // 甚至是同一张），改用矢量主题版式重绘，风格与 cs-034 一致。
+  dance: {
+    bg1: '#fdeef7', bg2: '#f5b3dc', halo: '#ffffff', plate: '#ffffff', plateOpacity: '.44',
+    line: '#8e2f7a', ink: '#5c1249', accent: '#c2418f', kicker: 'DANCE  /  COLLECTION 040',
+    art: danceArt, text: danceText,
+    titles: ['各种舞蹈教程', '零基础合集'],
+    subText: '镜面分解 · 慢速拆解 · 热门编舞', footText: '新手基础  ·  网红热门  ·  手势舞  ·  韩舞',
+    layout: {
+      lines: [{ y: 548, size: 40, weight: 700 }, { y: 606, size: 50, weight: 700 }],
+      sub: { y: 650, size: 19, opacity: 0.78 }, foot: { y: 692, size: 13, opacity: 0.6, spacing: 1.6 },
+    },
+  },
+  martial: {
+    bg1: '#fff4e6', bg2: '#ffbf80', halo: '#ffffff', plate: '#ffffff', plateOpacity: '.44',
+    line: '#a8531a', ink: '#5c2f0c', accent: '#b4601f', kicker: 'WUSHU  /  COLLECTION 039',
+    art: martialArt, text: martialText,
+    titles: ['中华武术', '系列课程合集'],
+    subText: '太极 · 八极 · 咏春 · 散打 · 柔术', footText: '三十余门课程  ·  分节教学  ·  MP4 视频',
+    layout: {
+      lines: [{ y: 548, size: 46, weight: 700 }, { y: 606, size: 42, weight: 700 }],
+      sub: { y: 650, size: 19, opacity: 0.78 }, foot: { y: 692, size: 13, opacity: 0.6, spacing: 1.6 },
+    },
+  },
+  vocab: {
+    bg1: '#eaf6ff', bg2: '#8ecdf0', halo: '#ffffff', plate: '#ffffff', plateOpacity: '.44',
+    line: '#12608f', ink: '#0d3b5c', accent: '#12608f', kicker: 'VOCABULARY  /  COLLECTION 035',
+    art: vocabArt, text: vocabText,
+    titles: ['一个月记忆', '20000 单词'],
+    subText: '象形记忆 · 词根词缀 · 美语发音', footText: '音频 + PDF 讲义  ·  听说读写全套视频',
+    layout: {
+      lines: [{ y: 548, size: 38, weight: 700 }, { y: 606, size: 50, weight: 700 }],
+      sub: { y: 650, size: 19, opacity: 0.78 }, foot: { y: 692, size: 13, opacity: 0.6, spacing: 1.6 },
     },
   },
 };
