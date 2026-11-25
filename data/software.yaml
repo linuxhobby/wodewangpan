@@ -1901,6 +1901,15 @@
   date: 2018-12-23
   added: 2026-10-04
   image: app-093.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "34.3 MB"
+    format: "DMG / MD"
+    tree: |
+      093-CodeEdit/
+      CodeEdit.dmg
+      APP简介.md
 
 
 - id: app-094
