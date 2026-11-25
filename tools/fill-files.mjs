@@ -41,6 +41,10 @@
 //   刚确认为占位的 id 记入 ~/.cache/quark-sync/fill-files-notready.json，TTL（默认 6 小时）内
 //   直接跳过、不发请求也不消耗预算；资源到位后最快下下轮自动被重新检查。
 //
+// 排除清单（2026-11-25 起）：config/fill-files-exclude.json 里的 id 是长期占位/分享失效
+//   的资源，扫描待补队列时直接跳过、不占预算；资源到位后从数组删掉即恢复例行补齐。
+//   人工核实已恢复时可用 --ids 显式指定，覆盖排除清单（日志会提示）。
+//
 // 用法：
 //   node scripts/fill-files.mjs --limit 30            # 本次最多补 30 条（默认，全局 added 升序）
 //   node scripts/fill-files.mjs --per-category        # 每个分类各补 1 条（编排脚本默认口径）
@@ -86,6 +90,20 @@ import {
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dataDir = path.join(root, 'data');
+
+// 排除清单（2026-11-25）：盘端长期只有占位说明文件、或分享失效无法抓取的 id，
+// 不再每轮重复请求。格式与 config/drive-source-ids.json 相同（纯 id 数组）。
+// 资源到位后从数组删掉即恢复正常；--ids 显式指定可临时覆盖排除（用于人工核实已恢复）。
+const excludeFile = path.join(root, 'config', 'fill-files-exclude.json');
+function loadExcludeIds() {
+  try {
+    const arr = JSON.parse(fs.readFileSync(excludeFile, 'utf8'));
+    return new Set(Array.isArray(arr) ? arr.filter((s) => typeof s === 'string' && s.trim()) : []);
+  } catch {
+    return new Set();
+  }
+}
+const excludeIds = loadExcludeIds();
 
 // 网盘目录里的「占位说明文件」是同步任务自建（或人工放过）的工作流产物，不是资源内容。
 // 2026-11-08 起 trending-sync / mirror-baidu 预置三份：更新通知、QQ 群缺失反馈、站点导流；
@@ -525,7 +543,18 @@ console.log(
         : `补 ${limit} 条（占位/失败顺延，最多 ${limit * triesPerWrite} 次请求）`
   } · 按 added 升序 · 间隔 ${delayMs}ms · updated=${today}`
 );
-const all = collectPending();
+const scanned = collectPending();
+// 排除清单：占位/失效资源不进待补队列，也不占请求预算；--ids 显式指定时允许覆盖。
+const forcedIds = wantedIds ? new Set(wantedIds) : new Set();
+const excluded = scanned.filter((p) => excludeIds.has(p.id) && !forcedIds.has(p.id));
+if (excluded.length) {
+  console.log(`排除清单：跳过 ${excluded.length} 条（config/fill-files-exclude.json）\n`);
+}
+if (forcedIds.size) {
+  const forced = wantedIds.filter((id) => excludeIds.has(id) && scanned.some((p) => p.id === id));
+  if (forced.length) console.log(`--ids 显式指定：覆盖排除清单 ${forced.join('、')}\n`);
+}
+const all = scanned.filter((p) => !excluded.includes(p));
 // --ids 只补同步任务本轮新增的那几条；已有 files: 的条目 collectPending 已排除，重复执行安全
 let pending = all;
 if (wantedIds) {
@@ -533,7 +562,7 @@ if (wantedIds) {
   pending = all.filter((p) => set.has(p.id));
   const skipped = wantedIds.filter((id) => !pending.some((p) => p.id === id));
   console.log(
-    `全库待补：${all.length} 个 · 本次指定：${pending.length} 个` +
+    `全库待补：${all.length} 个（排除清单外）· 本次指定：${pending.length} 个` +
       (skipped.length ? ` · 跳过（已有 files: 或仓库内不存在）：${skipped.join('、')}` : '') +
       '\n'
   );
