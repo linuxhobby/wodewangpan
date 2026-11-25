@@ -401,7 +401,8 @@ async function main() {
   git(['add', ...filesToAdd]);
   // 已删除的配图：git add -A 会把删除一并 stage
   git(['add', '-A', '--', ...imgPaths]);
-  const msg = `data: 删除 ${plan.length} 个失效资源（${plan.map((i) => i.id).join('/')}，网盘目录已移入回收目录）`;
+  const driveNote = SKIP_DRIVE ? '网盘目录由用户人工处理' : '网盘目录已移入回收目录';
+  const msg = `data: 删除 ${plan.length} 个失效资源（${plan.map((i) => i.id).join('/')}，${driveNote}）`;
   const commit = git(['commit', '-m', msg]);
   if (!commit.ok) { log('✗ git commit 失败：' + commit.out.slice(0, 400)); process.exit(3); }
   const hash = git(['rev-parse', '--short', 'HEAD']).out.trim();
