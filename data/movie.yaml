@@ -6325,6 +6325,15 @@
   date: 2026-04-30
   added: "2026-10-18 02:15"
   image: mv-388.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "9.6 GB"
+    format: "MP4×2"
+    tree: |
+      388-给阿嬷的情书/
+      [4K][潮汕话].mp4
+      [4K][普通话].mp4
 
 
 - id: mv-389
@@ -6417,6 +6426,14 @@
   date: 2026-10-19
   added: 2026-10-21
   image: mv-393.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "3.7 GB"
+    format: "MP4"
+    tree: |
+      393-泥面人/
+      泥面人.Clayface.2026.1080p.英语中字.mp4
 
 - id: mv-394
   title: "海洋奇缘：启航"
@@ -6451,6 +6468,14 @@
   date: 2025-12-18
   added: "2026-10-23 17:15"
   image: mv-395.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "3.8 GB"
+    format: "MKV"
+    tree: |
+      395-家弑服务/
+      家弑服务.mkv
 
 
 - id: mv-396
@@ -6630,6 +6655,14 @@
   date: 2026-09-30
   added: "2026-10-29 05:31"
   image: mv-403.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "8.3 GB"
+    format: "MKV"
+    tree: |
+      403-不存在的罪人（2026）/
+      [ AMZN ][1080p][简英双语.].mkv
 
 
 - id: mv-404
@@ -7369,6 +7402,15 @@
   date: 2026-09-19
   added: "2026-11-07 03:40"
   image: mv-427.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "11.0 GB"
+    format: "MKV"
+    tree: |
+      427-野兽之心/
+      野兽之心- (2026)Heart of the Beast 简繁英多国字幕/
+      野兽之心Heart.of.the.Beast.2026.2160p.AMZN.WEB-DL.DDP5.1.H.265.mkv
 
 - id: mv-428
   title: "公民义警"
@@ -8302,6 +8344,14 @@
   date: 2026-11-20
   added: "2026-11-21 03:51"
   image: mv-474.jpg
+  updated: 2026-11-25
+  files:
+    count: 1
+    size: "5.6 GB"
+    format: "MKV"
+    tree: |
+      474-完美骗子/
+      完美骗子.mkv
 
 - id: mv-475
   title: "孤独的幸存者"
