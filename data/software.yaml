@@ -1922,6 +1922,15 @@
   date: 2014-11-13
   added: 2026-10-04
   image: app-094.jpg
+  updated: 2026-11-25
+  files:
+    count: 2
+    size: "96.4 MB"
+    format: "DMG / MD"
+    tree: |
+      094-Clop/
+      Clop-3.4.6.dmg
+      APP简介.md
 
 
 - id: app-095
