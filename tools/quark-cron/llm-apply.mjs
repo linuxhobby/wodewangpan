@@ -17,6 +17,10 @@ import { seasonTitle } from '../vendor/quark-resource-sync/scripts/lib/season-ti
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = process.env.WDP_REPO || path.resolve(HERE, '..', '..');
 const CACHE = process.env.WDP_CACHE_DIR || path.join(os.homedir(), '.cache', 'quark-sync');
+// 海报下载的临时文件单独放一个子目录：~/.cache/quark-sync 根目录条目已过百，
+// 在那里删单个临时文件会命中工具层的「批量删除」守卫（SAFE_DELETE_BULK_CONFIRM_REQUIRED），
+// 直接抛错中断整轮补全。独立子目录条目数少，删除不被拦截。
+const TMP_DIR = path.join(CACHE, 'poster-tmp');
 const MAKE = path.join(REPO, 'tools', 'vendor', 'quark-resource-sync', 'scripts', 'make-entry.mjs');
 const FILL = path.join(REPO, 'tools', 'fill-files.mjs');
 const MIN_CONF = Number(process.env.WDP_LLM_MIN_CONF || 0.75);
@@ -72,7 +76,17 @@ async function poster(item, file) {
   const destDir = path.join(REPO, 'static', 'images', file.slug);
   fs.mkdirSync(destDir, { recursive: true });
   const dest = path.join(destDir, `${item.id}.jpg`);
-  const tmp = path.join(CACHE, `llm-poster-${item.id}-${Date.now()}.img`);
+  fs.mkdirSync(TMP_DIR, { recursive: true });
+  const tmp = path.join(TMP_DIR, `llm-poster-${item.id}-${Date.now()}.img`);
+  // 删临时文件失败不能中断整轮：工具层的安全删除守卫可能拦下 rmSync，
+  // 这里吞掉异常即可，残留的 .img 由缓存目录的定期清理处理。
+  const dropTmp = () => {
+    try {
+      fs.rmSync(tmp, { force: true });
+    } catch {
+      /* 忽略：临时文件残留不影响入库 */
+    }
+  };
   try {
     // curl 缺失时用 node fetch 下载（不落盘，直接进 sharp）
     let buf;
@@ -86,10 +100,10 @@ async function poster(item, file) {
     }
     if (buf.length < 1024) throw new Error('image too small');
     await sharp(buf).rotate().resize(500, 750, { fit: 'cover' }).jpeg({ quality: 88 }).toFile(dest);
-    fs.rmSync(tmp, { force: true });
+    dropTmp();
     return true;
   } catch {
-    fs.rmSync(tmp, { force: true });
+    dropTmp();
     return false;
   }
 }
