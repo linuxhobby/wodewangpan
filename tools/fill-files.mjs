@@ -41,13 +41,20 @@
 //   刚确认为占位的 id 记入 ~/.cache/quark-sync/fill-files-notready.json，TTL（默认 6 小时）内
 //   直接跳过、不发请求也不消耗预算；资源到位后最快下下轮自动被重新检查。
 //
+// 全量补齐（--all，2026-11-26 起为编排脚本默认口径）：
+//   每轮把待补队列里**所有可用条目**逐条尝试一遍，不再按分类限 1 条。占位/抓取失败仍按原
+//   逻辑跳过、不写盘；空目录缓存与排除清单照常生效（它们本来也补不了）。--all 与
+//   --per-category 互斥；--only / --ids 定向用法下不生效。请求量 = 待补条目数 × 每目录下钻
+//   次数，队列大时单轮耗时明显变长，编排脚本已相应放宽超时。
+//
 // 排除清单（2026-11-25 起）：config/fill-files-exclude.json 里的 id 是长期占位/分享失效
 //   的资源，扫描待补队列时直接跳过、不占预算；资源到位后从数组删掉即恢复例行补齐。
 //   人工核实已恢复时可用 --ids 显式指定，覆盖排除清单（日志会提示）。
 //
 // 用法：
 //   node scripts/fill-files.mjs --limit 30            # 本次最多补 30 条（默认，全局 added 升序）
-//   node scripts/fill-files.mjs --per-category        # 每个分类各补 1 条（编排脚本默认口径）
+//   node scripts/fill-files.mjs --per-category        # 每个分类各补 1 条（历史口径，可手动指定）
+//   node scripts/fill-files.mjs --all                 # 全量补齐：本轮补完待补队列（编排脚本默认口径）
 //   node scripts/fill-files.mjs --limit 1             # 每日例行：只补 1 条，队首是空目录就顺延
 //   node scripts/fill-files.mjs --limit 3 --only misc # 只处理 data/misc.yaml，小批试跑
 //   node scripts/fill-files.mjs --ids mv-427,tv-086   # 只补指定 id（同步任务入库后当场补；已有 files: 的自动跳过）
@@ -60,7 +67,7 @@
 //   node scripts/fill-files.mjs --airing 0            # 临时关掉追更提醒
 //   node scripts/fill-files.mjs --limit 0 --serials 0 --todo 40 --dry-run  # 一次看待加资源清单
 //
-// 建议节奏：每天跑一批（--limit 20~30），配合站点「updated 逐日分散」的策略。
+// 建议节奏：例行任务默认 --all，每轮补完待补队列里所有可用条目；手动限流时用 --limit。
 
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -146,8 +153,10 @@ const delayMs = Number(getArg('delay', 3000));
 const only = getArg('only', '');
 const idArg = getArg('ids', '');
 const dryRun = hasFlag('dry-run');
-// 每个分类各补 1 条：编排脚本默认口径。定向 --only/--ids 时不生效。
+// 每个分类各补 1 条：历史口径，可手动指定；编排脚本已改用 --all 全量补齐。
 const perCategory = hasFlag('per-category');
+// 全量补齐：一轮尝试待补队列全部条目，不受分类条数上限约束。与 --per-category 互斥。
+const allMode = hasFlag('all');
 // 每轮顺带抽查几条连载条目（默认 1；0 = 临时关闭）。与 --limit 的补齐额度互相独立。
 const serialsN = Math.max(0, Number(getArg('serials', 1)) || 0);
 // 每轮抽查几条「最近入库」的剧集目录，找出盘端仍空、需要人工加资源的（默认 3；0 = 关闭）。
@@ -541,14 +550,17 @@ const wantedIds = idArg
       .filter(Boolean)
   : null;
 
-const perCatMode = perCategory && !wantedIds && !only;
+const perCatMode = perCategory && !allMode && !wantedIds && !only;
+const fullMode = allMode && !wantedIds && !only; // --ids/--only 定向用法下全量口径不生效
 console.log(
   `fill-files：${dryRun ? '试跑（不写文件）' : '写入'} · ${
     wantedIds
       ? `指定 ${wantedIds.length} 个 id`
       : perCatMode
         ? '每个分类各补 1 条（占位/失败在本分类内顺延，无待补分类跳过）'
-        : `补 ${limit} 条（占位/失败顺延，最多 ${limit * triesPerWrite} 次请求）`
+        : fullMode
+          ? '全量补齐（逐条尝试整个待补队列，占位/失败顺延不写盘）'
+          : `补 ${limit} 条（占位/失败顺延，最多 ${limit * triesPerWrite} 次请求）`
   } · 按 added 升序 · 间隔 ${delayMs}ms · updated=${today}`
 );
 const scanned = collectPending();
@@ -597,6 +609,11 @@ if (perCatMode) {
   writeCap = groups.length;
   maxTries = writeCap * triesPerWrite;
   console.log(`每分类 1 条模式：${writeCap} 个分类有待补条目 · 全局最多请求 ${maxTries} 次（占位/失败继续在本类顺延）\n`);
+} else if (fullMode) {
+  // 全量口径：待补队列每条只试一次，占位/失败顺延本身就是往前推进，不需要再乘 triesPerWrite。
+  writeCap = pending.length;
+  maxTries = pending.length;
+  console.log(`全量补齐模式：${pending.length} 条待补 · 逐条尝试（占位/失败跳过，不写盘）\n`);
 } else {
   writeCap = wantedIds ? Infinity : limit;
   maxTries = wantedIds ? pending.length : Math.min(pending.length, writeCap * triesPerWrite);

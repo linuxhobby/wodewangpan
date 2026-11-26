@@ -8,19 +8,19 @@
  * 用法：
  *   node tools/feishu-reports/wodewangpan-fillfiles-run.mjs
  *   node ... --dry-run          试跑：不动 git、不写盘、不发飞书，只验证流程与解析
- *   node ... --limit 3          限制本轮最多写入几条，默认 9（站点分类数；每类 1 条）
+ *   node ... --limit 3          手动限流最多写入 3 条（默认不限，补完整个待补队列）
  *   node ... --no-feishu        跳过飞书卡片（调试用）
  *
- * 补齐规则（2026-11-22 起）：每个分类各补 1 条，分类无待补条目则跳过。由 fill-files.mjs 的
- *   --per-category 实现：按分类分组、每类按 added 升序取 1 条、占位/失败在本分类内顺延。
- *   每类最多 1 条，避免电影分类长期霸占整轮额度；有待补的分类数决定每轮实际写入条数。
+ * 补齐规则（2026-11-26 起）：全量补齐——一轮补完待补队列里所有可用条目，不再按分类限 1 条。
+ *   由 fill-files.mjs 的 --all 实现：按 added 升序逐条尝试，占位/失败顺延、不写盘。
+ *   历史 --per-category（每类 1 条）仍可由人工直接调 fill-files 使用，但编排脚本不再传它。
  *
  * 退出码：0 正常结束（含 0 写入 / 抓取失败）；3 停手未提交；4 环境错误（锁 / 仓库缺失）
  *
  * 规则来源：wodewangpan/AGENTS.md 的 §3 Git 约束、§4 fill-files、§5 数据铁律、§6 发布、§9 验证清单。
  * 2026-11-16 一次性转述进本脚本，此后任务执行不再读 AGENTS.md（只在脚本崩溃时人工翻手册核对）。
  * AGENTS.md 若改动，只需回来同步这几处：
- *   每轮条数与节奏      → LIMIT（每类 1 条，上限=分类数）、飞书 --per-day（动态=待补分类数×12）
+ *   每轮条数与节奏      → 默认 --all 全量补齐、--limit 手动限流；飞书 --per-day（动态=待补条目数）
  *   files: 字段集合     → FIELD_OK 白名单
  *   eslint 与两次构建   → 第 5、6 段
  *   commit message 格式 → 第 7 段
@@ -44,14 +44,12 @@ const LOCK = path.join(LOG_DIR, 'wdp-fillfiles.lock');
 const argv = process.argv.slice(2);
 const DRY = argv.includes('--dry-run');
 const NO_FEISHU = argv.includes('--no-feishu');
-// 每类 1 条模式：默认额度 = 站点分类数（9），即所有有待补条目的分类各补 1 条。
-// --limit 可缩小用于试跑/限流；硬上限 9，禁止自己加量。
-const MAX_PER_ROUND = 9;
+// 全量补齐：默认不限条数，fill-files 用 --all 补完待补队列。
+// --limit N 只作为手动限流/试跑的阀门（传正数时改走 fill-files 的普通额度模式）。
 const LIMIT = (() => {
   const i = argv.indexOf('--limit');
-  const v = i >= 0 ? parseInt(argv[i + 1], 10) : MAX_PER_ROUND;
-  if (!Number.isFinite(v) || v < 0) return MAX_PER_ROUND;
-  return Math.min(v, MAX_PER_ROUND);
+  const v = i >= 0 ? parseInt(argv[i + 1], 10) : 0;
+  return Number.isFinite(v) && v > 0 ? v : 0;
 })();
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -284,7 +282,7 @@ function finish(code = 0) {
 
   let detail;
   if (R.status === '成功' && ok.length) {
-    detail = `本轮补成 ${ok.length} 条（每类 1 条）：合计 ${totalItems} 项` +
+    detail = `本轮补成 ${ok.length} 条（全量补齐）：合计 ${totalItems} 项` +
       (sizeStr ? ` / ${sizeStr}` : '') +
       (formats.length ? ` / ${formats[0]}` : '') +
       (R.commitHash ? ` ｜ commit ${R.commitHash} 已推送` : '');
@@ -309,8 +307,9 @@ function finish(code = 0) {
   if (R.todoEmpty.length) follow.push(`待加资源（盘端仍空，需转存）：${R.todoEmpty.join('、')}`);
   if (R.airing) follow.push(R.airing);
 
-  // 预计天数节奏：每类 1 条 × 12 轮/天，按当前待补分类数动态算；解析不到时保守兜底 12。
-  const perDay = R.pendingCats ? R.pendingCats * 12 : 12;
+  // 预计天数节奏：全量口径下每轮补完可用条目，按当轮开局待补条目数作「条/天」估算（≈1 天）；
+  // 旧 per-category 口径（人工指定时）仍按待补分类数 × 12 轮/天。解析不到兜底 12。
+  const perDay = R.pendingCats ? R.pendingCats * 12 : Math.max(1, R.pendingCount || 12);
 
   // ---- 发飞书 ----
   if (DRY || NO_FEISHU) {
@@ -341,7 +340,7 @@ function finish(code = 0) {
   } else if (R.status === '停手未提交') {
     brief.push(`本轮停手未提交：${R.reasons.join('；') || '见日志'}`);
   } else if (ok.length) {
-    brief.push(`本轮补齐 ${ok.length} 条（每类 1 条）：${ok.map((e) => itemLabel(e.id, byId)).join('、')}`);
+    brief.push(`本轮补齐 ${ok.length} 条（全量补齐）：${ok.map((e) => itemLabel(e.id, byId)).join('、')}`);
     brief.push(`合计 ${totalItems} 项${sizeStr ? ` / ${sizeStr}` : ''}${formats.length ? ` / ${formats[0]}` : ''}`);
   } else {
     brief.push(`本轮补齐 0 条`);
@@ -407,7 +406,7 @@ if (!fs.existsSync(path.join(REPO, 'package.json'))) {
   finish(4);
 }
 
-log(`fill-files 编排开始 ${stamp}${DRY ? '（试跑）' : ''} · 每类 1 条 · 分类数上限 ${LIMIT}`);
+log(`fill-files 编排开始 ${stamp}${DRY ? '（试跑）' : ''} · ${LIMIT ? `手动限流最多 ${LIMIT} 条` : '全量补齐（补完待补队列）'}`);
 log(`仓库 ${REPO}`);
 
 // ---------------------------------------------------------------------------
@@ -453,12 +452,14 @@ if (!DRY) {
 // ---------------------------------------------------------------------------
 // 2. 跑工具
 // ---------------------------------------------------------------------------
-// 每类 1 条：fill-files 按「有待补条目的分类数」决定写入额度；--limit 传 LIMIT 作为
-// 分类数硬上限（fill-files 内部 per-category 模式下按分类分组，每类最多 1 条）。
-const toolArgs = ['tools/fill-files.mjs', '--per-category', '--limit', String(LIMIT), '--delay', DRY ? '2000' : '3000'];
+// 默认 --all：把待补队列里可用条目一次补完；--limit N 手动限流时退回普通额度模式。
+// 全量模式下请求量随待补条目数增长，超时放宽到 1 小时。
+const toolArgs = ['tools/fill-files.mjs', '--delay', DRY ? '2000' : '3000'];
+if (LIMIT > 0) toolArgs.push('--limit', String(LIMIT));
+else toolArgs.push('--all');
 if (DRY) toolArgs.push('--dry-run');
 log(`\n$ node ${toolArgs.join(' ')}`);
-const ff = node(toolArgs, { timeout: 1800000 });
+const ff = node(toolArgs, { timeout: 3600000 });
 log(ff.out || '（无输出）');
 
 const P = parseToolOutput(ff.out);
