@@ -6137,6 +6137,14 @@
   date: 2026-11-25
   added: 2026-11-25
   image: tv-220.jpg
+  updated: 2026-11-26
+  files:
+    count: 1
+    size: "1.5 GB"
+    format: "MKV"
+    tree: |
+      220-朝九晚六 第一季/
+      E01.mkv
 
 - id: tv-221
   title: "银翼杀手2099 第一季"

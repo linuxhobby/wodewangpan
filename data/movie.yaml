@@ -8567,6 +8567,14 @@
   date: 2016-05-25
   added: 2026-11-25
   image: mv-266.jpg
+  updated: 2026-11-26
+  files:
+    count: 1
+    size: "19.4 GB"
+    format: "MKV"
+    tree: |
+      266-魔兽 (2016) 4K HDR/
+      Warcraft.2016.BluRay.2160p.x265.10bit.HDR.4Audio-MiniHD.mkv
 
 - id: mv-267
   title: "无处可逃"
