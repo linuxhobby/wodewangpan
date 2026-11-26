@@ -1,4 +1,4 @@
-# 游戏资源（81 条）
+# 游戏资源（85 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1690,3 +1690,82 @@
       [本体v1.1.0][055D7600A0040000].nsp
       [移植游戏][055D7600A0040000][v0].nsp
       安装说明.txt
+
+- id: game-082
+  title: "集合啦！动物森友会 - Switch中文无人岛生活模拟游戏"
+  category: 游戏
+  tags: ["游戏", "Switch", "模拟经营", "社交", "中文", "任天堂"]
+  quark_url: "https://pan.quark.cn/s/335382364891"
+  description: "《集合啦！动物森友会》（Animal Crossing: New Horizons）由任天堂开发发行，2020 年 3 月 20 日登陆 Nintendo Switch，支持简体与繁体中文。玩家受狸克之托前往无人岛定居，从露营地起步，采集资源、制作工具与家具，逐步建设自己的岛屿；钓鱼、捕虫、种花、挖化石、布置房间与日常活动随现实季节与节假日推进，强调按自己节奏生活的慢节奏体验。游戏支持本地与在线多人，一台主机上最多四位居民同岛生活，也可通过本地无线或网络拜访其他玩家的岛屿。盘端资源为 Switch 中文 NSP：本体 v1.0.0（标题 ID 01006F8002326000，约 6.2 GB）与升级档 v3.0.3（标题 ID 01006F8002326800，约 4.3 GB），另含 DLC、小岛转移工具与历史版本目录。发售日期与玩法依据任天堂官方商品页及香港任天堂公告，版本形态以盘端文件为准。"
+  date: 2020-03-20
+  added: 2026-11-26
+  image: game-082.jpg
+  updated: 2026-11-26
+  files:
+    count: 5
+    format: "NSP×2"
+    tree: |
+      082-集合啦！动物森友会 Animal Crossing New Horizons/
+      历史版本[不用下载]/
+      小岛转移工具 Island Transfer Tool/
+      DLC/
+      [本体v1.0.0][01006F8002326000][9.1.0][中文].nsp
+      [升级档v3.0.3][01006F8002326800][22.1.0][中文].nsp
+
+- id: game-083
+  title: "塞尔达传说 智慧的再现 - Switch中文冒险解谜游戏"
+  category: 游戏
+  tags: ["游戏", "Switch", "动作冒险", "解谜", "中文", "任天堂"]
+  quark_url: "https://pan.quark.cn/s/7134e04df09f"
+  description: "《塞尔达传说 智慧的再现》（The Legend of Zelda: Echoes of Wisdom）由任天堂开发发行，2024 年 9 月 26 日登陆 Nintendo Switch，支持简体与繁体中文。海拉鲁各地出现不明裂缝并引发神隐现象，剑士林克失踪，塞尔达公主遇见妖精托力并获得托力之杖，得以复制环境中的桌子、木箱、床等物件，随时随地再现以解开谜题；战斗中也能复制石块或怪物辅助攻击，或借飞行、火焰类怪物之力移动与探索。如何依据场景选择复制品构成解谜与战斗的核心。盘端资源为 Switch 中文版：本体 v1.0.0 为 XCI（标题 ID 01008CF01BAAC000，约 5.4 GB），升级档 v1.1.0 为 NSP（标题 ID 01008CF01BAAC800，约 190 MB），另附一份金手指压缩包。发售日期与玩法依据任天堂官方公告及香港、欧洲商店页，版本形态以盘端文件为准。"
+  date: 2024-09-26
+  added: 2026-11-26
+  image: game-083.jpg
+  updated: 2026-11-26
+  files:
+    count: 3
+    size: "5.6 GB"
+    format: "XCI / ZIP / NSP"
+    packed: true
+    tree: |
+      083-塞尔达传说 智慧的再现 The Legend of Zelda Echoes of Wisdom/
+      [升级档v1.1.0][01008CF01BAAC800][20.0.1][中文][US].nsp
+      [本体v1.0.0][01008CF01BAAC000][16.0.0][中文][US].xci
+      1.1.0金手指.zip
+
+- id: game-084
+  title: "上古卷轴5 天际 - Switch中文开放世界角色扮演游戏"
+  category: 游戏
+  tags: ["游戏", "Switch", "角色扮演", "开放世界", "中文", "Bethesda"]
+  quark_url: "https://pan.quark.cn/s/8e6f8bad4fcf"
+  description: "《上古卷轴5 天际》（The Elder Scrolls V: Skyrim）由 Bethesda Game Studios 开发、Bethesda Softworks 发行，Switch 版于 2017 年 11 月 17 日推出，收录黎明守卫、炉火、龙裔三款官方扩展，并加入体感操作与《塞尔达传说》系列联动装备等主机独占内容。故事设定在泰姆瑞尔帝国北方的天际省：大领主托雷格遇刺后省份陷入内战，黑色巨龙奥杜因现身威胁世界，玩家作为龙裔在开放世界中自由探索、完成任务、修炼数百种武器与法术。盘端资源按地区分为美版与日版两套目录，各含 nsz 本体、升级档 v1.1.404.0 与 DLC1 子目录；nsz 为 Switch 压缩包格式，平台形态以盘端为准。发售日期与内容依据任天堂官方商品页及维基百科条目，中文支持情况因版本而异，具体以盘内文件为准。"
+  date: 2017-11-17
+  added: 2026-11-26
+  image: game-084.jpg
+  updated: 2026-11-26
+  files:
+    count: 2
+    tree: |
+      084-上古卷轴5 天际 The Elder Scrolls V Skyrim/
+      美版/
+      日版/
+
+- id: game-085
+  title: "守墓人2 - Switch中文墓地经营模拟游戏"
+  category: 游戏
+  tags: ["游戏", "Switch", "模拟经营", "角色扮演", "中文", "tinyBuild"]
+  quark_url: "https://pan.quark.cn/s/a91eecfdb6a9"
+  description: "《守墓人2》（Graveyard Keeper 2）由 Lazy Bear Games 开发、tinyBuild 发行，2026 年 9 月 22 日登陆 Nintendo Switch 等平台，支持简体中文。作为中世纪墓地经营模拟游戏的续作，玩家继续经营自己的墓地，采集植物、动物与人体材料，打造 machinery 自动化生产，并把重复劳动交给复活的僵尸员工；同时以大审判官身份带领亡灵军队对抗僵尸危机，建造箭塔与防御工事、打造盔甲武器并训练部队。小镇重建是另一条主线：帮助居民修缮房屋、完成任务，把他们的麻烦转化为收入来源。游戏延续前作黑色幽默与略显荒诞的风格。盘端资源为 Switch 中文 NSP：本体 v1.0.0（标题 ID 0100005027A18000，约 687 MB）与升级档 v1.0.5（标题 ID 0100005027A18800，约 415 MB），另含 1DLC 与历史版本目录；平台形态以盘端文件为准，发售日期与玩法依据任天堂官方商店页与发行商公告。"
+  date: 2026-09-22
+  added: 2026-11-26
+  image: game-085.jpg
+  updated: 2026-11-26
+  files:
+    count: 4
+    format: "NSP×2"
+    tree: |
+      085-守墓人2 Graveyard Keeper 2/
+      1DLC/
+      历史版本[不用下载]/
+      [本体v1.0.0][0100005027A18000][22.5.0].nsp
+      [升级档v1.0.5][0100005027A18800][23.0.1][中文].nsp
