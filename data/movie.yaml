@@ -8585,6 +8585,15 @@
   date: 2022-02-24
   added: 2026-11-25
   image: mv-267.jpg
+  updated: 2026-11-26
+  files:
+    count: 2
+    size: "11.0 GB"
+    format: "SRT / MKV"
+    tree: |
+      267-暂无出口 (2022) 4K HDR/
+      No.Exit.2022.2160p.DSNP.WEB-DL.DDP5.1.HDR.HEVC-MZABI.mkv
+      No.Exit.2022.2160p.DSNP.WEB-DL.DDP5.1.HDR.HEVC-MZABI.srt
 
 - id: mv-268
   title: "精英部队"
@@ -8595,6 +8604,14 @@
   date: 2007-10-05
   added: 2026-11-25
   image: mv-268.jpg
+  updated: 2026-11-26
+  files:
+    count: 1
+    size: "9.8 GB"
+    format: "MKV"
+    tree: |
+      268-精英部队 Tropa de Elite/
+      Tropa.de.Elite.2007.BluRay.1080p.x265.10bit-MiniHD.mkv
 
 - id: mv-269
   title: "黑牢城"
@@ -8642,6 +8659,15 @@
   date: 2026-10-29
   added: "2026-11-26 03:51"
   image: mv-271.jpg
+  updated: 2026-11-26
+  files:
+    count: 1
+    size: "18.1 GB"
+    format: "MKV"
+    tree: |
+      271-蚊子杯：最后一役/
+      蚊.子.杯：最.后.一.役（2026）NF DV&HDR/
+      The.Mosquito.Bowl.2026.2160p.NF.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265.mkv
 
 - id: mv-272
   title: "杀人者报告"
