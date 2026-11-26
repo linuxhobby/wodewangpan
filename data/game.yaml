@@ -1,4 +1,4 @@
-# 游戏资源（85 条）
+# 游戏资源（86 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1769,3 +1769,22 @@
       历史版本[不用下载]/
       [本体v1.0.0][0100005027A18000][22.5.0].nsp
       [升级档v1.0.5][0100005027A18800][23.0.1][中文].nsp
+
+- id: game-086
+  title: "任天堂Switch运动 - Switch中文体育竞技游戏（本体+升级档）"
+  category: 游戏
+  tags: ["游戏", "Nintendo Switch", "Switch游戏", "体育", "体感", "多人游戏", "中文", "任天堂"]
+  quark_url: "https://pan.quark.cn/s/bfd0bc4823a0"
+  description: "【Switch 中文 NSP】任天堂发行的体感体育合集游戏，日文原名《Nintendo Switch Sports》，2022 年 4 月 29 日发售。游戏以 Joy-Con 体感操作为核心，玩家挥动手柄即可参与排球、羽毛球、保龄球、足球、剑道、网球等项目，高尔夫与篮球需通过免费更新解锁。支持同一主机 1 至 4 人本地同乐，联网对战需加入 Nintendo Switch Online 会员；足球的「射门对决」模式另需腿部固定带配件。游戏不支持 Switch Lite 主机。盘端目录含两个中文 NSP 文件：本体 v1.0.0（标题 ID 0100D2F00D5C0000）与升级档 v1.5.0（标题 ID 0100D2F00D5C0800），合计约 3.5 GB，升级档包含后续追加的运动项目与功能修正。官方资料来自任天堂官网与欧洲区商品数据库，发售日期 2022-04-29 与其一致。"
+  date: 2022-04-29
+  added: 2026-11-26
+  image: game-086.jpg
+  updated: 2026-11-27
+  files:
+    count: 2
+    size: "3.2 GB"
+    format: "NSP×2"
+    tree: |
+      086-任天堂Switch运动 Nintendo Switch Sports/
+      [本体v1.0.0][0100D2F00D5C0000][13.2.1][中文].nsp
+      [升级档v1.5.0][0100D2F00D5C0800][18.1.0][中文].nsp
