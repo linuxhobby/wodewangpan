@@ -88,17 +88,37 @@ async function poster(item, file) {
     }
   };
   try {
-    // curl 缺失时用 node fetch 下载（不落盘，直接进 sharp）
+    // fetch 优先、curl 回退：部分站点对 curl 默认 UA 返回 405，对无头请求返回 HTML
+    // 反爬页，只有带浏览器 UA 的 fetch 稳定拿到真图。每个候选都先用 sharp 验证
+    // 能否解析为图片，避免把 HTML 错误页当成海报存进 static/images。
+    const UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36';
+    const candidates = [
+      async () => {
+        const r = await fetch(String(item.image_url), {
+          headers: { 'User-Agent': UA },
+          signal: AbortSignal.timeout(60000),
+        });
+        if (!r.ok) throw new Error(`fetch ${r.status}`);
+        return Buffer.from(await r.arrayBuffer());
+      },
+      async () => {
+        await run('curl', ['-fL', '--max-time', '60', '-A', UA, '-o', tmp, String(item.image_url)]);
+        return fs.readFileSync(tmp);
+      },
+    ];
     let buf;
-    try {
-      await run('curl', ['-fL', '--max-time', '60', '-o', tmp, String(item.image_url)]);
-      buf = fs.readFileSync(tmp);
-    } catch {
-      const r = await fetch(String(item.image_url), { signal: AbortSignal.timeout(60000) });
-      if (!r.ok) throw new Error(`fetch ${r.status}`);
-      buf = Buffer.from(await r.arrayBuffer());
+    for (const get of candidates) {
+      try {
+        const b = await get();
+        if (b.length < 1024) continue;
+        await sharp(b).metadata(); // HTML 反爬页在这里抛错，自动换下一个候选
+        buf = b;
+        break;
+      } catch {
+        /* 该候选不可用，换下一个 */
+      }
     }
-    if (buf.length < 1024) throw new Error('image too small');
+    if (!buf) throw new Error('所有下载方式均未拿到有效图片');
     await sharp(buf).rotate().resize(500, 750, { fit: 'cover' }).jpeg({ quality: 88 }).toFile(dest);
     dropTmp();
     return true;
