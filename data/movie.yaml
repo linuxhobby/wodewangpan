@@ -1,4 +1,4 @@
-# 电影资源（425 条）
+# 电影资源（428 条）
 # 来源：夸克网盘 SHARE/04电影
 # 链接：公开链接（无提取码），永久有效；信息来自 TMDB 中文
 
@@ -8702,3 +8702,58 @@
   date: 2026-11-24
   added: "2026-11-27 03:50"
   image: mv-273.jpg
+
+- id: mv-274
+  title: "密探"
+  category: 电影
+  tags: ["电影", "惊悚", "剧情", "犯罪", "密探 O Agente Secreto"]
+  quark_url: "https://pan.quark.cn/s/10d7621ecd7e"
+  description: "小克莱伯·门多萨以动感冲击力与历史挽歌的恢弘感交织出的这部震撼之作，将巴西二十世纪军事独裁统治下的生活与当下的现实相连，呈现出一部万花筒般的时代惊悚片，在共鸣中脉动不息。1977年，化名马塞洛的男子带着年幼的儿子来到勒西菲市，试图开启新的生活。然而暴力的威胁接踵而至——腐败的警察、肮脏的杀手、饱受折磨的流亡者，以及一则引发公众狂热的疯狂都市传说，在他身边交织成网。影片不断偏离其时间与叙事轴线，展开一幅史诗般的广阔画卷，充满了对那些拒绝向压迫体制屈服者的生命与爱的描摹。｜TMDB 7.1"
+  date: 2025-07-23
+  added: 2026-11-27
+  image: mv-274.jpg
+  updated: 2026-11-27
+  files:
+    count: 1
+    size: "5.2 GB"
+    format: "MKV"
+    tree: |
+      274-密探 The Secret Agent (2025)/
+      [密探].The.Secret.Agent.2025.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+
+- id: mv-275
+  title: "盟军敢死队"
+  category: 电影
+  tags: ["电影", "动作", "喜剧", "战争", "盟军敢死队 The Ministry of Ungentlemanly Warfare"]
+  quark_url: "https://pan.quark.cn/s/ef9259e94ea5"
+  description: "1940年二战期间，德国持续对英国进行轰炸，并利用U型潜艇破坏英国的补给线。一些英国政府人员主张投降，但丘吉尔决心不认输，而是改变战争规则，进行强力反击。根据情报，德国大西洋U型潜艇舰队的保养、维修和武装工作都在尼日利亚的一个小港口进行。丘吉尔看到了摧毁德国战争资产、夺回优势的机会。然而，他意识到直接攻击这个西班牙殖民地可能导致西班牙与德国结盟，因此便组建了一个秘密的作战分队，由古斯·马奇·菲利普斯上尉（亨利·卡维尔 饰）带领，发动秘密行动破坏舰队。当最初计划的炸毁舰队行动因船只坚固、港口浅水而无法实施时，小分队迅速制定了偷船计划。他们大胆的行动取得了成功，摧毁了希特勒战争机器的重要组成部分，重新打开通往英国的补给线，从而加速了德国的战败。｜TMDB 7.0"
+  date: 2024-04-18
+  added: 2026-11-27
+  image: mv-275.jpg
+  updated: 2026-11-27
+  files:
+    count: 1
+    size: "3.8 GB"
+    format: "MKV"
+    tree: |
+      275-盟军敢死队 The Ministry of Ungentlemanly Warfare (2024)/
+      [盟军敢死队].The.Ministry.of.Ungentlemanly.Warfare.2024.1080p.NowPlayer.WEB-DL.H264.AAC-UBWEB.mkv
+
+- id: mv-276
+  title: "末日崩塌"
+  category: 电影
+  tags: ["电影", "动作", "剧情", "惊悚", "末日崩塌 San Andreas"]
+  quark_url: "https://pan.quark.cn/s/abcbbfe97e1a"
+  description: "雷·盖恩斯正驱车前往旧金山，随着一声巨响，周围的树木与电线杆变得七扭八歪，紧急刹车查看状况的盖恩斯被眼前的景象“惊呆了”:公路被一条深不见底的裂隙截断，甚至错位，加油站被裂成两半隔着“峡谷”遥遥相对。随着这场超级地震毫无预 兆的来袭，整个城市浓烟滚滚、火光冲天，高楼大厦相继倒塌，到处都是惊慌失措的市民。更要命的是，如此强烈的地震，“摧枯拉朽”般粉碎了坚实的大坝，洪水如猛兽一般涌向已经水深火热的城市，“天崩地陷”的景象犹如“末日”已然来临……｜TMDB 6.3"
+  date: 2015-05-27
+  added: 2026-11-27
+  image: mv-276.jpg
+  updated: 2026-11-27
+  files:
+    count: 2
+    size: "20.0 GB"
+    format: "SRT / MKV"
+    tree: |
+      276-末日崩塌 (2015) 4K HDR/
+      San.Andreas.2015.BluRay.2160p.x265.10bit.HDR.3Audio-MiniHD.mkv
+      San.Andreas.2015.BluRay.2160p.x265.10bit.HDR.3Audio-MiniHD.srt
