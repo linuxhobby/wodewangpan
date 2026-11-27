@@ -1,4 +1,4 @@
-# 游戏资源（86 条）
+# 游戏资源（87 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1788,3 +1788,22 @@
       086-任天堂Switch运动 Nintendo Switch Sports/
       [本体v1.0.0][0100D2F00D5C0000][13.2.1][中文].nsp
       [升级档v1.5.0][0100D2F00D5C0800][18.1.0][中文].nsp
+
+- id: game-087
+  title: "塞尔达传说 织梦岛 - Switch中文俯视角动作冒险重制版"
+  category: 游戏
+  tags: ["游戏", "Switch", "动作冒险", "解谜", "中文", "重制"]
+  quark_url: "https://pan.quark.cn/s/6d45d51eb041"
+  description: "《塞尔达传说 织梦岛》（The Legend of Zelda: Link's Awakening）由 Grezzo 开发、任天堂发行，2019 年 9 月 20 日登陆 Nintendo Switch，是 1993 年 Game Boy 同名作品的完全重制版，并吸收了 1998 年 DX 版的部分内容。游戏保留原作俯视角探索结构，以黏土玩偶般的立体美术重新呈现可洛碧岛：林克因船只遭遇风暴而漂流到岛上，被少女玛丽娜救起后，为唤醒传说中的风鱼、离开岛屿而寻找八件海螺乐器。流程包含迷宫解谜、Boss 战、收集隐藏贝壳与心之碎片等要素，并新增可在工房自行拼装房间、供玩家挑战的迷宫模板创作功能。盘端资源为 Switch 中文 NSP：本体 v1.0.0（标题 ID 01006BB00C6F0000，约 5.84 GB）与升级档 v1.1.0（标题 ID 01006BB00C6F0800，约 37.8 MB），另有「历史版本[不用下载]」目录。平台与版本以盘端文件为准；发售日期、开发与玩法信息参考维基百科相关条目与任天堂欧洲官方商品资料。"
+  date: 2019-09-20
+  added: 2026-11-27
+  image: game-087.jpg
+  updated: 2026-11-28
+  files:
+    count: 3
+    format: "NSP×2"
+    tree: |
+      087-塞尔达传说 织梦岛 The Legend of Zelda Link s Awakening/
+      历史版本[不用下载]/
+      [本体v1.0.0][01006BB00C6F0000][8.0.0][中文][US].nsp
+      [升级档v1.1.0][01006BB00C6F0800][20.0.1][中文][US].nsp
