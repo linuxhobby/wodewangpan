@@ -710,6 +710,68 @@ const vocabText = `
   ${text(240, 650, '象形记忆 · 词根词缀 · 美语发音', 19, '#0d3b5c', { opacity: 0.78 })}
   ${text(240, 692, '音频 + PDF 讲义  ·  听说读写全套视频', 13, '#0d3b5c', { opacity: 0.6, spacing: 1.6 })}`;
 
+// ── graphic：平面设计全套系列课（cs-041）——暖粉橙亮底 + 设计工作台 ──
+// 主视觉：中央画板叠放 LOGO 几何标、Aa 字体与版式线，两侧是名片与画册页，
+// 四角色卡 + 裁切角标呼应 LOGO / 名片 / 广告 / 画册 / 活动物料五大模块。
+const graphicSwatches = [
+  { x: 120, y: 170, c: '#e2603f' },
+  { x: 360, y: 170, c: '#f2a03d' },
+  { x: 120, y: 374, c: '#4a90c4' },
+  { x: 360, y: 374, c: '#7b6cc4' },
+]
+  .map(({ x, y, c }) => `<circle cx="${x}" cy="${y}" r="17" fill="#ffffff" fill-opacity=".95"/>
+  <circle cx="${x}" cy="${y}" r="11" fill="${c}"/>`)
+  .join('\n  ');
+
+const graphicArt = `
+  <circle cx="240" cy="272" r="150" fill="#ffffff" fill-opacity=".42"/>
+  <circle cx="240" cy="272" r="150" fill="none" stroke="#ffffff" stroke-opacity=".9" stroke-width="1.6"/>
+  <circle cx="240" cy="272" r="121" fill="none" stroke="#8a4a3a" stroke-opacity=".22" stroke-width="1.4" stroke-dasharray="3 9"/>
+  <g stroke="#e2603f" stroke-opacity=".34" stroke-width="1.8" fill="none">
+    <path d="M240 272 L120 170 M240 272 L360 170 M240 272 L120 374 M240 272 L360 374"/>
+  </g>
+  ${graphicSwatches}
+  <g fill="none" stroke="#e2603f" stroke-opacity=".5" stroke-width="2" stroke-linecap="round">
+    <path d="M174 198 L174 187 L185 187 M306 198 L306 187 L295 187 M174 346 L174 357 L185 357 M306 346 L306 357 L295 357"/>
+  </g>
+  <g transform="rotate(-8 138 334)">
+    <rect x="100" y="312" width="76" height="44" rx="6" fill="#ffffff" fill-opacity=".96"/>
+    <rect x="100" y="312" width="76" height="44" rx="6" fill="none" stroke="#8a4a3a" stroke-opacity=".22" stroke-width="1.2"/>
+    <circle cx="118" cy="328" r="7" fill="#e2603f"/>
+    <rect x="132" y="325" width="34" height="4" rx="2" fill="#8a4a3a" fill-opacity=".4"/>
+    <rect x="132" y="335" width="24" height="3" rx="1.5" fill="#8a4a3a" fill-opacity=".24"/>
+  </g>
+  <g transform="rotate(7 342 330)">
+    <rect x="306" y="306" width="66" height="48" rx="4" fill="#ffffff" fill-opacity=".96"/>
+    <rect x="306" y="306" width="66" height="48" rx="4" fill="none" stroke="#8a4a3a" stroke-opacity=".22" stroke-width="1.2"/>
+    <rect x="314" y="314" width="26" height="18" rx="2" fill="#f2c1ac"/>
+    <rect x="346" y="315" width="18" height="3" rx="1.5" fill="#8a4a3a" fill-opacity=".38"/>
+    <rect x="346" y="323" width="14" height="3" rx="1.5" fill="#8a4a3a" fill-opacity=".22"/>
+    ${[338, 346].map((y, i) => `<rect x="314" y="${y}" width="${i ? 38 : 50}" height="3" rx="1.5" fill="#8a4a3a" fill-opacity=".22"/>`).join('\n    ')}
+  </g>
+  <rect x="170" y="196" width="140" height="152" rx="10" fill="#ffffff" fill-opacity=".98"/>
+  <rect x="170" y="196" width="140" height="152" rx="10" fill="none" stroke="#8a4a3a" stroke-opacity=".2" stroke-width="1.4"/>
+  <path d="M170 226 Q170 222 174 222 H306 Q310 222 310 226 V236 H170 Z" fill="#f9e4db"/>
+  <circle cx="186" cy="220" r="3.6" fill="#e2603f"/>
+  <circle cx="198" cy="220" r="3.6" fill="#f2a03d"/>
+  <circle cx="210" cy="220" r="3.6" fill="#7b6cc4"/>
+  <circle cx="240" cy="274" r="30" fill="none" stroke="#e2603f" stroke-width="7"/>
+  <path d="M240 248 L263 289 L217 289 Z" fill="none" stroke="#4a90c4" stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="240" cy="274" r="7" fill="#f2a03d"/>
+  ${text(240, 330, 'Aa', 22, '#5a2a20', { weight: 700 })}
+  <rect x="200" y="336" width="80" height="2" rx="1" fill="#8a4a3a" fill-opacity=".28"/>
+  <rect x="212" y="342" width="56" height="2" rx="1" fill="#8a4a3a" fill-opacity=".16"/>
+  <g fill="#e2603f" fill-opacity=".65">
+    <circle cx="150" cy="122" r="4"/><circle cx="330" cy="122" r="4"/>
+    <circle cx="150" cy="422" r="4"/><circle cx="330" cy="422" r="4"/>
+  </g>`;
+
+const graphicText = `
+  ${text(240, 548, '平面设计全套', 40, '#5a2a20', { weight: 700 })}
+  ${text(240, 606, '实战系列课', 50, '#5a2a20', { weight: 700 })}
+  ${text(240, 650, '黑马程序员 · 品牌视觉设计', 19, '#5a2a20', { opacity: 0.78 })}
+  ${text(240, 692, 'LOGO设计  ·  名片印刷  ·  广告画册  ·  活动物料', 13, '#5a2a20', { opacity: 0.6, spacing: 1.6 })}`;
+
 const SCENES = {
   ecom: {
     bg1: '#fff0f2', bg2: '#ffb08c', halo: '#ffffff', plate: '#ffffff', plateOpacity: '.46',
@@ -799,6 +861,17 @@ const SCENES = {
     subText: '象形记忆 · 词根词缀 · 美语发音', footText: '音频 + PDF 讲义  ·  听说读写全套视频',
     layout: {
       lines: [{ y: 548, size: 38, weight: 700 }, { y: 606, size: 50, weight: 700 }],
+      sub: { y: 650, size: 19, opacity: 0.78 }, foot: { y: 692, size: 13, opacity: 0.6, spacing: 1.6 },
+    },
+  },
+  graphic: {
+    bg1: '#fff3ea', bg2: '#ffc2a8', halo: '#ffffff', plate: '#ffffff', plateOpacity: '.46',
+    line: '#8a4a3a', ink: '#5a2a20', accent: '#e2603f', kicker: 'GRAPHIC DESIGN  /  COURSE 041',
+    art: graphicArt, text: graphicText,
+    titles: ['平面设计全套', '实战系列课'],
+    subText: '黑马程序员 · 品牌视觉设计', footText: 'LOGO设计  ·  名片印刷  ·  广告画册  ·  活动物料',
+    layout: {
+      lines: [{ y: 548, size: 40, weight: 700 }, { y: 606, size: 50, weight: 700 }],
       sub: { y: 650, size: 19, opacity: 0.78 }, foot: { y: 692, size: 13, opacity: 0.6, spacing: 1.6 },
     },
   },
