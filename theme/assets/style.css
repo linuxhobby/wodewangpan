@@ -556,6 +556,10 @@ a.tag:hover { background: var(--brand-soft); }
 /* 等宽文本（链接地址 / 订阅地址）统一字体与字号 */
 .linkrow__url, .feed-url__code { font-family: var(--font-mono); font-size: var(--fs-sm); }
 
+/* 详情页反馈条上方的推广邀请链接：弱提示，不抢转存主操作 */
+.detail__promo { margin: 0 0 8px; font-size: var(--fs-base); }
+.detail__promo a { color: var(--brand); font-weight: 600; }
+
 /* 详情页反馈条：链接失效 / 资源有误的出口，紧跟在转存链接下面。
    用虚线框 + 中性底与上面的 .linkrow 拉开层次——它是兜底，不是主操作 */
 .feedback {

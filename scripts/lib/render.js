@@ -709,6 +709,10 @@ function shareTextOf(item) {
   ].join('\n');
 }
 
+// 详情页反馈条上方的光鸭邀请链接（站长指定的推广位，rel=sponsored）
+const GUANGYA_PROMO_URL =
+  'https://www.guangyapan.com/a?id=2&noActionBar=true&noStatusBar=true&noNavigationBar=true&code=HKKV9V#/activity/invite/share';
+
 /** 详情页反馈条：紧跟转存链接下面——用户刚发现链接打不开，此刻正需要出口。
     不放二维码（海报旁 qrbox 已是转存码，同屏再放会被扫错）、不用实底按钮（兜底动作不抢主操作），
     主路径纯 <a> 零 JS；口令复制按钮是渐进增强（复用 app.js 的 data-copy），
@@ -983,6 +987,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     <div class="links">
       ${item.links.length ? item.links.map(linkRow).join('\n') : '<p class="muted">暂无可用链接</p>'}
     </div>
+    <p class="detail__promo"><a href="${esc(GUANGYA_PROMO_URL)}" target="_blank" rel="noopener noreferrer sponsored">送你一份光鸭云盘会员，畅享500T空间，极速云添加，下载不限速</a></p>
     ${feedbackBar({ site, item, baseUrl })}
     <div class="detail__share">
       <button class="btn btn--mini" type="button" data-share
