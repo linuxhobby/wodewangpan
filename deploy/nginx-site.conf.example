@@ -111,6 +111,15 @@ server {
     rewrite ^/tag/yijifangchengshi-jisuzhengsheng-formula-1-drive-to-survive(/index\.html|/)?$ /documentary/ permanent;
     rewrite ^/tag/taersazhiwang-tulsa-king(/index\.html|/)?$ /tv/ permanent;
 
+    # 2026-11-28：作品名 / 语言 / IP 名标签清退，同义标签合并
+    # 人生一串、药屋少女的呢喃归各自分类；中文、宝可梦归游戏分类；动作冒险→动作、AI视频→AI。
+    rewrite ^/tag/renshengyichuan-renshengyichuan(/index\.html|/)?$ /documentary/ permanent;
+    rewrite ^/tag/yaowushaon-deninan-yaowu(/index\.html|/)?$ /anime/ permanent;
+    rewrite ^/tag/zhongwen(/index\.html|/)?$ /game/ permanent;
+    rewrite ^/tag/baokemeng(/index\.html|/)?$ /game/ permanent;
+    rewrite ^/tag/action-adventure(/index\.html|/)?$ /tag/action/ permanent;
+    rewrite ^/tag/aishipin(/index\.html|/)?$ /tag/ai/ permanent;
+
     # 静态资源长期缓存；HTML 不缓存，更新即时生效
     location ~* \.(css|js|json|svg|webp|png|jpg|jpeg|gif|ico)$ {
         expires 30d;

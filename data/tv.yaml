@@ -4,7 +4,7 @@
 - id: tv-008
   title: "大叔再出招"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "喜剧", "剧情"]
+  tags: ["电视剧", "动作", "喜剧", "剧情"]
   quark_url: "https://pan.quark.cn/s/60ed26dc3c16"
   baidu_url: "https://pan.baidu.com/s/1BYuxIJf8ywKn-z8vrFCeWg"
   baidu_pwd: "mxyr"
@@ -98,7 +98,7 @@
 - id: tv-013
   title: "黑帆"
   category: 电视剧
-  tags: ["电视剧", "剧情", "动作冒险"]
+  tags: ["电视剧", "剧情", "动作"]
   quark_url: "https://pan.quark.cn/s/e374eb03990c"
   baidu_url: "https://pan.baidu.com/s/1Ws_FbtHRxmpncPDZ-5O8mA"
   baidu_pwd: "gxvq"
@@ -281,7 +281,7 @@
 - id: tv-006
   title: "浪客行"
   category: 电视剧
-  tags: ["电视剧", "剧情", "悬疑", "动作冒险"]
+  tags: ["电视剧", "剧情", "悬疑", "动作"]
   quark_url: "https://pan.quark.cn/s/a1dd5663235a"
   baidu_url: "https://pan.baidu.com/s/1qdox93iZyPCBbpOlTxk04A"
   baidu_pwd: "hdct"
@@ -366,7 +366,7 @@
 - id: tv-003
   title: "杀手妈咪"
   category: 电视剧
-  tags: ["电视剧", "剧情", "动作冒险", "悬疑"]
+  tags: ["电视剧", "剧情", "动作", "悬疑"]
   quark_url: "https://pan.quark.cn/s/032ad01ae994"
   baidu_url: "https://pan.baidu.com/s/1UQr6GZ_7MCRFVyO4ODa4Ng"
   baidu_pwd: "lj46"
@@ -395,7 +395,7 @@
 - id: tv-001
   title: "现金英雄"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "캐셔로"]
+  tags: ["电视剧", "动作", "剧情", "캐셔로"]
   quark_url: "https://pan.quark.cn/s/f386107af47d"
   baidu_url: "https://pan.baidu.com/s/1fhETQCjUBnERe2hyWHiuUg"
   baidu_pwd: "rnw9"
@@ -423,7 +423,7 @@
 - id: tv-016
   title: "夜魔侠：重生"
   category: 电视剧
-  tags: ["电视剧", "剧情", "动作冒险", "犯罪", "夜魔侠：重生.第一季"]
+  tags: ["电视剧", "剧情", "动作", "犯罪", "夜魔侠：重生.第一季"]
   quark_url: "https://pan.quark.cn/s/d4e375cc28d3"
   baidu_url: "https://pan.baidu.com/s/1XRDMnmiVs1FIoW_YgPwFwQ"
   baidu_pwd: "j394"
@@ -451,7 +451,7 @@
 - id: tv-017
   title: "青年夏洛克"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "悬疑"]
+  tags: ["电视剧", "动作", "悬疑"]
   quark_url: "https://pan.quark.cn/s/2b6125191ad3"
   baidu_url: "https://pan.baidu.com/s/1c2BAd4jkFMSJtv3nVR019w"
   baidu_pwd: "nygu"
@@ -478,7 +478,7 @@
 - id: tv-018
   title: "伦敦黑帮"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "犯罪", "伦敦黑帮.Gangs of London.1-3季合集.1080p.英语中字"]
+  tags: ["电视剧", "动作", "剧情", "犯罪", "伦敦黑帮.Gangs of London.1-3季合集.1080p.英语中字"]
   quark_url: "https://pan.quark.cn/s/7b12bd34a9ca"
   baidu_url: "https://pan.baidu.com/s/1o3ASHxcymwPV9moElNz0-A"
   baidu_pwd: "lm5o"
@@ -522,7 +522,7 @@
 - id: tv-020
   title: "海豹六队"
   category: 电视剧
-  tags: ["电视剧", "政治", "剧情", "犯罪", "动作冒险", "six.海豹六队.1-2季合集"]
+  tags: ["电视剧", "政治", "剧情", "犯罪", "动作", "six.海豹六队.1-2季合集"]
   quark_url: "https://pan.quark.cn/s/2670efea5575"
   baidu_url: "https://pan.baidu.com/s/15ft7hlSOTBX3gMzwYnnxEA"
   baidu_pwd: "1q8b"
@@ -565,7 +565,7 @@
 - id: tv-022
   title: "和平使者"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "科幻奇幻", "喜剧", "和平使者S1"]
+  tags: ["电视剧", "动作", "科幻奇幻", "喜剧", "和平使者S1"]
   quark_url: "https://pan.quark.cn/s/17eaf2471a4f"
   baidu_url: "https://pan.baidu.com/s/18JFKooPMS_-l0Z4JR2wGqw"
   baidu_pwd: "wojo"
@@ -589,7 +589,7 @@
 - id: tv-023
   title: "权力的游戏 第一季"
   category: 电视剧
-  tags: ["电视剧", "奇幻", "剧情", "动作冒险", "权力的游戏 第一季 Game of Thrones S01"]
+  tags: ["电视剧", "奇幻", "剧情", "动作", "权力的游戏 第一季 Game of Thrones S01"]
   quark_url: "https://pan.quark.cn/s/3b74323db2c8"
   baidu_url: "https://pan.baidu.com/s/1ZO2dCyHOrzlDcfdoVwRgBA"
   baidu_pwd: "ojks"
@@ -618,7 +618,7 @@
 - id: tv-024
   title: "鱿鱼游戏"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "悬疑", "剧情"]
+  tags: ["电视剧", "动作", "悬疑", "剧情"]
   quark_url: "https://pan.quark.cn/s/bf66d4eb17fd"
   baidu_url: "https://pan.baidu.com/s/1YsbUwB2NJM4VRRGmwbnMRA"
   baidu_pwd: "7hqc"
@@ -676,7 +676,7 @@
 - id: tv-027
   title: "斯巴达克斯：亚述家族"
   category: 电视剧
-  tags: ["电视剧", "剧情", "动作冒险", "斯巴达克斯：亚述家族（2025）"]
+  tags: ["电视剧", "剧情", "动作", "斯巴达克斯：亚述家族（2025）"]
   quark_url: "https://pan.quark.cn/s/038f33731721"
   baidu_url: "https://pan.baidu.com/s/1qOKkhCVtQuMGzvxL44filQ"
   baidu_pwd: "4kqj"
@@ -732,7 +732,7 @@
 - id: tv-029
   title: "金特务：本色回归"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "犯罪", "剧情", "金特务：本色回归"]
+  tags: ["电视剧", "动作", "犯罪", "剧情", "金特务：本色回归"]
   quark_url: "https://pan.quark.cn/s/a06211cdce37"
   baidu_url: "https://pan.baidu.com/s/1FVfZDt9VqRXdV6fLwH3XIQ"
   baidu_pwd: "yrsl"
@@ -806,7 +806,7 @@
 - id: tv-031
   title: "黑鸽"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "悬疑", "犯罪", "黑鸽.第一季.Black.Doves.S01.2160p.NF.WEB-DL.D"]
+  tags: ["电视剧", "动作", "悬疑", "犯罪", "黑鸽.第一季.Black.Doves.S01.2160p.NF.WEB-DL.D"]
   quark_url: "https://pan.quark.cn/s/20bdee383e76"
   baidu_url: "https://pan.baidu.com/s/1HsSZDFc0GCzcdUNuknQcUA"
   baidu_pwd: "8obg"
@@ -831,7 +831,7 @@
 - id: tv-032
   title: "领地之争"
   category: 电视剧
-  tags: ["电视剧", "西部", "剧情", "动作冒险", "领地之争.Territory"]
+  tags: ["电视剧", "西部", "剧情", "动作", "领地之争.Territory"]
   quark_url: "https://pan.quark.cn/s/c02a0ac660b1"
   baidu_url: "https://pan.baidu.com/s/1eTiCKnYC8hfWDAUFTGTmaw"
   baidu_pwd: "r848"
@@ -856,7 +856,7 @@
 - id: tv-033
   title: "面目全非 第二季"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "喜剧", "面目全非.第二季.2023.2160p.NF.WEB-DL."]
+  tags: ["电视剧", "动作", "剧情", "喜剧", "面目全非.第二季.2023.2160p.NF.WEB-DL."]
   quark_url: "https://pan.quark.cn/s/c22b6a74d826"
   baidu_url: "https://pan.baidu.com/s/18ZNbLv2g8fpwRWxn2UeubA"
   baidu_pwd: "uz7n"
@@ -883,7 +883,7 @@
 - id: tv-034
   title: "面目全非 第一季"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "喜剧", "面目全非.第一季FUBAR.S01.2023.1080p.N"]
+  tags: ["电视剧", "动作", "剧情", "喜剧", "面目全非.第一季FUBAR.S01.2023.1080p.N"]
   quark_url: "https://pan.quark.cn/s/9fbd77425805"
   baidu_url: "https://pan.baidu.com/s/1cgCdP08e7dWV7cPvKwnDgw"
   baidu_pwd: "ricp"
@@ -998,7 +998,7 @@
 - id: tv-038
   title: "终极名单"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "终极名单.The Terminal List"]
+  tags: ["电视剧", "动作", "剧情", "终极名单.The Terminal List"]
   quark_url: "https://pan.quark.cn/s/b99c73ba7633"
   baidu_url: "https://pan.baidu.com/s/1Cy1XDzPhydnOgHTv9MUDMQ"
   baidu_pwd: "3qyi"
@@ -1025,7 +1025,7 @@
 - id: tv-039
   title: "猎犬 第一季"
   category: 电视剧
-  tags: ["电视剧", "剧情", "动作冒险", "犯罪", "猎犬.Bloodhounds.S01.2023.NF.WEB"]
+  tags: ["电视剧", "剧情", "动作", "犯罪", "猎犬.Bloodhounds.S01.2023.NF.WEB"]
   quark_url: "https://pan.quark.cn/s/a2863924969c"
   baidu_url: "https://pan.baidu.com/s/1uoVH4thudoXjZprLPUpgOA"
   baidu_pwd: "1kyh"
@@ -1108,7 +1108,7 @@
 - id: tv-042
   title: "枪口彼端"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "犯罪"]
+  tags: ["电视剧", "动作", "剧情", "犯罪"]
   quark_url: "https://pan.quark.cn/s/095ce80912f7"
   baidu_url: "https://pan.baidu.com/s/1BOFKHKi3_wO_mtJuI36zXA"
   baidu_pwd: "vzu3"
@@ -1137,7 +1137,7 @@
 - id: tv-043
   title: "末日骑士"
   category: 电视剧
-  tags: ["电视剧", "剧情", "动作冒险", "科幻奇幻", "末日骑士.Black.Knight"]
+  tags: ["电视剧", "剧情", "动作", "科幻奇幻", "末日骑士.Black.Knight"]
   quark_url: "https://pan.quark.cn/s/c5304ef08277"
   baidu_url: "https://pan.baidu.com/s/1lT67g5pkon_b1txbvf074A"
   baidu_pwd: "dsuj"
@@ -1189,7 +1189,7 @@
 - id: tv-045
   title: "暗夜情报员"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "悬疑", "暗夜情报员.The.Night.Agent.S01.1080p.NF.WEB-D"]
+  tags: ["电视剧", "动作", "剧情", "悬疑", "暗夜情报员.The.Night.Agent.S01.1080p.NF.WEB-D"]
   quark_url: "https://pan.quark.cn/s/f9220710d3ef"
   baidu_url: "https://pan.baidu.com/s/1OEkuTt2QIlzuFzSkPwEVgA"
   baidu_pwd: "j9ty"
@@ -1247,7 +1247,7 @@
 - id: tv-047
   title: "地狱担保人"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "科幻奇幻", "喜剧", "地狱担保人The.Bondsman"]
+  tags: ["电视剧", "动作", "科幻奇幻", "喜剧", "地狱担保人The.Bondsman"]
   quark_url: "https://pan.quark.cn/s/577cfba8a846"
   baidu_url: "https://pan.baidu.com/s/1FdnH3esCcZEpuPFofdXrjw"
   baidu_pwd: "da17"
@@ -1274,7 +1274,7 @@
 - id: tv-048
   title: "卧底高中"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "喜剧", "剧情", "卧底高中.Undercover.High.School"]
+  tags: ["电视剧", "动作", "喜剧", "剧情", "卧底高中.Undercover.High.School"]
   quark_url: "https://pan.quark.cn/s/f959113b52f5"
   baidu_url: "https://pan.baidu.com/s/1d96RqXBikDShLrGbO9KYCA"
   baidu_pwd: "bgya"
@@ -1336,7 +1336,7 @@
 - id: tv-050
   title: "光环 第二季"
   category: 电视剧
-  tags: ["电视剧", "科幻奇幻", "动作冒险", "光环 第二季.Halo.S02.1080p.Paramoun"]
+  tags: ["电视剧", "科幻奇幻", "动作", "光环 第二季.Halo.S02.1080p.Paramoun"]
   quark_url: "https://pan.quark.cn/s/5c21575a0e21"
   baidu_url: "https://pan.baidu.com/s/1B7C0HKp9CpoT49wtDhzMTA"
   baidu_pwd: "x7cs"
@@ -1421,7 +1421,7 @@
 - id: tv-053
   title: "Stealer：七个朝鲜通宝"
   category: 电视剧
-  tags: ["电视剧", "剧情", "动作冒险", "喜剧", "Stealer.The.Treasure.Keeper.S0"]
+  tags: ["电视剧", "剧情", "动作", "喜剧", "Stealer.The.Treasure.Keeper.S0"]
   quark_url: "https://pan.quark.cn/s/95053bf5d0a3"
   baidu_url: "https://pan.baidu.com/s/1bjx_Xyo0OiRtz4Cls5Z8Uw"
   baidu_pwd: "epzz"
@@ -1451,7 +1451,7 @@
 - id: tv-054
   title: "安多 第二季"
   category: 电视剧
-  tags: ["电视剧", "科幻奇幻", "动作冒险", "剧情", "Star.Wars.Andor.S2安多S2"]
+  tags: ["电视剧", "科幻奇幻", "动作", "剧情", "Star.Wars.Andor.S2安多S2"]
   quark_url: "https://pan.quark.cn/s/f5abf7a24ea4"
   baidu_url: "https://pan.baidu.com/s/1n2LklUUnx_ntOxb2U0RQcg"
   baidu_pwd: "h6c8"
@@ -1482,7 +1482,7 @@
 - id: tv-055
   title: "安多 第一季"
   category: 电视剧
-  tags: ["电视剧", "科幻奇幻", "动作冒险", "剧情", "Star.Wars.Andor.S1安多S1"]
+  tags: ["电视剧", "科幻奇幻", "动作", "剧情", "Star.Wars.Andor.S1安多S1"]
   quark_url: "https://pan.quark.cn/s/1fd16dbbf637"
   baidu_url: "https://pan.baidu.com/s/1FEofb1kqCGYx93ZlJ7HiFg"
   baidu_pwd: "qm0s"
@@ -1719,7 +1719,7 @@
 - id: tv-063
   title: "无赦之仇"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "无赦之仇.Mercy For None"]
+  tags: ["电视剧", "动作", "剧情", "无赦之仇.Mercy For None"]
   quark_url: "https://pan.quark.cn/s/4eea73597c20"
   baidu_url: "https://pan.baidu.com/s/1YwqHtKWPBGRv1O0FwXQAvQ"
   baidu_pwd: "gbv9"
@@ -1745,7 +1745,7 @@
 - id: tv-064
   title: "终极名单：黑狼"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "终极名单：黑狼.The Terminal List：Dark Wolf"]
+  tags: ["电视剧", "动作", "剧情", "终极名单：黑狼.The Terminal List：Dark Wolf"]
   quark_url: "https://pan.quark.cn/s/7b6e669a2feb"
   baidu_url: "https://pan.baidu.com/s/1im1GW6IC0-egZYeiGUkzqQ"
   baidu_pwd: "l0jt"
@@ -1865,7 +1865,7 @@
 - id: tv-068
   title: "猎犬 第二季"
   category: 电视剧
-  tags: ["电视剧", "剧情", "动作冒险", "犯罪", "猎犬第二季"]
+  tags: ["电视剧", "剧情", "动作", "犯罪", "猎犬第二季"]
   quark_url: "https://pan.quark.cn/s/0b14e9699502"
   baidu_url: "https://pan.baidu.com/s/1Vb9kNW0nL5Bnj4wFKP4UZw"
   baidu_pwd: "w3i7"
@@ -2054,7 +2054,7 @@
 - id: tv-110
   title: "法警小队"
   category: 电视剧
-  tags: ["电视剧", "剧情", "犯罪", "动作冒险", "法警小队 Marshals"]
+  tags: ["电视剧", "剧情", "犯罪", "动作", "法警小队 Marshals"]
   quark_url: "https://pan.quark.cn/s/71de81cc4c8c"
   baidu_url: "https://pan.baidu.com/s/1zJb6riQ3uxBHlofjBPI3eA"
   baidu_pwd: "vhlg"
@@ -2329,7 +2329,7 @@
 - id: tv-120
   title: "法警小队 第二季"
   category: 电视剧
-  tags: ["电视剧", "剧情", "犯罪", "动作冒险", "法警小队 第二季 Marshals"]
+  tags: ["电视剧", "剧情", "犯罪", "动作", "法警小队 第二季 Marshals"]
   quark_url: "https://pan.quark.cn/s/4b1a8061dc77"
   baidu_url: "https://pan.baidu.com/s/1WQKBEHyXjyWM9muGTw0mXQ"
   baidu_pwd: "768q"
@@ -2378,7 +2378,7 @@
 - id: tv-128
   title: "权力的游戏 第二季"
   category: 电视剧
-  tags: ["电视剧", "奇幻", "剧情", "动作冒险", "权力的游戏 第二季 Game of Thrones S02"]
+  tags: ["电视剧", "奇幻", "剧情", "动作", "权力的游戏 第二季 Game of Thrones S02"]
   quark_url: "https://pan.quark.cn/s/e99aeaa98fdb"
   baidu_url: "https://pan.baidu.com/s/1_Oyd-oi0RvMqghmWUSAoZw"
   baidu_pwd: "481r"
@@ -2407,7 +2407,7 @@
 - id: tv-127
   title: "权力的游戏 第三季"
   category: 电视剧
-  tags: ["电视剧", "奇幻", "剧情", "动作冒险", "权力的游戏 第三季 Game of Thrones S03"]
+  tags: ["电视剧", "奇幻", "剧情", "动作", "权力的游戏 第三季 Game of Thrones S03"]
   quark_url: "https://pan.quark.cn/s/bb6347ff6f4c"
   baidu_url: "https://pan.baidu.com/s/1jh-P0h-EmnyIcut3V1wiYw"
   baidu_pwd: "0xrv"
@@ -2436,7 +2436,7 @@
 - id: tv-126
   title: "权力的游戏 第四季"
   category: 电视剧
-  tags: ["电视剧", "奇幻", "剧情", "动作冒险", "权力的游戏 第四季 Game of Thrones S04"]
+  tags: ["电视剧", "奇幻", "剧情", "动作", "权力的游戏 第四季 Game of Thrones S04"]
   quark_url: "https://pan.quark.cn/s/9ed02110c3b6"
   baidu_url: "https://pan.baidu.com/s/1QudZzn3xeeEafYop5KA-_g"
   baidu_pwd: "q1n2"
@@ -2465,7 +2465,7 @@
 - id: tv-125
   title: "权力的游戏 第五季"
   category: 电视剧
-  tags: ["电视剧", "奇幻", "剧情", "动作冒险", "权力的游戏 第五季 Game of Thrones S05"]
+  tags: ["电视剧", "奇幻", "剧情", "动作", "权力的游戏 第五季 Game of Thrones S05"]
   quark_url: "https://pan.quark.cn/s/a5e2cfd12df0"
   baidu_url: "https://pan.baidu.com/s/1zlUopfIgGJ9aLdZINgDDhA"
   baidu_pwd: "35wp"
@@ -2494,7 +2494,7 @@
 - id: tv-124
   title: "权力的游戏 第六季"
   category: 电视剧
-  tags: ["电视剧", "奇幻", "剧情", "动作冒险", "权力的游戏 第六季 Game of Thrones S06"]
+  tags: ["电视剧", "奇幻", "剧情", "动作", "权力的游戏 第六季 Game of Thrones S06"]
   quark_url: "https://pan.quark.cn/s/97172b3efcd1"
   baidu_url: "https://pan.baidu.com/s/1LlV60qD42yoLwBKOTG-grQ"
   baidu_pwd: "y90v"
@@ -2523,7 +2523,7 @@
 - id: tv-123
   title: "权力的游戏 第七季"
   category: 电视剧
-  tags: ["电视剧", "奇幻", "剧情", "动作冒险", "权力的游戏 第七季 Game of Thrones S07"]
+  tags: ["电视剧", "奇幻", "剧情", "动作", "权力的游戏 第七季 Game of Thrones S07"]
   quark_url: "https://pan.quark.cn/s/5dd8e3f0fff2"
   baidu_url: "https://pan.baidu.com/s/1JFHgiY66bO0O7Tk6ywt_8A"
   baidu_pwd: "0y77"
@@ -2549,7 +2549,7 @@
 - id: tv-122
   title: "权力的游戏 第八季"
   category: 电视剧
-  tags: ["电视剧", "奇幻", "剧情", "动作冒险", "权力的游戏 第八季 Game of Thrones S08"]
+  tags: ["电视剧", "奇幻", "剧情", "动作", "权力的游戏 第八季 Game of Thrones S08"]
   quark_url: "https://pan.quark.cn/s/f97b92e8951c"
   baidu_url: "https://pan.baidu.com/s/1GA4u91mMKfmFVcJIE2iB_Q"
   baidu_pwd: "fz3w"
@@ -2958,7 +2958,7 @@
 - id: tv-142
   title: "百日谎言"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "剧情", "百日谎言 100일의 거짓말"]
+  tags: ["电视剧", "动作", "剧情", "百日谎言 100일의 거짓말"]
   quark_url: "https://pan.quark.cn/s/7fe74637d991"
   description: "【第 1 季 · 共 16 集】韩国年代谍报爱情剧《百日谎言》（100일의 거짓말）2026 年 10 月 10 日开播，故事设定在日本殖民统治时期的朝鲜半岛。女主角佳景是个凭一双手吃饭的天才扒手，为了活下去，她冒名顶替混进朝鲜总督府当差，摇身一变成了体制里的「密探」。不过这个身份从头到尾都是假的，她瞒天过海，一装就是一百天。装着装着，假的也成了真的：她开始真正卷入情报的传递与危险的周旋，从冒牌密探一步步长成真正的暗线人物。与她命运纠缠在一起的是朝鲜翻译官泰雄，两人各怀目的互相试探，又在乱世里交出了真心，谍报线的紧绷与爱情线的悸动交替上演。本剧的动作冒险底色很足，扒手出身的设定让女主角的身手戏有独特看点，总督府内的权力倾轧则为剧情提供了持续的压力源。16 集的体量，适合喜欢年代谍战气质又想看言情线的观众；剧集刚开播，评分尚未开出，可以先看前几集再决定追不追。资源目录按 Season 1 结构存放。"
   date: 2026-10-10
@@ -3036,7 +3036,7 @@
 - id: tv-144
   title: "金银岛"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "冒险", "金银岛 Treasure Island"]
+  tags: ["电视剧", "动作", "冒险", "金银岛 Treasure Island"]
   quark_url: "https://pan.quark.cn/s/564ba0f5373d"
   description: "【第 1 季 · 共 6 集】改编自罗伯特·路易斯·史蒂文森的经典冒险小说。少年吉姆·霍金斯和母亲贝斯意外得到一张传说中的海盗藏宝图，由此踏上横渡大西洋的航程。船上的人各怀心思，叛变、暴力与背叛接踵而来，吉姆必须在这一路上迅速长大，而这段经历也彻底改写了他的人生。这一版把重心放在吉姆的视角：从一开始对远航的浪漫想象，到亲眼看见成年人的贪婪能到什么程度，成长是被硬生生逼出来的。航船是主要舞台，封闭空间里的人心博弈写得相当紧，谁可信、谁在演，观众和吉姆几乎是同时知道的。动作场面服务于叙事，没有脱离情境的炫技，海上的压迫感靠镜头与声音堆出来。史蒂文森原著的骨架都在——藏宝图、独腿船厨、叛变与荒岛，但节奏按剧集重排，悬念分布更均匀。适合喜欢经典冒险故事、想看一次海上传奇新拍的观众；抱着寻宝爽片预期来的会觉得它更沉，人物戏占的比重不小。｜TMDB 4.7"
   date: 2026-10-11
@@ -3265,7 +3265,7 @@
 - id: tv-160
   title: "赛博朋克：边缘行者 第2季"
   category: 电视剧
-  tags: ["电视剧", "动画", "动作冒险", "科幻", "犯罪", "赛博朋克：边缘行者 第2季 Cyberpunk: Edgerunners Season 2"]
+  tags: ["电视剧", "动画", "动作", "科幻", "犯罪", "赛博朋克：边缘行者 第2季 Cyberpunk: Edgerunners Season 2"]
   quark_url: "https://pan.quark.cn/s/792399fb193f"
   description: "【第 2 季 · 共 10 集 · 全剧 2 季】夜之城的故事在时隔四年后重新开张。TRIGGER 与 CD PROJEKT RED 再度联手打造的这部动画剧集，自 2022 年第一季播出后就把《赛博朋克 2077》的世界观从游戏搬上了屏幕，让全球观众记住了这座霓虹与铁锈交织的城市。第二季延续了只管奔跑的底色，但主角换了一批人：落魄的赛博朋克传奇人物 Weak Kingsley，如今被迫在没有义体的世界里求生，一个人人改造身体的狂热时代早已把他抛在身后，他要在被遗忘的处境里重新找到活下去的意义。另一边，致命的流浪者 D 踏上了复仇之路，一路逼近那些本不该被任何人发现的公司秘密，两条线在夜之城的暗处逐渐交汇。本季依旧由系列发起人拉法乌·亚基主导，利根健太朗为 Weak Kingsley 配音，内山昂辉为 D 献声，寺泽百花与鬼头明里也在主要阵容之中。十集的体量，动画、动作冒险、犯罪与科幻元素全部在线，赛博格改造、公司阴谋与底层挣扎一个不落。没看过第一季的观众建议先补前作，认得夜之城的规矩之后，第二季的狠劲才更容易尝出味道。｜TMDB 8.5"
   date: 2026-10-20
@@ -4744,7 +4744,7 @@
 - id: tv-088
   title: "指环王：力量之戒 第三季"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "科幻奇幻", "指环王：力量之戒 第三季 The Lord of the Rings: The Rings of Power"]
+  tags: ["电视剧", "动作", "科幻奇幻", "指环王：力量之戒 第三季 The Lord of the Rings: The Rings of Power"]
   quark_url: "https://pan.quark.cn/s/1cb897841aab"
   description: "【第 3 季 · 共 8 集 · 全剧 3 季】强大的力量锻造成型，王国辉煌崛起又陨落成尘，让人意想不到的英雄遭受考验，而强大的反派势要让整个世界蒙上黑暗。 一组为人熟悉的人物和全新的角色，他们必须对抗邪恶势力在中土世界再度崛起。从迷雾山脉的最深处、林顿壮丽的森林、努曼诺尔的海岛王国到地图的最边缘，这些领土和角色将联手创造传奇，即使他们不在人世后仍流芳百世。 本剧设定在托尔金的《霍比特人》和《指环王》事件前的数千年，将带领观众回到那个年代。本剧类型：动作冒险 / Sci-Fi & Fantasy。｜TMDB 7.2"
   date: 2022-09-01
@@ -5158,7 +5158,7 @@
 - id: tv-185
   title: "拣选 第六季"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "家庭", "剧情", "拣选 第六季 The Chosen"]
+  tags: ["电视剧", "动作", "家庭", "剧情", "拣选 第六季 The Chosen"]
   quark_url: "https://pan.quark.cn/s/483a92b82139"
   guangya_url: "https://www.guangyapan.com/s/1969157174053474366_avljRRMihbsI49Uo"
   description: "【第 6 季 · 共 6 集 · 全剧 6 季】拣选是第一部关于基督生平的多季电视连续剧，通过他影响的人的眼睛见证。本剧类型：动作冒险 / 家庭 / 剧情。2019 年首播，已获续订，仍在播出，全剧 6 季，累计 46 集，单集约 60 分钟。播出平台：Prime Video、VidAngel、Angel、TheChosen.tv。制片国家/地区：美国。｜TMDB 8.8"
@@ -5169,7 +5169,7 @@
 - id: tv-186
   title: "重生密码"
   category: 电视剧
-  tags: ["电视剧", "Sci-Fi & Fantasy", "动作冒险", "重生密码 重生密碼"]
+  tags: ["电视剧", "Sci-Fi & Fantasy", "动作", "重生密码 重生密碼"]
   quark_url: "https://pan.quark.cn/s/aba1d96ffa79"
   description: "【第 1 季 · 共 24 集】一场海底火山爆发，让尘封多年的休眠舱浮出海面，舱中沉睡的周亦白就此醒来，记忆却停留在1955年。当他循着旧日地址回到周宅大院，眼前早已物是人非，一场与孙子周末的意外相遇，反倒引来重重杀机。祖孙二人性格迥异，彼此试探，是敌是友难以分辨。另一条线上，车祸之后昏迷不醒的拳王陆霏，脑海里总浮现一个陌生男子的身影，伴随熟悉的琴声，冰封的记忆正一点点重启。两段错位的时空、一段深埋海底的往事交织推进，悬念层层揭开，科幻设定与悬疑叙事相互咬合，构成这部剧最吸引人的看点。｜TMDB 7.0"
   date: 2026-11-13
@@ -5195,7 +5195,7 @@
 - id: tv-187
   title: "文武"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "War & Politics", "文武 문무"]
+  tags: ["电视剧", "动作", "War & Politics", "文武 문무"]
   quark_url: "https://pan.quark.cn/s/6c59e9e204ac"
   description: "【第 1 季 · 共 28 集】这是一部气势宏大的历史正剧，把镜头对准朝鲜半岛三国归一的动荡年代。故事以高句丽与百济的兴衰为经，以与唐朝的角力为纬，铺陈出一段波澜壮阔的统一之路。剧中不仅重现了当年诸国并立、征战不休的格局，也着力刻画那些推动历史走向的人物，他们在权力与信念之间抉择，在兄弟与家国之间取舍。宏大的战争场面与细腻的人物命运相互映衬，让这段以弱胜强、完成三国统一的往事有了温度。对历史题材感兴趣的观众，能从中看到小国在大国夹缝中求生存、谋发展的韧性与智慧。｜TMDB 7.5"
   date: 2026-11-14
@@ -5315,7 +5315,7 @@
 - id: tv-192
   title: "波巴·费特之书"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "Sci-Fi & Fantasy", "波巴·费特之书 The Book of Boba Fett"]
+  tags: ["电视剧", "动作", "Sci-Fi & Fantasy", "波巴·费特之书 The Book of Boba Fett"]
   quark_url: "https://pan.quark.cn/s/a74878586271"
   description: "【第 1 季 · 共 7 集】波巴·费特不再只是一个雇佣兵，他与芬内克·尚德一起在塔图因开辟新天地。官方标语：每个星系，都有一个地下世界。本剧类型：动作冒险 / Sci-Fi & Fantasy。2021 年首播，已完结，全剧 1 季，累计 7 集。播出平台：Disney+。制片国家/地区：美国。主创：乔恩·费儒。出品方：Lucasfilm Ltd.、Golem Creations。｜TMDB 7.5"
   date: 2021-12-29
@@ -5487,7 +5487,7 @@
 - id: tv-199
   title: "拣选"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "家庭", "剧情", "拣选 The Chosen"]
+  tags: ["电视剧", "动作", "家庭", "剧情", "拣选 The Chosen"]
   quark_url: "https://pan.quark.cn/s/895b95729a5e"
   description: "【全剧 6 季 · 共 46 集】拣选是第一部关于基督生平的多季电视连续剧，通过他影响的人的眼睛见证。本剧类型：动作冒险 / 家庭 / 剧情。2019 年首播，已获续订，仍在播出，全剧 6 季，累计 46 集，单集约 60 分钟。播出平台：Prime Video、VidAngel、Angel、TheChosen.tv。制片国家/地区：美国。｜TMDB 8.9"
   date: 2019-04-21
@@ -6355,7 +6355,7 @@
 - id: tv-228
   title: "模范出租车 第一季"
   category: 电视剧
-  tags: ["电视剧", "动作冒险", "犯罪", "剧情", "模范出租车 모범택시"]
+  tags: ["电视剧", "动作", "犯罪", "剧情", "模范出租车 모범택시"]
   quark_url: "https://pan.quark.cn/s/be42aa5dd092"
   description: "【全剧 3 季 · 共 48 集】一名前特种部队士兵在以出租车公司为幌子的秘密组织工作，为遭受不公的受害者复仇。本剧类型：动作冒险 / 犯罪 / 剧情。2021 年首播，已完结，全剧 3 季，累计 48 集，单集约 64 分钟。播出平台：SBS。制片国家/地区：韩国。主创：李玉奎。出品方：Studio S、Group Eight。对白语言：韩语。｜TMDB 8.1"
   date: 2021-04-09
