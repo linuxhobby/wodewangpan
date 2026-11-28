@@ -987,7 +987,7 @@ ${facts.map(([k, v]) => `    <tr><th scope="row">${k}</th><td>${v}</td></tr>`).j
     <div class="links">
       ${item.links.length ? item.links.map(linkRow).join('\n') : '<p class="muted">暂无可用链接</p>'}
     </div>
-    <p class="detail__promo"><a href="${esc(GUANGYA_PROMO_URL)}" target="_blank" rel="noopener noreferrer sponsored">送你一份光鸭云盘会员，畅享500T空间，极速云添加，下载不限速</a></p>
+    <p class="detail__promo"><a class="detail__promo-link" href="${esc(GUANGYA_PROMO_URL)}" target="_blank" rel="noopener noreferrer sponsored"><span class="detail__promo-badge">免费领</span><span class="detail__promo-text">送你一份光鸭云盘会员，畅享500T空间，极速云添加，下载不限速</span></a></p>
     ${feedbackBar({ site, item, baseUrl })}
     <div class="detail__share">
       <button class="btn btn--mini" type="button" data-share

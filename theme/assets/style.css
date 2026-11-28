@@ -556,9 +556,27 @@ a.tag:hover { background: var(--brand-soft); }
 /* 等宽文本（链接地址 / 订阅地址）统一字体与字号 */
 .linkrow__url, .feed-url__code { font-family: var(--font-mono); font-size: var(--fs-sm); }
 
-/* 详情页反馈条上方的推广邀请链接：弱提示，不抢转存主操作 */
-.detail__promo { margin: 0 0 8px; font-size: var(--fs-base); }
-.detail__promo a { color: var(--brand); font-weight: 600; }
+/* 详情页反馈条上方的光鸭邀请卡：价格签式徽章 + 醒目文案，和兜底反馈条拉开层次 */
+.detail__promo { margin: 0 0 10px; }
+.detail__promo-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--brand);
+  border-radius: var(--r-box);
+  background: var(--brand-soft);
+  color: var(--brand); text-decoration: none;
+  line-height: var(--lh-tight);
+}
+.detail__promo-link:hover { background: var(--fill-hover); text-decoration: none; }
+.detail__promo-badge {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--brand);
+  color: var(--surface);
+  font-size: var(--fs-sm); font-weight: 700; line-height: var(--lh-tight);
+}
+.detail__promo-text { font-size: var(--fs-lg); font-weight: 700; color: var(--brand); }
 
 /* 详情页反馈条：链接失效 / 资源有误的出口，紧跟在转存链接下面。
    用虚线框 + 中性底与上面的 .linkrow 拉开层次——它是兜底，不是主操作 */
