@@ -1231,7 +1231,11 @@ ${p === 1 ? tagCloudHtml(tags) : ''}
 /** 相关标签：与当前标签「同时挂在同一批资源上」的标签，按重合条数排序。
     只留已经建了聚合页的（没建页的链过去就是 404），比每页都一样的全站热门标签更有信息量 */
 function relatedTagsOf(tag, tags, max = 12) {
-  const pageable = new Map((tags || []).map((t) => [t.key, t]));
+  const pageable = new Map();
+  for (const t of tags || []) {
+    pageable.set(t.key, t);
+    for (const alias of t.aliases || []) pageable.set(alias, t);
+  }
   const shared = new Map();
   for (const it of tag.items) {
     for (const raw of it.tags || []) {

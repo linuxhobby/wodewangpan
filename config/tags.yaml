@@ -91,3 +91,11 @@ tagSlugs:
   # 2026-11-16 把 TMDB 的 "Sci-Fi & Fantasy" 统一成中文标签「科幻奇幻」，
   # 这里保留旧 slug 指向同一页（别名只增不改，已收录的 URL 不能断）。
   科幻奇幻: sci-fi-fantasy
+
+# 同义标签归一（2026-11-28）：key 是旧写法，value 是保留的规范写法。
+# 与 tagSlugs 的区别：tagSlugs 只管 URL，collectTags 按标签名分桶——两个同义写法
+# 各自成桶 → 两个标签页写到同一个 slug 目录、互相覆盖（构建会报「slug 撞车」）。
+# 在这里声明后，构建时把旧写法的资源并入规范标签，只建一个页；旧 URL 仍由 tagSlugs 兜底。
+# 数据层不必批量改（TMDB 同步还会带回英文写法），在脚本层归一才不会复发。
+tagAliases:
+  "Sci-Fi & Fantasy": 科幻奇幻

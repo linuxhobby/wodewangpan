@@ -83,6 +83,21 @@ export function tagSlug(tag) {
   return TAG_SLUGS.get(key) || (SLUG_FALLBACK && SLUG_FALLBACK(key)) || key;
 }
 
+/**
+ * 同义标签归一表：旧写法 → 规范写法（config/tags.yaml 的 tagAliases）。
+ * 在 collectTags 分桶前应用，让同义写法并入同一标签页；只影响分桶，不改数据、不改 URL。
+ */
+let TAG_ALIASES = new Map();
+function setTagAliases(map) {
+  TAG_ALIASES = new Map(
+    Object.entries(map || {}).map(([k, v]) => [tagKey(k), String(v).trim()])
+  );
+}
+export function canonicalTag(text) {
+  const key = tagKey(text);
+  return TAG_ALIASES.get(key) || String(text || '').trim();
+}
+
 /** 标签聚合页的最低资源数：低于这个数不出页（口径常量，仅本文件与 loadSite 消费，不外发） */
 const MIN_TAG_ITEMS = 3;
 
@@ -176,17 +191,22 @@ export function collectTags(items, { categories = [], min = MIN_TAG_ITEMS, exclu
   const buckets = new Map();
   for (const it of items) {
     for (const raw of it.tags || []) {
-      const label = String(raw || '').trim();
+      const shown = String(raw || '').trim();
+      // 同义归一：旧写法并入规范写法，避免同一题材拆成两个桶写出同一个 slug 目录
+      const label = canonicalTag(shown);
       const key = tagKey(label);
       if (!key) continue;
       if (catSet.has(key)) continue;
       if (skip.has(key) || skip.has(label)) continue;
       if (isTitleNoise(label, it.title)) continue;
       let b = buckets.get(key);
-      if (!b) buckets.set(key, (b = { key, items: [], variants: new Map() }));
+      if (!b) buckets.set(key, (b = { key, items: [], variants: new Map(), aliases: new Set() }));
       b.items.push(it);
       // 同一标签可能有大小写 / 全半角写法差异，显示名取出现最多的那种
       b.variants.set(label, (b.variants.get(label) || 0) + 1);
+      // 旧写法的 key 留给详情页查 tagIndex：条目的 tags 字段仍是原始写法（不改数据）
+      const shownKey = tagKey(shown);
+      if (shownKey && shownKey !== key) b.aliases.add(shownKey);
     }
   }
   const list = [];
@@ -200,7 +220,7 @@ export function collectTags(items, { categories = [], min = MIN_TAG_ITEMS, exclu
         label = v;
       }
     }
-    list.push({ key: b.key, label, count: b.items.length, items: b.items });
+    list.push({ key: b.key, label, count: b.items.length, items: b.items, aliases: [...b.aliases] });
   }
   return list.sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
 }
@@ -448,6 +468,8 @@ export function loadTagConfig(configDir) {
   const cfg = fs.existsSync(file) ? yaml.load(fs.readFileSync(file, 'utf8')) || {} : {};
   // 别名表要早于任何标签链接生成，否则 tagSlug() 会退回拼音兜底，URL 就变了
   setTagSlugs(cfg.tagSlugs);
+  // 同义归一表：collectTags 分桶前把旧写法并入规范写法
+  setTagAliases(cfg.tagAliases);
   return {
     // 标签聚合页的最低资源数，不配就用 MIN_TAG_ITEMS
     min: Number(cfg.tagMin) > 0 ? Number(cfg.tagMin) : MIN_TAG_ITEMS,

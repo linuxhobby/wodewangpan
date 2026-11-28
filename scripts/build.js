@@ -149,8 +149,12 @@ try {
 
 // 只留资源数达 tagMin 的标签（默认 3）；tagExclude 点名的不建页——页面会与分类页近重复
 const tags = collectTags(items, { categories, min: tagCfg.min, exclude: tagCfg.exclude });
-/** 标签 key → 聚合信息：详情页据此决定标签给不给链接 */
-const tagIndex = new Map(tags.map((t) => [t.key, t]));
+/** 标签 key → 聚合信息：详情页据此决定标签给不给链接。同义归一后，旧写法 key 也指向同一页 */
+const tagIndex = new Map();
+for (const t of tags) {
+  tagIndex.set(t.key, t);
+  for (const alias of t.aliases || []) tagIndex.set(alias, t);
+}
 
 function checkTagSlugClashes(tags) {
   const seen = new Map();
