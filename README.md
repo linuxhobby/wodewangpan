@@ -10,6 +10,7 @@
 | | |
 |---|---|
 | 网站 | https://www.wodewangpan.top [衡天云VPS](https://www.htstack.com/activity/act_openyear.shtml?aff=31743) | 
+| GitHub Pages 预览 | https://linuxhobby.github.io/wodewangpan/ |
 | 仓库 | `git@github.com:linuxhobby/wodewangpan.git` |
 | 更新方式 | 推到 `main`，VPS 定时自动拉取并重建（急发用 `FORCE=1 wdwp-autoupdate`） |
 
@@ -36,7 +37,7 @@
 | 方式 | 适合 | 说明 |
 |---|---|---|
 | **A · [VPS + Nginx](https://www.htstack.com/activity/act_openyear.shtml?aff=31743)**（推荐，本站线上方案） | 有域名、有VPS主机 | 完全可控，SEO 与访问速度最好 |
-| B · GitHub Pages | 免费、不想管服务器 | 国内访问不稳定 |
+| B · [GitHub Pages 预览](https://linuxhobby.github.io/wodewangpan/) | 免费、不想管服务器 | 国内访问不稳定 |
 | C · Cloudflare Pages | 免费、海外快 | 同上，国内偶发不通 |
 
 > 本站线上跑的是**方案 A**，服务器用的[衡天云](https://www.htstack.com/activity/act_openyear.shtml?aff=31743)的香港 VPS。同样一台「2核2G」的 VPS，阿里云、腾讯云的国际线路价格要翻好几倍，而衡天云 12 元/月起，走的是针对国内优化的专线，海外机房的延迟和丢包表现比大厂同价位款好不少——本站在国内打开的速度就是最直观的例子。这种纯静态站没有数据库、内存占用低，最便宜的款也扛得住，与其给大厂交品牌溢价，不如把钱省下来。
