@@ -24,6 +24,7 @@ import {
   writeShareQr,
   writeFavicon,
   copyThemeAssets,
+  resolveSource,
   POSTER_WIDTHS,
   OG_VERSION,
 } from './lib/assets.js';
@@ -171,6 +172,54 @@ function checkTagSlugClashes(tags) {
   }
 }
 checkTagSlugClashes(tags);
+
+/** 构建期配图一致性检查。与 npm run check:images 互补：那个查「引用了但找不到文件 / 孤儿 / 旧平铺」，
+ *  这里查它管不到的三类高发偏差——图在却没写 image:（靠 id 兜底渲染，字段一被整体替换就断图）、
+ *  image: 写了却找不到文件、以及多条撞字节级相同的海报（cs-035/cs-040 那种）。
+ *  默认只告警不阻断：同系列剧集共用一张海报属正常，硬失败会卡死 VPS 自动更新。
+ *  WDP_STRICT_IMAGES=1 时，前两类明确的写入/下载 bug 直接让构建失败，供 commit 前主动校验。 */
+function checkImageConsistency(items) {
+  const noField = [];
+  const brokenRef = [];
+  const byHash = new Map();
+  for (const it of items) {
+    const src = resolveSource(it, staticDir, root);
+    if (!it.image && src) noField.push(it.id);
+    else if (it.image && !src) brokenRef.push(`${it.id}(${it.image})`);
+    if (!src) continue;
+    let buf;
+    try {
+      buf = fs.readFileSync(src);
+    } catch {
+      continue;
+    }
+    const h = crypto.createHash('md5').update(buf).digest('hex');
+    if (!byHash.has(h)) byHash.set(h, []);
+    byHash.get(h).push(it.id);
+  }
+  const duplicate = [...byHash.values()].filter((ids) => ids.length > 1);
+  if (noField.length) {
+    console.log(`  ! 缺 image: 引用 ${noField.length} 条（图在，靠 id 兜底渲染）：${noField.slice(0, 20).join('、')}${noField.length > 20 ? '…' : ''}`);
+    console.log('      补 image: <id>.jpg，避免 --replace-existing 等整体替换抹掉配图');
+  }
+  if (brokenRef.length) {
+    console.log(`  ! image: 指向的文件找不到 ${brokenRef.length} 条：${brokenRef.slice(0, 20).join('、')}${brokenRef.length > 20 ? '…' : ''}`);
+  }
+  if (duplicate.length) {
+    console.log(`  ! 字节级相同海报 ${duplicate.length} 组（同系列共用属正常，请人工确认非误用）：`);
+    for (const ids of duplicate.slice(0, 12)) console.log(`      ${ids.join(' / ')}`);
+    if (duplicate.length > 12) console.log(`      …另 ${duplicate.length - 12} 组`);
+  }
+  if (!noField.length && !brokenRef.length && !duplicate.length) {
+    console.log('  ✓ 配图一致性：无缺 image: 引用 · 无断链 · 无重复海报');
+  }
+  const hard = noField.length + brokenRef.length;
+  if (process.env.WDP_STRICT_IMAGES === '1' && hard) {
+    console.error(`! 严格模式：${hard} 条配图引用错误（${noField.length} 缺字段 / ${brokenRef.length} 断链），构建中止`);
+    process.exit(1);
+  }
+}
+checkImageConsistency(items);
 
 if (!total) {
   console.error('! data/ 目录下没有解析到任何资源，请检查 YAML');

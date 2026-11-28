@@ -26,9 +26,12 @@ node tools/sort-trees.mjs --dry-run # 预览/回填目录树排序（见 §4）
 node tools/fill-desc.mjs            # 批量补/改描述（谨慎，见 §5）
 npm run check:images                 # 配图盘点（分类目录命中 / 孤儿文件）
 node tools/list-missing-posters.mjs  # 缺海报盘点（只读，列无 image:/图缺失的条目）
+WDP_STRICT_IMAGES=1 npm run build    # 严格配图校验：缺 image: / image: 断链会让构建中止（重复海报仍只告警）
 ```
 
 一次完整构建约 45~130 秒（首次全量偏慢，增量约 40 秒），第二次跑应「重新生成 0 个」。
+
+构建期还有一段**配图一致性检查**（`build.js` 内，紧挨标签 slug 撞车告警），与 `check:images` 互补：后者查「缺图 / 孤儿 / 旧平铺」，前者查「图在却没写 `image:`（靠 id 兜底）」「`image:` 指向文件找不到」「字节级相同海报」。默认只告警不阻断——同系列剧集共用海报属正常，硬失败会卡死 VPS 自动更新；只有 `WDP_STRICT_IMAGES=1` 时前两类明确 bug 才 exit 1，供 commit 前主动校验。见 §5 海报口径。
 
 ## 2. 目录结构
 
