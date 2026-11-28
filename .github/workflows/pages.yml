@@ -27,6 +27,9 @@ jobs:
       - run: npm run build
         env:
           BASE_URL: https://linuxhobby.github.io/wodewangpan
+      - run: node tools/gh-pages-prefix.mjs
+        env:
+          BASE_PATH: /wodewangpan
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
