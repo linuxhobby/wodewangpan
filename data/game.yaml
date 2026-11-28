@@ -1,4 +1,4 @@
-# 游戏资源（89 条）
+# 游戏资源（92 条）
 - id: game-001
   title: "文明6 - Firaxis 4X 回合策略"
   category: 游戏
@@ -1847,3 +1847,64 @@
       089-贝优妮塔3 Bayonetta3/
       [整合版v1.1.0][01004A4010FEA000][15.0.1][中文][US].xci
       1.1.0金手指.zip
+
+- id: game-090
+  title: "数码宝贝物语 时空异客 数位终极版 - Switch中文育成RPG"
+  category: 游戏
+  tags: ["游戏", "Switch", "角色扮演", "育成", "数码宝贝", "中文"]
+  quark_url: "https://pan.quark.cn/s/7cee55a172dc"
+  description: "《数码宝贝物语 时空异客》（Digimon Story: Time Stranger）由 Media Vision 开发、万代南梦宫娱乐发行，是《数码宝贝物语》系列的角色扮演作品。PlayStation 5 与 Xbox Series X|S 版于 2025 年 10 月 2 日推出，Steam 版 10 月 3 日，Nintendo Switch 与 Switch 2 版于 2026 年 7 月 9 日在亚洲上市。故事舞台是东京：玩家扮演超自然现象特别调查局 ADAMAS 的特工，调查新宿异常现象时遭遇数码宝贝并被卷入爆炸，醒来发现世界回到八年前，由此展开阻止世界崩坏、追寻过去与未来谜团的冒险。游戏可在人类世界与数字世界·伊利亚斯之间往来，收录 450 种以上可收集培育的数码宝贝，战斗为回合制，病毒、数据、疫苗三种属性相互克制。数字终极版除游戏本体外还包含季票、服装组合包等数字特典。盘端资源为 Switch 中文 NSP：本体 v1.0.0（标题 ID 010062E01FE0C000，约 10.53 GB）、升级档 v1.2.2（010062E01FE0C800，约 1.38 GB）、DLC14 目录内 14 个追加内容 NSP，以及标注不用下载的历史版本目录，平台与版本以盘端文件为准。发售信息参考万代南梦宫娱乐亚洲官方公告。"
+  date: 2026-07-09
+  added: 2026-11-28
+  image: game-090.jpg
+  updated: 2026-11-28
+  files:
+    count: 4
+    format: "NSP×2"
+    tree: |
+      090-数码宝贝物语 时空异客 数位终极版 Digimon Story Time Stranger/
+      历史版本[不用下载]/
+      DLC14（7月30更新）/
+      [本体v1.0.0][010062E01FE0C000][21.1.0][中文][US].nsp
+      [升级档v1.2.2][010062E01FE0C800][23.0.0][中文][US].nsp
+
+- id: game-091
+  title: "死亡细胞 Dead Cells - Switch RogueVania动作平台游戏"
+  category: 游戏
+  tags: ["游戏", "Switch", "动作", "Roguelike", "类银河恶魔城", "中文"]
+  quark_url: "https://pan.quark.cn/s/badebe95cf59"
+  description: "《死亡细胞》（Dead Cells）由法国 Motion Twin 团队开发，是一款融合 Roguelike 与类银河恶魔城要素的 2D 平台动作游戏。2017 年 5 月进入抢先体验，2018 年 8 月 7 日正式版登陆 Windows、macOS、Linux、PlayStation 4、Xbox One 与 Nintendo Switch 等平台。玩家操控一具被细胞寄生、从地牢中苏醒的尸体，在随机生成的关卡中探索，使用近战与远程武器、盾牌和翻滚闪避应对敌人与陷阱，击败敌人获得细胞作为货币，在关卡起点向商人换取永久能力、武器蓝图与道具解锁；每次死亡都会失去当次携带的装备与细胞，从初始关卡重新出发，已解锁的蓝图则会在后续流程中随机出现。作品另有坏种、致命坠落、王后与海、重返恶魔城等追加内容。盘端资源为 Switch 版本：xci整合版目录含整合版 v1.24.1（标题 ID 0100646009FBE000，约 2.38 GB，标注 1 本体加 1 升级加 5 DLC），nsz非整合目录含本体、升级档 v1.25.0 与 dlc-5 子目录，另附 1.25.0 金手指压缩包，具体版本以盘端文件为准。背景资料参考中文维基百科与百度百科条目。"
+  date: 2018-08-07
+  added: 2026-11-28
+  image: game-091.jpg
+  updated: 2026-11-28
+  files:
+    count: 3
+    format: "ZIP"
+    packed: true
+    tree: |
+      091-死亡细胞 Dead Cells/
+      nsz非整合/
+      xci整合版/
+      1.25.0金手指.zip
+
+- id: game-092
+  title: "土豆兄弟 Brotato - Switch Roguelite俯视角射击游戏"
+  category: 游戏
+  tags: ["游戏", "Switch", "Roguelite", "射击", "俯视角", "中文"]
+  quark_url: "https://pan.quark.cn/s/b2b23b87b1f6"
+  description: "《土豆兄弟》（Brotato）由法国独立开发者托马·热夫罗以 Blobfish 工作室名义开发，是一款 Roguelite 俯视角清版射击游戏。2022 年 9 月 27 日在 Steam 以抢先体验形式发行，2023 年 6 月 23 日推出完整版，Nintendo Switch 版于 2023 年 8 月 3 日上线，PS4、PS5、Xbox One 与 Xbox Series X|S 版于 2024 年 1 月 30 日推出。玩家从多名初始属性各异的马铃薯角色中选择一名，以俯视角操控角色抵御一波波敌人；每波结束后用收集到的材料购买和升级武器与属性，角色可装备多件武器组合出不同流派，默认自动瞄准，也可在设置中改为手动瞄准。2024 年 10 月推出首个 DLC 深海魔怪（Abyssal Terrors），并加入本地合作玩法。盘端资源为 Switch 中文 NSP：本体 v1.0.0.3d（标题 ID 01002EF01A316000，约 0.20 GB）、升级档 v1.1.15.4（01002EF01A316800，约 0.32 GB）、DLC 目录、设置中文教程目录与标注不用下载的历史版本目录，平台与版本以盘端文件为准。资料参考维基百科中文条目及任天堂欧洲商店信息。"
+  date: 2023-08-03
+  added: 2026-11-28
+  image: game-092.jpg
+  updated: 2026-11-28
+  files:
+    count: 5
+    format: "NSP×2"
+    tree: |
+      092-土豆兄弟 Brotato/
+      历史版本[不用下载]/
+      设置中文教程/
+      DLC/
+      [本体v1.0.0.3d][01002EF01A316000][16.0.3][中文].nsp
+      [升级档v1.1.15.4][01002EF01A316800][22.5.0][中文][US].nsp
