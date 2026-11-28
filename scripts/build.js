@@ -87,6 +87,9 @@ if (baseUrl.includes('example.com')) {
   console.log('  ! 站点域名是占位值 example.com，canonical / OG / sitemap 会指错');
   console.log('    请用 BASE_URL=... npm run build，或在 config/site.yaml 写 baseUrl: https://你的域名');
 }
+// 页脚固定入口指向正式站：镜像站构建时 BASE_URL 会漂到 GitHub Pages / Workers，
+// 但「关于本站 / 全部资源 / 追热播…」这些链接要始终回到主域名，不跟镜像域名走。
+const footerBaseUrl = (site.baseUrl || DEFAULT_BASE_URL).replace(/\/+$/, '');
 // 验证 meta 不输出时页面照常能打开，看不出缺了什么，只能在构建时提醒一次
 if (!site.verification || !Object.values(site.verification).filter((v) => String(v ?? '').trim()).length) {
   console.log('  ! 未配置站长验证：config/site.yaml 的 verification 为空，搜索引擎后台无法验证站点归属');
@@ -309,6 +312,7 @@ const ctxBase = {
   items,
   images,
   baseUrl,
+  footerBaseUrl,
   indexAll,
   searchIndexUrl,
   assetVersion,

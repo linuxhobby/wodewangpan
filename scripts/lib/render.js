@@ -333,6 +333,7 @@ function layout({
   // 默认宽容器，已经是全站唯一档位；要窄才显式传 false（见 docs/README.md）
   wide = true,
   baseUrl = '',
+  footerBaseUrl = '',
   canonicalPath = '/',
   ogImage = '',
   ogImageSize = null,
@@ -435,7 +436,7 @@ ${crumb}${body}
 </main>
 ${promoFooter(site)}
 <footer class="foot wrap">
-  ${footNav(footNavCurrent, baseUrl)}
+  ${footNav(footNavCurrent, footerBaseUrl || baseUrl)}
   <p>共 ${total} 个资源 · ${esc(site.disclaimer)}</p>
   ${site.icp ? `<p class="foot__icp">${esc(site.icp)}</p>` : ''}
   ${contactHtml(site.contact, site.qqGroup)}

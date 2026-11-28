@@ -13,16 +13,17 @@ import { esc } from '../../theme/assets/card.js';
 
 /** 页脚固定入口。type 同时是面包屑规则的页面类型；abs: true 的输出拼上站点域名 */
 export const FOOT_NAV = [
+  // 9 个入口统一输出正式站完整 URL（abs: true），镜像站也不把用户留在镜像域名
   { href: '/', label: '网站首页', type: 'home', abs: true },
-  { href: '/about/', label: '关于本站', type: 'about' },
-  { href: '/all/', label: '全部资源', type: 'all' },
+  { href: '/about/', label: '关于本站', type: 'about', abs: true },
+  { href: '/all/', label: '全部资源', type: 'all', abs: true },
   // 虚拟栏目：不是分类，不进 sitemap，播完即可下线；页脚留常驻入口
-  { href: '/following/', label: '追热播', type: 'following' },
-  { href: '/tags/', label: '标签索引', type: 'tags' },
+  { href: '/following/', label: '追热播', type: 'following', abs: true },
+  { href: '/tags/', label: '标签索引', type: 'tags', abs: true },
   { href: '/sitemap.xml', label: '网站地图', type: 'sitemap', abs: true },
-  { href: '/rss/', label: 'RSS订阅', type: 'rss' },
-  { href: '/privacy/', label: '隐私政策', type: 'privacy' },
-  { href: '/contact/', label: '联系我们', type: 'contact' },
+  { href: '/rss/', label: 'RSS订阅', type: 'rss', abs: true },
+  { href: '/privacy/', label: '隐私政策', type: 'privacy', abs: true },
+  { href: '/contact/', label: '联系我们', type: 'contact', abs: true },
 ];
 
 /** 底部导航页都是单一页面；其余这几个页面按现状也不出，集中列在这里避免各自判断 */
