@@ -11,6 +11,7 @@
 |---|---|
 | 网站 | https://www.wodewangpan.top [衡天云VPS](https://www.htstack.com/activity/act_openyear.shtml?aff=31743) | 
 | GitHub Pages 预览 | https://linuxhobby.github.io/wodewangpan/ |
+| Cloudflare Workers 预览 | https://wodewangpan.marco-chan.workers.dev |
 | 仓库 | `git@github.com:linuxhobby/wodewangpan.git` |
 | 更新方式 | 推到 `main`，VPS 定时自动拉取并重建（急发用 `FORCE=1 wdwp-autoupdate`） |
 
