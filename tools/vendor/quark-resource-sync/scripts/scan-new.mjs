@@ -8,6 +8,7 @@ import { execFile } from 'node:child_process';
 import { cfg, requireCfg, TMP, QUARK_TASK_DIR } from './lib/config.mjs';
 import { usedSet, holesOf, classifyHoles, pad3 } from './lib/number.mjs';
 import { idOccupancy } from './lib/yaml-store.mjs';
+import { seasonMark } from './lib/season-title.mjs';
 
 const arg = (k, d) => {
   const i = process.argv.indexOf(`--${k}`);
@@ -78,6 +79,15 @@ const norm = (s) =>
     .replace(/[\s·・:：\-_.]/g, '')
     .toLowerCase();
 
+// 显式季/部不同的同名目录是不同资源，不是重复（「XX 第二季」vs「100-XX (2023)」）。
+// 季号解析统一走 season-title.mjs，勿在此另写正则。
+const seasonDiffers = (a, b) => {
+  const ma = seasonMark(a);
+  const mb = seasonMark(b);
+  if (!ma && !mb) return false;
+  return !ma || !mb || ma.kind !== mb.kind || ma.number !== mb.number;
+};
+
 const dirs = (await browse(SHARE_FID)).filter((o) => String(o.file_type) === '0');
 // 全站 data/*.yaml 的 id → 文件：用来判断空洞编号能否直接用（REPO 未配置时退化为「不判定」）
 const REPO = cfg.REPO;
@@ -121,6 +131,7 @@ for (const dir of dirs) {
     const kp = norm(o.filename);
     const hit = numbered.find((n) => {
       const kn = norm(n.filename);
+      if (seasonDiffers(o.filename, n.filename)) return false;
       return kn === kp || kn.includes(kp) || (kp.length >= 3 && kp.includes(kn));
     });
     return {
